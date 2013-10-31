@@ -31,22 +31,27 @@ require_once "base.php";
 					Chess
 				</div>
 				<div id="user">
-
+					asd
 				</div>
+				<div class="cb i"></div>
 			</div>
 		</div>
 		<div class="main">
 			<div class="col1">
 				<div class="nav">
 					<h2>Tools</h2>
-					<a href="/editor">Game editor</a>
-					<a href="/openings">Opening explorer</a>
-					<a href="/pgn">PGN viewer</a>
-					<a href="/database">Database</a>
+					<ul>
+						<li><a href="/editor">Game editor</a></li>
+						<li><a href="/openings">Opening explorer</a></li>
+						<li><a href="/pgn">PGN viewer</a></li>
+						<li><a href="/database">Database</a></li>
+					</ul>
 				</div>
 				<div class="nav">
 					<h2>Play</h2>
-					<a href="/play">New correspondence game</a>
+					<ul>
+						<li><a href="/play">New correspondence game</a></li>
+					</ul>
 				</div>
 			</div>
 			<div class="col2">

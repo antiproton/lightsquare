@@ -1,9 +1,9 @@
-body {
+body{
 	font-family: sans-serif;
 	background-color: #DDDDDD;
 }
 
-#topbar {
+#topbar{
 	color: white;
 	padding: .5em;
 	background: #444444;
@@ -15,5 +15,51 @@ body {
 }
 
 #title{
+	float: left;
 	font-weight: bold;
+}
+
+#user{
+	float: right;
+}
+
+.col1, .col2{
+	float: left;
+}
+
+.col1{
+	width: 20%;
+}
+
+.col2{
+	width: 80%;
+}
+
+.nav{
+	margin: 1em 0 0 0;
+	background: white;
+}
+
+.nav h2{
+	color: white;
+	font-size: .8em;
+	font-weight: bold;
+	margin: 0;
+	padding: .3em;
+	background: #474747;
+}
+
+.nav ul{
+	list-style-type: none;
+	margin: .5em 0 0 0;
+	padding: 0;
+}
+
+.nav li{
+	padding: .5em 0 0 0;
+}
+
+.nav a{
+	color: #234B72;
+	font-size: .9em;
 }
