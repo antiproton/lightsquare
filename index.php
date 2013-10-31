@@ -24,6 +24,6 @@ require_once "base.php";
 		</script>
 	</head>
 	<body>
-
+		<h1>Chess</h1>
 	</body>
 </html>
