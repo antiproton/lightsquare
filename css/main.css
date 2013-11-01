@@ -1,12 +1,14 @@
 body{
 	font-family: sans-serif;
-	background-color: #DDDDDD;
+	/*background-color: #DDDDDD;*/
 }
 
 #topbar{
 	color: white;
 	padding: .5em;
-	background: #444444;
+	/*border-bottom: 1px solid gray;*/
+	box-shadow: inset 3px -5px 5px rgba(0, 0, 0, .4);
+	background: #3D3D3D;
 }
 
 .main{
@@ -37,16 +39,17 @@ body{
 
 .nav{
 	margin: 1em 0 0 0;
-	background: white;
+	border: 1px solid #C9C9C9;
+	background: #E8E8E8;
 }
 
 .nav h2{
-	color: white;
+	color: #595959;
 	font-size: .8em;
 	font-weight: bold;
 	margin: 0;
 	padding: .3em;
-	background: #474747;
+	/*background: #474747;*/
 }
 
 .nav ul{
@@ -60,6 +63,12 @@ body{
 }
 
 .nav a{
-	color: #234B72;
+	color: #00588C;
 	font-size: .9em;
+	display: inline-block;
+	margin: .5em .5em 0 .5em;
+}
+
+.nav a:last-of-type{
+	margin-bottom: .5em;
 }

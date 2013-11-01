@@ -40,18 +40,17 @@ require_once "base.php";
 			<div class="col1">
 				<div class="nav">
 					<h2>Tools</h2>
-					<ul>
-						<li><a href="/editor">Game editor</a></li>
-						<li><a href="/openings">Opening explorer</a></li>
-						<li><a href="/pgn">PGN viewer</a></li>
-						<li><a href="/database">Database</a></li>
-					</ul>
+					<a href="/editor">Game editor</a>
+					<br>
+					<a href="/openings">Opening explorer</a>
+					<br>
+					<a href="/pgn">PGN viewer</a>
+					<br>
+					<a href="/database">Database</a>
 				</div>
 				<div class="nav">
 					<h2>Play</h2>
-					<ul>
-						<li><a href="/play">New correspondence game</a></li>
-					</ul>
+					<a href="/play">New correspondence game</a>
 				</div>
 			</div>
 			<div class="col2">
