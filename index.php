@@ -1,5 +1,6 @@
 <?php
 require_once "base.php";
+require_once "php/init.php";
 ?>
 <!DOCTYPE html>
 <html>
@@ -46,18 +47,24 @@ require_once "base.php";
 					<br>
 					<a href="/pgn">PGN viewer</a>
 					<br>
-					<a href="/database">Database</a>
+					<a href="/database">Games database</a>
 				</div>
 				<div class="nav">
 					<h2>Play</h2>
-					<a href="/play">New correspondence game</a>
+					<a href="/echess">Correspondence games</a>
+					<a href="/live">Live chess</a>
 				</div>
 			</div>
 			<div class="col2">
 				<div id="page">
-
+					<h1 class="pagetitle">Opening explorer</h1>
+					<div id="board">
+					</div>
 				</div>
 			</div>
 		</div>
+		<script>
+
+		</script>
 	</body>
 </html>

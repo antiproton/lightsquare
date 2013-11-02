@@ -11,6 +11,11 @@ body{
 	background: #3D3D3D;
 }
 
+h1.pagetitle{
+	font-size: 1.5em;
+	/*border-bottom: 1px solid #D6D6D6;*/
+}
+
 .main{
 	width: 80%;
 	margin: 0 auto;
@@ -71,4 +76,8 @@ body{
 
 .nav a:last-of-type{
 	margin-bottom: .5em;
+}
+
+#page{
+	margin: 0 0 0 1em;
 }
