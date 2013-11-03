@@ -1,6 +1,32 @@
 <?php
 require_once "base.php";
 require_once "php/init.php";
+
+function script_tags($file, $parent="") {
+	if(is_string($file)) {
+		$path="$parent$file";
+
+		if(is_dir(WWWROOT.$path)) {
+			$dir=scandir(WWWROOT.$path);
+
+			foreach($dir as $node) {
+				if($node!="." && $node!="..") {
+					script_tags("/$node", $path);
+				}
+			}
+		}
+
+		else {
+			echo "<script type=\"text/javascript\" src=\"$path\"></script>\n";
+		}
+	}
+
+	else if(is_array($file)) {
+		foreach($file as $fn) {
+			script_tags($fn, $parent);
+		}
+	}
+}
 ?>
 <!DOCTYPE html>
 <html>
@@ -34,6 +60,14 @@ require_once "php/init.php";
 		loadw("/js/livechess");
 		?>
 		</script>
+		<?php
+		script_tags("/js/constants.js");
+		script_tags("/js/chess/constants.js");
+		script_tags("/js/chess");
+		script_tags("/js/analysis");
+		script_tags("/js/controls");
+		script_tags("/js/livechess");
+		?>
 	</head>
 	<body>
 		<div id="topbar">
@@ -75,6 +109,10 @@ require_once "php/init.php";
 		</div>
 		<script>
 		var board=new UiBoard(g("board"));
+
+		board.SquareSize.Set(60);
+
+		board.SetFen(FEN_INITIAL);
 		</script>
 	</body>
 </html>
