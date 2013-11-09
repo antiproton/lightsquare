@@ -2,31 +2,7 @@
 require_once "base.php";
 require_once "php/init.php";
 
-function script_tags($file, $parent="") {
-	if(is_string($file)) {
-		$path="$parent$file";
 
-		if(is_dir(WWWROOT.$path)) {
-			$dir=scandir(WWWROOT.$path);
-
-			foreach($dir as $node) {
-				if($node!="." && $node!="..") {
-					script_tags("/$node", $path);
-				}
-			}
-		}
-
-		else {
-			echo "<script type=\"text/javascript\" src=\"$path\"></script>\n";
-		}
-	}
-
-	else if(is_array($file)) {
-		foreach($file as $fn) {
-			script_tags($fn, $parent);
-		}
-	}
-}
 ?>
 <!DOCTYPE html>
 <html>
@@ -52,12 +28,6 @@ function script_tags($file, $parent="") {
 		loads("/lib/js/dbenums/chess.js");
 		loads("/lib/js/dbcodes/chess.js");
 
-		loadw("/js/constants.js");
-		loadw("/js/chess/constants.js");
-		loadw("/js/chess");
-		loadw("/js/analysis");
-		loadw("/js/controls");
-		loadw("/js/livechess");
 		?>
 		</script>
 		<?php
@@ -70,6 +40,12 @@ function script_tags($file, $parent="") {
 		?>
 	</head>
 	<body>
+		<?php
+
+		?>
+		<div class="template" id="livetable_standardchess">
+
+		</div>
 		<div id="topbar">
 			<div class="main">
 				<div id="title">
