@@ -2,16 +2,18 @@
 NOTE this is the exception to the rule of lowercase and underscore
 for private/titlecase for public.
 
-TODO could do with making sq, x, get_file, file etc more well named.
-and fullmove/halfmove etc.
+CLEAN:
 
-colour_name etc could probs be replaced with not functions, more like
-Result
+names
+
+what fullmove, halfmove etc are
+
+remove use of btoi
 */
 
 var Util={
 	hm_colour: function(hm) {
-		return (hm%2==1)?BLACK:WHITE;
+		return (hm%2===1)?BLACK:WHITE;
 	},
 
 	opp_colour: function(colour) {
