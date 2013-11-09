@@ -22,8 +22,6 @@ require_once "php/init.php";
 		loads("/lib/js/server");
 		loads("/lib/js/events");
 		loads("/lib/js/dom");
-		loads("/lib/js/base");
-		loads("/lib/js/Base.js");
 
 		loads("/lib/js/dbenums/chess.js");
 		loads("/lib/js/dbcodes/chess.js");
@@ -86,7 +84,7 @@ require_once "php/init.php";
 		<script>
 		var board=new UiBoard(g("board"));
 
-		board.SquareSize.Set(60);
+		board.SquareSize(60);
 
 		board.SetFen(FEN_INITIAL);
 		</script>
