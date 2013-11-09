@@ -6,14 +6,14 @@ function GameOverDialog(parent) {
 	this.z_index=1;
 	this.result=RESULT_WHITE;
 
-	this.Zindex=new Property(this, function() {
+	this.Zindex=setter(this, function() {
 		return this.z_index;
 	}, function(value) {
 		this.z_index=value;
 		this.UpdateHtml();
 	});
 
-	this.Result=new Property(this, function() {
+	this.Result=setter(this, function() {
 		return this.result;
 	}, function(value) {
 		this.result=value;

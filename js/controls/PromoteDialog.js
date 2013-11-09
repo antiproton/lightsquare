@@ -23,78 +23,77 @@ function PromoteDialog(parent) {
 }
 
 PromoteDialog.prototype.init_props=function() {
-	this.Zindex=new Property(this, function() {
+	this.Zindex=setter(this, function() {
 		return this.z_index;
 	}, function(value) {
 		this.z_index=value;
 		this.UpdateHtml();
 	});
 
-	this.Position=new Property(this, function() {
+	this.Position=setter(this, function() {
 		return this.pos;
 	}, function(value) {
 		this.pos=value;
 		this.UpdateHtml();
 	});
 
-	this.PositionX=new Property(this, function() {
+	this.PositionX=setter(this, function() {
 		return this.pos[X];
 	}, function(value) {
 		this.pos[X]=value;
 		this.UpdateHtml();
 	});
 
-	this.PositionY=new Property(this, function() {
+	this.PositionY=setter(this, function() {
 		return this.pos[Y];
 	}, function(value) {
 		this.pos[Y]=value;
 		this.UpdateHtml();
 	});
 
-	this.BorderColour=new Property(this, function() {
+	this.BorderColour=setter(this, function() {
 		return this.border_colour;
 	}, function(value) {
 		this.border_colour=value;
 		this.UpdateHtml();
 	});
 
-	this.BorderWidth=new Property(this, function() {
+	this.BorderWidth=setter(this, function() {
 		return this.border_width;
 	}, function(value) {
 		this.border_width=value;
 		this.UpdateHtml();
 	});
 
-	this.PointerCursor=new Property(this, function() {
+	this.PointerCursor=setter(this, function() {
 		return this.pointer_cursor;
 	}, function(value) {
 		this.pointer_cursor=value;
 		this.UpdateHtml();
 	});
 
-	this.ImgDirPiece=new Property(this, function() {
+	this.ImgDirPiece=setter(this, function() {
 		return this.img_dir_piece;
 	}, function(value) {
 		this.img_dir_piece=value;
 		this.UpdateHtml();
 	});
 
-	this.SquareSize=new Property(this, function() {
+	this.SquareSize=setter(this, function() {
 		return this.square_size;
 	}, function(value) {
 		this.square_size=value;
 		this.UpdateHtml();
-		this.UiUpdate.Fire();
 	});
 
-	this.PieceStyle=new Property(this, function() {
+	this.PieceStyle=setter(this, function() {
 		return this.piece_style;
 	}, function(value) {
 		this.piece_style=value;
 		this.UpdateHtml();
 	});
 
-	this.Colour=new Property(this, function() {
+	this.Colour=setter(this, function() {
 		return this.colour;
 	}, function(value) {
 		this.colour=value;
@@ -188,7 +187,7 @@ PromoteDialog.prototype.SetLocation=function(coords, use_center) {
 
 	x-=this.border_width;
 
-	this.Position.Set([x, y]);
+	this.Position([x, y]);
 }
 
 PromoteDialog.prototype.Show=function() {

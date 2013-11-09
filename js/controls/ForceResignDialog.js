@@ -4,7 +4,7 @@ function ForceResignDialog(parent) {
 	this.width=300;
 	this.z_index=1;
 
-	this.Zindex=new Property(this, function() {
+	this.Zindex=setter(this, function() {
 		return this.z_index;
 	}, function(value) {
 		this.z_index=value;

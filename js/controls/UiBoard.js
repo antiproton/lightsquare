@@ -196,7 +196,7 @@ UiBoard.prototype.init_hilite_styles=function() {
 }
 
 UiBoard.prototype.init_props=function() {
-	this.HtmlUpdatesEnabled=new Property(this, function() {
+	this.HtmlUpdatesEnabled=setter(this, function() {
 		return this.html_updates_enabled;
 	}, function(value) {
 		this.html_updates_enabled=value;
@@ -206,7 +206,7 @@ UiBoard.prototype.init_props=function() {
 		}
 	});
 
-	this.SquareColour=new Property(this, function() {
+	this.SquareColour=setter(this, function() {
 		return this.square_colour;
 	}, function(value) {
 		if(this.square_colour!==value) {
@@ -215,7 +215,7 @@ UiBoard.prototype.init_props=function() {
 		}
 	});
 
-	this.CoordsFontSize=new Property(this, function() {
+	this.CoordsFontSize=setter(this, function() {
 		return this.coords_font_size;
 	}, function(value) {
 		if(this.coords_font_size!==value) {
@@ -224,7 +224,7 @@ UiBoard.prototype.init_props=function() {
 		}
 	});
 
-	this.CoordsFontFamily=new Property(this, function() {
+	this.CoordsFontFamily=setter(this, function() {
 		return this.coords_font_family;
 	}, function(value) {
 		if(this.coords_font_family!==value) {
@@ -233,7 +233,7 @@ UiBoard.prototype.init_props=function() {
 		}
 	});
 
-	this.CoordsFontColor=new Property(this, function() {
+	this.CoordsFontColor=setter(this, function() {
 		return this.coords_font_color;
 	}, function(value) {
 		if(this.coords_font_color!==value) {
@@ -242,7 +242,7 @@ UiBoard.prototype.init_props=function() {
 		}
 	});
 
-	this.ImgDirBoard=new Property(this, function() {
+	this.ImgDirBoard=setter(this, function() {
 		return this.img_dir_board;
 	}, function(value) {
 		if(this.img_dir_board!==value) {
@@ -251,17 +251,17 @@ UiBoard.prototype.init_props=function() {
 		}
 	});
 
-	this.ImgDirPiece=new Property(this, function() {
+	this.ImgDirPiece=setter(this, function() {
 		return this.img_dir_piece;
 	}, function(value) {
 		if(this.img_dir_piece!==value) {
 			this.img_dir_piece=value;
-			this.PromoteDialog.ImgDirPiece.Set(value);
+			this.PromoteDialog.ImgDirPiece(value);
 			this.UpdateHtml();
 		}
 	});
 
-	this.ViewAs=new Property(this, function() {
+	this.ViewAs=setter(this, function() {
 		return this.view_as;
 	}, function(value) {
 		if(this.view_as!==value) {
@@ -270,62 +270,58 @@ UiBoard.prototype.init_props=function() {
 		}
 	});
 
-	this.CoordSizeF=new Property(this, function() {
+	this.CoordSizeF=setter(this, function() {
 		return this.coord_size_f;
 	}, function(value) {
 		if(this.coord_size_f!==value) {
 			this.coord_size_f=value;
 			this.UpdateHtml();
-			this.UiUpdate.Fire();
 		}
 	});
 
-	this.CoordSizeR=new Property(this, function() {
+	this.CoordSizeR=setter(this, function() {
 		return this.coord_size_r;
 	}, function(value) {
 		if(this.coord_size_r!==value) {
 			this.coord_size_r=value;
 			this.UpdateHtml();
-			this.UiUpdate.Fire();
 		}
 	});
 
-	this.ShowCoordsPadding=new Property(this, function() {
+	this.ShowCoordsPadding=setter(this, function() {
 		return this.show_coords_padding;
 	}, function(value) {
 		if(this.show_coords_padding!==value) {
 			this.show_coords_padding=value;
 			this.UpdateHtml();
-			this.UiUpdate.Fire();
 		}
 	});
 
-	this.ShowCoords=new Property(this, function() {
+	this.ShowCoords=setter(this, function() {
 		return this.show_coords;
 	}, function(value) {
 		if(this.show_coords!==value) {
 			this.show_coords=value;
 
 			if(this.show_coords) {
-				this.ShowCoordsPadding.Set(true);
+				this.ShowCoordsPadding(true);
 			}
 
 			this.UpdateHtml();
 		}
 	});
 
-	this.SquareSize=new Property(this, function() {
+	this.SquareSize=setter(this, function() {
 		return this.square_size;
 	}, function(value) {
 		if(this.square_size!==value) {
 			this.square_size=parseInt(value);
-			this.PromoteDialog.SquareSize.Set(value);
+			this.PromoteDialog.SquareSize(value);
 			this.UpdateHtml();
-			this.UiUpdate.Fire();
 		}
 	});
 
-	this.BoardStyle=new Property(this, function() {
+	this.BoardStyle=setter(this, function() {
 		return this.board_style;
 	}, function(value) {
 		if(this.board_style!==value) {
@@ -334,17 +330,17 @@ UiBoard.prototype.init_props=function() {
 		}
 	});
 
-	this.PieceStyle=new Property(this, function() {
+	this.PieceStyle=setter(this, function() {
 		return this.piece_style;
 	}, function(value) {
 		if(this.piece_style!==value) {
 			this.piece_style=value;
-			this.PromoteDialog.PieceStyle.Set(value);
+			this.PromoteDialog.PieceStyle(value);
 			this.UpdateHtml();
 		}
 	});
 
-	this.Border=new Property(this, function() {
+	this.Border=setter(this, function() {
 		return this.border;
 	}, function(value) {
 		this.board_style=value;
@@ -352,7 +348,7 @@ UiBoard.prototype.init_props=function() {
 		this.UiUpdate.Fire();
 	});
 
-	this.SquareHighlightBorder=new Property(this, function() {
+	this.SquareHighlightBorder=setter(this, function() {
 		return this.square_highlight_border;
 	}, function(value) {
 		if(this.board_style!==value) {
@@ -361,7 +357,7 @@ UiBoard.prototype.init_props=function() {
 		}
 	});
 
-	this.ContainerBorder=new Property(this, function() {
+	this.ContainerBorder=setter(this, function() {
 		return this.container_border;
 	}, function(value) {
 		if(this.container_border!==value) {
@@ -370,7 +366,7 @@ UiBoard.prototype.init_props=function() {
 		}
 	});
 
-	this.ContainerBackground=new Property(this, function() {
+	this.ContainerBackground=setter(this, function() {
 		return this.container_background;
 	}, function(value) {
 		if(this.container_background!==value) {
@@ -379,7 +375,7 @@ UiBoard.prototype.init_props=function() {
 		}
 	});
 
-	this.ContainerShadow=new Property(this, function() {
+	this.ContainerShadow=setter(this, function() {
 		return this.container_shadow;
 	}, function(value) {
 		if(this.container_shadow!==value) {
@@ -388,7 +384,7 @@ UiBoard.prototype.init_props=function() {
 		}
 	});
 
-	this.ContainerBorderBorderWidth=new Property(this, function() {
+	this.ContainerBorderBorderWidth=setter(this, function() {
 		return this.container_border_border_width;
 	}, function(value) {
 		if(this.container_border_border_width!==value) {
@@ -397,7 +393,7 @@ UiBoard.prototype.init_props=function() {
 		}
 	});
 
-	this.ContainerBorderBorderColour=new Property(this, function() {
+	this.ContainerBorderBorderColour=setter(this, function() {
 		return this.container_border_border_colour;
 	}, function(value) {
 		if(this.container_border_border_colour!==value) {
@@ -406,11 +402,11 @@ UiBoard.prototype.init_props=function() {
 		}
 	});
 
-	this.OverallWidth=new Property(this, function() {
+	this.OverallWidth=setter(this, function() {
 		return this.get_overall_size(X);
 	});
 
-	this.OverallHeight=new Property(this, function() {
+	this.OverallHeight=setter(this, function() {
 		return this.get_overall_size(Y);
 	});
 }
@@ -560,10 +556,10 @@ UiBoard.prototype.SetupHtml=function() {
 	*/
 
 	this.PromoteDialog=new PromoteDialog(this.board);
-	this.PromoteDialog.Zindex.Set(UiBoard.SQ_ZINDEX_ABOVE);
-	this.PromoteDialog.ImgDirPiece.Set(this.img_dir_piece);
-	this.PromoteDialog.PieceStyle.Set(this.piece_style);
-	this.PromoteDialog.SquareSize.Set(this.square_size);
+	this.PromoteDialog.Zindex(UiBoard.SQ_ZINDEX_ABOVE);
+	this.PromoteDialog.ImgDirPiece(this.img_dir_piece);
+	this.PromoteDialog.PieceStyle(this.piece_style);
+	this.PromoteDialog.SquareSize(this.square_size);
 
 	/*
 	game over dialog - this is part of the board to simplifiy positioning it
@@ -571,14 +567,14 @@ UiBoard.prototype.SetupHtml=function() {
 	*/
 
 	this.GameOverDialog=new GameOverDialog(this.board);
-	this.GameOverDialog.Zindex.Set(UiBoard.SQ_ZINDEX_ABOVE);
+	this.GameOverDialog.Zindex(UiBoard.SQ_ZINDEX_ABOVE);
 
 	/*
 	force resign dialog
 	*/
 
 	this.ForceResignDialog=new ForceResignDialog(this.board);
-	this.ForceResignDialog.Zindex.Set(UiBoard.SQ_ZINDEX_ABOVE);
+	this.ForceResignDialog.Zindex(UiBoard.SQ_ZINDEX_ABOVE);
 
 	this.UpdateHtml();
 }
@@ -590,8 +586,8 @@ set the size, position and other style attributes on the elements
 UiBoard.prototype.UpdateHtml=function() { //after switching colours ,changing size tec
 	var rank_index, file_index, text;
 	var board_size=this.GetBoardSize();
-	var coord_size_r=this.CoordSizeR.Get();
-	var coord_size_f=this.CoordSizeF.Get();
+	var coord_size_r=this.CoordSizeR();
+	var coord_size_f=this.CoordSizeF();
 	var coord_display_size_r=this.show_coords_padding?coord_size_r:0;
 	var coord_display_size_f=this.show_coords_padding?coord_size_f:0;
 	var container_padding_r=this.container_border?coord_size_r:coord_display_size_r;
@@ -696,7 +692,7 @@ UiBoard.prototype.UpdateHtml=function() { //after switching colours ,changing si
 		prop Sets (but then they wouldn't be applied initially unless the prop set was
 		called in initialisation.  maybe some system where you can call a "initialise_props"
 		method that knows all the properties that have been added and does
-		this[prop].Set(this[prop].Get()).  logic could even be tucked away nicely in the Property
+		this[prop](this[prop]()).  logic could even be tucked away nicely in the Property
 		class if classes implemented IPropertyLogging for the list.)
 
 		up to now these optimisations seem pointless as the board comes up without any
