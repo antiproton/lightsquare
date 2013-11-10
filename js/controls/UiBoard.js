@@ -416,7 +416,7 @@ destroy/re-create all the elements
 */
 
 UiBoard.prototype.SetupHtml=function() {
-	Dom.ClearNode(this.Node);
+	Dom.ClearNode(this.node);
 
 	var self=this;
 
@@ -430,7 +430,7 @@ UiBoard.prototype.SetupHtml=function() {
 	can still be non-absolute so that it fills up its container
 	*/
 
-	this.inner_container=div(this.Node);
+	this.inner_container=div(this.node);
 
 	Dom.Style(this.inner_container, {
 		position: "absolute"
@@ -599,7 +599,7 @@ UiBoard.prototype.UpdateHtml=function() { //after switching colours ,changing si
 	container border (bit around the edge with the shadow)
 	*/
 
-	Dom.Style(this.Node, {
+	Dom.Style(this.node, {
 		paddingTop: this.container_border?coord_size_f:0,
 		paddingRight: this.container_border?coord_size_r:0,
 		borderWidth: this.container_border?this.container_border_border_width:0,
@@ -724,7 +724,7 @@ UiBoard.prototype.UpdateHtml=function() { //after switching colours ,changing si
 	board
 	*/
 
-	Dom.Style(this.Node, {
+	Dom.Style(this.node, {
 		width: container_padding_r+(this.border.length*2)+board_size,
 		height: container_padding_f+(this.border.length*2)+board_size
 	});

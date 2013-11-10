@@ -104,9 +104,9 @@ PromoteDialog.prototype.init_props=function() {
 PromoteDialog.prototype.SetupHtml=function() {
 	var self=this;
 
-	this.board_container=div(this.Node);
+	this.board_container=div(this.node);
 
-	Dom.Style(this.Node, {
+	Dom.Style(this.node, {
 		position: "absolute"
 	});
 
@@ -135,9 +135,9 @@ PromoteDialog.prototype.SetupHtml=function() {
 PromoteDialog.prototype.UpdateHtml=function() {
 	var board_w=this.square_size*this.pieces.length;
 	var board_h=this.square_size;
-	var os=Dom.GetOffsets(this.Node);
+	var os=Dom.GetOffsets(this.node);
 
-	Dom.Style(this.Node, {
+	Dom.Style(this.node, {
 		top: this.pos[Y],
 		left: this.pos[X],
 		width: board_w,
