@@ -1,5 +1,5 @@
 <div class="template" id="live_table_standard_chess">
-	<div class="live_table_standard_chess">
+	<div class="live_table_standard_chess" data-id="root">
 		<div class="main">
 			<div class="player">
 				<div class="player_info" data-id="player_info_opponent">
@@ -43,7 +43,7 @@
 				<a class="button" data-id="button_resign">Resign</a>
 			</div>
 			<div class="pieces_taken" data-id="pieces_taken">
-				
+
 			</div>
 		</div>
 	</div>
