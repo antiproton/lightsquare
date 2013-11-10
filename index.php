@@ -36,6 +36,7 @@ require_once "php/init.php";
 		script_tags("/js/controls");
 		script_tags("/js/livechess");
 		?>
+		<script src="/lib/js/jquery.js"></script>
 	</head>
 	<body>
 		<?php
