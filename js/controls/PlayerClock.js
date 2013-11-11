@@ -23,81 +23,81 @@ function PlayerClock(parent) {
 }
 
 PlayerClock.prototype.init_props=function() {
-	this.PaddingTop=new Property(this, function() {
+	this.PaddingTop=setter(this, function() {
 		return this.padding_top;
 	}, function(value) {
 		this.padding_top=value;
 		this.UpdateHtml();
 	});
 
-	this.Mtime=new Property(this, function() {
+	this.Mtime=setter(this, function() {
 		return this.mtime;
 	}, function(value) {
 		this.mtime=value;
 		this.UpdateTime();
 	});
 
-	this.Urgent=new Property(this, function() {
+	this.Urgent=setter(this, function() {
 		return this.urgent;
 	});
 
-	this.FontSize=new Property(this, function() {
+	this.FontSize=setter(this, function() {
 		return this.font_size;
 	}, function(value) {
 		this.font_size=value;
 		this.UpdateHtml();
 	});
 
-	this.FontFamily=new Property(this, function() {
+	this.FontFamily=setter(this, function() {
 		return this.font_family;
 	}, function(value) {
 		this.font_family=value;
 		this.UpdateHtml();
 	});
 
-	this.ColourNormal=new Property(this, function() {
+	this.ColourNormal=setter(this, function() {
 		return this.colour_normal;
 	}, function(value) {
 		this.colour_normal=value;
 		this.UpdateTime();
 	});
 
-	this.ColourUrgent=new Property(this, function() {
+	this.ColourUrgent=setter(this, function() {
 		return this.colour_urgent;
 	}, function(value) {
 		this.colour_urgent=value;
 		this.UpdateTime();
 	});
 
-	this.UrgentThreshold=new Property(this, function() {
+	this.UrgentThreshold=setter(this, function() {
 		return this.urgent_threshold;
 	}, function(value) {
 		this.urgent_threshold=value;
 		this.UpdateTime();
 	});
 
-	this.TenthsDisplayThreshold=new Property(this, function() {
+	this.TenthsDisplayThreshold=setter(this, function() {
 		return this.tenths_display_threshold;
 	}, function(value) {
 		this.tenths_display_threshold=value;
 		this.UpdateTime();
 	});
 
-	this.MinSections=new Property(this, function() {
+	this.MinSections=setter(this, function() {
 		return this.min_sections;
 	}, function(value) {
 		this.min_sections=value;
 		this.UpdateHtml();
 	});
 
-	this.MinDigits=new Property(this, function() {
+	this.MinDigits=setter(this, function() {
 		return this.min_digits;
 	}, function(value) {
 		this.min_digits=value;
 		this.UpdateHtml();
 	});
 
-	this.DisplayTime=new Property(this, function() {
+	this.DisplayTime=setter(this, function() {
 		return this.display_time;
 	});
 }
@@ -116,8 +116,6 @@ PlayerClock.prototype.UpdateHtml=function() {
 	});
 
 	this.UpdateTime();
-
-	this.UiUpdate.Fire();
 }
 
 PlayerClock.prototype.UpdateTime=function() {

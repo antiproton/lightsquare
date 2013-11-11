@@ -14,34 +14,34 @@ function PlayerInfo(parent, game_id, show_sit_button) {
 	this.img_dir_icons="/img/icon/colour_dot";
 	this.font_size=16;
 
-	this.GameId=new Property(this, function() {
+	this.GameId=setter(this, function() {
 		return this.game_id;
 	}, function(value) {
 		this.game_id=value;
 	});;
 
-	this.FontSize=new Property(this, function() {
+	this.FontSize=setter(this, function() {
 		return this.font_size;
 	}, function(value) {
 		this.font_size=value;
 		this.UpdateHtml();
 	});
 
-	this.ImgDirIcons=new Property(this, function() {
+	this.ImgDirIcons=setter(this, function() {
 		return this.img_dir_icons;
 	}, function(value) {
 		this.img_dir_icons=value;
 		this.UpdateHtml();
 	});
 
-	this.Height=new Property(this, function() {
+	this.Height=setter(this, function() {
 		return this.height;
 	}, function(value) {
 		this.height=value;
 		this.UpdateHtml();
 	});
 
-	this.PaddingTop=new Property(this, function() {
+	this.PaddingTop=setter(this, function() {
 		return this.padding_top;
 	}, function(value) {
 		this.padding_top=value;
@@ -50,14 +50,14 @@ function PlayerInfo(parent, game_id, show_sit_button) {
 
 	this.Sit=new Event(this);
 
-	this.Colour=new Property(this, function() {
+	this.Colour=setter(this, function() {
 		return this.colour;
 	}, function(value) {
 		this.colour=value;
 		this.UpdateHtml();
 	});
 
-	this.Username=new Property(this, function() {
+	this.Username=setter(this, function() {
 		return this.username;
 	}, function(value) {
 		if(value!==this.username) {
@@ -67,7 +67,7 @@ function PlayerInfo(parent, game_id, show_sit_button) {
 		}
 	});
 
-	this.Rating=new Property(this, function() {
+	this.Rating=setter(this, function() {
 		return this.rating;
 	}, function(value) {
 		if(value!==null && value>0) {
@@ -83,14 +83,14 @@ function PlayerInfo(parent, game_id, show_sit_button) {
 		this.UpdateHtml();
 	});
 
-	this.Score=new Property(this, function() {
+	this.Score=setter(this, function() {
 		return this.score;
 	}, function(value) {
 		this.score=value;
 		this.UpdateHtml();
 	});
 
-	this.ShowScore=new Property(this, function() {
+	this.ShowScore=setter(this, function() {
 		return this.show_score;
 	}, function(value) {
 		this.show_score=value;
@@ -102,7 +102,7 @@ function PlayerInfo(parent, game_id, show_sit_button) {
 
 PlayerInfo.prototype.SetupHtml=function() {
 	var self=this;
-	this.inner=div(this.Node);
+	this.inner=div(this.node);
 
 	//there are 2 possible things to show - sit button or username of person in seat
 
@@ -110,32 +110,32 @@ PlayerInfo.prototype.SetupHtml=function() {
 	this.inner_taken=div(this.inner);
 
 	//Sit button
-
-	this.colour_icon=$("*img");
+	//FIXME convert to templates
+	this.colour_icon=c("img");
 	this.inner_open.appendChild(this.colour_icon);
-	this.ButtonSit=new Button(this.inner_open, "Sit");
-
-	this.ButtonSit.Click.AddHandler(this, function() {
-		this.Sit.Fire();
-	});
+	//this.ButtonSit=new Button(this.inner_open, "Sit");
+	//
+	//this.ButtonSit.Click.AddHandler(this, function() {
+	//	this.Sit.Fire();
+	//});
 
 	//username
 
-	this.user_link=$("*span"); //NOTE make it *a when user profiles are done
+	this.user_link=c("span"); //NOTE make it *a when user profiles are done
 	this.inner_taken.appendChild(this.user_link);
 	this.user_link.target="_blank";
 
-	this.rating_span=$("*span");
+	this.rating_span=c("span");
 	this.inner_taken.appendChild(this.rating_span);
 
-	this.score_span=$("*span");
+	this.score_span=c("span");
 	this.inner_taken.appendChild(this.score_span);
 
 	this.UpdateHtml();
 }
 
 PlayerInfo.prototype.UpdateHtml=function() {
-	Dom.Style(this.Node, {
+	Dom.Style(this.node, {
 		height: this.height
 	});
 
