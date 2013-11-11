@@ -1,50 +1,41 @@
 <?php
 require_once "base.php";
+require_once "include_utils.php";
 require_once "php/init.php";
-
-
 ?>
 <!DOCTYPE html>
 <html>
 	<head>
 		<title>Chess</title>
-		<style type="text/css">
 		<?php
-		loads("/lib/css/reset.css");
-		loads("/lib/css/common.css");
-		loadw("/css/main.css");
+		style_tags_w("/css/main.css");
+		style_tags_s("/lib/css/reset.css");
+		style_tags_s("/lib/css/common.css");
 		?>
-		</style>
-		<script type="text/javascript">
 		<?php
-		loads("/lib/js/util");
-		loads("/lib/js/data");
-		loads("/lib/js/server");
-		loads("/lib/js/events");
-		loads("/lib/js/dom");
+		script_tags_s("/lib/js/util");
+		script_tags_s("/lib/js/data");
+		script_tags_s("/lib/js/server");
+		script_tags_s("/lib/js/events");
+		script_tags_s("/lib/js/dom");
 
-		loads("/lib/js/dbenums/chess.js");
-		loads("/lib/js/dbcodes/chess.js");
+		script_tags_s("/lib/js/dbenums/chess.js");
+		script_tags_s("/lib/js/dbcodes/chess.js");
 
-		?>
-		</script>
-		<?php
-		script_tags("/js/constants.js");
-		script_tags("/js/chess/constants.js");
-		script_tags("/js/chess");
-		script_tags("/js/analysis");
-		script_tags("/js/controls");
-		script_tags("/js/livechess");
+		script_tags_w("/js/constants.js");
+		script_tags_w("/js/chess/constants.js");
+		script_tags_w("/js/chess");
+		script_tags_w("/js/analysis");
+		script_tags_w("/js/controls");
+		script_tags_w("/js/livechess");
+		script_tags_w("/js/uis");
 		?>
 		<script src="/lib/js/jquery.js"></script>
 	</head>
 	<body>
 		<?php
-
+		require_once "templates/live_table_std.php";
 		?>
-		<div class="template" id="livetable_standardchess">
-
-		</div>
 		<div id="topbar">
 			<div class="main">
 				<div id="title">
@@ -77,17 +68,17 @@ require_once "php/init.php";
 			<div class="col2">
 				<div id="page">
 					<h1 class="pagetitle">Opening explorer</h1>
-					<div id="board">
+					<div id="table">
 					</div>
 				</div>
 			</div>
 		</div>
 		<script>
-		var board=new UiBoard(g("board"));
+		var ui=new LiveTableStdUi(g("table"));
 
-		board.SquareSize(60);
+		ui.Board.SquareSize(60);
 
-		board.SetFen(FEN_INITIAL);
+		ui.Board.SetFen(FEN_INITIAL);
 		</script>
 	</body>
 </html>
