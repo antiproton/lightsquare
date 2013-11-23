@@ -37,7 +37,7 @@ require_once "php/init.php";
 		require_once "templates/live_table_std.php";
 		?>
 		<div id="topbar">
-			<div class="main">
+			<div class="layout_main">
 				<div id="title">
 					Chess
 				</div>
@@ -48,28 +48,9 @@ require_once "php/init.php";
 			</div>
 		</div>
 		<div class="main">
-			<div class="col1">
-				<div class="nav">
-					<h2>Tools</h2>
-					<a href="/editor">Game editor</a>
-					<br>
-					<a href="/openings">Opening explorer</a>
-					<br>
-					<a href="/pgn">PGN viewer</a>
-					<br>
-					<a href="/database">Games database</a>
-				</div>
-				<div class="nav">
-					<h2>Play</h2>
-					<a href="/echess">Correspondence games</a>
-					<a href="/live">Live chess</a>
-				</div>
-			</div>
-			<div class="col2">
-				<div id="page">
-					<h1 class="pagetitle">Opening explorer</h1>
-					<div id="table">
-					</div>
+			<div id="page">
+				<h1 class="pagetitle">Opening explorer</h1>
+				<div id="table">
 				</div>
 			</div>
 		</div>
@@ -77,8 +58,9 @@ require_once "php/init.php";
 		var ui=new LiveTableStdUi(g("table"));
 
 		ui.Board.SquareSize(60);
-
 		ui.Board.SetFen(FEN_INITIAL);
+
+
 		</script>
 	</body>
 </html>
