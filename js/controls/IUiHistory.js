@@ -19,56 +19,56 @@ function IUiHistory(parent) {
 }
 
 IUiHistory.prototype.init_props=function() {
-	this.FontSize=new Property(this, function() {
+	this.FontSize=setter(this, function() {
 		return this.font_size;
 	}, function(value) {
 		this.font_size=value;
 		this.UpdateHtml();
 	});
 
-	this.BackgroundColour=new Property(this, function() {
+	this.BackgroundColour=setter(this, function() {
 		return this.background_colour;
 	}, function(value) {
 		this.background_colour=value;
 		this.UpdateHtml();
 	});
 
-	this.Height=new Property(this, function() {
+	this.Height=setter(this, function() {
 		return this.height;
 	}, function(value) {
 		this.height=value;
 		this.UpdateHtml();
 	});
 
-	this.Width=new Property(this, function() {
+	this.Width=setter(this, function() {
 		return this.width;
 	}, function(value) {
 		this.width=value;
 		this.UpdateHtml();
 	});
 
-	this.BorderWidth=new Property(this, function() {
+	this.BorderWidth=setter(this, function() {
 		return this.border_width;
 	}, function(value) {
 		this.border_width=value;
 		this.UpdateHtml();
 	});
 
-	this.BorderStyle=new Property(this, function() {
+	this.BorderStyle=setter(this, function() {
 		return this.border_style;
 	}, function(value) {
 		this.border_style=value;
 		this.UpdateHtml();
 	});
 
-	this.BorderColor=new Property(this, function() {
+	this.BorderColor=setter(this, function() {
 		return this.border_color;
 	}, function(value) {
 		this.border_color=value;
 		this.UpdateHtml();
 	});
 
-	this.Padding=new Property(this, function() {
+	this.Padding=setter(this, function() {
 		return this.padding;
 	}, function(value) {
 		this.padding=value;

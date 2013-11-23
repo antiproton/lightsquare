@@ -1,6 +1,4 @@
 function IHistoryCommon() {
-	IEventHandlerLogging.implement(this);
-
 	this.starting_colour=WHITE;
 	this.starting_fullmove=1;
 	this.SelectedMove=null;
@@ -17,24 +15,24 @@ function IHistoryCommon() {
 	e.g. updating bughouse pieces available needs to get every move, but bringing
 	the board up to date only needs to happen for the latest move
 	*/
-	
+
 	this.BulkUpdate=false;
 
-	this.StartingColour=new Property(this, function() {
+	this.StartingColour=setter(this, function() {
 		return this.starting_colour;
 	}, function(value) {
 		this.starting_colour=value;
 		this.MainLine.UpdatePointers(true);
 	});
 
-	this.StartingFullmove=new Property(this, function() {
+	this.StartingFullmove=setter(this, function() {
 		return this.starting_fullmove;
 	}, function(value) {
 		this.starting_fullmove=value;
 		this.MainLine.UpdatePointers(true);
 	});
 
-	this.MainLineNoVars=new Property(this, function() {
+	this.MainLineNoVars=setter(this, function() {
 		var line=new Variation(this, true);
 
 		this.MainLine.Line.Each(function(item) {

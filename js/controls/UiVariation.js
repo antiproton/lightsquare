@@ -12,7 +12,7 @@ function UiVariation(history, is_mainline) {
 }
 
 /*
-NOTE the combination of spaces, non-breaking spaces (\u...) and whiteSpace: nowrap here
+NOTE the combination of spaces, non-breaking spaces (\u00a0) and whiteSpace: nowrap here
 is essential for keeping the move list looking right
 
 the nowrap (here and in the UiMoves) stop any moves getting indented on the left.
@@ -24,7 +24,7 @@ UiVariation.prototype.SetupHtml=function() {
 	if(!this.IsMainline) {
 		this.BracketL=$("*span");
 		this.Node.appendChild(this.BracketL);
-		this.BracketL.appendChild($("% ( "));
+		this.BracketL.innerHTML=" ( ";
 
 		Dom.Style(this.BracketL, {
 			whiteSpace: "nowrap"

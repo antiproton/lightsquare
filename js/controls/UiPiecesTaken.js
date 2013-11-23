@@ -6,7 +6,7 @@ function UiPiecesTaken(parent) {
 	this.img_dir="/board/piece";
 	this.piece_style=Base.App.User.Prefs.PieceStyle.Get();
 
-	this.ViewAs=new Property(this, function() {
+	this.ViewAs=setter(this, function() {
 		return this.view_as;
 	}, function(value) {
 		this.view_as=value;

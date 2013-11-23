@@ -3,6 +3,11 @@ to be implemented onto existing histories of any kind
 
 NOTE this will be implemented onto the same History multiple times (when
 a new game gets created on the same table)
+
+--
+
+NOTE this will never be used .. some of the update code might end up in LiveTable
+or something though
 */
 
 function ILiveHistory(table, game) {
@@ -129,8 +134,4 @@ ILiveHistory.prototype.start_updates=function() {
 			}
 		}
 	});
-}
-
-ILiveHistory.prototype.Die=function() {
-	this.ClearEventHandlers();
 }

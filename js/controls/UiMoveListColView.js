@@ -9,14 +9,14 @@ function UiMoveListColView() {
 	this.background_odd="#ffffff";
 	this.background_even="#efefef";
 
-	this.BackgroundOdd=new Property(this, function() {
+	this.BackgroundOdd=setter(this, function() {
 		return this.background_odd;
 	}, function(value) {
 		this.background_odd=value;
 		this.UpdateHtml();
 	});
 
-	this.BackgroundEven=new Property(this, function() {
+	this.BackgroundEven=setter(this, function() {
 		return this.background_even;
 	}, function(value) {
 		this.background_even=value;
