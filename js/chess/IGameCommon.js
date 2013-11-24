@@ -639,11 +639,11 @@ IGameCommon.prototype.Move=function(fs, ts, promote_to, dryrun) {
 	return move;
 }
 
-IGameCommon.prototype.IsInCheck=function(colour, pos) {
+IGameCommon.prototype.IsInCheck=function(colour) {
 	return (Util.attackers(this.Position.Board, this.Position.Kings[colour], Util.opp_colour(colour)).length>0);
 }
 
-IGameCommon.prototype.IsMated=function(colour, pos) {
+IGameCommon.prototype.IsMated=function(colour) {
 	return (this.IsInCheck(colour) && this.CountLegalMoves(colour)===0);
 }
 
@@ -653,8 +653,13 @@ IGameCommon.prototype.can_mate=function(colour) {
 	pieces[KNIGHT]=0;
 	pieces[BISHOP]=0;
 
-	var bishops=[0, 0]; //NOTE indexed by colour
-	var knights=[0, 0];
+	var bishops=[];
+	var knights=[];
+
+	bishops[WHITE]=0;
+	bishops[BLACK]=0;
+	knights[WHITE]=0;
+	knights[BLACK]=0;
 
 	var piece, piece_colour, piece_type;
 
