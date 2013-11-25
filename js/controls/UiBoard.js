@@ -416,8 +416,6 @@ destroy/re-create all the elements
 */
 
 UiBoard.prototype.SetupHtml=function() {
-	Dom.ClearNode(this.node);
-
 	var self=this;
 
 	this.CoordsF=[];
@@ -614,7 +612,11 @@ UiBoard.prototype.UpdateHtml=function() { //after switching colours ,changing si
 	border
 	*/
 
-	Dom.ClearNode(this.border_container);
+	//Dom.ClearNode(this.border_container);
+	//FIXME this is insane; make this all a template instead
+	//make a template for the border and coords maybe, then
+	//no fuck that, keep it as a completely dynamic control (everything needs calculations if size changes etc)
+	//but make it better
 
 	var border;
 	var inner_border=this.border_container;
@@ -736,7 +738,7 @@ UiBoard.prototype.UpdateHtml=function() { //after switching colours ,changing si
 
 	Dom.Style(this.board_container, {
 		top: this.border.length,
-		left: container_padding_r+this.border.length,
+		left: container_padding_r+this.border.length, //r is "rank" not "right"
 		width: board_size,
 		height: board_size
 	});
