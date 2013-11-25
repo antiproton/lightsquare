@@ -116,7 +116,7 @@ PromoteDialog.prototype.SetupHtml=function() {
 		node=div(this.board_container);
 		piece=this.pieces[i];
 
-		Dom.AddEventHandler(node, "click", (function(piece) {
+		node.addEventListener("click", (function(piece) {
 			return function(e) {
 				self.PieceSelected.Fire({
 					Type: piece,

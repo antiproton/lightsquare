@@ -456,7 +456,7 @@ UiBoard.prototype.SetupHtml=function() {
 
 	this.board=div(this.board_container);
 
-	Dom.AddEventHandler(this.board, "mouseout", function(e) {
+	this.board.addEventListener("mouseout", function(e) {
 		self.UpdateMouseOverData(e);
 	});
 
@@ -523,11 +523,11 @@ UiBoard.prototype.SetupHtml=function() {
 				visibility: "hidden"
 			});
 
-			Dom.AddEventHandler(sq_inner, "mousedown", function(e) {
+			sq_inner.addEventListener("mousedown", function(e) {
 				self.BoardMouseDown(e);
 			});
 
-			Dom.AddEventHandler(sq_inner, "mouseup", function(e) {
+			sq_inner.addEventListener("mouseup", function(e) {
 				self.BoardMouseUp(e);
 			});
 
@@ -546,7 +546,7 @@ UiBoard.prototype.SetupHtml=function() {
 	mousemove - no point adding to individual squares like mouseup/mousedown
 	*/
 
-	Dom.AddEventHandler(window, "mousemove", function(e) {
+	window.addEventListener("mousemove", function(e) {
 		self.BoardMouseMove(e);
 	});
 
