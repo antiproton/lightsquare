@@ -674,7 +674,6 @@ UiBoard.prototype.UpdateHtml=function() { //after switching colours ,changing si
 			file_index=7-i;
 		}
 
-		Dom.ClearNode(this.CoordsR[i].Node);
 
 		this.CoordsR[i].Node.innerHTML=RANK.charAt(rank_index);
 
@@ -682,7 +681,6 @@ UiBoard.prototype.UpdateHtml=function() { //after switching colours ,changing si
 			marginTop: Math.round((this.square_size/2)-(this.coords_font_size/2))-this.coord_r_hinting
 		});
 
-		Dom.ClearNode(this.CoordsF[i].Node);
 
 		this.CoordsF[i].Node.innerHTML=FILE.charAt(file_index);
 
