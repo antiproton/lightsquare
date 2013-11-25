@@ -2,6 +2,8 @@
 NOTE for updating this in the future - MoveInfo is a complete wreck.
 definition is in ResetMoveInfo.  used in all kinds of places, don't
 bother trying to edit.
+
+TODO refactor MoveInfo
 */
 
 function UiBoard(parent) {
@@ -411,10 +413,6 @@ UiBoard.prototype.init_props=function() {
 	});
 }
 
-/*
-destroy/re-create all the elements
-*/
-
 UiBoard.prototype.SetupHtml=function() {
 	var self=this;
 
@@ -613,10 +611,13 @@ UiBoard.prototype.UpdateHtml=function() { //after switching colours ,changing si
 	*/
 
 	//Dom.ClearNode(this.border_container);
+	this.border_container.innerHTML="";
 	//FIXME this is insane; make this all a template instead
 	//make a template for the border and coords maybe, then
 	//no fuck that, keep it as a completely dynamic control (everything needs calculations if size changes etc)
 	//but make it better
+	//this is actually quite clean, or as clean as a pixel-calculated layout
+	//generation routine can be expected to be
 
 	var border;
 	var inner_border=this.border_container;
@@ -700,6 +701,10 @@ UiBoard.prototype.UpdateHtml=function() { //after switching colours ,changing si
 		probably most of the problem.
 
 		noticeable pauses seem to arise with about 200 board.CoordsFontColor.Set calls
+		*/
+
+		/*
+		SOLUTION get rid of all the props, no point being able to change the font colour
 		*/
 
 		Dom.Style(this.CoordsF[i].Node, {
