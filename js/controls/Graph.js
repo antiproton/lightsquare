@@ -11,14 +11,14 @@ function Graph(parent) {
 }
 
 Graph.prototype.SetupHtml=function() {
-/*	Dom.Style(this.Node, {
+/*	style(this.Node, {
 		position: "absolute",
 		width: "100%"
 	})*/;
 
 	this.inner=div(this.Node);
 
-	Dom.Style(this.inner, {
+	style(this.inner, {
 		position: "absolute",
 		width: "100px",
 		height: "30px",

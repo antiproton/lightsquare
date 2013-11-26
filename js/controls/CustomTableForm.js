@@ -26,7 +26,7 @@ function CustomTableForm(parent) {
 CustomTableForm.prototype.SetupHtml=function() {
 	this.inner_container=div(this.Node);
 
-	Dom.Style(this.inner_container, {
+	style(this.inner_container, {
 		textAlign: "center"
 	});
 
@@ -43,7 +43,7 @@ CustomTableForm.prototype.SetupHtml=function() {
 			};
 		})(code));
 
-		Dom.Style(this.links[code].Node, {
+		style(this.links[code].Node, {
 			color: "#3E84C6",
 			margin: "0 4px"
 		});
@@ -57,7 +57,7 @@ CustomTableForm.prototype.SetupHtml=function() {
 }
 
 CustomTableForm.prototype.UpdateHtml=function() {
-	Dom.Style(this.inner_container, {
+	style(this.inner_container, {
 		padding: this.padding
 	});
 }

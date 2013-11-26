@@ -130,7 +130,7 @@ HistoryControls.prototype.SetupHtml=function() {
 }
 
 HistoryControls.prototype.UpdateHtml=function() {
-	Dom.Style(this.inner, {
+	style(this.inner, {
 		width: this.width
 	});
 }

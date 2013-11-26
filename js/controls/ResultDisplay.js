@@ -5,7 +5,7 @@ function ResultDisplay(parent) {
 }
 
 ResultDisplay.prototype.SetupHtml=function() {
-	Dom.Style(this.Node, {
+	style(this.Node, {
 		fontWeight: "bold",
 		fontSize: 11,
 		//color: "#ffffff",
@@ -26,13 +26,13 @@ ResultDisplay.prototype.SetResult=function(result, result_details) {
 }
 
 //ResultDisplay.prototype.Show=function() {
-//	Dom.Style(this.Node, {
+//	style(this.Node, {
 //		display: "inline-block"
 //	});
 //}
 //
 //ResultDisplay.prototype.Hide=function() {
-//	Dom.Style(this.Node, {
+//	style(this.Node, {
 //		display: "none"
 //	});
 //}

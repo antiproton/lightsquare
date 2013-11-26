@@ -118,7 +118,7 @@ QuickChallengeForm.prototype.SetupHtml=function() {
 	var tmp, container;
 	var full_width="100%";
 
-	Dom.Style(this.inner_container, {
+	style(this.inner_container, {
 		fontSize: 11
 	});
 
@@ -341,13 +341,13 @@ QuickChallengeForm.prototype.SetupHtml=function() {
 
 	this.ContainerMessage=new Container(this.inner_container);
 
-	Dom.Style(this.ContainerMessage.Node, {
+	style(this.ContainerMessage.Node, {
 		paddingTop: 4
 	});
 
 	this.message_box=div(this.ContainerMessage.Node);
 
-	Dom.Style(this.message_box, {
+	style(this.message_box, {
 		padding: 4,
 		borderRadius: 3
 	});
@@ -358,7 +358,7 @@ QuickChallengeForm.prototype.SetupHtml=function() {
 	this.message_inner.appendChild(this.loading_gif);
 	this.loading_gif.src=Base.App.ImgUrl("/loading.gif");
 
-	Dom.Style(this.loading_gif, {
+	style(this.loading_gif, {
 		verticalAlign: "middle",
 		marginRight: 5
 	});
@@ -369,7 +369,7 @@ QuickChallengeForm.prototype.SetupHtml=function() {
 
 	tmp=div(this.inner_container);
 
-	Dom.Style(tmp, {
+	style(tmp, {
 		paddingTop: 5
 	});
 
@@ -404,15 +404,15 @@ QuickChallengeForm.prototype.SetupHtml=function() {
 }
 
 QuickChallengeForm.prototype.UpdateHtml=function() {
-	Dom.Style(this.main_container, {
+	style(this.main_container, {
 		width: this.width
 	});
 
-	Dom.Style(this.inner_container, {
+	style(this.inner_container, {
 		padding: this.padding
 	});
 
-	Dom.Style(this.message_box, {
+	style(this.message_box, {
 		backgroundColor: this.message_colour
 	});
 
@@ -420,7 +420,7 @@ QuickChallengeForm.prototype.UpdateHtml=function() {
 
 	this.ButtonChallenge.Text.Set(waiting?"Cancel":"Start game");
 
-	Dom.Style(this.loading_gif, {
+	style(this.loading_gif, {
 		display: waiting?"":"none"
 	});
 

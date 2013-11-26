@@ -23,20 +23,20 @@ TableList.prototype.SetupHtml=function() {
 	this.panel_container=div(this.border_container);
 	this.list_container=div(this.border_container);
 
-	Dom.Style(this.border_container, {
+	style(this.border_container, {
 		height: 300, //DEBUG
 		borderWidth: 1,
 		borderStyle: "solid",
 		borderColor: "#9f9f9f"
 	});
 
-	Dom.Style(this.panel_container, {
+	style(this.panel_container, {
 		backgroundColor: "#f0f0f0"
 	});
 
 	this.list_inner=div(this.list_container);
 
-	Dom.Style(this.list_container, {
+	style(this.list_container, {
 		width: "100%",
 		height: "100%",
 		overflowY: "scroll"

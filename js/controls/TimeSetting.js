@@ -101,7 +101,7 @@ TimeSetting.prototype.SetupHtml=function() {
 		Width: 220
 	});
 
-	Dom.Style(this.TimeSettingDialog.Inner, {
+	style(this.TimeSettingDialog.Inner, {
 		padding: 5
 	});
 

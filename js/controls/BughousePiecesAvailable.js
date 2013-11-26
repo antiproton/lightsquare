@@ -70,13 +70,13 @@ function BughousePiecesAvailable(parent) {
 BughousePiecesAvailable.prototype.SetupHtml=function() {
 	var self=this;
 
-	Dom.Style(this.Node, {
+	style(this.Node, {
 		border: "1px solid #cbcbcb"
 	});
 
 	this.board=div(this.Node);
 
-	Dom.Style(this.board, {
+	style(this.board, {
 		position: "absolute"
 	});
 
@@ -95,15 +95,15 @@ BughousePiecesAvailable.prototype.SetupHtml=function() {
 			Type: type
 		};
 
-		Dom.Style(sq_outer, {
+		style(sq_outer, {
 			position: "absolute"
 		});
 
-		Dom.Style(sq_inner, {
+		style(sq_inner, {
 			position: "absolute"
 		});
 
-		Dom.Style(amount_display, {
+		style(amount_display, {
 			fontSize: 9,
 			color: "#263ebc",
 			position: "absolute",
@@ -142,12 +142,12 @@ BughousePiecesAvailable.prototype.UpdateHtml=function() {
 	var width=this.width*this.square_size;
 	var height=this.height*this.square_size;
 
-	Dom.Style(this.Node, {
+	style(this.Node, {
 		width: width,
 		height: height
 	});
 
-	Dom.Style(this.board, {
+	style(this.board, {
 		width: width,
 		height: height
 	});
@@ -168,7 +168,7 @@ BughousePiecesAvailable.prototype.UpdateHtml=function() {
 			col=0;
 		}
 
-		Dom.Style(square.Container, {
+		style(square.Container, {
 			display: (amt>0)?"block":"none",
 			top: row*this.square_size,
 			left: col*this.square_size,
@@ -176,13 +176,13 @@ BughousePiecesAvailable.prototype.UpdateHtml=function() {
 			height: this.square_size
 		});
 
-		Dom.Style(square.Node, {
+		style(square.Node, {
 			width: this.square_size,
 			height: this.square_size,
 			backgroundImage: Dom.CssUrl(this.img_dir_piece+"/"+this.piece_style+"/"+this.square_size+"/"+Fen.get_piece_char(piece)+".png")
 		});
 
-		//Dom.Style(square.AmountDisplay, {
+		//style(square.AmountDisplay, {
 		//	display: (amt>1)?"block":"none"
 		//});
 
@@ -230,14 +230,14 @@ BughousePiecesAvailable.prototype.SetSquarePos=function(square, sq) {
 	x=this.square_size*f;
 	y=this.square_size*((this.height-1)-r);
 
-	Dom.Style(square.Container, {
+	style(square.Container, {
 		top: y,
 		left: x
 	});
 }
 
 BughousePiecesAvailable.prototype.ResetSquarePos=function(square) { //return the inner bit to its container pos
-	Dom.Style(square.Node, {
+	style(square.Node, {
 		top: 0,
 		left: 0
 	});
@@ -246,7 +246,7 @@ BughousePiecesAvailable.prototype.ResetSquarePos=function(square) { //return the
 BughousePiecesAvailable.prototype.SetSquareXyPos=function(square, x, y) { //takes mouse coords
 	var os=Dom.GetOffsets(square.Container);
 
-	Dom.Style(square.Node, {
+	style(square.Node, {
 		top: y-os[Y],
 		left: x-os[X]
 	});
@@ -335,13 +335,13 @@ BughousePiecesAvailable.prototype.BoardMouseUp=function(square, e) {
 }
 
 BughousePiecesAvailable.prototype.inc_z_index=function(square) {
-	Dom.Style(square.Node, {
+	style(square.Node, {
 		zIndex: UiBoard.SQ_ZINDEX_ABOVE
 	});
 }
 
 BughousePiecesAvailable.prototype.reset_z_index=function(square) {
-	Dom.Style(square.Node, {
+	style(square.Node, {
 		zIndex: UiBoard.SQ_ZINDEX_NORMAL
 	});
 }
@@ -360,13 +360,13 @@ BughousePiecesAvailable.prototype.MouseOnBoard=function(e) {
 }
 
 BughousePiecesAvailable.prototype.HighlightSq=function(square) {
-	Dom.Style(square.Container, {
+	style(square.Container, {
 		backgroundColor: "#808080"
 	});
 }
 
 BughousePiecesAvailable.prototype.UnHighlightSq=function(square) {
-	Dom.Style(square.Container, {
+	style(square.Container, {
 		backgroundColor: "inherit"
 	});
 }

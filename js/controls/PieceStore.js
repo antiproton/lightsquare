@@ -131,7 +131,7 @@ PieceStore.prototype.SetupHtml=function() { //after changing style (border)
 		border=$("*div");
 		parent.appendChild(border);
 
-		Dom.Style(border, {
+		style(border, {
 			border: "1px solid "+this.border[i]
 		});
 
@@ -221,17 +221,17 @@ PieceStore.prototype.UpdateHtml=function() { //after switching colours ,changing
 	board
 	*/
 
-	Dom.Style(this.board, {
+	style(this.board, {
 		width: board_size_w,
 		height: board_size_h
 	});
 
-	Dom.Style(this.Node, {
+	style(this.Node, {
 		width: (this.border.length*2)+board_size_w,
 		height: (this.border.length*2)+board_size_h+this.hold_cb_container.offsetHeight
 	});
 
-	Dom.Style(this.board_container, {
+	style(this.board_container, {
 		position: "absolute",
 		top: os[Y],
 		left: os[X]
@@ -247,7 +247,7 @@ PieceStore.prototype.UpdateHtml=function() { //after switching colours ,changing
 	for(var sq=0; sq<this.Squares.length; sq++) {
 		square=this.Squares[sq];
 
-		Dom.Style(square.Container, {
+		style(square.Container, {
 			position: "absolute",
 			width: this.square_size,
 			height: this.square_size
@@ -255,7 +255,7 @@ PieceStore.prototype.UpdateHtml=function() { //after switching colours ,changing
 
 		this.SetSquarePos(square, sq);
 
-		Dom.Style(square.Node, {
+		style(square.Node, {
 			position: "absolute",
 			width: this.square_size,
 			height: this.square_size
@@ -272,7 +272,7 @@ PieceStore.prototype.UpdateHtml=function() { //after switching colours ,changing
 	Hold cb
 	*/
 
-	Dom.Style(this.hold_cb_container, {
+	style(this.hold_cb_container, {
 		position: "absolute",
 		top: os[Y]+(this.Node.offsetHeight-this.hold_cb_container.offsetHeight),
 		left: os[X],
@@ -331,14 +331,14 @@ PieceStore.prototype.SetSquarePos=function(square, sq) {
 	x=this.square_size*f;
 	y=this.square_size*((this.height-1)-r);
 
-	Dom.Style(square.Container, {
+	style(square.Container, {
 		top: this.border.length+y,
 		left: this.border.length+x
 	});
 }
 
 PieceStore.prototype.ResetSquarePos=function(square) { //return the inner bit to its container pos
-	Dom.Style(square.Node, {
+	style(square.Node, {
 		top: 0,
 		left: 0
 	});
@@ -347,7 +347,7 @@ PieceStore.prototype.ResetSquarePos=function(square) { //return the inner bit to
 PieceStore.prototype.SetSquareXyPos=function(square, x, y) { //takes mouse coords
 	var os=Dom.GetOffsets(square.Container);
 
-	Dom.Style(square.Node, {
+	style(square.Node, {
 		top: y-os[Y],
 		left: x-os[X]
 	});
@@ -458,13 +458,13 @@ PieceStore.prototype.BoardMouseUp=function(e) {
 }
 
 PieceStore.prototype.inc_z_index=function(square) {
-	Dom.Style(square.Node, {
+	style(square.Node, {
 		zIndex: UiBoard.SQ_ZINDEX_ABOVE
 	});
 }
 
 PieceStore.prototype.reset_z_index=function(square) {
-	Dom.Style(square.Node, {
+	style(square.Node, {
 		zIndex: UiBoard.SQ_ZINDEX_NORMAL
 	});
 }
@@ -483,13 +483,13 @@ PieceStore.prototype.MouseOnBoard=function(e) {
 }
 
 PieceStore.prototype.HighlightSq=function(sq) {
-	Dom.Style(this.Squares[sq].Container, {
+	style(this.Squares[sq].Container, {
 		backgroundColor: "#808080"
 	});
 }
 
 PieceStore.prototype.UnHighlightSq=function(sq) {
-	Dom.Style(this.Squares[sq].Container, {
+	style(this.Squares[sq].Container, {
 		backgroundColor: "inherit"
 	});
 }

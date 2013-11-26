@@ -24,7 +24,7 @@ function GameOverDialog(parent) {
 }
 
 GameOverDialog.prototype.SetupHtml=function() {
-	Dom.Style(this.node, {
+	style(this.node, {
 		position: "absolute",
 		display: "none",
 		width: this.width,
@@ -40,7 +40,7 @@ GameOverDialog.prototype.SetupHtml=function() {
 
 	this.inner_container=div(this.node);
 
-	Dom.Style(this.inner_container, {
+	style(this.inner_container, {
 		textAlign: "center",
 		fontSize: 11,
 		padding: 6
@@ -52,16 +52,16 @@ GameOverDialog.prototype.SetupHtml=function() {
 	this.message_inner=div(this.inner_container);
 	this.buttons_inner=div(this.node);
 
-	Dom.Style(this.result_inner, {
+	style(this.result_inner, {
 		fontSize: 18,
 		marginTop: 12
 	});
 
-	Dom.Style(this.result_details_inner, {
+	style(this.result_details_inner, {
 		marginTop: 7
 	});
 
-	Dom.Style(this.buttons_inner, {
+	style(this.buttons_inner, {
 		textAlign: "center",
 		position: "absolute",
 		top: this.height-30,
@@ -80,7 +80,7 @@ GameOverDialog.prototype.SetupHtml=function() {
 }
 
 GameOverDialog.prototype.UpdateHtml=function() {
-	Dom.Style(this.node, {
+	style(this.node, {
 		zIndex: this.z_index
 	});
 }
@@ -95,7 +95,7 @@ set the location of the center
 */
 
 GameOverDialog.prototype.SetLocation=function(x, y) {
-	Dom.Style(this.node, {
+	style(this.node, {
 		top: y-Math.round(this.height/2),
 		left: x-Math.round(this.width/2)
 	});

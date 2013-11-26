@@ -33,13 +33,13 @@ function ChatBox(parent) {
 ChatBox.prototype.SetupHtml=function() {
 	this.inner_container=div(this.Node);
 
-	//Dom.Style(this.Node, {
+	//style(this.Node, {
 	//	backgroundColor: "#ffffff"
 	//});
 
 	this.messages_container=div(this.inner_container);
 
-	Dom.Style(this.messages_container, {
+	style(this.messages_container, {
 		fontSize: 11,
 		color: "#303030",
 		border: "1px solid #cbcbcb",
@@ -53,7 +53,7 @@ ChatBox.prototype.SetupHtml=function() {
 
 	this.controls_container=div(this.inner_container);
 
-	//Dom.Style(this.controls_container, {
+	//style(this.controls_container, {
 	//	padding: "2px 2px 1px 3px"
 	//});
 
@@ -62,14 +62,14 @@ ChatBox.prototype.SetupHtml=function() {
 
 	//Dom.AddClass(this.TextBoxMessage.InputNode, "input_no_focus_outline");
 
-	//Dom.Style(this.TextBoxMessage.InputNode, {
+	//style(this.TextBoxMessage.InputNode, {
 	//	width: "100%",
 	//	border: 0
 	//});
 
 	this.TextBoxMessage.Width.Set(200);
 
-	Dom.Style(this.controls_container, {
+	style(this.controls_container, {
 		marginTop: 1
 	});
 
@@ -92,21 +92,21 @@ ChatBox.prototype.SetupHtml=function() {
 
 ChatBox.prototype.UpdateHtml=function() {
 	if(this.width!==null) {
-		Dom.Style(this.Node, {
+		style(this.Node, {
 			width: this.width
 		});
 
-		Dom.Style(this.TextBoxMessage.InputNode, {
+		style(this.TextBoxMessage.InputNode, {
 			width: this.width-70
 		});
 
-		Dom.Style(this.ButtonSend.InputNode, {
+		style(this.ButtonSend.InputNode, {
 			width: 55
 		});
 	}
 
 	else {
-		Dom.Style(this.Node, {
+		style(this.Node, {
 			width: "auto"
 		});
 	}
@@ -154,7 +154,7 @@ ChatBox.prototype.AddMessage=function() { //variable args
 		}
 	}
 
-	Dom.Style(tmp, {
+	style(tmp, {
 		paddingBottom: 3
 	});
 

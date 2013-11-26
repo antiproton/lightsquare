@@ -28,7 +28,7 @@ TournamentFilter.prototype.SetupHtml=function() {
 		LabelPadding: 7
 	});
 
-	Dom.Style(this.ContainerLabel.LabelInner, {
+	style(this.ContainerLabel.LabelInner, {
 		fontWeight: "bold"
 	});
 

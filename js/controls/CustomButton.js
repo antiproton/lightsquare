@@ -28,7 +28,7 @@ CustomButton.MODE_CHECKBUTTON=1;
 CustomButton.prototype.SetupHtml=function() {
 	var self=this;
 
-	Dom.Style(this.Node, {
+	style(this.Node, {
 		display: "inline-block",
 		verticalAlign: "middle"
 	});

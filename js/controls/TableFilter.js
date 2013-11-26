@@ -35,7 +35,7 @@ TableFilter.prototype.SetupHtml=function() {
 		LabelPadding: 7
 	});
 
-	Dom.Style(this.ContainerLabel.LabelInner, {
+	style(this.ContainerLabel.LabelInner, {
 		fontWeight: "bold"
 	});
 
@@ -157,7 +157,7 @@ TableFilter.prototype.SetupHtml=function() {
 		LabelPadding: 7
 	});
 
-	Dom.Style(this.ContainerRatingMin.Node, {
+	style(this.ContainerRatingMin.Node, {
 		marginLeft: 7
 	});
 
@@ -184,7 +184,7 @@ TableFilter.prototype.SetupHtml=function() {
 		LabelPadding: 7
 	});
 
-	Dom.Style(this.ContainerRatingMax.Node, {
+	style(this.ContainerRatingMax.Node, {
 		marginLeft: 7
 	});
 

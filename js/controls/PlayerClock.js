@@ -108,7 +108,7 @@ PlayerClock.prototype.SetupHtml=function() {
 }
 
 PlayerClock.prototype.UpdateHtml=function() {
-	Dom.Style(this.time_container, {
+	style(this.time_container, {
 		fontFamily: this.font_family,
 		fontSize: this.font_size,
 		color: this.colour_normal,
@@ -123,7 +123,7 @@ PlayerClock.prototype.UpdateTime=function() {
 	var display_tenths=(this.mtime<(this.tenths_display_threshold*MSEC_PER_SEC) /*&& this.mtime>0*/);
 
 	if(urgent && !this.urgent) {
-		Dom.Style(this.time_container, {
+		style(this.time_container, {
 			color: this.colour_urgent
 		});
 
@@ -132,7 +132,7 @@ PlayerClock.prototype.UpdateTime=function() {
 	}
 
 	else if(!urgent && this.urgent) {
-		Dom.Style(this.time_container, {
+		style(this.time_container, {
 			color: this.colour_normal
 		});
 

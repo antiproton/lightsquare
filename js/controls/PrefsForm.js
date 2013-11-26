@@ -124,7 +124,7 @@ PrefsForm.prototype.SetupHtml=function() {
 	Dom.AddClass(this.header_appearance, "prefs_header");
 	this.header_appearance.innerHTML="Gameplay";
 
-	Dom.Style(this.header_appearance, {
+	style(this.header_appearance, {
 		marginTop: 5
 	});
 

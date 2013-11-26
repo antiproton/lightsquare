@@ -106,7 +106,7 @@ PromoteDialog.prototype.SetupHtml=function() {
 
 	this.board_container=div(this.node);
 
-	Dom.Style(this.node, {
+	style(this.node, {
 		position: "absolute"
 	});
 
@@ -137,7 +137,7 @@ PromoteDialog.prototype.UpdateHtml=function() {
 	var board_h=this.square_size;
 	var os=Dom.GetOffsets(this.node);
 
-	Dom.Style(this.node, {
+	style(this.node, {
 		top: this.pos[Y],
 		left: this.pos[X],
 		width: board_w,
@@ -150,7 +150,7 @@ PromoteDialog.prototype.UpdateHtml=function() {
 		backgroundColor: "#ffffff"
 	});
 
-	Dom.Style(this.board_container, {
+	style(this.board_container, {
 		position: "absolute",
 		width: board_w,
 		height: board_h
@@ -162,7 +162,7 @@ PromoteDialog.prototype.UpdateHtml=function() {
 		piece=this.pieces[i];
 		square=this.squares[piece];
 
-		Dom.Style(square, {
+		style(square, {
 			position: "absolute",
 			top: 0,
 			left: (this.square_size*i),

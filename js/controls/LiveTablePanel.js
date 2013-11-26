@@ -13,7 +13,7 @@ LiveTablePanel.prototype.SetupHtml=function() {
 	container=idiv(this.inner);
 	this.DropDownVariant=new DropDown(container);
 
-	Dom.Style(this.DropDownVariant.Node, {
+	style(this.DropDownVariant.Node, {
 		marginRight: 4
 	});
 
@@ -24,7 +24,7 @@ LiveTablePanel.prototype.SetupHtml=function() {
 	container=idiv(this.inner);
 	this.DropDownSubvariant=new DropDown(container);
 
-	Dom.Style(this.DropDownSubvariant.Node, {
+	style(this.DropDownSubvariant.Node, {
 		marginRight: 4
 	});
 
@@ -38,7 +38,7 @@ LiveTablePanel.prototype.SetupHtml=function() {
 	container=idiv(this.inner);
 	this.TimeSetting=new TimeSetting(container);
 
-	Dom.Style(container, {
+	style(container, {
 		marginRight: 5,
 		marginLeft: 5
 	});
@@ -46,14 +46,14 @@ LiveTablePanel.prototype.SetupHtml=function() {
 	container=idiv(this.inner);
 	this.CheckboxRated=new Checkbox(container, "Rated");
 
-	Dom.Style(container, {
+	style(container, {
 		marginRight: 5
 	});
 
 	container=idiv(this.inner);
 	this.CheckboxAlternateColours=new Checkbox(container, "Alternate colours");
 
-	Dom.Style(this.inner, {
+	style(this.inner, {
 		fontSize: 12
 	});
 

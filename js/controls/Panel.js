@@ -65,7 +65,7 @@ Panel.prototype.SetupHtml=function() {
 	this.border=div(this.Node);
 	this.inner=div(this.border);
 
-	Dom.Style(this.border, {
+	style(this.border, {
 		borderRadius: 2
 	});
 
@@ -73,13 +73,13 @@ Panel.prototype.SetupHtml=function() {
 }
 
 Panel.prototype.UpdateHtml=function() {
-	Dom.Style(this.Node, {
+	style(this.Node, {
 		fontSize: this.font_size,
 		fontFamily: "verdana",
 		width: this.width
 	});
 
-	Dom.Style(this.border, {
+	style(this.border, {
 		borderStyle: "solid",
 		borderColor: this.border_colour,
 		borderWidth: this.border_width,
@@ -87,19 +87,19 @@ Panel.prototype.UpdateHtml=function() {
 	});
 
 	if(this.background_image!==null) {
-		Dom.Style(this.border, {
+		style(this.border, {
 			backgroundPosition: "left top",
 			backgroundRepeat: "repeat-x"
 		});
 	}
 
 	else {
-		Dom.Style(this.border, {
+		style(this.border, {
 			backgroundImage: "none"
 		});
 	}
 
-	Dom.Style(this.inner, {
+	style(this.inner, {
 		padding: this.padding
 	});
 }

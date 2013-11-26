@@ -135,41 +135,41 @@ PlayerInfo.prototype.SetupHtml=function() {
 }
 
 PlayerInfo.prototype.UpdateHtml=function() {
-	Dom.Style(this.node, {
+	style(this.node, {
 		height: this.height
 	});
 
-	Dom.Style(this.inner_open, {
+	style(this.inner_open, {
 		display: "none"
 	});
 
-	Dom.Style(this.inner_taken, {
+	style(this.inner_taken, {
 		display: "none"
 	});
 
 	if(this.username===null && this.show_sit_button) {
-		Dom.Style(this.inner_open, {
+		style(this.inner_open, {
 			display: ""
 		});
 
 		this.colour_icon.src=ap(this.img_dir_icons+"/"+Util.colour_name(this.colour)+".png");
 
-		Dom.Style(this.colour_icon, {
+		style(this.colour_icon, {
 			verticalAlign: "middle",
 			marginRight: 8
 		});
 	}
 
 	else if(this.username!==null) {
-		Dom.Style(this.inner_taken, {
+		style(this.inner_taken, {
 			display: ""
 		});
 
-		Dom.Style(this.inner_taken, {
+		style(this.inner_taken, {
 			paddingTop: this.padding_top
 		});
 
-		Dom.Style(this.user_link, {
+		style(this.user_link, {
 			fontSize: this.font_size,
 			color: "#343434"
 		});

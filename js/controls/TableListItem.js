@@ -18,7 +18,7 @@ TableListItem.prototype.SetupHtml=function() {
 
 	var cb=div(this.inner);
 
-	Dom.Style(cb, {
+	style(cb, {
 		clear: "both"
 	});
 
@@ -42,12 +42,12 @@ TableListItem.prototype.create_cell_div=function(width, padding) {
 	cell.Container=div(this.inner);
 	cell.Inner=div(cell.Container);
 
-	Dom.Style(cell.Container, {
+	style(cell.Container, {
 		cssFloat: "left",
 		width: width
 	});
 
-	Dom.Style(cell.Inner, {
+	style(cell.Inner, {
 		padding: padding
 	});
 

@@ -32,7 +32,7 @@ function UserButton(x, y) {
 UserButton.prototype.SetupHtml=function() {
 	var tmp;
 
-	Dom.Style(this.Node, {
+	style(this.Node, {
 		fontSize: 12,
 		position: "absolute",
 		zIndex: 2
@@ -40,7 +40,7 @@ UserButton.prototype.SetupHtml=function() {
 
 	this.button=div(this.Node);
 
-	Dom.Style(this.button, {
+	style(this.button, {
 		cssFloat: "right",
 		borderRadius: this.border_radius,
 		padding: "1px 5px 3px 5px"
@@ -74,7 +74,7 @@ UserButton.prototype.SetupHtml=function() {
 		}
 	});
 
-	Dom.Style(this.container_dialog.Node, {
+	style(this.container_dialog.Node, {
 		borderTopLeftRadius: this.border_radius,
 		borderBottomRightRadius: this.border_radius,
 		borderBottomLeftRadius: this.border_radius
@@ -93,7 +93,7 @@ UserButton.prototype.SetupHtml=function() {
 
 	tmp=div(tmp);
 
-	Dom.Style(tmp, {
+	style(tmp, {
 		cssFloat: "right"
 	});
 
@@ -103,7 +103,7 @@ UserButton.prototype.SetupHtml=function() {
 
 	this.inner_prefs=div(this.container_dialog.Node);
 
-	Dom.Style(this.inner_prefs, {
+	style(this.inner_prefs, {
 		padding: 5
 	});
 
@@ -113,7 +113,7 @@ UserButton.prototype.SetupHtml=function() {
 }
 
 UserButton.prototype.UpdateHtml=function() {
-	Dom.Style(this.Node, {
+	style(this.Node, {
 		top: this.y,
 		right: this.x
 	});
@@ -121,7 +121,7 @@ UserButton.prototype.UpdateHtml=function() {
 	if(this.dialog_open) {
 		this.container_dialog.Show();
 
-		Dom.Style(this.button, {
+		style(this.button, {
 			borderBottomRightRadius: 0,
 			borderBottomLeftRadius: 0
 		});
@@ -130,7 +130,7 @@ UserButton.prototype.UpdateHtml=function() {
 	else {
 		this.container_dialog.Hide();
 
-		Dom.Style(this.button, {
+		style(this.button, {
 			borderBottomRightRadius: this.border_radius,
 			borderBottomLeftRadius: this.border_radius
 		});

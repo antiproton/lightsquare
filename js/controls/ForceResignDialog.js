@@ -15,7 +15,7 @@ function ForceResignDialog(parent) {
 }
 
 ForceResignDialog.prototype.SetupHtml=function() {
-	Dom.Style(this.node, {
+	style(this.node, {
 		position: "absolute",
 		display: "none",
 		width: this.width,
@@ -30,7 +30,7 @@ ForceResignDialog.prototype.SetupHtml=function() {
 
 	this.inner_container=div(this.node);
 
-	Dom.Style(this.inner_container, {
+	style(this.inner_container, {
 		textAlign: "center",
 		fontSize: 11,
 		padding: 6
@@ -40,12 +40,12 @@ ForceResignDialog.prototype.SetupHtml=function() {
 	this.message_inner=div(this.inner_container);
 	this.buttons_inner=div(this.inner_container);
 
-	Dom.Style(this.title_inner, {
+	style(this.title_inner, {
 		fontSize: 13,
 		fontWeight: "bold"
 	});
 
-	Dom.Style(this.message_inner, {
+	style(this.message_inner, {
 		marginTop: 10,
 		marginBottom: 10
 	});
@@ -72,7 +72,7 @@ ForceResignDialog.prototype.SetupHtml=function() {
 }
 
 ForceResignDialog.prototype.UpdateHtml=function() {
-	Dom.Style(this.node, {
+	style(this.node, {
 		zIndex: this.z_index
 	});
 }
@@ -88,7 +88,7 @@ ForceResignDialog.prototype.SetLocation=function(x, y) {
 		height=100;
 	}
 
-	Dom.Style(this.node, {
+	style(this.node, {
 		top: y-Math.round(height/2),
 		left: x-Math.round(this.width/2)
 	});

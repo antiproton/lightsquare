@@ -104,7 +104,7 @@ TimeSettingForm.prototype.SetupHtml=function() {
 
 	var full_width="100%";
 
-	Dom.Style(this.inner, {
+	style(this.inner, {
 		fontSize: 11
 	});
 
@@ -257,7 +257,7 @@ TimeSettingForm.prototype.SetupHtml=function() {
 
 	tmp=div(this.inner);
 
-	Dom.Style(tmp, {
+	style(tmp, {
 		paddingTop: 3
 	});
 
@@ -270,7 +270,7 @@ TimeSettingForm.prototype.SetupHtml=function() {
 
 	this.LinkCancel=new Link(container.LabelInner, "Cancel");
 
-	Dom.Style(this.LinkCancel.Node, {
+	style(this.LinkCancel.Node, {
 		//textDecoration: "none",
 		color: "#3E84C6"
 	});
