@@ -3,7 +3,7 @@ user interface for a standard chess live table
 */
 
 function LiveTableStdUi(parent) {
-	this.tpl=new Template(parent, "live_table_std");
+	this.tpl=new Template("live_table_std", parent);
 
 	this.PlayerInfo={
 		Player: new PlayerInfo(this.tpl.player_info_player),
