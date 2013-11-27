@@ -135,7 +135,6 @@ PromoteDialog.prototype.SetupHtml=function() {
 PromoteDialog.prototype.UpdateHtml=function() {
 	var board_w=this.square_size*this.pieces.length;
 	var board_h=this.square_size;
-	var os=Dom.GetOffsets(this.node);
 
 	style(this.node, {
 		top: this.pos[Y],

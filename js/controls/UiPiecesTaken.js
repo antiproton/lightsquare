@@ -40,13 +40,13 @@ UiPiecesTaken.prototype.SetupHtml=function() {
 	this.border=div(this.Node);
 	this.inner=div(this.border);
 
-	//Dom.Style(this.border, {
+	//style(this.border, {
 	//	//border: "1px solid #cfcfcf",
 	//	borderRadius: 3,
 	//	backgroundColor: "#ededed"
 	//});
 
-	Dom.Style(this.inner, {
+	style(this.inner, {
 		margin: "0 auto"
 	});
 
@@ -66,7 +66,7 @@ UiPiecesTaken.prototype.SetupHtml=function() {
 
 		this.player_divs[colour]=div(this.inner);
 
-		Dom.Style(this.player_divs[colour], {
+		style(this.player_divs[colour], {
 			paddingTop: 6
 		});
 
@@ -74,7 +74,7 @@ UiPiecesTaken.prototype.SetupHtml=function() {
 		pieces_container=div(this.player_divs[colour]);
 		this.score_divs[colour]=div(this.player_divs[colour]);
 
-		Dom.Style(this.score_divs[colour], {
+		style(this.score_divs[colour], {
 			textAlign: "center",
 			fontSize: 11,
 			padding: "4px 0 4px 0"
@@ -108,7 +108,7 @@ UiPiecesTaken.prototype.SetupHtml=function() {
 	}
 
 	for(var i=0; i<this.divs.length; i++) {
-		Dom.Style(this.divs[i], {
+		style(this.divs[i], {
 			cssFloat: "left"
 		});
 	}
@@ -118,12 +118,12 @@ UiPiecesTaken.prototype.SetupHtml=function() {
 }
 
 UiPiecesTaken.prototype.UpdateHtml=function() {
-	Dom.Style(this.inner, {
+	style(this.inner, {
 		width: this.square_size*8
 	});
 
 	for(var i=0; i<this.divs.length; i++) {
-		Dom.Style(this.divs[i], {
+		style(this.divs[i], {
 			height: this.square_size
 		});
 	}
@@ -194,7 +194,7 @@ UiPiecesTaken.prototype.set_piece_div=function(div, pc) {
 	var width=(pc===SQ_EMPTY?0:this.square_size);
 	var bgimg=(pc===SQ_EMPTY?"none":Base.App.CssImg(this.img_dir+"/"+this.piece_style+"/"+this.square_size+"/"+Fen.get_piece_char(pc)+".png"));
 
-	Dom.Style(div, {
+	style(div, {
 		width: width,
 		backgroundImage: bgimg
 	});

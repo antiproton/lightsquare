@@ -1,9 +1,18 @@
 function UiHistoryTextView(parent) {
-	IUiHistory.implement(this, parent);
+	UiHistory.implement(this);
+
+	this.tpl=new Template("history_textview", parent);
+	this.tpl.root.appendChild(this.MainLine.Node);
 }
 
-UiHistoryTextView.prototype.Move=function(move) {
-	IUiMoveTextView.implement(move);
+UiHistoryTextView.prototype.CreateMove=function() {
+	var move=new UiMoveTextView();
 
-	return IHistoryCommon.prototype.Move.call(this, move);
+	this.setup_move(move);
+
+	return move;
+}
+
+UiHistoryTextView.prototype.CreateVariation=function() {
+	return new UiVariationTextView(this);
 }

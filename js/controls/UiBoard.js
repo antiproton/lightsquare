@@ -20,8 +20,6 @@ function UiBoard(parent) {
 	//square the currently dragging piece will drop on if dropped (see Sq..Over/Out events)
 	this.CurrentPieceOverSq=null;
 
-	//Events
-
 	this.UserMove=new Event(this);
 	this.DragDrop=new Event(this);
 	this.DragMove=new Event(this);
@@ -95,7 +93,9 @@ function UiBoard(parent) {
 	this.img_dir_piece="/img/piece";
 	this.board_style=null;
 	this.piece_style=PIECE_STYLE_ALPHA;
-	this.square_colour=["f0d9b5", "b58863"];
+	this.square_colour=[];
+	this.square_colour[WHITE]="f0d9b5";
+	this.square_colour[BLACK]="b58863";
 	this.square_highlight_border=0; //gap around the edge of the highlight div to fit a border in
 	this.html_updates_enabled=true; //visual updates can be temporarily turned off entirely to ensure consistency when multiple events are causing updates
 	this.container_border=true;
@@ -428,7 +428,7 @@ UiBoard.prototype.SetupHtml=function() {
 
 	this.inner_container=div(this.node);
 
-	Dom.Style(this.inner_container, {
+	style(this.inner_container, {
 		position: "absolute"
 	});
 
@@ -438,14 +438,14 @@ UiBoard.prototype.SetupHtml=function() {
 
 	this.border_container=div(this.inner_container);
 
-	Dom.Style(this.border_container, {
+	style(this.border_container, {
 		position: "absolute",
 		zIndex: 0
 	});
 
 	this.board_container=div(this.inner_container);
 
-	Dom.Style(this.board_container, {
+	style(this.board_container, {
 		position: "absolute",
 		zIndex: 1
 	});
@@ -502,16 +502,16 @@ UiBoard.prototype.SetupHtml=function() {
 			highlight=div(sq_outer);
 			sq_inner=div(sq_outer);
 
-			Dom.Style(sq_outer, {
+			style(sq_outer, {
 				position: "absolute"
 			});
 
-			Dom.Style(sq_inner, {
+			style(sq_inner, {
 				position: "absolute",
 				zIndex: UiBoard.SQ_ZINDEX_NORMAL
 			});
 
-			Dom.Style(highlight, {
+			style(highlight, {
 				position: "absolute",
 				zIndex: UiBoard.SQ_ZINDEX_BELOW,
 				borderStyle: "solid",
@@ -595,7 +595,7 @@ UiBoard.prototype.UpdateHtml=function() { //after switching colours ,changing si
 	container border (bit around the edge with the shadow)
 	*/
 
-	Dom.Style(this.node, {
+	style(this.node, {
 		paddingTop: this.container_border?coord_size_f:0,
 		paddingRight: this.container_border?coord_size_r:0,
 		borderWidth: this.container_border?this.container_border_border_width:0,
@@ -625,14 +625,14 @@ UiBoard.prototype.UpdateHtml=function() { //after switching colours ,changing si
 	for(var i=0; i<this.border.length; i++) {
 		border=div(inner_border);
 
-		Dom.Style(border, {
+		style(border, {
 			border: "1px solid "+this.border[i]
 		});
 
 		inner_border=border;
 	}
 
-	Dom.Style(inner_border, {
+	style(inner_border, {
 		width: board_size,
 		height: board_size
 	});
@@ -642,7 +642,7 @@ UiBoard.prototype.UpdateHtml=function() { //after switching colours ,changing si
 	*/
 
 	for(var i=0; i<8; i++) {
-		Dom.Style(this.CoordsR[i].Container, {
+		style(this.CoordsR[i].Container, {
 			position: "absolute",
 			top: this.border.length+(this.square_size*i),
 			left: 0,
@@ -653,7 +653,7 @@ UiBoard.prototype.UpdateHtml=function() { //after switching colours ,changing si
 			cursor: "default"
 		});
 
-		Dom.Style(this.CoordsF[i].Container, {
+		style(this.CoordsF[i].Container, {
 			position: "absolute",
 			top: (this.border.length*2)+board_size,
 			left: coord_size_r+this.border.length+(this.square_size*i),
@@ -678,7 +678,7 @@ UiBoard.prototype.UpdateHtml=function() { //after switching colours ,changing si
 
 		this.CoordsR[i].Node.innerHTML=RANK.charAt(rank_index);
 
-		Dom.Style(this.CoordsR[i].Node, {
+		style(this.CoordsR[i].Node, {
 			marginTop: Math.round((this.square_size/2)-(this.coords_font_size/2))-this.coord_r_hinting
 		});
 
@@ -707,7 +707,7 @@ UiBoard.prototype.UpdateHtml=function() { //after switching colours ,changing si
 		SOLUTION get rid of all the props, no point being able to change the font colour
 		*/
 
-		Dom.Style(this.CoordsF[i].Node, {
+		style(this.CoordsF[i].Node, {
 			fontFamily: this.coords_font_family,
 			fontSize: this.coords_font_size,
 			fontWeight: "normal",
@@ -716,7 +716,7 @@ UiBoard.prototype.UpdateHtml=function() { //after switching colours ,changing si
 			textAlign: "center"
 		});
 
-		Dom.Style(this.CoordsR[i].Node, {
+		style(this.CoordsR[i].Node, {
 			fontFamily: this.coords_font_family,
 			fontSize: this.coords_font_size,
 			color: this.coords_font_color,
@@ -729,17 +729,17 @@ UiBoard.prototype.UpdateHtml=function() { //after switching colours ,changing si
 	board
 	*/
 
-	Dom.Style(this.node, {
+	style(this.node, {
 		width: container_padding_r+(this.border.length*2)+board_size,
 		height: container_padding_f+(this.border.length*2)+board_size
 	});
 
-	Dom.Style(this.border_container, {
+	style(this.border_container, {
 		top: 0,
 		left: container_padding_r
 	});
 
-	Dom.Style(this.board_container, {
+	style(this.board_container, {
 		top: this.border.length,
 		left: container_padding_r+this.border.length, //r is "rank" not "right"
 		width: board_size,
@@ -752,7 +752,7 @@ UiBoard.prototype.UpdateHtml=function() { //after switching colours ,changing si
 		bgimg=Base.App.CssImg(this.img_dir_board+"/"+this.board_style+"/"+this.square_size+".png");
 	}
 
-	Dom.Style(this.board, {
+	style(this.board, {
 		position: "absolute",
 		width: board_size,
 		height: board_size,
@@ -768,7 +768,7 @@ UiBoard.prototype.UpdateHtml=function() { //after switching colours ,changing si
 	for(var sq=0; sq<this.Squares.length; sq++) {
 		square=this.Squares[sq];
 
-		Dom.Style(square.Container, {
+		style(square.Container, {
 			width: this.square_size,
 			height: this.square_size,
 			backgroundColor: "#"+this.square_colour[Util.sq_colour(sq)]
@@ -776,12 +776,12 @@ UiBoard.prototype.UpdateHtml=function() { //after switching colours ,changing si
 
 		this.SetSquarePos(square, sq);
 
-		Dom.Style(square.Node, {
+		style(square.Node, {
 			width: this.square_size,
 			height: this.square_size
 		});
 
-		Dom.Style(square.Highlight, {
+		style(square.Highlight, {
 			width: this.square_size-(this.square_highlight_border*2),
 			height: this.square_size-(this.square_highlight_border*2),
 			borderWidth: this.square_highlight_border
@@ -820,7 +820,7 @@ UiBoard.prototype.SetHtmlSquare=function(sq, pc) {
 		bgimg="url("+this.img_dir_piece+"/"+this.piece_style+"/"+this.square_size+"/"+Fen.get_piece_char(pc)+".png)";
 	}
 
-	if(this.Squares[sq].Node.style.backgroundImage!==bgimg) { //performance is better with this check
+	if(this.Squares[sq].Node.style.backgroundImage!==bgimg) { //performance is noticeably better with this check
 		this.Squares[sq].Node.style.backgroundImage=bgimg;
 	}
 }
@@ -843,7 +843,7 @@ UiBoard.prototype.ResetMoveInfo=function() {
 	};
 }
 
-UiBoard.prototype.SqFromMouseEvent=function(e, use_offsets, offsets) { //use_offsets to calc for middle of piece
+UiBoard.prototype.SqFromMouseEvent=function(e, use_offsets, offsets) { //useoffsets to calc for middle of piece
 	offsets=offsets||[this.MoveInfo.OffsetX, this.MoveInfo.OffsetY];
 
 	var x=e.pageX;
@@ -854,7 +854,7 @@ UiBoard.prototype.SqFromMouseEvent=function(e, use_offsets, offsets) { //use_off
 		y+=(Math.round(this.square_size/2)-offsets[Y]);
 	}
 
-	var os=Dom.GetOffsets(this.board);
+	var os=getoffsets(this.board);
 
 	return this.sq_from_offsets(x-os[X], this.GetBoardSize()-(y-os[Y]));
 }
@@ -891,23 +891,23 @@ UiBoard.prototype.SetSquarePos=function(square, sq) {
 	is absolute the squares don't have to add anything to these offsets
 	*/
 
-	Dom.Style(square.Container, {
+	style(square.Container, {
 		top: y,
 		left: x
 	});
 }
 
 UiBoard.prototype.ResetSquarePos=function(square) { //return the inner bit to its container pos
-	Dom.Style(square.Node, {
+	style(square.Node, {
 		top: 0,
 		left: 0
 	});
 }
 
 UiBoard.prototype.SetSquareXyPos=function(square, x, y) { //takes mouse coords
-	var os=Dom.GetOffsets(square.Container);
+	var os=getoffsets(square.Container);
 
-	Dom.Style(square.Node, {
+	style(square.Node, {
 		top: y-os[Y],
 		left: x-os[X]
 	});
@@ -919,7 +919,7 @@ UiBoard.prototype.BoardMouseDown=function(e) {
 	if(this.MouseOnBoard(e)) {
 		var sq=this.SqFromMouseEvent(e);
 		var square=this.Squares[sq];
-		var os=Dom.GetOffsets(square.Container);
+		var os=getoffsets(square.Container);
 
 		if(this.MoveMode!==UiBoard.MOVE_MODE_NONE && !this.MoveInfo.Selected && !this.MoveInfo.InProgress && this.Board[sq]!==SQ_EMPTY) { //first click or start of drag
 			this.inc_z_index(square);
@@ -1077,13 +1077,13 @@ UiBoard.prototype.BoardMouseUp=function(e) {
 }
 
 UiBoard.prototype.inc_z_index=function(square) {
-	Dom.Style(square.Node, {
+	style(square.Node, {
 		zIndex: UiBoard.SQ_ZINDEX_ABOVE
 	});
 }
 
 UiBoard.prototype.reset_z_index=function(square) {
-	Dom.Style(square.Node, {
+	style(square.Node, {
 		zIndex: UiBoard.SQ_ZINDEX_NORMAL
 	});
 }
@@ -1099,7 +1099,7 @@ UiBoard.prototype.MouseOnBoard=function(e, use_offsets, offsets) {
 		y+=(Math.round(this.square_size/2)-offsets[Y]);
 	}
 
-	var os=Dom.GetOffsets(this.board);
+	var os=getoffsets(this.board);
 
 	x-=os[X];
 	y-=os[Y];
@@ -1120,12 +1120,12 @@ and ones for fucking unhighlighting squares as well
 */
 
 UiBoard.prototype.HiliteSq=function(sq, style) {
-	Dom.Style(this.Squares[sq].Highlight, style);
+	style(this.Squares[sq].Highlight, style);
 }
 
 UiBoard.prototype.UnhiliteSq=function(sq) {
 	if(sq!==null) {
-		Dom.Style(this.Squares[sq].Highlight, this.HlNone);
+		style(this.Squares[sq].Highlight, this.HlNone);
 	}
 }
 
