@@ -30,11 +30,11 @@ require_once "php/init.php";
 		script_tags_w("/js/livechess");
 		script_tags_w("/js/uis");
 		?>
-		<script src="/lib/js/jquery.js"></script>
+		<script src="/lib/js/jquery-1.9.1.js"></script>
 	</head>
 	<body>
 		<?php
-		require_once "templates/live_table_std.php";
+		loadw("/templates");
 		?>
 		<div id="topbar">
 			<div class="layout_main">
@@ -57,7 +57,7 @@ require_once "php/init.php";
 		<script>
 		var ui=new LiveTableStdUi(g("table"));
 
-		ui.Board.SquareSize(60);
+		ui.Board.SquareSize(45);
 		ui.Board.SetFen(FEN_INITIAL);
 
 
