@@ -8,6 +8,8 @@ Add - has to insert the piece in order for string checking on the server
 NOTE doing it this way (looking at the piece's numerical value) depends
 on the values (WHITE being 0 etc) because it's done differently but with
 the same result on the server.
+
+FIXME too coupled
 */
 
 PiecesTaken.prototype.Add=function(piece) {
