@@ -128,7 +128,7 @@ PlayerClock.prototype.UpdateTime=function() {
 		});
 
 		this.urgent=true;
-		this.BecomeUrgent.Fire();
+		this.BecomeUrgent.fire();
 	}
 
 	else if(!urgent && this.urgent) {
@@ -137,15 +137,15 @@ PlayerClock.prototype.UpdateTime=function() {
 		});
 
 		this.urgent=false;
-		this.BecomeNormal.Fire();
+		this.BecomeNormal.fire();
 	}
 
 	if(this.mtime===0) {
-		this.Timeout.Fire();
+		this.Timeout.fire();
 	}
 
 	this.display_time=TimeParser.GetColonDisplay(this.mtime, display_tenths);
 	this.time_container.innerHTML=this.display_time;
 
-	this.Update.Fire();
+	this.Update.fire();
 }

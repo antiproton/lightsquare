@@ -347,7 +347,7 @@ UiBoard.prototype.init_props=function() {
 	}, function(value) {
 		this.board_style=value;
 		this.UpdateHtml();
-		this.UiUpdate.Fire();
+		this.UiUpdate.fire();
 	});
 
 	this.SquareHighlightBorder=setter(this, function() {
@@ -952,7 +952,7 @@ UiBoard.prototype.BoardMouseMove=function(e) {
 			Cancel: false
 		};
 
-		this.SelectPiece.Fire(args);
+		this.SelectPiece.fire(args);
 
 		if(args.Cancel) {
 			this.ResetMoveInfo();
@@ -962,7 +962,7 @@ UiBoard.prototype.BoardMouseMove=function(e) {
 		else {
 			this.MoveInfo.Mode=UiBoard.MOVE_MODE_DRAG_DROP;
 			this.MoveInfo.InProgress=true;
-			this.PieceSelected.Fire({Sq: sq});
+			this.PieceSelected.fire({Sq: sq});
 		}
 	}
 
@@ -973,7 +973,7 @@ UiBoard.prototype.BoardMouseMove=function(e) {
 			Cancel: false
 		};
 
-		this.DragMove.Fire(args);
+		this.DragMove.fire(args);
 
 		if(!args.Cancel) {
 			this.SetSquareXyPos(this.Squares[this.MoveInfo.From], e.pageX-this.MoveInfo.OffsetX, e.pageY-this.MoveInfo.OffsetY);
@@ -1007,20 +1007,20 @@ UiBoard.prototype.BoardMouseUp=function(e) {
 	};
 
 	if(this.MoveInfo.Mode===UiBoard.MOVE_MODE_CLICK_CLICK) {
-		this.SquareClicked.Fire(args);
+		this.SquareClicked.fire(args);
 	}
 
 	else if(this.MoveInfo.Mode===UiBoard.MOVE_MODE_DRAG_DROP && this.MoveInfo.InProgress) {
-		this.DragDrop.Fire(args);
+		this.DragDrop.fire(args);
 	}
 
 	if(!args.Cancel) {
 		if(this.MoveInfo.InProgress) { //was dragging, now dropped; or second click
-			this.Deselected.Fire();
+			this.Deselected.fire();
 
 			if(this.MouseOnBoard(e, true)) {
 				if(sq!=this.MoveInfo.From) {
-					this.UserMove.Fire({
+					this.UserMove.fire({
 						From: this.MoveInfo.From,
 						To: sq,
 						Piece: this.GetSquare(this.MoveInfo.From),
@@ -1030,7 +1030,7 @@ UiBoard.prototype.BoardMouseUp=function(e) {
 			}
 
 			else {
-				this.DragOff.Fire({
+				this.DragOff.fire({
 					From: this.MoveInfo.From
 				});
 			}
@@ -1047,7 +1047,7 @@ UiBoard.prototype.BoardMouseUp=function(e) {
 				Cancel: false
 			};
 
-			this.SelectPiece.Fire(args);
+			this.SelectPiece.fire(args);
 
 			if(args.Cancel) {
 				this.ResetMoveInfo();
@@ -1056,7 +1056,7 @@ UiBoard.prototype.BoardMouseUp=function(e) {
 			else {
 				this.MoveInfo.InProgress=true;
 				this.MoveInfo.Mode=UiBoard.MOVE_MODE_CLICK_CLICK;
-				this.PieceSelected.Fire({Sq: sq});
+				this.PieceSelected.fire({Sq: sq});
 			}
 		}
 	}
@@ -1214,14 +1214,14 @@ UiBoard.prototype.UpdateMouseOverData=function(e) {
 	if(this.MouseOnBoard(e) && sq>-1 && sq<64) { //MouseOnBoard doesn't appear to be enough
 		if(this.CurrentMouseOverSq!=sq) {
 			if(this.CurrentMouseOverSq!==null) {
-				this.SqMouseOut.Fire({
+				this.SqMouseOut.fire({
 					Sq: this.CurrentMouseOverSq
 				});
 			}
 
 			this.CurrentMouseOverSq=sq;
 
-			this.SqMouseOver.Fire({
+			this.SqMouseOver.fire({
 				Sq: sq
 			});
 		}
@@ -1229,7 +1229,7 @@ UiBoard.prototype.UpdateMouseOverData=function(e) {
 
 	else {
 		if(this.CurrentMouseOverSq!==null) {
-			this.SqMouseOut.Fire({
+			this.SqMouseOut.fire({
 				Sq: this.CurrentMouseOverSq
 			});
 		}
@@ -1245,14 +1245,14 @@ UiBoard.prototype.UpdatePieceOverData=function(e) {
 		if(this.MouseOnBoard(e)) {
 			if(this.CurrentPieceOverSq!=sq) {
 				if(this.CurrentPieceOverSq!==null) {
-					this.SqPieceOut.Fire({
+					this.SqPieceOut.fire({
 						Sq: this.CurrentPieceOverSq
 					});
 				}
 
 				this.CurrentPieceOverSq=sq;
 
-				this.SqPieceOver.Fire({
+				this.SqPieceOver.fire({
 					Sq: sq
 				});
 			}
@@ -1260,7 +1260,7 @@ UiBoard.prototype.UpdatePieceOverData=function(e) {
 
 		else {
 			if(this.CurrentPieceOverSq!==null) {
-				this.SqPieceOut.Fire({
+				this.SqPieceOut.fire({
 					Sq: this.CurrentPieceOverSq
 				});
 			}
@@ -1271,7 +1271,7 @@ UiBoard.prototype.UpdatePieceOverData=function(e) {
 
 	else {
 		if(this.CurrentPieceOverSq!==null) {
-			this.SqPieceOut.Fire({
+			this.SqPieceOut.fire({
 				Sq: this.CurrentPieceOverSq
 			});
 		}
