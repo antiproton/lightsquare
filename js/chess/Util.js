@@ -7,21 +7,19 @@ CLEAN:
 names
 
 what fullmove, halfmove etc are
-
-remove use of btoi
 */
 
 var Util={
 	hm_colour: function(hm) {
-		return (hm%2===1)?BLACK:WHITE;
+		return (hm%2===1?BLACK:WHITE);
 	},
 
 	opp_colour: function(colour) {
-		return btoi(!colour); //NOTE relies on colours being 0 and 1
+		return (colour?WHITE:BLACK);
 	},
 
 	opp_game: function(game_id) {
-		return btoi(!game_id);
+		return (game_id?0:1);
 	},
 
 	fullmove_index: function(hm) {
@@ -79,7 +77,7 @@ var Util={
 	},
 
 	sq_colour: function(sq) { //WTF? must be a simpler way of doing this
-		return (!(((sq%2)+(Math.floor(sq/8)%2))%2))-0;
+		return (!(((sq%2)+(Math.floor(sq/8)%2))%2))?BLACK:WHITE;
 	},
 
 	colour_name: function(colour) {
@@ -515,7 +513,7 @@ var Util={
 
 	pawns_attacking: function(board, sq, colour) {
 		var piece=Util.piece(PAWN, colour);
-		var plr_colour=btoi(!colour);
+		var plr_colour=Util.opp_colour(colour);
 		var relsq=Util.rel_sq_no(sq, plr_colour);
 		var relcoords=Util.sq_to_coords(relsq);
 		var x_diff=[-1, 1];
