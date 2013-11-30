@@ -23,10 +23,11 @@ $widgetLoader->load([
 		?>
 		<?php
 		script_tags_s("/lib/js/util");
-		script_tags_s("/lib/js/data");
 		script_tags_s("/lib/js/server");
 		script_tags_s("/lib/js/events");
 		script_tags_s("/lib/js/dom");
+		script_tags_s("/lib/js/List.js");
+		script_tags_s("/lib/js/serialise.js");
 
 		script_tags_s("/lib/js/dbenums/chess.js");
 		script_tags_s("/lib/js/dbcodes/chess.js");
