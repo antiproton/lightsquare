@@ -21,8 +21,8 @@ HistoryColView.prototype.CreateVariation=function() {
 	return new VariationColView(this);
 }
 
-UiHistoryColView.prototype.CreateMove=function() {
-	var move=new UiMoveColView();
+HistoryColView.prototype.CreateMove=function() {
+	var move=new MoveColView();
 
 	UiHistory.prototype.setup_move.call(this, move);
 

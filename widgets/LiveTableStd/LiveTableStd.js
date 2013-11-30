@@ -16,5 +16,5 @@ function LiveTableStdUi(parent) {
 	};
 
 	this.Board=new UiBoard(this.tpl.board);
-	this.History=new UiHistoryColView(this.tpl.history);
+	this.History=new HistoryColView(this.tpl.history);
 }
