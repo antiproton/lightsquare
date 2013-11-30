@@ -696,6 +696,38 @@ Game.prototype.Undo=function() {
 	this.History.Undo();
 }
 
+Game.prototype.CanSelectPiece=function(sq) {
+	var pc=this.Board.GetSquare(sq);
+	var colour=Util.colour(pc);
+
+	if(this.UserControl===IGameCommon.USER_CONTROL_NONE || this.Position.Active!==colour) {
+		return false;
+	}
+
+	if(this.UserControl===IGameCommon.USER_CONTROL_PLAYER && colour!==this.UserColour) {
+		return false;
+	}
+
+	var legal_moves=0;
+	var available;
+
+	if(pc!==SQ_EMPTY) {
+		available=Util.moves_available(Util.type(pc), sq, colour);
+
+		for(var n=0; n<available.length; n++) {
+			if(this.Move(sq, available[n], QUEEN, true).Legal) {
+				legal_moves++;
+			}
+		}
+	}
+
+	if(legal_moves===0) {
+		return false;
+	}
+
+	return true;
+}
+
 Game.prototype.game_over=function(result, result_details) {
 	this.State=GAME_STATE_FINISHED;
 	this.Result=result;
