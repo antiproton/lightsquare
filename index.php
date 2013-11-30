@@ -2,6 +2,15 @@
 require_once "base.php";
 require_once "include_utils.php";
 require_once "php/init.php";
+require_once "WidgetLoader.php";
+
+$widgetLoader=new WidgetLoader("widgets");
+
+$widgetLoader->load([
+	"Board",
+	"History",
+	"LiveTableStd"
+]);
 ?>
 <!DOCTYPE html>
 <html>
@@ -28,13 +37,22 @@ require_once "php/init.php";
 		script_tags_w("/js/analysis");
 		script_tags_w("/js/controls");
 		script_tags_w("/js/livechess");
-		script_tags_w("/js/uis");
 		?>
 		<script src="/lib/js/jquery-1.9.1.js"></script>
+		<script>
+		<?php
+		$widgetLoader->outputJs();
+		?>
+		</script>
+		<style>
+		<?php
+		$widgetLoader->outputCss();
+		?>
+		</style>
 	</head>
 	<body>
 		<?php
-		loadw("/templates");
+		$widgetLoader->outputTemplates();
 		?>
 		<div id="topbar">
 			<div class="layout_main">
