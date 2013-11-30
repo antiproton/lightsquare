@@ -1,174 +1,174 @@
 function Variation(history, is_mainline) { //TODO hopefully is_mainline can be dropped at some point
 	HistoryItem.implement(this);
 
-	this.History=history;
-	this.AutoUpdatePointers=true;
-	this.IsMainline=!!is_mainline;
-	this.IsVariation=true;
-	this.MoveList=this.create_move_list();
-	this.FirstMove=null;
-	this.LastMove=null;
+	this.history=history;
+	this.autoupdatepointers=true;
+	this.isMainline=!!is_mainline;
+	this.isVariation=true;
+	this.moveList=this.createMoveList();
+	this.firstMove=null;
+	this.lastMove=null;
 }
 
-Variation.prototype.ResetPointers=function() {
-	HistoryItem.prototype.ResetPointers.call(this);
+Variation.prototype.resetPointers=function() {
+	HistoryItem.prototype.resetPointers.call(this);
 
-	this.BranchMove=null; //the move before the first move of the variation
+	this.branchMove=null; //the move before the first move of the variation
 }
 
-Variation.prototype.SetBranchMove=function(move) {
-	this.BranchMove=move;
+Variation.prototype.setBranchMove=function(move) {
+	this.branchMove=move;
 }
 
-Variation.prototype.Insert=function(item, index, no_pointer_update) {
-	var update_pointers=no_pointer_update?false:this.AutoUpdatePointers;
+Variation.prototype.insert=function(item, index, noPointerUpdate) {
+	var updatePointers=noPointerUpdate?false:this.autoUpdatePointers;
 
-	this.MoveList.Insert(item, index);
+	this.moveList.insert(item, index);
 
-	if(update_pointers) {
+	if(updatePointers) {
 		this.UpdatePointers();
 	}
 }
 
-Variation.prototype.Remove=function(item, no_pointer_update) {
-	var update_pointers=no_pointer_update?false:this.AutoUpdatePointers;
+Variation.prototype.remove=function(item, noPointerUpdate) {
+	var updatePointers=noPointerUpdate?false:this.autoUpdatePointers;
 
-	this.MoveList.Remove(item);
+	this.moveList.remove(item);
 
-	if(update_pointers) {
+	if(updatePointers) {
 		this.UpdatePointers();
 	}
 }
 
-Variation.prototype.DeleteMove=function(move, no_pointer_update) {
-	var update_pointers=no_pointer_update?false:this.AutoUpdatePointers;
+Variation.prototype.deleteMove=function(move, noPointerUpdate) {
+	var updatePointers=noPointerUpdate?false:this.autoUpdatePointers;
 	var item=move;
 
 	while(item!==null) {
-		this.Remove(item, true);
+		this.remove(item, true);
 		item=item.NextItem;
 	}
 
-	if(update_pointers) {
-		this.UpdatePointers();
+	if(updatePointers) {
+		this.updatePointers();
 	}
 }
 
-Variation.prototype.Add=function(item, no_pointer_update) {
-	this.Insert(item, this.MoveList.Length, no_pointer_update);
+Variation.prototype.add=function(item, noPointerUpdate) {
+	this.insert(item, this.moveList.length, noPointerUpdate);
 }
 
-Variation.prototype.InsertAfter=function(item, prev_item, no_pointer_update) {
-	if(prev_item===null) {
-		this.Insert(item, 0, no_pointer_update);
+Variation.prototype.insertAfter=function(item, prevItem, noPointerUpdate) {
+	if(prevItem===null) {
+		this.insert(item, 0, noPointerUpdate);
 	}
 
 	else {
 		var i=0;
 
-		this.MoveList.Each(function(item, index) {
-			if(item==prev_item) {
+		this.moveList.Each(function(item, index) {
+			if(item==prevItem) {
 				i=index;
 			}
 		});
 
-		this.Insert(item, i+1, no_pointer_update);
+		this.insert(item, i+1, noPointerUpdate);
 	}
 }
 
 /*
-InsertAfterMove - use this if the item should come after the move, or
+insertAfterMove - use this if the item should come after the move, or
 after the move's last variation if it has any
 */
 
-Variation.prototype.InsertAfterMove=function(item, prev_move, no_pointer_update) {
-	if(prev_move===null) {
-		this.Insert(item, 0, no_pointer_update);
+Variation.prototype.insertAfterMove=function(item, prevMove, noPointerUpdate) {
+	if(prevMove===null) {
+		this.insert(item, 0, noPointerUpdate);
 	}
 
 	else {
-		var prev_item=prev_move;
+		var prevItem=prevMove;
 
-		while(prev_item.NextVariation!==null) {
-			prev_item=prev_item.NextVariation;
+		while(prevItem.NextVariation!==null) {
+			prevItem=prevItem.NextVariation;
 		}
 
-		this.InsertAfter(item, prev_item, no_pointer_update);
+		this.insertAfter(item, prevItem, noPointerUpdate);
 	}
 }
 
-Variation.prototype.UpdatePointers=function(recursive) {
-	this.FirstMove=null;
-	this.LastMove=null;
+Variation.prototype.updatePointers=function(recursive) {
+	this.firstMove=null;
+	this.lastMove=null;
 
-	if(this.MoveList.Length>0) {
-		var last_move=null;
-		var previous_variation=null;
-		var last_item=null;
-		var move_index=0;
-		var halfmove=Util.halfmove(this.History.StartingFullmove.Get());
+	if(this.moveList.Length>0) {
+		var lastMove=null;
+		var previousVariation=null;
+		var lastItem=null;
+		var moveIndex=0;
+		var halfmove=Util.halfmove(this.history.startingFullmove.get());
 
-		if(this.History.StartingColour.Get()===BLACK) {
+		if(this.history.startingColour.get()===BLACK) {
 			halfmove++;
 		}
 
-		if(!this.IsMainline) {
-			halfmove=this.BranchMove.Halfmove;
+		if(!this.isMainline) {
+			halfmove=this.branchMove.halfmove;
 		}
 
-		this.FirstMove=this.Line.FirstItem();
+		this.firstMove=this.line.firstItem();
 
-		this.MoveList.Each(function(item, i) {
-			item.ResetPointers();
-			item.SetVariation(this);
-			item.SetItemIndex(i);
-			item.SetPreviousMove(last_move);
-			item.SetPreviousItem(last_item);
+		this.moveList.each(function(item, i) {
+			item.resetPointers();
+			item.setVariation(this);
+			item.setItemIndex(i);
+			item.setPreviousMove(lastMove);
+			item.setPreviousItem(lastItem);
 
 			if(item.IsVariation) {
-				item.SetBranchMove(last_move);
+				item.setBranchMove(lastMove);
 
 				if(recursive) {
-					item.UpdatePointers(true);
+					item.updatePointers(true);
 				}
 
-				if(last_item!==null) {
-					last_item.SetNextVariation(item);
+				if(lastItem!==null) {
+					lastItem.setNextVariation(item);
 				}
 
-				previous_variation=item;
+				previousVariation=item;
 			}
 
 			else {
 				this.LastMove=item;
 
-				item.SetPreviousVariation(previous_variation);
-				item.SetHalfmove(halfmove);
-				item.SetMoveIndex(move_index);
+				item.setPreviousVariation(previous_variation);
+				item.setHalfmove(halfmove);
+				item.setMoveIndex(move_index);
 
-				if(last_item!==null) {
-					last_item.SetNextMove(item);
+				if(lastItem!==null) {
+					lastItem.setNextMove(item);
 				}
 
-				if(last_move!==null) {
-					last_move.SetNextMove(item);
+				if(lastMove!==null) {
+					lastMove.setNextMove(item);
 				}
 
-				last_move=item;
-				previous_variation=null;
+				lastMove=item;
+				previousVariation=null;
 				halfmove++;
-				move_index++;
+				moveIndex++;
 			}
 
-			if(last_item!==null) {
-				last_item.SetNextItem(item);
+			if(lastItem!==null) {
+				lastItem.setNextItem(item);
 			}
 
-			last_item=item;
+			lastItem=item;
 		}, this);
 	}
 }
 
-Variation.prototype.create_move_list=function() {
+Variation.prototype.createMoveList=function() {
 	return new List();
 }
