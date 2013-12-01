@@ -5,9 +5,9 @@ function UiMove() {
 }
 
 UiMove.prototype.select=function() {
-	$(this.Node).addClass("move_selected");
+	this.node.classList.add("move_selected");
 }
 
 UiMove.prototype.deselect=function() {
-	$(this.node).removeClass("move_selected");
+	this.node.classList.remove("move_selected");
 }
