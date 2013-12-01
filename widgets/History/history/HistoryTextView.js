@@ -14,5 +14,5 @@ HistoryTextView.prototype.createMove=function() {
 }
 
 HistoryTextView.prototype.createVariation=function() {
-	return new VariationTextView(this);
+	return new VariationTextView();
 }

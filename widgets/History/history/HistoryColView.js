@@ -18,7 +18,7 @@ HistoryColView.prototype.move=function(move) {
 }
 
 HistoryColView.prototype.createVariation=function() {
-	return new VariationColView(this);
+	return new VariationColView();
 }
 
 HistoryColView.prototype.createMove=function() {

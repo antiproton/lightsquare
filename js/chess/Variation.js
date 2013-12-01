@@ -1,13 +1,31 @@
-function Variation(history, is_mainline) { //TODO hopefully is_mainline can be dropped at some point
+function Variation() {
 	HistoryItem.implement(this);
 
-	this.history=history;
+	this._startingFullmove=1;
+	this._startingColour=WHITE;
 	this.autoUpdatePointers=true;
-	this.isMainline=!!is_mainline;
 	this.isVariation=true;
 	this.moveList=this._createMoveList();
 	this.firstMove=null;
 	this.lastMove=null;
+}
+
+Variation.prototype.getStartingFullmove=function() {
+	return this._startingFullmove;
+}
+
+Variation.prototype.setStartingFullmove=function(fullmove) {
+	this._startingFullmove=fullmove;
+	this.updatePointers(true);
+}
+
+Variation.prototype.getStartingColour=function() {
+	return this._startingColour;
+}
+
+Variation.prototype.setStartingColour=function(colour) {
+	this._startingColour=colour;
+	this.updatePointers(true);
 }
 
 Variation.prototype.resetPointers=function() {
@@ -77,8 +95,7 @@ Variation.prototype.insertAfter=function(item, prevItem, noPointerUpdate) {
 }
 
 /*
-insertAfterMove - use this if the item should come after the move, or
-after the move's last variation if it has any
+insertAfterMove - the item will come after the move and all its variations
 */
 
 Variation.prototype.insertAfterMove=function(item, prevMove, noPointerUpdate) {
@@ -106,13 +123,13 @@ Variation.prototype.updatePointers=function(recursive) {
 		var previousVariation=null;
 		var lastItem=null;
 		var moveIndex=0;
-		var halfmove=Util.halfmove(this.history.startingFullmove.get());
+		var halfmove=Util.halfmove(this._startingFullmove);
 
-		if(this.history.startingColour.get()===BLACK) {
+		if(this._startingColour===BLACK) {
 			halfmove++;
 		}
 
-		if(!this.isMainline) {
+		if(!this.isMainline()) {
 			halfmove=this.branchMove.halfmove;
 		}
 
@@ -167,6 +184,10 @@ Variation.prototype.updatePointers=function(recursive) {
 			lastItem=item;
 		}, this);
 	}
+}
+
+Variation.prototype.isMainline=function() {
+	return (this.variation===null);
 }
 
 Variation.prototype._createMoveList=function() {

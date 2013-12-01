@@ -3,7 +3,7 @@ function History() {
 	this._startingFullmove=1;
 	this.selectedMove=null;
 	this.editMode=History.EDIT_MODE_BRANCH;
-	this.mainLine=this.createVariation(true);
+	this.mainLine=this.createVariation();
 
 	/*
 	bulkUpdate - set this to true before adding a lot of moves to
@@ -20,32 +20,6 @@ function History() {
 
 	//FIXME should probably be a method maybe like history.bulkUpdate(function() {...});
 
-	this.startingColour=setter(this, function() { //FIXME this should probably fail if there are moves
-		return this._startingColour;
-	}, function(value) {
-		this._startingColour=value;
-		this.mainLine.updatePointers(true);
-	});
-
-	this.startingFullmove=setter(this, function() { //this should also fail if there are moves
-		return this._startingFullmove;
-	}, function(value) {
-		this._startingFullmove=value;
-		this.mainLine.updatePointers(true);
-	});
-
-	this.mainLineNoVars=setter(this, function() {
-		var line=new Variation(this, true);
-
-		this.mainLine.moveList.Each(function(item) {
-			if(!item.isVariation) {
-				line.add(item);
-			}
-		});
-
-		return line;
-	});
-
 	this.SelectedMoveChanged=new Event(this);
 	this.Moved=new Event(this);
 	this.Update=new Event(this);
@@ -55,6 +29,36 @@ History.EDIT_MODE_FAIL=0;
 History.EDIT_MODE_OVERWRITE=1;
 History.EDIT_MODE_BRANCH=2;
 History.EDIT_MODE_APPEND=3;
+
+History.prototype.getStartingFullmove=function() {
+	return this._startingFullmove;
+}
+
+History.prototype.setStartingFullmove=function(fullmove) {
+	this._startingFullmove=fullmove;
+	this.mainLine.setStartingFullmove(fullmove);
+}
+
+History.prototype.getStartingColour=function() {
+	return this._startingColour;
+}
+
+History.prototype.setStartingColour=function(colour) {
+	this._startingColour=colour;
+	this.mainLine.setStartingColour(colour);
+}
+
+History.prototype.getMainLineWithoutVariations=function() {
+	var variation=new Variation(this, true);
+
+	this.mainLine.moveList.each(function(item) {
+		if(!item.isVariation) {
+			variation.add(item);
+		}
+	});
+
+	return variation;
+}
 
 History.prototype.promoteCurrentVariation=function() {
 	var variation=this.mainLine;
@@ -255,8 +259,8 @@ History.prototype.deselect=function() {
 	this.select(null);
 }
 
-History.prototype.createVariation=function(isMainline) {
-	return new Variation(this, isMainline);
+History.prototype.createVariation=function() {
+	return new Variation();
 }
 
 History.prototype.createMove=function() {

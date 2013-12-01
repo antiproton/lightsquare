@@ -1,5 +1,5 @@
-function VariationTextView(history, isMainline) {
-	Variation.implement(this, history, isMainline);
+function VariationTextView() {
+	Variation.implement(this);
 
 	this._tpl=new Template("variation_textview");
 

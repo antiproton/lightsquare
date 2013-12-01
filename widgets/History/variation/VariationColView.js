@@ -1,5 +1,5 @@
-function VariationColView(history) {
-	Variation.implement(this, history, true);
+function VariationColView() {
+	Variation.implement(this);
 
 	this._tpl=new Template("variation_colview");
 	this.node=this._tpl.root;
@@ -8,4 +8,10 @@ function VariationColView(history) {
 
 VariationColView.prototype._createMoveList=function() {
 	return new MoveListColView();
-};
+}
+
+VariationColView.prototype.updatePointers=function() {
+	Variation.prototype.updatePointers.call(this);
+
+	this.moveList.setStartingFullmove(this._startingFullmove);
+}

@@ -13,7 +13,13 @@ function Fullmove(parent, fullmove) {
 	});
 }
 
+Fullmove.prototype.setFullmove=function(fullmove) {
+	this.fullmove=fullmove;
+	this._fullmoveCol.innerHTML=fullmove;
+}
+
 Fullmove.prototype._setupTemplate=function() {
+	this._fullmoveCol=this._tpl.fullmove_col;
 	this._colourCols=[];
 	this._colourCols[WHITE]=this._tpl.white_col;
 	this._colourCols[BLACK]=this._tpl.black_col;

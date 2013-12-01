@@ -19,19 +19,8 @@ function Move() {
 	this.ts=null;
 	//TODO rename to from and to
 	this.piece=null; //for bughouse moves
-
 	this.isVariation=false; //for distinguishing between moves and variations in a move list
-
-	this.label={
-		piece: "",
-		disambiguation: "",
-		sign: "",
-		to: "",
-		special: "",
-		check: "",
-		notes: "" //!? etc
-	};
-
+	this.label="";
 	this.isSelected=false;
 }
 
@@ -51,6 +40,10 @@ Move.prototype.getDot=function() {
 	return Util.fullmove_dot(this.getColour());
 }
 
+Move.prototype.getFullLabel=function() {
+	return this.getFullmove+this.getDot()+" "+this.label;
+}
+
 Move.prototype.resetPointers=function() {
 	HistoryItem.prototype.resetPointers.call(this);
 
@@ -66,20 +59,12 @@ Move.prototype.setHalfmove=function(halfmove) {
 	this.halfmove=halfmove;
 }
 
-Move.prototype.setFullmove=function(fullmove) {
-	this.fullmove=fullmove;
-}
-
 Move.prototype.setMoveIndex=function(index) {
 	this.moveIndex=index;
 }
 
-Move.prototype.getLabel=function() {
-	return this.label.piece+this.label.disambiguation+this.label.sign+this.label.to+this.label.special+this.label.check+this.label.notes;
-}
-
-Move.prototype.getFullLabel=function() {
-	return this.fullmove+this.dot.Get()+" "+this.getLabel();
+Move.prototype.setLabel=function(label) {
+	this.label=label;
 }
 
 Move.prototype.select=function() {
