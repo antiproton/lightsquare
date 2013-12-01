@@ -1,68 +1,50 @@
 function HistoryControls(parent) {
 	Control.implement(this, parent);
 
-	this.History=null;
-	this.img_dir="/img/buttons";
+	this.history=null;
+	this._imgDir="/img/buttons";
 
-	this.width=100;
-
-	this.Width=new Property(this, function() {
-		return this.width;
-	}, function(value) {
-		this.width=value;
-		this.UpdateHtml();
-	});
-
-	this.SetupHtml();
+	this._setupHtml();
 }
 
-HistoryControls.prototype.SetupHtml=function() {
-	this.inner=div(this.Node);
+HistoryControls.prototype._setupHtml=function() {
+	this._inner=div(this.node);
 
-	//this.ButtonFirst=new Button(tmpdiv, "|<");
-	//this.ButtonPrevFive=new Button(tmpdiv, "<<");
-	//this.ButtonPrev=new Button(tmpdiv, "<");
-	//this.ButtonNext=new Button(tmpdiv, ">");
-	//this.ButtonNextFive=new Button(tmpdiv, ">>");
-	//this.ButtonLast=new Button(tmpdiv, ">|");
+	this.buttonFirst=new SpriteButton(this._inner, 23, 20, this._imgDir+"/hist_ctrl_first.png");
+	this.buttonPrevFive=new SpriteButton(this._inner, 23, 20, this._imgDir+"/hist_ctrl_prev5.png");
+	this.buttonPrev=new SpriteButton(this._inner, 23, 20, this._imgDir+"/hist_ctrl_prev.png");
+	this.buttonNext=new SpriteButton(this._inner, 23, 20, this._imgDir+"/hist_ctrl_next.png");
+	this.buttonNextFive=new SpriteButton(this._inner, 23, 20, this._imgDir+"/hist_ctrl_next5.png");
+	this.buttonLast=new SpriteButton(this._inner, 23, 20, this._imgDir+"/hist_ctrl_last.png");
 
-	Dom.AddClass(this.inner, "hist_ctrl_buttons");
-
-	this.ButtonFirst=new SpriteButton(this.inner, 23, 20, this.img_dir+"/hist_ctrl_first.png");
-	this.ButtonPrevFive=new SpriteButton(this.inner, 23, 20, this.img_dir+"/hist_ctrl_prev5.png");
-	this.ButtonPrev=new SpriteButton(this.inner, 23, 20, this.img_dir+"/hist_ctrl_prev.png");
-	this.ButtonNext=new SpriteButton(this.inner, 23, 20, this.img_dir+"/hist_ctrl_next.png");
-	this.ButtonNextFive=new SpriteButton(this.inner, 23, 20, this.img_dir+"/hist_ctrl_next5.png");
-	this.ButtonLast=new SpriteButton(this.inner, 23, 20, this.img_dir+"/hist_ctrl_last.png");
-
-	this.ButtonFirst.Click.AddHandler(this, function() {
-		if(this.History!==null) {
-			if(this.History.SelectedMove===null && this.History.MainLine.Line.Length>0) {
-				this.History.Select(this.History.MainLine.FirstMove);
+	this.buttonFirst.Click.addHandler(this, function() {
+		if(this.history!==null) {
+			if(this.history.selectedMove===null && this.history.mainLine.moveList.length>0) {
+				this.history.select(this.history.mainLine.firstMove);
 			}
 
 			else {
-				this.History.Select(null);
+				this.history.select(null);
 			}
 		}
 	});
 
-	this.ButtonPrevFive.Click.AddHandler(this, function() {
-		if(this.History!==null) {
-			if(this.History.MainLine.Line.Length>0) {
+	this.buttonPrevFive.Click.addHandler(this, function() {
+		if(this.history!==null) {
+			if(this.history.mainLine.moveList.length>0) {
 				for(var i=0; i<5; i++) {
-					if(this.History.SelectedMove!==null && this.History.SelectedMove.PreviousMove!==null) {
-						this.History.Select(this.History.SelectedMove.PreviousMove);
+					if(this.history.selectedMove!==null && this.history.selectedMove.previousMove!==null) {
+						this.history.select(this.history.selectedMove.previousMove);
 					}
 
-					else if(this.History.SelectedMove!==null && this.History.SelectedMove.Variation!==this.History.MainLine) {
-						this.History.Select(this.History.SelectedMove.Variation.BranchMove);
+					else if(this.history.selectedMove!==null && this.history.selectedMove.variation!==this.history.mainLine) {
+						this.history.select(this.history.selectedMove.variation.branchMove);
 
 						break;
 					}
 
 					else {
-						this.History.Select(null);
+						this.history.select(null);
 
 						break;
 					}
@@ -71,66 +53,60 @@ HistoryControls.prototype.SetupHtml=function() {
 		}
 	});
 
-	this.ButtonPrev.Click.AddHandler(this, function() {
-		if(this.History!==null) {
-			if(this.History.SelectedMove!==null && this.History.SelectedMove.PreviousMove!==null) {
-				this.History.Select(this.History.SelectedMove.PreviousMove);
+	this.buttonPrev.Click.addHandler(this, function() {
+		if(this.history!==null) {
+			if(this.history.selectedMove!==null && this.history.selectedMove.previousMove!==null) {
+				this.history.select(this.history.selectedMove.previousMove);
 			}
 
-			else if(this.History.SelectedMove!==null && this.History.SelectedMove.Variation!==this.History.MainLine) {
-				this.History.Select(this.History.SelectedMove.Variation.BranchMove);
+			else if(this.history.selectedMove!==null && this.history.selectedMove.variation!==this.history.mainLine) {
+				this.history.select(this.history.selectedMove.variation.branchMove);
 			}
 
 			else {
-				this.History.Select(null);
+				this.history.select(null);
 			}
 		}
 	});
 
-	this.ButtonNext.Click.AddHandler(this, function() {
-		if(this.History!==null) {
-			if(this.History.SelectedMove===null) {
-				if(this.History.MainLine.Line.Length>0) {
-					this.History.Select(this.History.MainLine.FirstMove);
+	this.buttonNext.Click.addHandler(this, function() {
+		if(this.history!==null) {
+			if(this.history.selectedMove===null) {
+				if(this.history.mainLine.moveList.length>0) {
+					this.history.select(this.history.mainLine.firstMove);
 				}
 			}
 
-			else if(this.History.SelectedMove.NextMove!==null) {
-				this.History.Select(this.History.SelectedMove.NextMove);
+			else if(this.history.selectedMove.nextMove!==null) {
+				this.history.select(this.history.selectedMove.nextMove);
 			}
 		}
 	});
 
-	this.ButtonNextFive.Click.AddHandler(this, function() {
-		if(this.History!==null) {
-			if(this.History.SelectedMove===null) {
-				if(this.History.MainLine.Line.Length>0) {
-					this.History.Select(this.History.MainLine.FirstMove);
+	this.buttonNextFive.Click.addHandler(this, function() {
+		if(this.history!==null) {
+			if(this.history.selectedMove===null) {
+				if(this.history.mainLine.moveList.length>0) {
+					this.history.select(this.history.mainLine.firstMove);
 				}
 			}
 
-			if(this.History.SelectedMove!==null) {
+			if(this.history.selectedMove!==null) {
 				var i=0;
 
-				while(i<5 && this.History.SelectedMove.NextMove!==null) {
-					this.History.Select(this.History.SelectedMove.NextMove);
+				while(i<5 && this.history.selectedMove.nextMove!==null) {
+					this.history.select(this.history.selectedMove.nextMove);
 					i++;
 				}
 			}
 		}
 	});
 
-	this.ButtonLast.Click.AddHandler(this, function() {
-		if(this.History!==null) {
-			if(this.History.MainLine.LastMove!==null) {
-				this.History.Select(this.History.MainLine.LastMove);
+	this.buttonLast.Click.addHandler(this, function() {
+		if(this.history!==null) {
+			if(this.history.mainLine.lastMove!==null) {
+				this.history.select(this.history.mainLine.lastMove);
 			}
 		}
-	});
-}
-
-HistoryControls.prototype.UpdateHtml=function() {
-	style(this.inner, {
-		width: this.width
 	});
 }
