@@ -34,19 +34,19 @@ function Move() {
 
 	this.isSelected=false;
 
-	this.dot=new Property(this, function() {
+	this.dot=setter(this, function() {
 		return Util.fullmove_dot(this.Colour.Get());
 	});
 
-	this.displayFullmove=new Property(this, function() {
+	this.displayFullmove=setter(this, function() {
 		return (this.colour.get()===WHITE || this.MoveIndex===0 || this.previousVariation!==null);
 	});
 
-	this.colour=new Property(this, function() {
+	this.colour=setter(this, function() {
 		return Util.hm_colour(this.halfmove);
 	});
 
-	this.fullmove=new Property(this, function() { //e4 e5 Nc3 //e4 and e5 are 1, Nc3 is 2
+	this.fullmove=setter(this, function() { //e4 e5 Nc3 //e4 and e5 are 1, Nc3 is 2
 		return Util.fullmove(this.halfmove);
 	});
 }
