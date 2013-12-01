@@ -4,12 +4,12 @@ function Fullmove(parent, fullmove) {
 
 	this.fullmove=fullmove;
 
-	this._isMoveAdded=[];
-	this._isMoveAdded[WHITE]=false;
-	this._isMoveAdded[BLACK]=false;
+	this._hasMove=[];
+	this._hasMove[WHITE]=false;
+	this._hasMove[BLACK]=false;
 
-	this.isMoveAdded=new Property(this, function(colour) {
-		return this._isMoveAdded[colour];
+	this.isMoveAdded=setter(this, function(colour) {
+		return this._hasMove[colour];
 	});
 }
 
@@ -22,14 +22,14 @@ Fullmove.prototype._setupTemplate=function() {
 Fullmove.prototype.add=function(move) {
 	this._colourCols[move.colour].appendChild(move.node);
 	move.parentFullmove=this;
-	this._isMoveAdded[move.colour]=true;
+	this._hasMove[move.colour]=true;
 }
 
 Fullmove.prototype.remove=function(move) {
 	$(move.node).remove();
-	this._isMoveAdded[move.colour]=false;
+	this._hasMove[move.colour]=false;
 }
 
 Fullmove.prototype.isEmpty=function() {
-	return (!this._isMoveAdded[WHITE] && !this._isMoveAdded[BLACK]);
+	return (!this._hasMove[WHITE] && !this._hasMove[BLACK]);
 }
