@@ -76,10 +76,10 @@ $widgetLoader->load([
 		<script>
 		var ui=new UiLiveTableStandard(g("table"));
 
-		ui.Board.SquareSize(45);
-		ui.Board.SetFen(FEN_INITIAL);
 
-
+		
+		ui.board.squareSize(45);
+		ui.board.setFen(FEN_INITIAL);
 		</script>
 	</body>
 </html>
