@@ -20,7 +20,7 @@ HistoryColView.prototype.createVariation=function() {
 HistoryColView.prototype.createMove=function() {
 	var move=new MoveColView();
 
-	UiHistory.prototype._setupMove.call(this, move);
+	this._setupMove(move);
 
 	return move;
 }
