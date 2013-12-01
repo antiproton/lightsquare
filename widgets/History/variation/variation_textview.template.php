@@ -34,7 +34,7 @@ UiVariation.prototype.SetupHtml=function() {
 ###
 -->
 <div class="template" id="variation_textview">
-	<div data-id="root" data-class="root">
+	<div data-id="root" class="variation_textview_root">
 
 	</div>
 </div>
