@@ -33,22 +33,22 @@ function Move() {
 	};
 
 	this.isSelected=false;
+}
 
-	this.dot=setter(this, function() {
-		return Util.fullmove_dot(this.Colour.Get());
-	});
+Move.prototype.getFullmove=function() {
+	return Util.fullmove(this.halfmove);
+}
 
-	this.displayFullmove=setter(this, function() {
-		return (this.colour.get()===WHITE || this.MoveIndex===0 || this.previousVariation!==null);
-	});
+Move.prototype.getColour=function() {
+	return Util.hm_colour(this.halfmove);
+}
 
-	this.colour=setter(this, function() {
-		return Util.hm_colour(this.halfmove);
-	});
+Move.prototype.isFullmoveDisplayed=function() {
+	return (this.getColour()===WHITE || this.moveIndex===0 || this.previousVariation!==null);
+}
 
-	this.fullmove=setter(this, function() { //e4 e5 Nc3 //e4 and e5 are 1, Nc3 is 2
-		return Util.fullmove(this.halfmove);
-	});
+Move.prototype.getDot=function() {
+	return Util.fullmove_dot(this.getColour());
 }
 
 Move.prototype.resetPointers=function() {
