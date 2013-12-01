@@ -8,6 +8,10 @@ function HistoryColView(parent) {
 HistoryColView.prototype.move=function(move) {
 	this.mainLine.add(move);
 
+	this.Moved.fire({
+		move: move
+	});
+
 	this.select(move);
 
 	return true;
