@@ -9,7 +9,7 @@ $widgetLoader=new WidgetLoader("widgets");
 $widgetLoader->load([
 	"Board",
 	"History",
-	"LiveTableStd"
+	"LiveTableStandard"
 ]);
 ?>
 <!DOCTYPE html>
