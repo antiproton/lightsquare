@@ -4,27 +4,27 @@ function MoveListTextView(parent) {
 	this.tpl=new Template("move_list_textview", parent);
 }
 
-MoveListTextView.prototype.Add=function(item) {
-	this.Insert(item, this.Length);
+MoveListTextView.prototype.add=function(item) {
+	this.insert(item, this.length);
 }
 
-MoveListTextView.prototype.Insert=function(item, index) {
+MoveListTextView.prototype.insert=function(item, index) {
 	var space=t(" ");
 
 	if(index>=this.Length) {
-		this.Node.appendChild(item.Node);
-		this.Node.appendChild(space);
+		this.node.appendChild(item.node);
+		this.node.appendChild(space);
 	}
 
 	else {
-		this.Node.insertBefore(space, this.Item(index).Node);
-		this.Node.insertBefore(item.Node, space);
+		this.node.insertBefore(space, this.item(index).node);
+		this.node.insertBefore(item.node, space);
 	}
 
-	List.prototype.Insert.call(this, item, index);
+	List.prototype.insert.call(this, item, index);
 }
 
-MoveListTextView.prototype.Remove=function(item) {
-	List.prototype.Remove.call(this, item);
-	Dom.RemoveNode(item.Node);
+MoveListTextView.prototype.remove=function(item) {
+	List.prototype.remove.call(this, item);
+	item.remove();
 }

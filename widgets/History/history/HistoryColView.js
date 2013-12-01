@@ -2,29 +2,29 @@ function HistoryColView(parent) {
 	UiHistory.implement(this);
 
 	this.tpl=new Template("history_colview", parent);
-	this.tpl.root.appendChild(this.MainLine.Node);
+	this.tpl.root.appendChild(this.mainLine.node);
 }
 
-HistoryColView.prototype.Move=function(move) {
-	this.MainLine.Add(move);
+HistoryColView.prototype.move=function(move) {
+	this.mainLine.add(move);
 
 	this.Moved.Fire({
-		Move: move
+		move: move
 	});
 
-	this.Select(move);
+	this.select(move);
 
 	return true;
 }
 
-HistoryColView.prototype.CreateVariation=function() {
+HistoryColView.prototype._createVariation=function() {
 	return new VariationColView(this);
 }
 
-HistoryColView.prototype.CreateMove=function() {
+HistoryColView.prototype._createMove=function() {
 	var move=new MoveColView();
 
-	UiHistory.prototype.setup_move.call(this, move);
+	UiHistory.prototype._setupMove.call(this, move);
 
 	return move;
 }

@@ -4,10 +4,10 @@ function UiMove() {
 	this.UserSelect=new Event(this);
 }
 
-UiMove.prototype.Select=function() {
+UiMove.prototype.select=function() {
 	$(this.Node).addClass("move_selected");
 }
 
-UiMove.prototype.Deselect=function() {
-	$(this.Node).removeClass("move_selected");
+UiMove.prototype.deselect=function() {
+	$(this.node).removeClass("move_selected");
 }

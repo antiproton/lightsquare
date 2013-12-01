@@ -4,8 +4,8 @@ function UiHistory() {
 	this.UserSelect=new Event(this);
 }
 
-UiHistory.prototype.Select=function(move) {
-	History.prototype.Select.call(this, move);
+UiHistory.prototype.select=function(move) {
+	History.prototype.select.call(this, move);
 
 	if(move!==null) {
 		/*
@@ -14,8 +14,8 @@ UiHistory.prototype.Select=function(move) {
 	}
 }
 
-UiHistory.prototype.setup_move=function(move) {
-	move.UserSelect.AddHandler(this, function(data, sender) {
-		this.Select(sender);
+UiHistory.prototype._setupMove=function(move) {
+	move.UserSelect.addHandler(this, function(data, sender) {
+		this.select(sender);
 	});
 }

@@ -2,31 +2,31 @@ function MoveTextView() {
 	UiMove.implement(this);
 
 	this.tpl=new Template("move_textview");
-	this.Node=this.tpl.root;
+	this.node=this.tpl.root;
 }
 
-MoveTextView.prototype.SetPreviousVariation=function(variation) {
-	Move.prototype.SetPreviousVariation.call(this, variation);
+MoveTextView.prototype.setPreviousVariation=function(variation) {
+	Move.prototype.setPreviousVariation.call(this, variation);
 
-	this.update_fullmove_display();
+	this._updateFullmove();
 }
 
-MoveTextView.prototype.SetFullmove=function(fullmove) {
-	this.Fullmove=fullmove;
-	this.update_fullmove();
+MoveTextView.prototype.setFullmove=function(fullmove) {
+	this.fullmove=fullmove;
+	this._updateFullmove();
 }
 
-MoveTextView.prototype.SetHalfmove=function(halfmove) {
-	this.Halfmove=halfmove;
-	this.update_fullmove();
+MoveTextView.prototype.setHalfmove=function(halfmove) {
+	this.halfmove=halfmove;
+	this._updateFullmove();
 }
 
-MoveTextView.prototype.update_fullmove=function() {
+MoveTextView.prototype._updateFullmove=function() {
 	this.tpl.fullmove.style.visibility=(
-		this.DisplayFullmove.Get()?
+		this.displayFullmove.get()?
 		"visible":
 		"hidden"
 	);
 
-	this.tpl.fullmove.innerHTML=this.Fullmove+this.Dot.Get();
+	this.tpl.fullmove.innerHTML=this.fullmove+this.dot.Get();
 }

@@ -2,38 +2,38 @@ function MoveListColView() {
 	List.implement(this);
 
 	this.tpl=new Template("movelist_colview");
-	this.Node=this.tpl.root;
+	this.node=this.tpl.root;
 	this.fullmoves=new List();
-	this.current_fullmove=null;
+	this._currentFullmove=null;
 }
 
-MoveListColView.prototype.Add=function(move) {
-	List.prototype.Add.call(this, move);
+MoveListColView.prototype.add=function(move) {
+	List.prototype.add.call(this, move);
 
-	if(this.current_fullmove===null || move.Colour===WHITE) {
-		this.current_fullmove=this.fullmoves.Add(new Fullmove(this.tpl.root, move.Fullmove));
+	if(this._currentFullmove===null || move.colour===WHITE) {
+		this._currentFullmove=this.fullmoves.add(new Fullmove(this.tpl.root, move.fullmove));
 	}
 
-	this.current_fullmove.Add(move);
+	this._currentFullmove.add(move);
 }
 
-MoveListColView.prototype.Remove=function(move) {
-	List.prototype.Remove.call(this, move);
+MoveListColView.prototype.remove=function(move) {
+	List.prototype.remove.call(this, move);
 
-	var fullmove=move.ParentFullmove;
+	var fullmove=move.parentFullmove;
 
-	fullmove.Remove(move);
+	fullmove.remove(move);
 
-	if(fullmove.IsEmpty()) {
-		this.fullmoves.Remove(fullmove);
-		$(fullmove.Node).remove();
+	if(fullmove.isEmpty()) {
+		this.fullmoves.remove(fullmove);
+		$(fullmove.node).remove();
 	}
 
-	if(this.fullmoves.Length>0) {
-		this.current_fullmove=this.fullmoves.LastItem();
+	if(this.fullmoves.length>0) {
+		this._currentFullmove=this.fullmoves.lastItem();
 	}
 
 	else {
-		this.current_fullmove=null;
+		this._currentFullmove=null;
 	}
 }

@@ -1,35 +1,35 @@
 function Fullmove(parent, fullmove) {
 	this.tpl=new Template("fullmove", parent);
-	this.setup_template();
+	this._setupTemplate();
 
-	this.Fullmove=fullmove;
+	this.fullmove=fullmove;
 
-	this.is_move_added=[];
-	this.is_move_added[WHITE]=false;
-	this.is_move_added[BLACK]=false;
+	this._isMoveAdded=[];
+	this._isMoveAdded[WHITE]=false;
+	this._isMoveAdded[BLACK]=false;
 
-	this.IsMoveAdded=new Property(this, function(colour) {
-		return this.is_move_added[colour];
+	this.isMoveAdded=new Property(this, function(colour) {
+		return this._isMoveAdded[colour];
 	});
 }
 
-Fullmove.prototype.setup_template=function() {
-	this.colour_cols=[];
-	this.colour_cols[WHITE]=this.tpl.white_col;
-	this.colour_cols[BLACK]=this.tpl.black_col;
+Fullmove.prototype._setupTemplate=function() {
+	this._colourCols=[];
+	this._colourCols[WHITE]=this.tpl.white_col;
+	this._colourCols[BLACK]=this.tpl.black_col;
 }
 
-Fullmove.prototype.Add=function(move) {
-	this.colour_cols[move.Colour].appendChild(move.Node);
-	move.ParentFullmove=this;
-	this.is_move_added[move.Colour]=true;
+Fullmove.prototype.add=function(move) {
+	this._colourCols[move.colour].appendChild(move.node);
+	move.parentFullmove=this;
+	this._isMoveAdded[move.colour]=true;
 }
 
-Fullmove.prototype.Remove=function(move) {
+Fullmove.prototype.remove=function(move) {
 	$(move.Node).remove();
-	this.is_move_added[move.Colour]=false;
+	this._isMoveAdded[move.colour]=false;
 }
 
-Fullmove.prototype.IsEmpty=function() {
-	return (!this.is_move_added[WHITE] && !this.is_move_added[BLACK]);
+Fullmove.prototype.isEmpty=function() {
+	return (!this._isMoveAdded[WHITE] && !this._isMoveAdded[BLACK]);
 }

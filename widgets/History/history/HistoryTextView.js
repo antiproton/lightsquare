@@ -2,17 +2,17 @@ function HistoryTextView(parent) {
 	UiHistory.implement(this);
 
 	this.tpl=new Template("history_textview", parent);
-	this.tpl.root.appendChild(this.MainLine.Node);
+	this.tpl.root.appendChild(this.MainLine.node);
 }
 
-HistoryTextView.prototype.CreateMove=function() {
+HistoryTextView.prototype._createMove=function() {
 	var move=new MoveTextView();
 
-	this.setup_move(move);
+	this._setupMove(move);
 
 	return move;
 }
 
-HistoryTextView.prototype.CreateVariation=function() {
+HistoryTextView.prototype._createVariation=function() {
 	return new VariationTextView(this);
 }
