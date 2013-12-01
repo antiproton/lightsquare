@@ -1,8 +1,8 @@
 function HistoryColView(parent) {
 	UiHistory.implement(this);
 
-	this.tpl=new Template("history_colview", parent);
-	this.tpl.root.appendChild(this.mainLine.node);
+	this._tpl=new Template("history_colview", parent);
+	this._tpl.root.appendChild(this.mainLine.node);
 }
 
 HistoryColView.prototype.move=function(move) {

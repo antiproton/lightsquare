@@ -1,7 +1,7 @@
 function MoveListTextView(parent) {
 	List.implement(this);
 
-	this.tpl=new Template("move_list_textview", parent);
+	this._tpl=new Template("move_list_textview", parent);
 }
 
 MoveListTextView.prototype.add=function(item) {

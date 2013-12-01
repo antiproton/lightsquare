@@ -1,8 +1,8 @@
 function MoveListColView() {
 	List.implement(this);
 
-	this.tpl=new Template("movelist_colview");
-	this.node=this.tpl.root;
+	this._tpl=new Template("movelist_colview");
+	this.node=this._tpl.root;
 	this.fullmoves=new List();
 	this._currentFullmove=null;
 }
@@ -11,7 +11,7 @@ MoveListColView.prototype.add=function(move) {
 	List.prototype.add.call(this, move);
 
 	if(this._currentFullmove===null || move.colour===WHITE) {
-		this._currentFullmove=this.fullmoves.add(new Fullmove(this.tpl.root, move.fullmove));
+		this._currentFullmove=this.fullmoves.add(new Fullmove(this._tpl.root, move.fullmove));
 	}
 
 	this._currentFullmove.add(move);

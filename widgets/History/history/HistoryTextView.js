@@ -1,8 +1,8 @@
 function HistoryTextView(parent) {
 	UiHistory.implement(this);
 
-	this.tpl=new Template("history_textview", parent);
-	this.tpl.root.appendChild(this.mainLine.node);
+	this._tpl=new Template("history_textview", parent);
+	this._tpl.root.appendChild(this.mainLine.node);
 }
 
 HistoryTextView.prototype.createMove=function() {

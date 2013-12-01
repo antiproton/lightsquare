@@ -1,5 +1,5 @@
 function Fullmove(parent, fullmove) {
-	this.tpl=new Template("fullmove", parent);
+	this._tpl=new Template("fullmove", parent);
 	this._setupTemplate();
 
 	this.fullmove=fullmove;
@@ -15,8 +15,8 @@ function Fullmove(parent, fullmove) {
 
 Fullmove.prototype._setupTemplate=function() {
 	this._colourCols=[];
-	this._colourCols[WHITE]=this.tpl.white_col;
-	this._colourCols[BLACK]=this.tpl.black_col;
+	this._colourCols[WHITE]=this._tpl.white_col;
+	this._colourCols[BLACK]=this._tpl.black_col;
 }
 
 Fullmove.prototype.add=function(move) {

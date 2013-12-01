@@ -1,8 +1,8 @@
 function MoveTextView() {
 	UiMove.implement(this);
 
-	this.tpl=new Template("move_textview");
-	this.node=this.tpl.root;
+	this._tpl=new Template("move_textview");
+	this.node=this._tpl.root;
 }
 
 MoveTextView.prototype.setPreviousVariation=function(variation) {
@@ -22,11 +22,11 @@ MoveTextView.prototype.setHalfmove=function(halfmove) {
 }
 
 MoveTextView.prototype._updateFullmove=function() {
-	this.tpl.fullmove.style.visibility=(
+	this._tpl.fullmove.style.visibility=(
 		this.displayFullmove.get()?
 		"visible":
 		"hidden"
 	);
 
-	this.tpl.fullmove.innerHTML=this.fullmove+this.dot.Get();
+	this._tpl.fullmove.innerHTML=this.fullmove+this.dot.Get();
 }
