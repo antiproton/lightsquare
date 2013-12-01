@@ -39,7 +39,7 @@ $widgetLoader->load([
 		script_tags_w("/js/controls");
 		script_tags_w("/js/livechess");
 		?>
-		<script src="/lib/js/jquery-1.9.1.js"></script>
+		<script src="/lib/jquery.js"></script>
 		<script>
 		<?php
 		$widgetLoader->outputJs();
