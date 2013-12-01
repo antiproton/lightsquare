@@ -17,11 +17,11 @@ HistoryColView.prototype.move=function(move) {
 	return true;
 }
 
-HistoryColView.prototype._createVariation=function() {
+HistoryColView.prototype.createVariation=function() {
 	return new VariationColView(this);
 }
 
-HistoryColView.prototype._createMove=function() {
+HistoryColView.prototype.createMove=function() {
 	var move=new MoveColView();
 
 	UiHistory.prototype._setupMove.call(this, move);

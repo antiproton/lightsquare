@@ -3,7 +3,7 @@ function History() {
 	this._startingFullmove=1;
 	this.selectedMove=null;
 	this.editMode=History.EDIT_MODE_BRANCH;
-	this.mainLine=this._createVariation(true);
+	this.mainLine=this.createVariation(true);
 
 	/*
 	bulkUpdate - set this to true before adding a lot of moves to
@@ -134,7 +134,7 @@ History.prototype.promoteCurrentVariation=function() {
 	}
 }
 
-History.prototype.DeleteCurrentMove=function() {
+History.prototype.deleteCurrentMove=function() {
 	var move=this.selectedMove;
 	var variation;
 	var parentVar=null;
@@ -142,7 +142,7 @@ History.prototype.DeleteCurrentMove=function() {
 	if(move!==null) {
 		variation=move.variation;
 		parentVar=variation.variation;
-		move.variation.DeleteMove(move);
+		move.variation.deleteMove(move);
 
 		if(variation.moveList.length===0 && !variation.IsMainline) {
 			this.select(variation.branchMove);
@@ -255,10 +255,10 @@ History.prototype.deselect=function() {
 	this.select(null);
 }
 
-History.prototype._createVariation=function(isMainline) {
+History.prototype.createVariation=function(isMainline) {
 	return new Variation(this, isMainline);
 }
 
-History.prototype._createMove=function() {
+History.prototype.createMove=function() {
 	return new Move();
 }
