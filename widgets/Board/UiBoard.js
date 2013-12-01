@@ -313,7 +313,7 @@ UiBoard.prototype.init_props=function() {
 		}
 	});
 
-	this.SquareSize=setter(this, function() {
+	this.squareSize=setter(this, function() {
 		return this.square_size;
 	}, function(value) {
 		if(this.square_size!==value) {
@@ -1287,7 +1287,7 @@ UiBoard.prototype.Deselect=function() {
 	}
 }
 
-UiBoard.prototype.SetFen=function(fen) {
+UiBoard.prototype.setFen=function(fen) {
 	Board.prototype.setFen.call(this, fen);
 	this.UpdateSquares();
 }
