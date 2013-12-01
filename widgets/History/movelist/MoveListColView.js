@@ -7,6 +7,10 @@ function MoveListColView() {
 	this._currentFullmove=null;
 }
 
+MoveListColView.prototype.insert=function(move) {
+	this.add(move);
+}
+
 MoveListColView.prototype.add=function(move) {
 	List.prototype.add.call(this, move);
 
