@@ -1,4 +1,4 @@
-function PiecesTaken(parent) {
+function PiecesTaken() {
 	this.pieces=[];
 }
 
@@ -12,22 +12,22 @@ the same result on the server.
 FIXME too coupled
 */
 
-PiecesTaken.prototype.Add=function(piece) {
-	var next_lowest=-1;
-	var current_piece;
+PiecesTaken.prototype.add=function(piece) {
+	var nextLowest=-1;
+	var currentPiece;
 
 	for(var i=0; i<this.pieces.length; i++) {
-		current_piece=this.pieces[i];
+		currentPiece=this.pieces[i];
 
-		if(current_piece<piece && current_piece>next_lowest) {
-			next_lowest=i;
+		if(currentPiece<piece && currentPiece>nextLowest) {
+			nextLowest=i;
 		}
 	}
 
-	this.pieces.splice(next_lowest+1, 0, piece);
+	this.pieces.splice(nextLowest+1, 0, piece);
 }
 
-PiecesTaken.prototype.Remove=function(piece) {
+PiecesTaken.prototype.remove=function(piece) {
 	for(var i=0; i<this.pieces.length; i++) {
 		if(this.pieces[i]===piece) {
 			this.pieces.splice(i, 1);
@@ -37,7 +37,7 @@ PiecesTaken.prototype.Remove=function(piece) {
 	}
 }
 
-PiecesTaken.prototype.Taken=function(piece) {
+PiecesTaken.prototype.taken=function(piece) {
 	for(var i=0; i<this.pieces.length; i++) {
 		if(this.pieces[i]===piece) {
 			return true;
@@ -47,6 +47,6 @@ PiecesTaken.prototype.Taken=function(piece) {
 	return false;
 }
 
-PiecesTaken.prototype.Clear=function() {
+PiecesTaken.prototype.clear=function() {
 	this.pieces=[];
 }

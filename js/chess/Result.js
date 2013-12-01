@@ -1,26 +1,26 @@
 var Result={};
 
-Result.String={};
+Result.string={};
 
-Result.String[RESULT_WHITE]="1-0";
-Result.String[RESULT_BLACK]="0-1";
-Result.String[RESULT_DRAW]="\u00bd-\u00bd"; //1/2-1/2 with fraction symbols
+Result.string[RESULT_WHITE]="1-0";
+Result.string[RESULT_BLACK]="0-1";
+Result.string[RESULT_DRAW]="\u00bd-\u00bd"; //1/2-1/2 with fraction symbols
 
-Result.WinResult=[
+Result.winResult=[
 	RESULT_WHITE,
 	RESULT_BLACK
 ];
 
-Result.WinningColour={};
+Result.winningColour={};
 
-Result.WinningColour[RESULT_WHITE]=WHITE;
-Result.WinningColour[RESULT_BLACK]=BLACK;
+Result.winningColour[RESULT_WHITE]=WHITE;
+Result.winningColour[RESULT_BLACK]=BLACK;
 
-Result.DetailsString=function(game) {
+Result.detailsString=function(game) {
 	var str;
-	var winner=[game.White, game.Black][Result.WinningColour[game.Result]];
+	var winner=[game.white, game.black][Result.winningColour[game.result]];
 
-	if(game.Result===RESULT_DRAW) {
+	if(game.result===RESULT_DRAW) {
 		str="Drawn by ";
 	}
 
@@ -28,7 +28,7 @@ Result.DetailsString=function(game) {
 		str=winner+" won by ";
 	}
 
-	str+=DbEnums[RESULT_DETAILS][game.ResultDetails].Description.toLowerCase();
+	str+=DbEnums[RESULT_DETAILS][game.resultDetails].description.toLowerCase();
 
 	return str;
 }

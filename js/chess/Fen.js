@@ -1,5 +1,5 @@
 var Fen={
-	piece_char: [
+	pieceChar: [
 		"_",
 		"P",
 		"N",
@@ -17,7 +17,7 @@ var Fen={
 		"k"
 	],
 
-	piece_int: {
+	pieceInt: {
 		"_": SQ_EMPTY,
 		"P": WHITE_PAWN,
 		"N": WHITE_KNIGHT,
@@ -33,7 +33,7 @@ var Fen={
 		"k": BLACK_KING
 	},
 
-	castling_sign: [
+	castlingSign: [
 		[
 			FEN_WHITE_CASTLE_KS,
 			FEN_WHITE_CASTLE_QS
@@ -44,15 +44,15 @@ var Fen={
 		]
 	],
 
-	get_piece_int: function(piece) {
-		return Fen.piece_int[piece];
+	getPieceInt: function(piece) {
+		return Fen.pieceInt[piece];
 	},
 
-	get_piece_char: function(piece) {
-		return Fen.piece_char[piece];
+	getPieceChar: function(piece) {
+		return Fen.pieceChar[piece];
 	},
 
-	pos_to_array: function(pos) {
+	posToArray: function(pos) {
 		var arr=[];
 		var rank=pos.split(FEN_POS_SEPARATOR);
 
@@ -69,7 +69,7 @@ var Fen={
 				sq=file[f];
 
 				if(FEN_PIECES.indexOf(sq)!==-1) {
-					arr.push(Fen.get_piece_int(sq));
+					arr.push(Fen.getPieceInt(sq));
 					i++;
 				}
 
@@ -93,7 +93,7 @@ var Fen={
 		return arr;
 	},
 
-	array_to_pos: function(arr) {
+	arrayToPos: function(arr) {
 		var pos=[];
 		var rank=[];
 
@@ -101,11 +101,11 @@ var Fen={
 			rank.push(arr.slice(i, i+8));
 		}
 
-		var n, fen_rank, next, piece;
+		var n, fenRank, next, piece;
 
 		for(var r in rank) {
 			n=0;
-			fen_rank="";
+			fenRank="";
 
 			for(var j=0; j<rank[r].length; j++) {
 				piece=rank[r][j];
@@ -120,31 +120,31 @@ var Fen={
 					n++;
 
 					if(next!==SQ_EMPTY) {
-						fen_rank+=n;
+						fenRank+=n;
 						n=0;
 					}
 				}
 
 				else {
-					fen_rank+=Fen.get_piece_char(piece);
+					fenRank+=Fen.getPieceChar(piece);
 				}
 			}
 
-			pos.push(fen_rank);
+			pos.push(fenRank);
 		}
 
 		return pos.join(FEN_POS_SEPARATOR);
 	},
 
-	fen_to_array: function(fen) {
+	fenToArray: function(fen) {
 		return fen.split(FEN_SEPARATOR);
 	},
 
-	array_to_fen: function(arr) {
+	arrayToFen: function(arr) {
 		return arr.join(FEN_SEPARATOR);
 	},
 
-	castling_int: function(str) {
+	castlingInt: function(str) {
 		if(str==FEN_NONE) {
 			return CASTLING_NONE;
 		}
@@ -154,7 +154,7 @@ var Fen={
 
 		for(var colour=WHITE; colour<=BLACK; colour++) {
 			for(var side=KINGSIDE; side<=QUEENSIDE; side++) {
-				n=(str.indexOf(this.castling_sign[colour][side])===-1)?0:1;
+				n=(str.indexOf(this.castlingSign[colour][side])===-1)?0:1;
 				castling=Util.set_castling(castling, colour, side, n);
 			}
 		}
@@ -162,7 +162,7 @@ var Fen={
 		return castling;
 	},
 
-	castling_str: function(n) {
+	castlingStr: function(n) {
 		if(n==CASTLING_NONE) {
 			return FEN_NONE;
 		}
@@ -172,7 +172,7 @@ var Fen={
 		for(var colour=WHITE; colour<=BLACK; colour++) {
 			for(var side=KINGSIDE; side<=QUEENSIDE; side++) {
 				if(Util.get_castling(n, colour, side)) {
-					castling+=Fen.castling_sign[colour][side];
+					castling+=Fen.castlingSign[colour][side];
 				}
 			}
 		}
@@ -180,11 +180,11 @@ var Fen={
 		return castling;
 	},
 
-	colour_str: function(colour) {
+	colourStr: function(colour) {
 		return colour===BLACK?FEN_ACTIVE_BLACK:FEN_ACTIVE_WHITE;
 	},
 
-	colour_int: function(str) {
+	colourInt: function(str) {
 		return str===FEN_ACTIVE_BLACK?BLACK:WHITE;
 	}
 };

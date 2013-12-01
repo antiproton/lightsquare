@@ -1,12 +1,12 @@
 function Piece(piece) {
-	this.Type=Util.type(piece);
-	this.Colour=Util.colour(piece);
+	this.type=Util.type(piece);
+	this.colour=Util.colour(piece);
 }
 
-Piece.Values=[];
+Piece.values=[];
 
-Piece.Values[PAWN]=1;
-Piece.Values[KNIGHT]=3;
-Piece.Values[BISHOP]=3;
-Piece.Values[ROOK]=5;
-Piece.Values[QUEEN]=9;
+Piece.values[PAWN]=1;
+Piece.values[KNIGHT]=3;
+Piece.values[BISHOP]=3;
+Piece.values[ROOK]=5;
+Piece.values[QUEEN]=9;

@@ -1,8 +1,8 @@
 var TimeParser=new (function () {
-	this.number_re=/\d/;
-	this.unit_re=/[ywdhms]/i;
+	this._numberRe=/\d/;
+	this._unitRe=/[ywdhms]/i;
 
-	this.unit_multipliers={
+	this._unitMultipliers={
 		"s": 1,
 		"m": 60,
 		"h": 60,
@@ -11,75 +11,75 @@ var TimeParser=new (function () {
 		"y": 52
 	};
 
-	this.seconds_multipliers={};
+	this._secondsMultipliers={};
 	var m=1;
 
-	for(var u in this.unit_multipliers) {
-		m*=this.unit_multipliers[u];
-		this.seconds_multipliers[u]=m;
+	for(var u in this._unitMultipliers) {
+		m*=this._unitMultipliers[u];
+		this._secondsMultipliers[u]=m;
 	}
 
-	this.DefaultUnits="m";
-	this.Str="";
-	this.CurrentChar="";
-	this.I=-1;
-	this.Chars=[];
-	this.Result=null;
-	this.current_time=0;
+	this.defaultUnits="m";
+	this.str="";
+	this.currentChar="";
+	this.i=-1;
+	this.chars=[];
+	this.result=null;
+	this._currentTime=0;
 })();
 
-TimeParser.Parse=function(str, default_units) {
-	default_units=default_units||this.DefaultUnits;
+TimeParser.parse=function(str, defaultUnits) {
+	defaultUnits=defaultUnits||this.defaultUnits;
 	var success=true;
 
-	this.set_string(str);
+	this._setString(str);
 
-	this.reset();
-	this.next();
+	this._reset();
+	this._next();
 
 	while(!this.eof()) {
-		this.current_time+=this.read_time(default_units);
+		this._currentTime+=this._readTime(defaultUnits);
 	}
 
-	this.Result=this.current_time;
+	this.result=this._currentTime;
 
-	return this.current_time;
+	return this._currentTime;
 }
 
-TimeParser.Encode=function(time, display_default_units, default_units) {
-	if(is_undefined(display_default_units)) {
-		display_default_units=true;
+TimeParser.encode=function(time, displayDefaultUnits, defaultUnits) {
+	if(is_undefined(displayDefaultUnits)) {
+		displayDefaultUnits=true;
 	}
 
-	default_units=default_units||null;
+	defaultUnits=defaultUnits||null;
 
 	var str="0";
 
 	if(time>0) {
-		var seconds_multipliers={};
+		var secondsMultipliers={};
 		var sections={};
 		var remaining=time;
 		var divider, quantity;
 
-		//first we need a reversed version of seconds_multipliers, to do years first
+		//first we need a reversed version of secondsMultipliers, to do years first
 
 		var multipliers=[];
 
-		for(var u in this.seconds_multipliers) {
+		for(var u in this._secondsMultipliers) {
 			multipliers.push({
 				Units: u,
-				Multiplier: this.seconds_multipliers[u]
+				Multiplier: this._secondsMultipliers[u]
 			});
 		}
 
 		multipliers.reverse();
 
 		for(var i=0; i<multipliers.length; i++) {
-			seconds_multipliers[multipliers[i].Units]=multipliers[i].Multiplier;
+			secondsMultipliers[multipliers[i].Units]=multipliers[i].Multiplier;
 		}
 
-		for(var u in seconds_multipliers) {
-			divider=seconds_multipliers[u];
+		for(var u in secondsMultipliers) {
+			divider=secondsMultipliers[u];
 
 			if(remaining>=divider) {
 				quantity=Math.floor(remaining/divider);
@@ -98,7 +98,7 @@ TimeParser.Encode=function(time, display_default_units, default_units) {
 		*/
 
 		for(var u in sections) {
-			if(u===default_units && time%seconds_multipliers[u]===0 && !display_default_units) {
+			if(u===defaultUnits && time%secondsMultipliers[u]===0 && !displayDefaultUnits) {
 				unit_strs.push(sections[u]);
 			}
 
@@ -113,7 +113,7 @@ TimeParser.Encode=function(time, display_default_units, default_units) {
 	return str;
 }
 
-TimeParser.GetColonDisplay=function(mtime, display_tenths) {
+TimeParser.getColonDisplay=function(mtime, display_tenths) {
 	var sections=[];
 	var time=Math.floor(mtime/MSEC_PER_SEC);
 	var tenths=Math.floor((mtime%MSEC_PER_SEC)/(MSEC_PER_SEC/10));
@@ -121,36 +121,36 @@ TimeParser.GetColonDisplay=function(mtime, display_tenths) {
 	var remainder;
 	var n, str;
 	var divisor;
-	var first_section=true;
+	var onFirstSection=true;
 	var nonzero=false; //have we encountered any sections with 1 or more units yet
 	var display;
-	var section_multiples=[24, 60, 60, 1]; //days, hours, minutes, seconds (don't divide seconds into anything)
+	var sectionMultiples=[24, 60, 60, 1]; //days, hours, minutes, seconds (don't divide seconds into anything)
 
 	//these two should really be parameters
 
-	var min_sections=2; //at least 0:12 if there are only 12 seconds left, but not 0:00:12
-	var min_digits=2;
+	var minSections=2; //at least 0:12 if there are only 12 seconds left, but not 0:00:12
+	var minDigits=2;
 
-	for(var i=0; i<section_multiples.length; i++) {
-		divisor=section_multiples[i];
+	for(var i=0; i<sectionMultiples.length; i++) {
+		divisor=sectionMultiples[i];
 
-		for(var j=i+1; j<section_multiples.length; j++) {
-			divisor*=section_multiples[j];
+		for(var j=i+1; j<sectionMultiples.length; j++) {
+			divisor*=sectionMultiples[j];
 		}
 
 		remainder=remaining%divisor;
 		n=(remaining-remainder)/divisor;
 		str=""+n;
 
-		if(!first_section) {
-			while(str.length<min_digits) {
+		if(!onFirstSection) {
+			while(str.length<minDigits) {
 				str="0"+str;
 			}
 		}
 
-		if(n>0 || nonzero || i>=section_multiples.length-min_sections) {
+		if(n>0 || nonzero || i>=sectionMultiples.length-minSections) {
 			sections.push(str);
-			first_section=false;
+			onFirstSection=false;
 		}
 
 		remaining=remainder;
@@ -169,37 +169,37 @@ TimeParser.GetColonDisplay=function(mtime, display_tenths) {
 	return display;
 }
 
-TimeParser.set_string=function(str) {
-	this.Str=str;
-	this.Chars=str.split("");
-	this.reset();
+TimeParser._setString=function(str) {
+	this.str=str;
+	this.chars=str.split("");
+	this._reset();
 }
 
-TimeParser.reset=function() {
-	this.I=-1;
-	this.CurrentChar="";
-	this.current_time=0;
+TimeParser._reset=function() {
+	this.i=-1;
+	this.currentChar="";
+	this._currentTime=0;
 }
 
-TimeParser.read_time=function(default_units) {
-	var number=this.read_number();
-	var unit=this.read_units(default_units);
-	var multiplier=this.seconds_multipliers[unit];
+TimeParser._readTime=function(defaultUnits) {
+	var number=this.readNumber();
+	var unit=this._readUnits(defaultUnits);
+	var multiplier=this._secondsMultipliers[unit];
 
 	return number*multiplier;
 }
 
-TimeParser.read_number=function() {
-	while(!this.match(this.number_re) && !this.eof()) {
-		this.next();
+TimeParser._readNumber=function() {
+	while(!this._match(this._numberRe) && !this._eof()) {
+		this._next();
 	}
 
 	var str="";
 	var n=0;
 
-	if(!this.eof()) {
-		while(this.match(this.number_re)) {
-			str+=this.read();
+	if(!this._eof()) {
+		while(this._match(this._numberRe)) {
+			str+=this._read();
 		}
 
 		if(str.length>0) {
@@ -210,48 +210,48 @@ TimeParser.read_number=function() {
 	return n;
 }
 
-TimeParser.read_units=function(default_units) {
-	var unit=default_units;
+TimeParser._readUnits=function(defaultUnits) {
+	var unit=defaultUnits;
 
-	while(!this.match(this.unit_re) && !this.eof()) {
-		this.next();
+	while(!this._match(this._unitRe) && !this._eof()) {
+		this._next();
 	}
 
-	if(!this.eof()) {
-		unit=this.read();
+	if(!this._eof()) {
+		unit=this._read();
 	}
 
 	return unit.toLowerCase();
 }
 
-TimeParser.next=function() {
-	this.I++;
+TimeParser._next=function() {
+	this.i++;
 
-	if(this.eof()) {
-		this.CurrentChar="";
+	if(this._eof()) {
+		this.currentChar="";
 	}
 
 	else {
-		this.CurrentChar=this.Chars[this.I];
+		this.currentChar=this.chars[this.i];
 	}
 }
 
-TimeParser.eof=function() {
-	return (this.I>=this.Str.length);
+TimeParser._eof=function() {
+	return (this.i>=this.str.length);
 }
 
-TimeParser.read=function() {
-	var str=this.CurrentChar;
+TimeParser._read=function() {
+	var str=this.currentChar;
 
-	this.next();
+	this._next();
 
 	return str;
 }
 
-TimeParser.eq=function(str) {
-	return (this.CurrentChar===str);
+TimeParser._eq=function(str) {
+	return (this.currentChar===str);
 }
 
-TimeParser.match=function(re) {
-	return (re.test(this.CurrentChar));
+TimeParser._match=function(re) {
+	return (re.test(this.currentChar));
 }

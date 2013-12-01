@@ -1,12 +1,12 @@
 function History() {
-	this.starting_colour=WHITE;
-	this.starting_fullmove=1;
-	this.SelectedMove=null;
-	this.EditMode=History.EDIT_MODE_BRANCH;
-	this.MainLine=this.CreateVariation(true);
+	this._startingColour=WHITE;
+	this._startingFullmove=1;
+	this.selectedMove=null;
+	this.editMode=History.EDIT_MODE_BRANCH;
+	this.mainLine=this._createVariation(true);
 
 	/*
-	BulkUpdate - set this to true before adding a lot of moves to
+	bulkUpdate - set this to true before adding a lot of moves to
 	the history
 
 	things that handle the Moved/SelectedMoveChanged events can then check it
@@ -16,28 +16,30 @@ function History() {
 	the board up to date only needs to happen for the latest move
 	*/
 
-	this.BulkUpdate=false;
+	this.bulkUpdate=false;
 
-	this.StartingColour=setter(this, function() {
-		return this.starting_colour;
+	//FIXME should probably be a method maybe like history.bulkUpdate(function() {...});
+
+	this.startingColour=setter(this, function() { //FIXME this should probably fail if there are moves
+		return this._startingColour;
 	}, function(value) {
-		this.starting_colour=value;
-		this.MainLine.UpdatePointers(true);
+		this._startingColour=value;
+		this.mainLine.updatePointers(true);
 	});
 
-	this.StartingFullmove=setter(this, function() {
-		return this.starting_fullmove;
+	this.startingFullmove=setter(this, function() { //this should also fail if there are moves
+		return this._startingFullmove;
 	}, function(value) {
-		this.starting_fullmove=value;
-		this.MainLine.UpdatePointers(true);
+		this._startingFullmove=value;
+		this.mainLine.updatePointers(true);
 	});
 
-	this.MainLineNoVars=setter(this, function() {
+	this.mainLineNoVars=setter(this, function() {
 		var line=new Variation(this, true);
 
-		this.MainLine.Line.Each(function(item) {
-			if(!item.IsVariation) {
-				line.Add(item);
+		this.mainLine.moveList.Each(function(item) {
+			if(!item.isVariation) {
+				line.add(item);
 			}
 		});
 
@@ -54,133 +56,133 @@ History.EDIT_MODE_OVERWRITE=1;
 History.EDIT_MODE_BRANCH=2;
 History.EDIT_MODE_APPEND=3;
 
-History.prototype.PromoteCurrentVariation=function() {
-	var variation=this.MainLine;
-	var branch_move=null;
-	var parent_var=null;
+History.prototype.promoteCurrentVariation=function() {
+	var variation=this.mainLine;
+	var branchMove=null;
+	var parentVar=null;
 
-	if(this.SelectedMove!==null) {
-		variation=this.SelectedMove.Variation;
+	if(this.selectedMove!==null) {
+		variation=this.selectedMove.variation;
 	}
 
-	if(variation!=this.MainLine) {
-		branch_move=variation.BranchMove;
-		parent_var=variation.Variation;
+	if(variation!=this.mainLine) {
+		branchMove=variation.branchMove;
+		parentVar=variation.variation;
 
 		var item;
-		var new_var=this.CreateVariation();
+		var newVar=this._createVariation();
 
 		//turn off auto-updating pointers and store the original settings to set back later
 
-		var temp_parent=parent_var.AutoUpdatePointers;
-		var temp_new=new_var.AutoUpdatePointers;
+		var tempParent=parentVar.autoUpdatePointers;
+		var tempNew=newVar.autoUpdatePointers;
 
-		new_var.AutoUpdatePointers=false;
-		parent_var.AutoUpdatePointers=false;
+		newVar.autoUpdatePointers=false;
+		parentVar.autoUpdatePointers=false;
 
 		//create a new variation and move the main line into it
 
-		parent_var.Remove(branch_move);
-		new_var.Add(branch_move);
+		parentVar.remove(branchMove);
+		newVar.add(branchMove);
 
-		var item=branch_move.NextMove;
+		var item=branchMove.nextMove;
 
 		while(item!==null) {
-			parent_var.Remove(item);
-			new_var.Add(item);
-			item=item.NextItem;
+			parentVar.remove(item);
+			newVar.add(item);
+			item=item.nextItem;
 		}
 
 		//insert the first move of the promoted variation in the parent variation
 
-		var prev_move=branch_move.PreviousMove;
-		parent_var.InsertAfterMove(variation.FirstMove, prev_move);
+		var prev_move=branchMove.previousMove;
+		parentVar.insertAfterMove(variation.firstMove, prev_move);
 
 		//insert the new variation at the end of the other variations in the main line
 
-		item=branch_move;
+		item=branchMove;
 
-		while(item.NextVariation!==null) {
-			item=item.NextVariation;
+		while(item.nextVariation!==null) {
+			item=item.nextVariation;
 		}
 
-		parent_var.InsertAfter(new_var, item);
+		parentVar.insertAfter(newVar, item);
 
 		//insert the rest of the promoted variation (2nd move onwards) into the main line
 
-		item=variation.FirstMove.NextItem;
+		item=variation.firstMove.nextItem;
 
 		while(item!==null) {
-			parent_var.Add(item);
-			item=item.NextItem;
+			parentVar.add(item);
+			item=item.nextItem;
 		}
 
 		//delete the promoted variation (all the moves are now in the main line)
 
-		parent_var.Remove(variation);
+		parentVar.remove(variation);
 
 		//set auto-updating pointers back to the original setting on each variation
 
-		parent_var.AutoUpdatePointers=temp_parent;
-		new_var.AutoUpdatePointers=temp_new;
+		parentVar.autoUpdatePointers=tempParent;
+		newVar.autoUpdatePointers=tempNew;
 
-		parent_var.UpdatePointers(true);
+		parentVar.updatePointers(true);
 
-		this.SelectedMoveChanged.Fire({
-			Move: this.SelectedMove
+		this.SelectedMoveChanged.fire({
+			Move: this.selectedMove
 		});
 	}
 }
 
 History.prototype.DeleteCurrentMove=function() {
-	var move=this.SelectedMove;
+	var move=this.selectedMove;
 	var variation;
-	var parent_var=null;
+	var parentVar=null;
 
 	if(move!==null) {
-		variation=move.Variation;
-		parent_var=variation.Variation;
-		move.Variation.DeleteMove(move);
+		variation=move.variation;
+		parentVar=variation.variation;
+		move.variation.DeleteMove(move);
 
-		if(variation.Line.Length===0 && !variation.IsMainline) {
-			this.Select(variation.BranchMove);
-			parent_var.Remove(variation);
+		if(variation.moveList.length===0 && !variation.IsMainline) {
+			this.select(variation.branchMove);
+			parentVar.remove(variation);
 		}
 
 		else {
-			if(move.PreviousMove!==null) {
-				this.Select(move.PreviousMove);
+			if(move.previousMove!==null) {
+				this.select(move.previousMove);
 			}
 
 			else { //move was first of main line, the history is empty now
-				this.Deselect();
+				this.deselect();
 			}
 		}
 	}
 }
 
-History.prototype.Move=function(move) {
+History.prototype.move=function(move) {
 	var success=true;
-	var variation=this.MainLine;
-	var current_move=this.SelectedMove;
-	var next_move=variation.FirstMove;
+	var variation=this.mainLine;
+	var currentMove=this.selectedMove;
+	var nextMove=variation.firstMove;
 
-	if(current_move!==null) {
-		variation=current_move.Variation;
+	if(currentMove!==null) {
+		variation=currentMove.variation;
 
-		if(current_move.NextMove!==null) {
-			next_move=current_move.NextMove;
+		if(currentMove.nextMove!==null) {
+			nextMove=currentMove.nextMove;
 		}
 	}
 
-	if(variation.Line.Length===0 || current_move===variation.LastMove) {
-		variation.Add(move);
+	if(variation.moveList.length===0 || currentMove===variation.lastMove) {
+		variation.add(move);
 	}
 
 	else {
-		switch(this.EditMode) {
+		switch(this.editMode) {
 			case History.EDIT_MODE_APPEND: {
-				variation.Add(move);
+				variation.add(move);
 
 				break;
 			}
@@ -192,16 +194,17 @@ History.prototype.Move=function(move) {
 			}
 
 			case History.EDIT_MODE_OVERWRITE: {
-				variation.DeleteMove(next_move);
-				variation.Add(move);
+				variation.DeleteMove(nextMove);
+				variation.add(move);
 
 				break;
 			}
 
 			case History.EDIT_MODE_BRANCH: {
-				var new_var=this.CreateVariation();
-				variation.InsertAfter(new_var, next_move);
-				new_var.Add(move);
+				var newVar=this._createVariation();
+
+				variation.insertAfter(newVar, nextMove);
+				newVar.add(move);
 
 				break;
 			}
@@ -209,50 +212,53 @@ History.prototype.Move=function(move) {
 	}
 
 	if(success) {
-		this.Moved.Fire({Move: move});
-		this.Select(move);
+		this.Moved.fire({
+			move: move
+		});
+
+		this.select(move);
 	}
 
 	return success;
 }
 
-History.prototype.Clear=function() {
-	if(this.MainLine.FirstMove!==null) {
-		this.MainLine.DeleteMove(this.MainLine.FirstMove);
+History.prototype.clear=function() {
+	if(this.mainLine.firstMove!==null) {
+		this.mainLine.deleteMove(this.mainLine.firstMove);
 	}
 
-	this.Deselect();
+	this.deselect();
 }
 
-History.prototype.Undo=function() {
-	this.MainLine.Remove(this.MainLine.LastMove);
-	this.Select(this.MainLine.LastMove);
+History.prototype.undo=function() {
+	this.mainLine.remove(this.mainLine.lastMove);
+	this.select(this.mainLine.lastMove);
 }
 
-History.prototype.Select=function(move) {
-	if(this.SelectedMove!==null) {
-		this.SelectedMove.Deselect();
+History.prototype.select=function(move) {
+	if(this.selectedMove!==null) {
+		this.selectedMove.deselect();
 	}
 
-	this.SelectedMove=move;
+	this.selectedMove=move;
 
 	if(move!==null) {
-		move.Select();
+		move.select();
 	}
 
-	this.SelectedMoveChanged.Fire({
-		Move: this.SelectedMove
+	this.SelectedMoveChanged.fire({
+		move: this.selectedMove
 	});
 }
 
-History.prototype.Deselect=function() {
-	this.Select(null);
+History.prototype.deselect=function() {
+	this.select(null);
 }
 
-History.prototype.CreateVariation=function(is_mainline) {
-	return new Variation(this, is_mainline);
+History.prototype._createVariation=function(isMainline) {
+	return new Variation(this, isMainline);
 }
 
-History.prototype.CreateMove=function() {
+History.prototype._createMove=function() {
 	return new Move();
 }

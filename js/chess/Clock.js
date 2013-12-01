@@ -10,26 +10,26 @@ The LiveGame does the ticking, not the Clock or the PlayerClock
 */
 
 function Clock() {
-	this.GameId=null;
-	this.Mtime=[0, 0];
+	this.gameId=null;
+	this.mtime=[0, 0];
 	this.Update=new Event(this);
 }
 
-Clock.prototype.SetMtime=function(mtime, colour) {
-	this.Mtime[colour]=Math.max(0, mtime);
-	this.Update.Fire();
+Clock.prototype.setMtime=function(mtime, colour) {
+	this.mtime[colour]=Math.max(0, mtime);
+	this.Update.fire();
 }
 
-Clock.prototype.GetMtime=function(colour) {
-	return this.Mtime[colour];
+Clock.prototype.getMtime=function(colour) {
+	return this.mtime[colour];
 }
 
-Clock.prototype.AddMtime=function(msecs_diff, colour) {
-	this.Mtime[colour]=Math.max(0, this.Mtime[colour]+msecs_diff);
-	this.Update.Fire();
+Clock.prototype.addMtime=function(msecs_diff, colour) {
+	this.mtime[colour]=Math.max(0, this.mtime[colour]+msecs_diff);
+	this.Update.fire();
 }
 
-Clock.prototype.Reset=function() {
-	this.Mtime[WHITE]=0;
-	this.Mtime[BLACK]=0;
+Clock.prototype.reset=function() {
+	this.mtime[WHITE]=0;
+	this.mtime[BLACK]=0;
 }

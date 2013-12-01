@@ -3,48 +3,48 @@ history item - a move or a variation
 */
 
 function HistoryItem() {
-	this.ResetPointers();
+	this.resetPointers();
 }
 
-HistoryItem.prototype.ResetPointers=function() {
-	this.Variation=null;
-	this.PreviousMove=null;
-	this.PreviousVariation=null;
-	this.NextMove=null;
-	this.NextVariation=null;
-	this.PreviousItem=null;
-	this.NextItem=null;
-	this.ItemIndex=null; //e4 e5 (h5 Nc3) d4 //d4 is 3 (variations are counted).  Nc3 is 1.
+HistoryItem.prototype.resetPointers=function() {
+	this.variation=null;
+	this.previousMove=null;
+	this.previousVariation=null;
+	this.nextMove=null;
+	this.nextVariation=null;
+	this.previousItem=null;
+	this.nextItem=null;
+	this.itemIndex=null; //e4 e5 (h5 Nc3) d4 //d4 is 3 (variations are counted).  Nc3 is 1.
 }
 
-HistoryItem.prototype.SetVariation=function(variation) {
-	this.Variation=variation;
+HistoryItem.prototype.setVariation=function(variation) {
+	this.variation=variation;
 }
 
-HistoryItem.prototype.SetPreviousMove=function(move) {
-	this.PreviousMove=move;
+HistoryItem.prototype.setPreviousMove=function(move) {
+	this.previousMove=move;
 }
 
-HistoryItem.prototype.SetPreviousVariation=function(variation) {
-	this.PreviousVariation=variation;
+HistoryItem.prototype.setPreviousVariation=function(variation) {
+	this.previousVariation=variation;
 }
 
-HistoryItem.prototype.SetNextMove=function(move) {
-	this.NextMove=move;
+HistoryItem.prototype.setNextMove=function(move) {
+	this.nextMove=move;
 }
 
-HistoryItem.prototype.SetNextVariation=function(variation) {
-	this.NextVariation=variation;
+HistoryItem.prototype.setNextVariation=function(variation) {
+	this.nextVariation=variation;
 }
 
-HistoryItem.prototype.SetPreviousItem=function(item) {
-	this.PreviousItem=item;
+HistoryItem.prototype.setPreviousItem=function(item) {
+	this.previousItem=item;
 }
 
-HistoryItem.prototype.SetNextItem=function(item) {
-	this.NextItem=item;
+HistoryItem.prototype.setNextItem=function(item) {
+	this.nextItem=item;
 }
 
-HistoryItem.prototype.SetItemIndex=function(index) {
-	this.ItemIndex=index;
+HistoryItem.prototype.setItemIndex=function(index) {
+	this.itemIndex=index;
 }

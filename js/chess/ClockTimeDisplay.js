@@ -9,19 +9,19 @@ var ClockTimeDisplay={
 	get short display string for basic time controls, e.g. "10m" or "10/5"
 	*/
 
-	Encode: function(style, initial, increment) {
-		var increment_style=in_array(style, [
+	encode: function(style, initial, increment) {
+		var isIncrementStyle=in_array(style, [
 			TIMING_FISCHER,
 			TIMING_FISCHER_AFTER,
 			TIMING_BRONSTEIN_DELAY,
 			TIMING_SIMPLE_DELAY
 		]);
 
-		var def_units_main=!increment_style;
-		var str=TimeParser.Encode(initial, def_units_main, "m");
+		var defUnitsMain=!isIncrementStyle;
+		var str=TimeParser.encode(initial, defUnitsMain, "m");
 
-		if(increment_style) {
-			str+="/"+TimeParser.Encode(increment, false, "s");
+		if(isIncrementStyle) {
+			str+="/"+TimeParser.encode(increment, false, "s");
 		}
 
 		return str;
@@ -31,18 +31,18 @@ var ClockTimeDisplay={
 	get display string with full details, e.g. "10h/1 Bronstein Delay + 2m @ 300 moves"
 	*/
 
-	EncodeFull: function(style, initial, increment, overtime, overtime_increment, overtime_cutoff) {
-		var str=DbEnums[TIMING][TIMING_NONE].Description;
+	encodeFull: function(style, initial, increment, overtime, overtimeIncrement, overtimeCutoff) {
+		var str=DbEnums[TIMING][TIMING_NONE].description;
 
 		if(style!==TIMING_NONE) {
-			str=ClockTimeDisplay.Encode(style, initial, increment);
+			str=ClockTimeDisplay.encode(style, initial, increment);
 
 			if(style!==TIMING_SUDDEN_DEATH) {
-				str+=" "+DbEnums[TIMING][style].Description;
+				str+=" "+DbEnums[TIMING][style].description;
 			}
 
 			if(overtime) {
-				str+=" + "+TimeParser.Encode(overtime_increment, true)+" @ "+overtime_cutoff+" moves";
+				str+=" + "+TimeParser.encode(overtimeIncrement, true)+" @ "+overtimeCutoff+" moves";
 			}
 		}
 

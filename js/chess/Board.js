@@ -1,43 +1,44 @@
 function Board() {
-	this.Board=[];
+	this.board=[];
 
 	for(var i=0; i<64; i++) {
-		this.Board.push(SQ_EMPTY);
+		this.board.push(SQ_EMPTY);
 	}
 
-	this.Kings=[null, null];
+	this.kings=[null, null];
 }
 
-Board.prototype.Move=function(from, to) {
-	this.SetSquare(to, this.GetSquare(from));
-	this.SetSquare(from, SQ_EMPTY);
+Board.prototype.move=function(from, to) {
+	this.setSquare(to, this.getSquare(from));
+	this.setSquare(from, SQ_EMPTY);
 }
 
-Board.prototype.SetSquare=function(sq, pc) {
-	this.Board[sq]=pc;
+Board.prototype.sSetSquare=function(sq, pc) {
+	this.board[sq]=pc;
 
-	if(Util.type(pc)==KING) {
-		this.Kings[Util.colour(pc)]=sq;
+	if(Util.type(pc)===KING) {
+		this.kings[Util.colour(pc)]=sq;
 	}
 }
 
-Board.prototype.GetSquare=function(sq) {
-	return this.Board[sq];
+Board.prototype.getSquare=function(sq) {
+	return this.board[sq];
 }
 
-Board.prototype.SetFen=function(fen) {
-	var fields=Fen.fen_to_array(fen);
-	this.Board=Fen.pos_to_array(fields[FEN_FIELD_POSITION]);
+Board.prototype.setFen=function(fen) {
+	var fields=Fen.fenToArray(fen);
+
+	this.board=Fen.posToArray(fields[FEN_FIELD_POSITION]);
 }
 
-Board.prototype.SetBoard=function(board) {
+Board.prototype.setBoard=function(board) {
 	for(var sq=0; sq<64; sq++) {
-		this.SetSquare(sq, board[sq]);
+		this.setSquare(sq, board[sq]);
 	}
 }
 
-Board.prototype.Copy=function(board) {
+Board.prototype.copy=function(board) {
 	for(var sq=0; sq<64; sq++) {
-		this.SetSquare(sq, board.GetSquare(sq));
+		this.setSquare(sq, board.getSquare(sq));
 	}
 }

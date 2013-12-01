@@ -7,24 +7,24 @@ arr[KINGSIDE] .. arr[QUEENSIDE] etc
 */
 
 function CastlingDetails(fs, ts) {
-	this.Valid=false;
+	this.valid=false;
 
-	var king_start_pos=[4, 60];
-	var king_end_pos;
+	var kingStartPos=[4, 60];
+	var kingEndPos;
 	var n, side, o, rook;
 
-	for(var i=0; i<king_start_pos.length; i++) {
-		n=king_start_pos[i];
+	for(var i=0; i<kingStartPos.length; i++) {
+		n=kingStartPos[i];
 
 		if(fs===n) {
-			king_end_pos=[ //indexed by side
+			kingEndPos=[ //indexed by side
 				n+2,
 				n-2
 			];
 
-			for(var j=0; j<king_end_pos.length; j++) {
+			for(var j=0; j<kingEndPos.length; j++) {
 				side=j;
-				o=king_end_pos[side];
+				o=kingEndPos[side];
 
 				if(ts===o) {
 					rook=[
@@ -32,18 +32,18 @@ function CastlingDetails(fs, ts) {
 						[o-2, o+1]
 					];
 
-					this.Side=side;
-					this.RookStartPos=rook[side][0];
-					this.RookEndPos=rook[side][1];
-					this.Sign=CastlingDetails.Signs[side];
-					this.Valid=true;
+					this.side=side;
+					this.rookStartPos=rook[side][0];
+					this.rookEndPos=rook[side][1];
+					this.sign=CastlingDetails.signs[side];
+					this.valid=true;
 				}
 			}
 		}
 	}
 }
 
-CastlingDetails.Signs=[
+CastlingDetails.signs=[
 	SIGN_CASTLE_KS,
 	SIGN_CASTLE_QS
 ];

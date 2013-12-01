@@ -1,63 +1,63 @@
 function Position(fen) {
 	fen=fen||null;
 
-	this.Castling=new CastlingPrivileges();
-	this.Board=[];
-	this.Kings=[];
-	this.Active=WHITE;
-	this.Ep=null;
-	this.Clock=0;
-	this.Fullmove=1;
+	this.castling=new CastlingPrivileges();
+	this.board=[];
+	this.kings=[];
+	this.active=WHITE;
+	this.ep=null;
+	this.clock=0;
+	this.fullmove=1;
 
 	if(fen===null) {
-		this.SetFen(FEN_INITIAL);
+		this.setFen(FEN_INITIAL);
 	}
 
 	else {
-		this.SetFen(fen);
+		this.setFen(fen);
 	}
 }
 
-Position.prototype.SetSquare=function(sq, pc) {
-	this.Board[sq]=pc;
+Position.prototype.setSquare=function(sq, pc) {
+	this.board[sq]=pc;
 
 	if(Util.type(pc)===KING) {
-		this.Kings[Util.colour(pc)]=sq;
+		this.kings[Util.colour(pc)]=sq;
 	}
 }
 
-Position.prototype.SetFen=function(str) {
-	var fen=Fen.fen_to_array(str);
+Position.prototype.setFen=function(str) {
+	var fen=Fen.fenToArray(str);
 
-	this.Active=Fen.colour_int(fen[FEN_FIELD_ACTIVE]);
-	this.Castling.SetStr(fen[FEN_FIELD_CASTLING]);
-	this.Ep=(fen[FEN_FIELD_EP]===FEN_NONE)?null:Util.sq(fen[FEN_FIELD_EP]);
-	this.Clock=0;
+	this.active=Fen.colour_int(fen[FEN_FIELD_ACTIVE]);
+	this.castling.setStr(fen[FEN_FIELD_CASTLING]);
+	this.ep=(fen[FEN_FIELD_EP]===FEN_NONE)?null:Util.sq(fen[FEN_FIELD_EP]);
+	this.clock=0;
 
 	if(fen[FEN_FIELD_CLOCK]) {
-		this.Clock=parseInt(fen[FEN_FIELD_CLOCK]);
+		this.clock=parseInt(fen[FEN_FIELD_CLOCK]);
 	}
 
-	this.Fullmove=1;
+	this.fullmove=1;
 
 	if(fen[FEN_FIELD_FULLMOVE]) {
-		this.Fullmove=parseInt(fen[FEN_FIELD_FULLMOVE]);
+		this.fullmove=parseInt(fen[FEN_FIELD_FULLMOVE]);
 	}
 
 	var board=Fen.pos_to_array(fen[FEN_FIELD_POSITION]);
 
 	for(var sq=0; sq<board.length; sq++) {
-		this.SetSquare(sq, board[sq]);
+		this.setSquare(sq, board[sq]);
 	}
 }
 
-Position.prototype.GetFen=function() {
-	return Fen.array_to_fen([
-		Fen.array_to_pos(this.Board),
-		Fen.colour_str(this.Active),
-		this.Castling.GetStr(),
-		(this.Ep===null)?FEN_NONE:Util.alg_sq(this.Ep),
-		this.Clock.toString(),
-		this.Fullmove.toString()
+Position.prototype.getFen=function() {
+	return Fen.arrayToFen([
+		Fen.arrayToPos(this.board),
+		Fen.colourStr(this.active),
+		this.castling.getStr(),
+		(this.ep===null)?FEN_NONE:Util.alg_sq(this.ep),
+		this.clock.toString(),
+		this.fullmove.toString()
 	]);
 }

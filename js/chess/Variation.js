@@ -2,10 +2,10 @@ function Variation(history, is_mainline) { //TODO hopefully is_mainline can be d
 	HistoryItem.implement(this);
 
 	this.history=history;
-	this.autoupdatepointers=true;
+	this.autoUpdatePointers=true;
 	this.isMainline=!!is_mainline;
 	this.isVariation=true;
-	this.moveList=this.createMoveList();
+	this.moveList=this._createMoveList();
 	this.firstMove=null;
 	this.lastMove=null;
 }
@@ -26,7 +26,7 @@ Variation.prototype.insert=function(item, index, noPointerUpdate) {
 	this.moveList.insert(item, index);
 
 	if(updatePointers) {
-		this.UpdatePointers();
+		this.updatePointers();
 	}
 }
 
@@ -36,7 +36,7 @@ Variation.prototype.remove=function(item, noPointerUpdate) {
 	this.moveList.remove(item);
 
 	if(updatePointers) {
-		this.UpdatePointers();
+		this.updatePointers();
 	}
 }
 
@@ -46,7 +46,7 @@ Variation.prototype.deleteMove=function(move, noPointerUpdate) {
 
 	while(item!==null) {
 		this.remove(item, true);
-		item=item.NextItem;
+		item=item.nextItem;
 	}
 
 	if(updatePointers) {
@@ -67,7 +67,7 @@ Variation.prototype.insertAfter=function(item, prevItem, noPointerUpdate) {
 		var i=0;
 
 		this.moveList.Each(function(item, index) {
-			if(item==prevItem) {
+			if(item===prevItem) {
 				i=index;
 			}
 		});
@@ -89,8 +89,8 @@ Variation.prototype.insertAfterMove=function(item, prevMove, noPointerUpdate) {
 	else {
 		var prevItem=prevMove;
 
-		while(prevItem.NextVariation!==null) {
-			prevItem=prevItem.NextVariation;
+		while(prevItem.nextVariation!==null) {
+			prevItem=prevItem.nextVariation;
 		}
 
 		this.insertAfter(item, prevItem, noPointerUpdate);
@@ -169,6 +169,6 @@ Variation.prototype.updatePointers=function(recursive) {
 	}
 }
 
-Variation.prototype.createMoveList=function() {
+Variation.prototype._createMoveList=function() {
 	return new List();
 }
