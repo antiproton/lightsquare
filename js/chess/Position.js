@@ -1,12 +1,12 @@
 function Position(fen) {
 	fen=fen||null;
 
-	this.castling=new CastlingPrivileges();
+	this.castlingRights=new CastlingRights();
 	this.board=[];
-	this.kings=[];
+	this.kingPositions=[];
 	this.active=WHITE;
-	this.ep=null;
-	this.clock=0;
+	this.epTarget=null;
+	this.fiftymoveClock=0;
 	this.fullmove=1;
 
 	if(fen===null) {
@@ -18,11 +18,11 @@ function Position(fen) {
 	}
 }
 
-Position.prototype.setSquare=function(sq, pc) {
-	this.board[sq]=pc;
+Position.prototype.setSquare=function(square, piece) {
+	this.board[square]=piece;
 
-	if(Util.type(pc)===KING) {
-		this.kings[Util.colour(pc)]=sq;
+	if(Util.type(piece)===KING) {
+		this.kingPositions[Util.colour(piece)]=square;
 	}
 }
 
@@ -30,12 +30,14 @@ Position.prototype.setFen=function(str) {
 	var fen=Fen.fenToArray(str);
 
 	this.active=Fen.colour_int(fen[FEN_FIELD_ACTIVE]);
-	this.castling.setStr(fen[FEN_FIELD_CASTLING]);
-	this.ep=(fen[FEN_FIELD_EP]===FEN_NONE)?null:Util.sq(fen[FEN_FIELD_EP]);
-	this.clock=0;
+	this.castlingRights.setStr(fen[FEN_FIELD_CASTLING]);
+
+	this.epTarget=(fen[FEN_FIELD_EP]===FEN_NONE)?null:Util.sq(fen[FEN_FIELD_EP]);
+
+	this.fiftymoveClock=0;
 
 	if(fen[FEN_FIELD_CLOCK]) {
-		this.clock=parseInt(fen[FEN_FIELD_CLOCK]);
+		this.fiftymoveClock=parseInt(fen[FEN_FIELD_CLOCK]);
 	}
 
 	this.fullmove=1;
@@ -55,9 +57,9 @@ Position.prototype.getFen=function() {
 	return Fen.arrayToFen([
 		Fen.arrayToPos(this.board),
 		Fen.colourStr(this.active),
-		this.castling.getStr(),
-		(this.ep===null)?FEN_NONE:Util.alg_sq(this.ep),
-		this.clock.toString(),
+		this.castlingRights.getStr(),
+		(this.epTarget===null)?FEN_NONE:Util.alg_sq(this.epTarget),
+		this.fiftymoveClock.toString(),
 		this.fullmove.toString()
 	]);
 }

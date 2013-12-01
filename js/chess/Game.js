@@ -129,8 +129,8 @@ Game.prototype.setFen=function(fen) {
 
 Game.prototype.check_time=function(colour) {
 	if(this.time[colour]<1) {
-		var opp_colour=Util.opp_colour(colour);
-		var result=this._canMate(opp_colour)?opp_colour:DRAW;
+		var oppColour=Util.opp_colour(colour);
+		var result=this._canMate(oppColour)?oppColour:DRAW;
 		this._gameOver(result, RESULT_DETAILS_TIMEOUT);
 	}
 }
@@ -205,103 +205,104 @@ Game.prototype.GetLegalMovesFrom=function(sq) {
 	return legalMoves;
 }
 
-Game.prototype.move=function(fs, ts, promoteTo, dryrun) {
+Game.prototype.move=function(from, to, promoteTo, dryrun) {
 	promoteTo=promoteTo||QUEEN;
 	dryrun=dryrun||false;
 
 	var colour=this.position.active;
-	var piece=new Piece(this.position.board[fs]);
-	var moveto=new Piece(this.position.board[ts]);
-	var move=this.history.CreateMove();
+	var piece=new Piece(this.position.board[from]);
+	var targetPiece=new Piece(this.position.board[to]);
+	var move=this.history.createMove();
 
-	move.Fs=fs;
-	move.Ts=ts;
+	move.from=from;
+	move.to=to;
 
-	if(Util.on_board(fs) && Util.on_board(ts) && piece.Type!==SQ_EMPTY && piece.Colour===colour) {
-		var pos=new Position(this.position.getFen());
-		var fc=Util.sq_to_coords(fs);
-		var tc=Util.sq_to_coords(ts);
-		var relfs=Util.rel_sq_no(fs, colour);
-		var relts=Util.rel_sq_no(ts, colour);
-		var opp_colour=Util.opp_colour(colour);
-		var unobstructed=(!Util.blocked(this.position.board, fs, ts) && (moveto.Type===SQ_EMPTY || moveto.Colour!==colour));
+	if(Util.isOnBoard(from) && Util.isOnBoard(to) && piece.type!==SQ_EMPTY && piece.colour===colour) {
+		var label=new MoveLabel();
+		var position=new Position(this.position.getFen());
+		var fromCoords=Util.sq_to_coords(from);
+		var toCoords=Util.sq_to_coords(to);
+		var relativeFrom=Util.rel_sq_no(from, colour);
+		var relativeTo=Util.rel_sq_no(to, colour);
+		var oppColour=Util.opp_colour(colour);
+		var isUnobstructed=(!Util.blocked(this.position.board, from, to) && (targetPiece.type===SQ_EMPTY || targetPiece.colour!==colour));
 
-		move.label.piece=Fen.piece_char[Util.piece(piece.Type, WHITE)];
-		move.label.To=Util.alg_sq(ts);
+		label.piece=Fen.piece_char[Util.piece(piece.type, WHITE)];
+		label.to=Util.alg_sq(to);
 
-		if(piece.Type!==PAWN && piece.Type!==KING) {
-			move.label.disambiguation=Util.disambiguate(this.position.board, piece.Type, colour, fs, ts);
+		if(piece.type!==PAWN && piece.type!==KING) {
+			label.disambiguation=Util.disambiguate(this.position.board, piece.type, colour, from, to);
 		}
 
-		if(moveto.Colour===opp_colour && moveto.Type!==SQ_EMPTY) {
-			move.label.Sign=SIGN_CAPTURE;
-			move.Capture=this.position.board[ts];
+		if(targetPiece.colour===oppColour && targetPiece.type!==SQ_EMPTY) {
+			label.sign=SIGN_CAPTURE;
+			move.capturedPiece=this.position.board[to];
 		}
 
-		if(Util.regular_move(piece.Type, fc, tc) && unobstructed) {
-			move.Valid=true;
-			move.Action.push({Sq: fs, Pc: SQ_EMPTY});
-			move.Action.push({Sq: ts, Pc: this.position.board[fs]});
+		if(Util.isRegularMove(piece.type, fromCoords, toCoords) && isUnobstructed) {
+			move.isValid=true;
+			move.boardChanges[from]=SQ_EMPTY;
+			move.boardChanges[to]=this.position.board[from];
 		}
 
-		else if(piece.Type===PAWN && unobstructed) {
-			var capturing=Util.pawn_move_capture(relfs, relts);
-			var valid_promotion=false;
+		else if(piece.type===PAWN && isUnobstructed) {
+			var capturing=Util.isPawnCapture(relativeFrom, relativeTo);
+			var validPromotion=false;
 			var promotion=false;
 
 			if(capturing) {
-				move.label.disambiguation=Util.file_str(fs);
-				move.label.Sign=SIGN_CAPTURE;
+				label.disambiguation=Util.file_str(from);
+				label.sign=SIGN_CAPTURE;
 			}
 
-			move.label.piece="";
+			label.piece="";
 
-			if(Util.pawn_move_promote(relts)) {
+			if(Util.isPawnPromotion(relativeTo)) {
 				promotion=true;
 
 				if(promoteTo>=KNIGHT && promoteTo<=QUEEN) {
-					move.Action.push({Sq: ts, Pc: Util.piece(promoteTo, colour)});
-					move.label.Special=SIGN_PROMOTE+Fen.piece_char[Util.piece(promoteTo, WHITE)];
-					move.PromoteTo=promoteTo;
-					valid_promotion=true;
+					move.boardChanges[to]=Util.piece(promoteTo, colour);
+					label.special=SIGN_PROMOTE+Fen.piece_char[Util.piece(promoteTo, WHITE)];
+					move.promoteTo=promoteTo;
+					validPromotion=true;
 				}
 			}
 
-			if(valid_promotion || !promotion) {
-				if(moveto.Type===SQ_EMPTY) {
-					if(Util.pawn_move_double(relfs, relts)) {
-						pos.Ep=Util.rel_sq_no(relts-8, colour);
-						move.Valid=true;
+			if(validPromotion || !promotion) {
+				if(targetPiece.type===SQ_EMPTY) {
+					if(Util.isDoublePawnMove(relativeFrom, relativeTo)) {
+						position.epTarget=Util.rel_sq_no(relativeTo-8, colour); //FIXME should be clearer that this is getting the absolute square from a relative square
+						move.isValid=true;
 					}
 
-					else if(Util.pawn_move(relfs, relts)) {
-						move.Valid=true;
+					else if(Util.pawn_move(relativeFrom, relativeTo)) {
+						move.isValid=true;
 					}
 
-					else if(capturing && ts===this.position.Ep) {
-						move.Action.push({Sq: Util.ep_pawn(fs, ts), Pc: SQ_EMPTY});
-						move.label.Sign=SIGN_CAPTURE;
-						move.Capture=Util.piece(PAWN, opp_colour);
-						move.Valid=true;
+					else if(capturing && to===this.position.epTarget) {
+						move.boardChanges[Util.ep_pawn(from, to)]=SQ_EMPTY;
+						label.sign=SIGN_CAPTURE;
+						move.capturedPiece=Util.piece(PAWN, oppColour);
+						move.isValid=true;
 					}
 				}
 
 				else if(capturing) {
-					move.Valid=true;
+					move.isValid=true;
 				}
 			}
 
-			if(move.Valid) {
-				move.Action.push({Sq: fs, Pc: SQ_EMPTY});
+			if(move.isValid) {
+				move.boardChanges[from]=SQ_EMPTY;
 
 				if(!promotion) {
-					move.Action.push({Sq: ts, Pc: this.position.board[fs]});
+					move.boardChanges[to]=this.position.board[from];
 				}
 			}
 		}
 
-		else if((piece.Type===KING || piece.Type===ROOK) && !this.isInCheck(colour)) {
-			move.Castling=true;
+		else if((piece.type===KING || piece.type===ROOK) && !this.isInCheck(colour)) {
+			move.isCastling=true;
 
 			/*
 			standard and 960 castling are different enough that it is worth having them
@@ -310,260 +311,238 @@ Game.prototype.move=function(fs, ts, promoteTo, dryrun) {
 			the default block now contains the original standard chess castling code.
 			*/
 
-			switch(this.variant) {
-				case VARIANT_960: {
-					var backrank=[0, 7][colour];
+			if(this.variant===VARIANT_960) {
+				var backrank=[0, 7][colour];
 
-					if(Util.y(fs)===backrank && Util.y(ts)===backrank) {
-						/*
-						blocked - get furthest in and furthest out squares out of the king/rook
-						start/end positions - there can't be anything but the king and rook
-						between them (inclusive)
-						*/
+				if(Util.y(from)===backrank && Util.y(to)===backrank) {
+					/*
+					blocked - get furthest in and furthest out squares out of the king/rook
+					start/end positions - there can't be anything but the king and rook
+					between them (inclusive)
+					*/
 
-						/*
-						through check - king start, king end and anything between
-						*/
+					/*
+					through check - king start, king end and anything between
+					*/
 
-						king_sq=this.position.kings[colour];
-						rook_sq=null;
+					king_sq=this.position.kings[colour];
+					rook_sq=null;
 
-						//find out whether it's kingside or queenside based on move direction
+					//find out whether it's kingside or queenside based on move direction
 
-						var side;
+					var side;
 
-						if(piece.Type===ROOK) {
-							side=(Util.x(fs)<Util.x(ts))?QUEENSIDE:KINGSIDE;
+					if(piece.type===ROOK) {
+						side=(Util.x(from)<Util.x(to))?QUEENSIDE:KINGSIDE;
+					}
+
+					else if(piece.type===KING) {
+						side=(Util.x(from)>Util.x(to))?QUEENSIDE:KINGSIDE;
+					}
+
+					var rook_dest_file=[5, 3][side];
+					var king_dest_file=[6, 2][side];
+					var edge=[7, 0][side];
+
+					//if king move, look for the rook between the edge and the king
+
+					if(piece.type===ROOK) {
+						rook_sq=from;
+					}
+
+					else {
+						var rook_squares=Util.squares_between(Util.coords_to_sq([edge, backrank]), king_sq, true);
+						var sq;
+
+						for(var i=0; i<rook_squares.length; i++) {
+							sq=rook_squares[i];
+
+							if(this.position.board[sq]===Util.piece(ROOK, colour)) {
+								rook_sq=sq;
+
+								break;
+							}
+						}
+					}
+
+					/*
+					this bit finds out which squares to check to see that the only 2 pieces
+					on the bit of the back rank used for castling are the king and the rook
+					*/
+
+					if(rook_sq!==null) {
+						var king_dest_sq=Util.coords_to_sq([king_dest_file, backrank]);
+						var rook_dest_sq=Util.coords_to_sq([rook_dest_file, backrank]);
+
+						var outermost_sq=king_sq;
+						var innermost_sq=rook_sq;
+
+						var king_file=Util.x(king_sq);
+						var rook_file=Util.x(rook_sq);
+
+						if(Math.abs(edge-rook_dest_file)>Math.abs(edge-king_file)) { //rook dest is further out
+							outermost_sq=rook_dest_sq;
 						}
 
-						else if(piece.Type===KING) {
-							side=(Util.x(fs)>Util.x(ts))?QUEENSIDE:KINGSIDE;
+						if(Math.abs(edge-king_dest_file)<Math.abs(edge-rook_file)) { //king dest is further in
+							innermost_sq=king_dest_sq;
 						}
 
-						var rook_dest_file=[5, 3][side];
-						var king_dest_file=[6, 2][side];
-						var edge=[7, 0][side];
+						var squares=Util.squares_between(innermost_sq, outermost_sq, true);
 
-						//if king move, look for the rook between the edge and the king
+						var kings=0;
+						var rooks=0;
+						var others=0;
+						var pc;
 
-						if(piece.Type===ROOK) {
-							rook_sq=fs;
-						}
+						for(var i=0; i<squares.length; i++) {
+							sq=squares[i];
+							pc=this.position.board[sq];
 
-						else {
-							var rook_squares=Util.squares_between(Util.coords_to_sq([edge, backrank]), king_sq, true);
-							var sq;
+							if(pc!==SQ_EMPTY) {
+								if(pc===Util.piece(ROOK, colour)) {
+									rooks++;
+								}
 
-							for(var i=0; i<rook_squares.length; i++) {
-								sq=rook_squares[i];
+								else if(pc===Util.piece(KING, colour)) {
+									kings++;
+								}
 
-								if(this.position.board[sq]===Util.piece(ROOK, colour)) {
-									rook_sq=sq;
+								else {
+									others++;
 
 									break;
 								}
 							}
 						}
 
-						//this bit finds out which squares to check to see that the only 2 pieces
-						//on the bit of the back rank used for castling are the king and the rook
-
-						if(rook_sq!==null) {
-							var king_dest_sq=Util.coords_to_sq([king_dest_file, backrank]);
-							var rook_dest_sq=Util.coords_to_sq([rook_dest_file, backrank]);
-
-							var outermost_sq=king_sq;
-							var innermost_sq=rook_sq;
-
-							var king_file=Util.x(king_sq);
-							var rook_file=Util.x(rook_sq);
-
-							if(Math.abs(edge-rook_dest_file)>Math.abs(edge-king_file)) { //rook dest is further out
-								outermost_sq=rook_dest_sq;
-							}
-
-							if(Math.abs(edge-king_dest_file)<Math.abs(edge-rook_file)) { //king dest is further in
-								innermost_sq=king_dest_sq;
-							}
-
-							var squares=Util.squares_between(innermost_sq, outermost_sq, true);
-
-							var kings=0;
-							var rooks=0;
-							var others=0;
-							var pc;
-
-							for(var i=0; i<squares.length; i++) {
-								sq=squares[i];
-								pc=this.position.board[sq];
-
-								if(pc!==SQ_EMPTY) {
-									if(pc===Util.piece(ROOK, colour)) {
-										rooks++;
-									}
-
-									else if(pc===Util.piece(KING, colour)) {
-										kings++;
-									}
-
-									else {
-										others++;
-
-										break;
-									}
-								}
-							}
-
-							if(kings===1 && rooks===1 && others===0) {
-								var through_check=false;
-								var between=Util.squares_between(king_sq, king_dest_sq);
-								var n;
-
-								for(var i=0; i<between.length; i++) {
-									n=between[i];
-
-									if(Util.attackers(this.position.board, n, opp_colour).length>0) {
-										through_check=true;
-
-										break;
-									}
-								}
-
-								if(!through_check) {
-									move.label.piece="";
-									move.label.To="";
-									move.label.disambiguation=""; //might be a rook castle, in which case disamb. would get added
-									move.label.Special=CastlingDetails.Signs[side];
-									move.Action.push({Sq: king_sq, Pc: SQ_EMPTY});
-									move.Action.push({Sq: rook_sq, Pc: SQ_EMPTY});
-									move.Action.push({Sq: king_dest_sq, Pc: Util.piece(KING, colour)});
-									move.Action.push({Sq: rook_dest_sq, Pc: Util.piece(ROOK, colour)});
-									move.Valid=true;
-								}
-							}
-						}
-					}
-
-					break;
-				}
-
-				default: { //standard (could be GAME_TYPE_STANDARD or just null)
-					if(piece.Type===KING && unobstructed) {
-						var castling=new CastlingDetails(fs, ts);
-
-						if(castling.Valid && this.position.Castling.Get(colour, castling.Side)) {
-							//not blocked or through check
-
+						if(kings===1 && rooks===1 && others===0) {
 							var through_check=false;
-							var between=Util.squares_between(fs, ts);
+							var between=Util.squares_between(king_sq, king_dest_sq);
 							var n;
 
 							for(var i=0; i<between.length; i++) {
 								n=between[i];
 
-								if(Util.attackers(this.position.board, n, opp_colour).length>0) {
+								if(Util.attackers(this.position.board, n, oppColour).length>0) {
 									through_check=true;
 
 									break;
 								}
 							}
 
-							if(!Util.blocked(this.position.board, fs, castling.RookStartPos) && !through_check) {
-								move.label.piece="";
-								move.label.To="";
-								move.label.Special=castling.Sign;
-								move.Action.push({Sq: fs, Pc: SQ_EMPTY});
-								move.Action.push({Sq: ts, Pc: Util.piece(KING, colour)});
-								move.Action.push({Sq: castling.RookStartPos, Pc: SQ_EMPTY});
-								move.Action.push({Sq: castling.RookEndPos, Pc: Util.piece(ROOK, colour)});
-								move.Valid=true;
+							if(!through_check) {
+								label.piece="";
+								label.to="";
+								label.disambiguation=""; //might be a rook castle, in which case disamb. would get added
+								label.special=CastlingDetails.signs[side];
+								move.boardChanges[king_sq]=SQ_EMPTY;
+								move.boardChanges[rook_sq]=SQ_EMPTY;
+								move.boardChanges[king_dest_sq]=Util.piece(KING, colour);
+								move.boardChanges[rook_dest_sq]=Util.piece(ROOK, colour);
+								move.isValid=true;
 							}
 						}
 					}
+				}
+			}
 
-					break;
+			else { //standard (could be GAME_TYPE_STANDARD or just null)
+				if(piece.type===KING && isUnobstructed) {
+					var castling=new CastlingDetails(from, to);
+
+					if(castling.Valid && this.position.castlingRights.Get(colour, castling.Side)) {
+						//not blocked or through check
+
+						var through_check=false;
+						var between=Util.squares_between(from, to);
+						var n;
+
+						for(var i=0; i<between.length; i++) {
+							n=between[i];
+
+							if(Util.attackers(this.position.board, n, oppColour).length>0) {
+								through_check=true;
+
+								break;
+							}
+						}
+
+						if(!Util.blocked(this.position.board, from, castling.rookStartPos) && !through_check) {
+							label.piece="";
+							label.to="";
+							label.special=castling.sign;
+							move.boardChanges[from]=SQ_EMPTY;
+							move.boardChanges[to]=Util.piece(KING, colour);
+							move.boardChanges[castling.rookStartPos]=SQ_EMPTY;
+							move.boardChanges[castling.rookEndPos]=Util.piece(ROOK, colour);
+							move.isValid=true;
+						}
+					}
 				}
 			}
 		}
 
-		if(move.Valid) {
+		if(move.isValid) {
 			var action;
 
-			for(var i=0; i<move.Action.length; i++) {
-				action=move.Action[i];
-				pos.setSquare(action.Sq, action.Pc);
+			for(var square in move.boardChanges) {
+				square=parseInt(square);
+				position.setSquare(square, move.boardChanges[square]);
 			}
 
 			//test whether the player is in check on temporary board
 
-			var plr_king_attackers=Util.attackers(pos.board, pos.kings[colour], opp_colour);
+			var playerKingAttackers=Util.attackers(position.board, position.kings[colour], oppColour);
 
-			if(plr_king_attackers.length===0) {
-				move.legal=true;
+			if(playerKingAttackers.length===0) {
+				move.isLegal=true;
 			}
 		}
 
-		if(move.legal) {
+		if(move.isLegal) {
 			//everything until the if dryrun bit is done even if it is a dryrun so it should
 			//only modify Position (which will be set back)
-			//it needs to do all this so it can check whether it is check, mate etc
+			//it needs to do all this so it can check whether it is check, mate etoCoords
 
 			var oldPosition=this.position;
 
 			this.position=pos;
 
-			//increment fullmove
-
 			if(colour===BLACK) {
-				this.position.Fullmove++;
+				this.position.fullmove++;
 			}
 
-			//switch active colour
+			this.position.active=oppColour;
 
-			this.position.active=opp_colour;
-
-			//50-move
-
-			if(move.Capture!==null || piece.Type===PAWN) {
-				this.position.clock=0;
+			if(move.capturedPiece!==null || piece.type===PAWN) {
+				this.position.fiftymoveClock=0;
 			}
 
 			else {
-				this.position.clock++;
+				this.position.fiftymoveClock++;
 			}
 
-			//ep
-
-			if(piece.Type!==PAWN || !Util.pawn_move_double(relfs, relts)) {
-				this.position.Ep=null;
+			if(piece.type!==PAWN || !Util.isDoublePawnMove(relativeFrom, relativeTo)) {
+				this.position.epTarget=null;
 			}
 
-			/*
-			disable castling
-
-			for simplicity this is done in "file" mode (where the file of the rook is given,
-			as opposed to KINGSIDE or QUEENSIDE) regardless of variant.  CastlingPrivileges
-			knows to disable QUEENSIDE if the file is 0 etc.
-			*/
-
-			if(piece.Type===KING || move.Castling) { //might be a rook-based castle (960)
+			if(piece.type===KING || move.isCastling) {
 				for(file=0; file<8; file++) {
-					this.position.Castling.set(colour, file, false, CastlingPrivileges.MODE_FILE);
+					this.position.castlingRights.set(colour, file, false, CastlingRights.MODE_FILE);
 				}
 			}
 
-			else if(piece.Type===ROOK) { //rook move, not castling
-				this.position.Castling.set(colour, Util.x(fs), false, CastlingPrivileges.MODE_FILE);
+			else if(piece.type===ROOK) {
+				this.position.castlingRights.set(colour, Util.x(from), false, CastlingRights.MODE_FILE);
 			}
 
-			//check/mate
-
-			if(this.isInCheck(opp_colour)) {
-				move.label.Check=SIGN_CHECK;
+			if(this.isInCheck(oppColour)) {
+				label.Check=SIGN_CHECK;
 			}
 
-			if(this.isMated(opp_colour)) { //checkmate
-				move.label.Check=SIGN_MATE;
+			if(this.isMated(oppColour)) {
+				label.Check=SIGN_MATE;
 			}
 
 			if(dryrun) {
@@ -571,28 +550,19 @@ Game.prototype.move=function(fs, ts, promoteTo, dryrun) {
 			}
 
 			else {
-				//reject any open draw offers or undo requests
-
-				this.drawOffered=null;
+				this.drawOffered=null; //FIXME using WHITE/BLACK/null for this .. call it "drawOfferedBy" or something?
 				this.undoRequested=false;
 
-				/*
-				mate/stalemate
-				*/
-
-				if(this.isMated(opp_colour)) { //checkmate
+				if(this.isMated(oppColour)) {
 					this._gameOver(Result.WinResult[colour], RESULT_DETAILS_CHECKMATE);
 				}
 
 				else {
-					//insufficient mating material
 					//games are automatically drawn only if mate is impossible, not if it's just not forceable.
 
 					if(!this._canMate(WHITE) && !this._canMate(BLACK)) {
 						this._gameOver(RESULT_DRAW, RESULT_DETAILS_INSUFFICIENT);
 					}
-
-					//no moves
 
 					/*
 					moves available will sometimes return 0 in bughouse games, e.g.
@@ -603,29 +573,21 @@ Game.prototype.move=function(fs, ts, promoteTo, dryrun) {
 					but that's too much of a performance hit (on the server at least).
 					*/
 
-					if(this.countLegalMoves(opp_colour)===0 && this.type!==GAME_TYPE_BUGHOUSE) {
+					if(this.countLegalMoves(oppColour)===0 && this.type!==GAME_TYPE_BUGHOUSE) {
 						this._gameOver(RESULT_DRAW, RESULT_DETAILS_STALEMATE);
 					}
 
-					//fifty move
-
-					if(this.position.clock>49) {
+					if(this.position.fiftymoveClock>49) {
 						this.fiftymoveClaimable=true;
 					}
-
-					//threefold
 
 					this.checkThreefold();
 				}
 
-				/*
-				add to history
-				*/
+				move.resultingFen=this.position.getFen();
 
-				move.fen=this.position.getFen();
-
-				if(this.history.Move(move)) {
-					move.Success=true;
+				if(this.history.move(move)) {
+					move.success=true;
 					this.Moved.fire();
 				}
 
@@ -715,7 +677,7 @@ Game.prototype.canSelectPiece=function(sq) {
 		available=Util.moves_available(Util.type(pc), sq, colour);
 
 		for(var n=0; n<available.length; n++) {
-			if(this.move(sq, available[n], QUEEN, true).legal) {
+			if(this.move(sq, available[n], QUEEN, true).isLegal) {
 				legalMoves++;
 			}
 		}

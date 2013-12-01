@@ -68,7 +68,7 @@ var Util={
 		return (colour<<COLOUR)|type;
 	},
 
-	on_board: function(sq) {
+	isOnBoard: function(sq) {
 		return (sq>-1 && sq<64);
 	},
 
@@ -200,7 +200,7 @@ var Util={
 		return Util.rank(a)===Util.rank(b);
 	},
 
-	regular_move: function(type, fc, tc) {
+	isRegularMove: function(type, fc, tc) {
 		var d=[];
 		var coord=[X, Y];
 
@@ -226,7 +226,7 @@ var Util={
 			}
 
 			case QUEEN: {
-				return (Util.regular_move(ROOK, fc, tc) || Util.regular_move(BISHOP, fc, tc));
+				return (Util.isRegularMove(ROOK, fc, tc) || Util.isRegularMove(BISHOP, fc, tc));
 			}
 
 			case KING: {
@@ -245,14 +245,14 @@ var Util={
 		return (fs>7 && fs<16 && ts-fs===16);
 	},
 
-	pawn_move_capture: function(fs, ts) {
+	isPawnCapture: function(fs, ts) {
 		var fc=Util.sq_to_coords(fs);
 		var tc=Util.sq_to_coords(ts);
 
 		return (tc[Y]-fc[Y]===1 && Util.diff(tc[X], fc[X])===1);
 	},
 
-	pawn_move_promote: function(ts) {
+	isPawnPromotion: function(ts) {
 		return (ts>55);
 	},
 
@@ -319,7 +319,7 @@ var Util={
 			arr.push(fs);
 		}
 
-		if(Util.regular_move(BISHOP, fc, tc)) {
+		if(Util.isRegularMove(BISHOP, fc, tc)) {
 			var distance=Util.distance_diagonal(fc, tc);
 
 			if(distance>0) {
@@ -331,7 +331,7 @@ var Util={
 			}
 		}
 
-		else if(Util.regular_move(ROOK, fc, tc)) {
+		else if(Util.isRegularMove(ROOK, fc, tc)) {
 			increment=difference>7?8:1; //?vertical:horizontal
 
 			for(var n=fs+increment; n<ts; n+=increment) {
