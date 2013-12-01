@@ -74,7 +74,7 @@ $widgetLoader->load([
 			</div>
 		</div>
 		<script>
-		var ui=new LiveTableStdUi(g("table"));
+		var ui=new UiLiveTableStandard(g("table"));
 
 		ui.Board.SquareSize(45);
 		ui.Board.SetFen(FEN_INITIAL);
