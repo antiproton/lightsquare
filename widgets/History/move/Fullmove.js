@@ -26,7 +26,7 @@ Fullmove.prototype.add=function(move) {
 }
 
 Fullmove.prototype.remove=function(move) {
-	$(move.Node).remove();
+	$(move.node).remove();
 	this._isMoveAdded[move.colour]=false;
 }
 
