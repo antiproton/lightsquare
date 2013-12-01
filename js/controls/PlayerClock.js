@@ -144,7 +144,7 @@ PlayerClock.prototype.UpdateTime=function() {
 		this.Timeout.fire();
 	}
 
-	this.display_time=TimeParser.GetColonDisplay(this.mtime, display_tenths);
+	this.display_time=TimeParser.getColonDisplay(this.mtime, display_tenths);
 	this.time_container.innerHTML=this.display_time;
 
 	this.Update.fire();

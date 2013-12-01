@@ -72,8 +72,8 @@ CastlingPrivileges.fileToSide[0]=QUEENSIDE;
 CastlingPrivileges.fileToSide[7]=KINGSIDE;
 
 CastlingPrivileges.sideToFile=[]
-CastlingPrivileged.sideToFile[KINGSIDE]=7;
-CastlingPrivileged.sideToFile[QUEENSIDE]=0;
+CastlingPrivileges.sideToFile[KINGSIDE]=7;
+CastlingPrivileges.sideToFile[QUEENSIDE]=0;
 
 CastlingPrivileges.prototype.reset=function() {
 	var colours=[WHITE, BLACK];

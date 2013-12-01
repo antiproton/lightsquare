@@ -3,7 +3,7 @@ function VariationColView(history) {
 
 	this.tpl=new Template("variation_colview");
 	this.node=this.tpl.root;
-	this.tpl.root.appendChild(this.moveList.Node);
+	this.tpl.root.appendChild(this.moveList.node);
 }
 
 VariationColView.prototype._createMoveList=function() {

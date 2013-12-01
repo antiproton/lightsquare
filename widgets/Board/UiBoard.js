@@ -450,9 +450,9 @@ UiBoard.prototype.SetupHtml=function() {
 		zIndex: 1
 	});
 
-	this.board=div(this.board_container);
+	this.board_div=div(this.board_container);
 
-	this.board.addEventListener("mouseout", function(e) {
+	this.board_div.addEventListener("mouseout", function(e) {
 		self.UpdateMouseOverData(e);
 	});
 
@@ -498,7 +498,7 @@ UiBoard.prototype.SetupHtml=function() {
 
 	for(var r=0; r<8; r++) {
 		for(var f=0; f<8; f++) {
-			sq_outer=div(this.board);
+			sq_outer=div(this.board_div);
 			highlight=div(sq_outer);
 			sq_inner=div(sq_outer);
 
@@ -551,7 +551,7 @@ UiBoard.prototype.SetupHtml=function() {
 	if the pd is needed, and it will usually have to be in the center of the board
 	*/
 
-	this.PromoteDialog=new PromoteDialog(this.board);
+	this.PromoteDialog=new PromoteDialog(this.board_div);
 	this.PromoteDialog.Zindex(UiBoard.SQ_ZINDEX_ABOVE);
 	this.PromoteDialog.ImgDirPiece(this.img_dir_piece);
 	this.PromoteDialog.PieceStyle(this.piece_style);
@@ -562,14 +562,14 @@ UiBoard.prototype.SetupHtml=function() {
 	and getting the zIndex right.
 	*/
 
-	this.GameOverDialog=new GameOverDialog(this.board);
+	this.GameOverDialog=new GameOverDialog(this.board_div);
 	this.GameOverDialog.Zindex(UiBoard.SQ_ZINDEX_ABOVE);
 
 	/*
 	force resign dialog
 	*/
 
-	this.ForceResignDialog=new ForceResignDialog(this.board);
+	this.ForceResignDialog=new ForceResignDialog(this.board_div);
 	this.ForceResignDialog.Zindex(UiBoard.SQ_ZINDEX_ABOVE);
 
 	this.UpdateHtml();
@@ -752,7 +752,7 @@ UiBoard.prototype.UpdateHtml=function() { //after switching colours ,changing si
 		bgimg=Base.App.CssImg(this.img_dir_board+"/"+this.board_style+"/"+this.square_size+".png");
 	}
 
-	style(this.board, {
+	style(this.board_div, {
 		position: "absolute",
 		width: board_size,
 		height: board_size,
@@ -817,7 +817,7 @@ UiBoard.prototype.SetHtmlSquare=function(sq, pc) {
 	var bgimg="none";
 
 	if(pc!==SQ_EMPTY) {
-		bgimg="url("+this.img_dir_piece+"/"+this.piece_style+"/"+this.square_size+"/"+Fen.get_piece_char(pc)+".png)";
+		bgimg="url("+this.img_dir_piece+"/"+this.piece_style+"/"+this.square_size+"/"+Fen.getPieceChar(pc)+".png)";
 	}
 
 	if(this.Squares[sq].Node.style.backgroundImage!==bgimg) { //performance is noticeably better with this check
@@ -826,8 +826,8 @@ UiBoard.prototype.SetHtmlSquare=function(sq, pc) {
 }
 
 UiBoard.prototype.UpdateSquares=function() {
-	for(var sq=0; sq<this.Board.length; sq++) {
-		this.SetHtmlSquare(sq, this.Board[sq]);
+	for(var sq=0; sq<this.board.length; sq++) {
+		this.SetHtmlSquare(sq, this.board[sq]);
 	}
 }
 
@@ -854,7 +854,7 @@ UiBoard.prototype.SqFromMouseEvent=function(e, use_offsets, offsets) { //useoffs
 		y+=(Math.round(this.square_size/2)-offsets[Y]);
 	}
 
-	var os=getoffsets(this.board);
+	var os=getoffsets(this.board_div);
 
 	return this.sq_from_offsets(x-os[X], this.GetBoardSize()-(y-os[Y]));
 }
@@ -921,11 +921,11 @@ UiBoard.prototype.BoardMouseDown=function(e) {
 		var square=this.Squares[sq];
 		var os=getoffsets(square.Container);
 
-		if(this.MoveMode!==UiBoard.MOVE_MODE_NONE && !this.MoveInfo.Selected && !this.MoveInfo.InProgress && this.Board[sq]!==SQ_EMPTY) { //first click or start of drag
+		if(this.MoveMode!==UiBoard.MOVE_MODE_NONE && !this.MoveInfo.Selected && !this.MoveInfo.InProgress && this.board[sq]!==SQ_EMPTY) { //first click or start of drag
 			this.inc_z_index(square);
 			this.MoveInfo.Selected=true;
 			this.MoveInfo.From=sq;
-			this.MoveInfo.Piece=this.Board[sq];
+			this.MoveInfo.Piece=this.board[sq];
 			this.MoveInfo.OffsetX=e.pageX-os[X];
 			this.MoveInfo.OffsetY=e.pageY-os[Y];
 		}
@@ -947,7 +947,7 @@ UiBoard.prototype.BoardMouseMove=function(e) {
 	if(this.MoveInfo.Selected && !this.MoveInfo.InProgress) { //down and not already up on same square
 		args={
 			Square: sq,
-			Piece: this.Board[sq],
+			Piece: this.board[sq],
 			Dragging: true,
 			Cancel: false
 		};
@@ -1023,7 +1023,7 @@ UiBoard.prototype.BoardMouseUp=function(e) {
 					this.UserMove.fire({
 						From: this.MoveInfo.From,
 						To: sq,
-						Piece: this.GetSquare(this.MoveInfo.From),
+						Piece: this.getSquare(this.MoveInfo.From),
 						Event: e
 					});
 				}
@@ -1042,7 +1042,7 @@ UiBoard.prototype.BoardMouseUp=function(e) {
 		else if(this.MoveMode&UiBoard.MOVE_MODE_CLICK_CLICK && this.MoveInfo.Selected && sq===this.MoveInfo.From && !this.MoveInfo.InProgress) { //clicking on first square
 			args={
 				Square: sq,
-				Piece: this.Board[sq],
+				Piece: this.board[sq],
 				Dragging: false,
 				Cancel: false
 			};
@@ -1099,7 +1099,7 @@ UiBoard.prototype.MouseOnBoard=function(e, use_offsets, offsets) {
 		y+=(Math.round(this.square_size/2)-offsets[Y]);
 	}
 
-	var os=getoffsets(this.board);
+	var os=getoffsets(this.board_div);
 
 	x-=os[X];
 	y-=os[Y];
@@ -1288,14 +1288,14 @@ UiBoard.prototype.Deselect=function() {
 }
 
 UiBoard.prototype.SetFen=function(fen) {
-	Board.prototype.SetFen.call(this, fen);
+	Board.prototype.setFen.call(this, fen);
 	this.UpdateSquares();
 }
 
 UiBoard.prototype.AnimateMove=function(piece, fs, ts, callback) {
 	//animate the move
 
-	//console.log("animating "+Fen.get_piece_char(piece)+" "+fs+" "+ts); //DEBUG
+	//console.log("animating "+Fen.getPieceChar(piece)+" "+fs+" "+ts); //DEBUG
 
 	//this will have to be moved into a callback passed to whatever is used for the animation:
 
