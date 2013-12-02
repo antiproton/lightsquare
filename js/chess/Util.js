@@ -6,39 +6,39 @@ CLEAN:
 
 names
 
-what fullmove, halfmove etc are
+what fullmove, halfmove etoCoords are
 */
 
 var Util={
-	hm_colour: function(hm) {
-		return (hm%2===1?BLACK:WHITE);
+	colourFromHalfmove: function(halfmove) {
+		return (Util.getHalfmoveIndex(halfmove)===1?BLACK:WHITE);
 	},
 
-	opp_colour: function(colour) {
-		return (colour?WHITE:BLACK);
+	getOppColour: function(colour) {
+		return (colour===BLACK?WHITE:BLACK);
 	},
 
-	opp_game: function(game_id) {
-		return (game_id?0:1);
+	getOppGame: function(gameId) {
+		return (gameId?0:1);
 	},
 
-	fullmove_index: function(hm) {
-		return Math.floor(hm/2);
+	fullmoveIndexFromHalfmove: function(halfmove) { //which fullmove the halfmove is in, zero-based
+		return Math.floor(halfmove/2);
 	},
 
-	fullmove: function(hm) { //PGN fullmove number
-		return Util.fullmove_index(hm)+1;
+	fullmoveFromHalfmove: function(halfmove) { //PGN fullmove number
+		return Util.fullmoveIndexFromHalfmove(halfmove)+1;
 	},
 
-	halfmove: function(fullmove) {
-		return (fullmove-1)*2; //halfmove of white's move of the specified fullmove
+	halfmoveFromFullmove: function(fullmove) {
+		return (fullmove-1)*2;
 	},
 
-	fullmove_dot: function(colour) { //NOTE relies on colours being 0 and 1
+	fullmoveDotFromColour: function(colour) { //NOTE relies on colours being 0 and 1
 		return [".", "..."][colour];
 	},
 
-	score: function(result, colour) {
+	getScore: function(result, colour) {
 		if(result===RESULT_DRAW) {
 			return SCORE_DRAW;
 		}
@@ -52,139 +52,69 @@ var Util={
 		}
 	},
 
-	halfmove_index: function(hm) {
-		return hm%2;
+	getHalfmoveIndex: function(halfmove) {
+		return halfmove%2;
 	},
 
-	type: function(piece) {
+	getType: function(piece) {
 		return piece&TYPE;
 	},
 
-	colour: function(piece) {
+	getColour: function(piece) {
 		return piece>>COLOUR;
 	},
 
-	piece: function(type, colour) {
+	getPiece: function(type, colour) {
 		return (colour<<COLOUR)|type;
 	},
 
-	isOnBoard: function(sq) {
-		return (sq>-1 && sq<64);
+	isOnBoard: function(square) {
+		return (square>-1 && sq<64);
 	},
 
-	fr_to_sq: function(f, r) {
-		return r*8+f;
+	getSquareColour: function(square) {
+		return (!(((square%2)+(Math.floor(square/8)%2))%2))?BLACK:WHITE;
 	},
 
-	sq_colour: function(sq) { //WTF? must be a simpler way of doing this
-		return (!(((sq%2)+(Math.floor(sq/8)%2))%2))?BLACK:WHITE;
+	getRelativeSquare: function(square, colour) {
+		return (colour===BLACK?63-square:square);
 	},
 
-	colour_name: function(colour) {
-		var fen={w: "white", b: "black"};
-		var name={white: "white", black: "white"};
-		var num=[];
-
-		num[WHITE]="white"
-		num[BLACK]="black";
-
-		if(colour in fen) {
-			return fen[colour];
-		}
-
-		else if(colour in name) {
-			return name[colour];
-		}
-
-		else {
-			return num[colour];
-		}
+	xFromSquare: function(square) {
+		return (square%8);
 	},
 
-	colour_fen: function(colour) {
-		var fen={w: FEN_ACTIVE_WHITE, b: FEN_ACTIVE_BLACK};
-		var name={white: FEN_ACTIVE_WHITE, black: FEN_ACTIVE_BLACK};
-		var num=[];
-
-		num[WHITE]=FEN_ACTIVE_WHITE;
-		num[BLACK]=FEN_ACTIVE_BLACK;
-
-		if(colour in fen) {
-			return fen[colour];
-		}
-
-		else if(colour in name) {
-			return name[colour];
-		}
-
-		else {
-			return num[colour];
-		}
+	yFromSquare: function(square) {
+		return ((square-Util.xFromSquare(square))/8);
 	},
 
-	colour_int: function(colour) {
-		var fen={w: WHITE, b: BLACK};
-		var name={white: WHITE, black: BLACK};
-		var num=[];
-
-		num[WHITE]=WHITE;
-		num[BLACK]=BLACK;
-
-		if(colour in fen) {
-			return fen[colour];
-		}
-
-		else if(colour in name) {
-			return name[colour];
-		}
-
-		else {
-			return num[colour];
-		}
+	fileFromSquare: function(square) {
+		return FILE.substr(square%8, 1);
 	},
 
-	rel_sq_no: function(sq, colour) {
-		return (colour===BLACK?63-sq:sq);
-	},
-
-	x: function(sq) {
-		return (sq%8);
-	},
-
-	y: function(sq) {
-		return ((sq-Util.x(sq))/8);
-	},
-
-	file_str: function(sq) {
-		return FILE.substr(sq%8, 1);
-	},
-
-	rank_str: function(sq) {
+	rankFromSquare: function(sq) {
 		return RANK.substr(((sq-(sq%8))/8), 1);
 	},
 
-	file: function(sq) {
-		return FILE.substr(sq%8, 1);
+	squareFromAlgebraic: function(algebraicSquare) {
+		return Util.squareFromCoords([
+			FILE.indexOf(algebraicSquare.charAt(X)),
+			RANK.indexOf(algebraicSquare.charAt(Y))
+		]);
 	},
 
-	rank: function(sq) {
-		return RANK.substr(((sq-(sq%8))/8), 1);
+	algebraicFromSquare: function(square) {
+		return Util.fileFromSquare(square)+Util.rankFromSquare(square);
 	},
 
-	sq: function(sq) {
-		return Util.coords_to_sq([FILE.indexOf(sq.charAt(X)), RANK.indexOf(sq.charAt(Y))]);
-	},
+	coordsFromSquare: function(square) {
+		var x=square%8;
+		var y=(square-x)/8;
 
-	alg_sq: function(sq) {
-		return Util.file(sq)+Util.rank(sq);
-	},
-
-	sq_to_coords: function(sq) {
-		var x=sq%8, y=(sq-x)/8;
 		return [x, y];
 	},
 
-	coords_to_sq: function(coords) {
+	squareFromCoords: function(coords) {
 		return (coords[Y]*8)+coords[X];
 	},
 
@@ -192,20 +122,20 @@ var Util={
 		return Math.abs(a-b);
 	},
 
-	same_file: function(a, b) { //abs sq nos
-		return Util.file(a)===Util.file(b);
+	squaresAreOnSameFile: function(squareA, squareB) {
+		return Util.fileFromSquare(squareA)===Util.fileFromSquare(squareB);
 	},
 
-	same_rank: function(a, b) { //abs sq nos
-		return Util.rank(a)===Util.rank(b);
+	squaresAreOnSameRank: function(squareA, squareB) { //abs sq nos
+		return Util.rankFromSquare(a)===Util.rankFromSquare(b);
 	},
 
-	isRegularMove: function(type, fc, tc) {
+	isRegularMove: function(type, fromCoords, toCoords) {
 		var d=[];
 		var coord=[X, Y];
 
 		for(var i=0; i<coord.length; i++) {
-			d[coord[i]]=Util.diff(fc[coord[i]], tc[coord[i]]);
+			d[coord[i]]=Util.diff(fromCoords[coord[i]], toCoords[coord[i]]);
 		}
 
 		if(d[X]===0 && d[Y]===0) {
@@ -226,7 +156,7 @@ var Util={
 			}
 
 			case QUEEN: {
-				return (Util.isRegularMove(ROOK, fc, tc) || Util.isRegularMove(BISHOP, fc, tc));
+				return (Util.isRegularMove(ROOK, fromCoords, toCoords) || Util.isRegularMove(BISHOP, fromCoords, toCoords));
 			}
 
 			case KING: {
@@ -237,120 +167,84 @@ var Util={
 		return false;
 	},
 
-	pawn_move: function(fs, ts) {
-		return (ts-fs===8);
+	isPawnMove: function(from, to) {
+		return (to-from===8);
 	},
 
-	pawn_move_double: function(fs, ts) {
-		return (fs>7 && fs<16 && ts-fs===16);
+	isDoublePawnMove: function(from, to) {
+		return (from>7 && from<16 && to-from===16);
 	},
 
-	isPawnCapture: function(fs, ts) {
-		var fc=Util.sq_to_coords(fs);
-		var tc=Util.sq_to_coords(ts);
+	isPawnCapture: function(from , to) {
+		var fromCoords=Util.coordsFromSquare(from);
+		var toCoords=Util.coordsFromSquare(to);
 
-		return (tc[Y]-fc[Y]===1 && Util.diff(tc[X], fc[X])===1);
+		return (toCoords[Y]-fromCoords[Y]===1 && Util.diff(toCoords[X], fromCoords[X])===1);
 	},
 
-	isPawnPromotion: function(ts) {
-		return (ts>55);
+	isPawnPromotion: function(to) {
+		return (to>55);
 	},
 
-	ep_pawn: function(fs, ts) {
-		return Util.coords_to_sq([Util.x(ts), Util.y(fs)]);
+	getEpPawn: function(capturerFrom, capturerTo) {
+		return Util.squareFromCoords([Util.xFromSquare(capturerTo), Util.yFromSquare(capturerFrom)]);
 	},
 
-	castling_details: function(fs, ts) {
-		var king_start_pos=[4, 60];
-		var king_end_pos;
-		var n, o;
-		var sign=[SIGN_CASTLE_KS, SIGN_CASTLE_QS];
-		var rook;
-
-		for(var i=0; i<king_start_pos.length; i++) {
-			n=king_start_pos[i];
-
-			if(fs===n) {
-				king_end_pos=[n+2, n-2];
-
-				for(var side=KINGSIDE; side<=QUEENSIDE; side++) {
-					o=king_end_pos[side];
-
-					if(ts===o) {
-						rook=[
-							[o+1, o-1],
-							[o-2, o+1]
-						];
-
-						return {
-							side: side,
-							rook_start_pos: rook[side][0],
-							rook_end_pos: rook[side][1],
-							sign: sign[side]
-						};
-					}
-				}
-			}
-		}
-
-		return false;
+	getDiagonalDistance: function(fromCoords, toCoords) {
+		return Util.diff(fromCoords[X], toCoords[X]);
 	},
 
-	distance_diagonal: function(fc, tc) {
-		return Util.diff(fc[X], tc[X]);
-	},
-
-	squares_between: function(fs, ts, inclusive) {
-		var arr=[];
+	getSquaresBetween: function(from, to, inclusive) {
+		var squares=[];
 
 		//go from lower to higher sq so same loop can be used in either dir
 
-		var temp=fs;
-		fs=Math.min(fs, ts);
-		ts=Math.max(temp, ts);
+		var temp=from;
+		from=Math.min(from, to);
+		to=Math.max(temp, to);
 
-		var fc=Util.sq_to_coords(fs);
-		var tc=Util.sq_to_coords(ts);
+		var fromCoords=Util.coordsFromSquare(from);
+		var toCoords=Util.coordsFromSquare(to);
 
-		var difference=Util.diff(fs, ts);
+		var difference=Util.diff(from, to);
 		var increment;
 
 		if(inclusive) {
-			arr.push(fs);
+			squares.push(from);
 		}
 
-		if(Util.isRegularMove(BISHOP, fc, tc)) {
-			var distance=Util.distance_diagonal(fc, tc);
+		if(Util.isRegularMove(BISHOP, fromCoords, toCoords)) {
+			var distance=Util.getDiagonalDistance(fromCoords, toCoords);
 
 			if(distance>0) {
 				increment=difference/distance;
 
-				for(var n=fs+increment; n<ts; n+=increment) {
-					arr.push(n);
+				for(var n=from+increment; n<to; n+=increment) {
+					squares.push(n);
 				}
 			}
 		}
 
-		else if(Util.isRegularMove(ROOK, fc, tc)) {
+		else if(Util.isRegularMove(ROOK, fromCoords, toCoords)) {
 			increment=difference>7?8:1; //?vertical:horizontal
 
-			for(var n=fs+increment; n<ts; n+=increment) {
-				arr.push(n);
+			for(var n=from+increment; n<to; n+=increment) {
+				squares.push(n);
 			}
 		}
 
 		if(inclusive) {
-			arr.push(ts);
+			squares.push(to);
 		}
 
 		return arr;
 	},
 
-	blocked: function(board, fs, ts) {
-		var intermediate=Util.squares_between(fs, ts);
+	isBlocked: function(board, from, to) {
+		var squares=Util.getSquaresBetween(from, to);
 
-		for(var i=0; i<intermediate.length; i++) {
-			if(board[intermediate[i]]!==SQ_EMPTY) {
+		for(var i=0; i<squares.length; i++) {
+			if(board[squares[i]]!==SQ_EMPTY) {
 				return true;
 			}
 		}
@@ -358,23 +252,23 @@ var Util={
 		return false;
 	},
 
-	moves_available: function(move, sq, colour) {
-		var fc=Util.sq_to_coords(sq);
+	getAvailableMoves: function(type, from, colour) {
+		var fromCoords=Util.coordsFromSquare(from);
 		var available=[];
 
-		switch(move) {
+		switch(type) {
 			case PAWN: {
-				var relsq=Util.rel_sq_no(sq, colour);
+				var relsq=Util.getRelativeSquare(from, colour);
 
 				//double
 
 				if(relsq<16) {
-					available.push(Util.rel_sq_no(relsq+16, colour));
+					available.push(Util.getRelativeSquare(relsq+16, colour));
 				}
 
 				//single and captures
 
-				var relcoords=Util.sq_to_coords(relsq);
+				var relcoords=Util.coordsFromSquare(relsq);
 				var _x, _y;
 
 				for(var x_diff=-1; x_diff<2; x_diff++) {
@@ -382,7 +276,7 @@ var Util={
 					_y=relcoords[Y]+1;
 
 					if(_x>-1 && _x<8 && _y>-1 && _y<8) {
-						available.push(Util.rel_sq_no(Util.coords_to_sq([_x, _y]), colour));
+						available.push(Util.getRelativeSquare(Util.squareFromCoords([_x, _y]), colour));
 					}
 				}
 
@@ -396,11 +290,11 @@ var Util={
 				var _x, _y;
 
 				for(var i=0; i<8; i++) {
-					_x=fc[X]+xdiff[i];
-					_y=fc[Y]+ydiff[i];
+					_x=fromCoords[X]+xdiff[i];
+					_y=fromCoords[Y]+ydiff[i];
 
 					if(_x>-1 && _x<8 && _y>-1 && _y<8) {
-						available.push(Util.coords_to_sq([_x, _y]));
+						available.push(Util.squareFromCoords([_x, _y]));
 					}
 				}
 
@@ -412,14 +306,14 @@ var Util={
 
 				for(var ix=0; ix<diff.length; ix++) {
 					for(var iy=0; iy<diff.length; iy++) {
-						var coords=[fc[X], fc[Y]]; //temp copy of coords for branching
+						var coords=[fromCoords[X], fromCoords[Y]]; //temp copy of coords for branching
 
 						while(coords[X]>-1 && coords[X]<8 && coords[Y]>-1 && coords[Y]<8) {
 							coords[X]+=diff[ix];
 							coords[Y]+=diff[iy];
 
 							if(coords[X]>-1 && coords[X]<8 && coords[Y]>-1 && coords[Y]<8) {
-								available.push(Util.coords_to_sq([coords[X], coords[Y]]));
+								available.push(Util.squareFromCoords([coords[X], coords[Y]]));
 							}
 						}
 					}
@@ -429,16 +323,21 @@ var Util={
 			}
 
 			case ROOK: {
+				/*
+				the algorithm here is to go off in both axes at once adding squares
+				that are on the same file or rank as the from square
+				*/
+
 				var square;
 
 				for(var i=0; i<8; i++) {
 					square=[
-						(fc[Y]*8)+i, //same rank
-						fc[X]+(i*8) //same file
+						(fromCoords[Y]*8)+i, //same rank
+						fromCoords[X]+(i*8) //same file
 					];
 
 					for(var n=0; n<square.length; n++) {
-						if(square[n]!==sq) {
+						if(square[n]!==from) {
 							available.push(square[n]);
 						}
 					}
@@ -448,8 +347,8 @@ var Util={
 			}
 
 			case QUEEN: {
-				var r=Util.moves_available(ROOK, sq, colour);
-				var b=Util.moves_available(BISHOP, sq, colour);
+				var r=Util.getAvailableMoves(ROOK, from, colour);
+				var b=Util.getAvailableMoves(BISHOP, from, colour);
 
 				available=[].concat(r, b);
 
@@ -462,14 +361,14 @@ var Util={
 				var _x, _y;
 
 				for(var x_diff=-1; x_diff<2; x_diff++) {
-					_x=fc[X]+x_diff;
+					_x=fromCoords[X]+x_diff;
 
 					if(_x>-1 && _x<8) {
 						for(var y_diff=-1; y_diff<2; y_diff++) {
-							_y=fc[Y]+y_diff;
+							_y=fromCoords[Y]+y_diff;
 
 							if(_y>-1 && _y<8) {
-								available.push(Util.coords_to_sq([_x, _y]));
+								available.push(Util.squareFromCoords([_x, _y]));
 							}
 						}
 					}
@@ -480,10 +379,10 @@ var Util={
 				var x_diff=[-2, 2];
 
 				for(var i=0; i<x_diff.length; i++) {
-					_x=fc[X]+x_diff[i];
+					_x=fromCoords[X]+x_diff[i];
 
 					if(_x>-1 && _x<8) {
-						available.push(Util.coords_to_sq([_x, fc[Y]]));
+						available.push(Util.squareFromCoords([_x, fromCoords[Y]]));
 					}
 				}
 
@@ -494,32 +393,31 @@ var Util={
 		return available;
 	},
 
-	pieces_attacking: function(board, type, sq, colour) {
-		var attacker=[];
-		var piece=Util.piece(type, colour);
-		var square=Util.moves_available(type, sq, colour);
+	getAttackers: function(board, type, square, colour) {
+		var attackers=[];
+		var piece=Util.getPiece(type, colour);
+		var squares=Util.getAvailableMoves(type, square, colour);
 		var n;
 
-		for(var i=0; i<square.length; i++) {
-			n=square[i];
+		for(var i=0; i<squares.length; i++) {
+			n=squares[i];
 
-			if(board[n]===piece && !Util.blocked(board, sq, n)) {
-				attacker.push(n);
+			if(board[n]===piece && !Util.isBlocked(board, square, n)) {
+				attackers.push(n);
 			}
 		}
 
-		return attacker;
+		return attackers;
 	},
 
-	pawns_attacking: function(board, sq, colour) {
+	getPawnAttackers: function(board, square, colour) {
 		var piece=Util.piece(PAWN, colour);
-		var plr_colour=Util.opp_colour(colour);
-		var relsq=Util.rel_sq_no(sq, plr_colour);
-		var relcoords=Util.sq_to_coords(relsq);
+		var plr_colour=Util.getOppColour(colour);
+		var relsq=Util.getRelativeSquare(square, plr_colour);
+		var relcoords=Util.coordsFromSquare(relsq);
 		var x_diff=[-1, 1];
 		var d, _x, _y, n;
-		var attacker=[];
-
+		var attackers=[];
 
 		for(var i=0; i<x_diff.length; i++) {
 			d=x_diff[i];
@@ -527,22 +425,22 @@ var Util={
 			_y=relcoords[Y]+1;
 
 			if(_x>-1 && _x<8 && _y>-1 && _y<8) {
-				n=Util.rel_sq_no(Util.coords_to_sq([_x, _y]), plr_colour);
+				n=Util.getRelativeSquare(Util.squareFromCoords([_x, _y]), plr_colour);
 
 				if(board[n]===piece) {
-					attacker.push(n);
+					attackers.push(n);
 				}
 			}
 		}
 
-		return attacker;
+		return attackers;
 	},
 
-	kings_attacking: function(board, sq, colour) {
-		var piece=Util.piece(KING, colour);
-		var coords=Util.sq_to_coords(sq);
+	getKingAttackers: function(board, square, colour) {
+		var piece=Util.getPiece(KING, colour);
+		var coords=Util.coordsFromSquare(square);
 		var _x, _y, n;
-		var attacker=[];
+		var attackers=[];
 
 		for(var x_diff=-1; x_diff<2; x_diff++) {
 			_x=coords[X]+x_diff;
@@ -552,74 +450,63 @@ var Util={
 					_y=coords[Y]+y_diff;
 
 					if(_y>-1 && _y<8) {
-						n=Util.coords_to_sq([_x, _y]);
+						n=Util.squareFromCoords([_x, _y]);
 
 						if(board[n]===piece) {
-							attacker.push(n);
+							attackers.push(n);
 						}
 					}
 				}
 			}
 		}
 
-		return attacker;
+		return attackers;
 	},
 
-	attackers: function(board, sq, colour) {
-		var attacker=[];
-		var type=[KNIGHT, BISHOP, ROOK, QUEEN];
+	getAllAttackers: function(board, square, colour) {
+		var attackers=[];
+		var pieceTypes=[KNIGHT, BISHOP, ROOK, QUEEN];
 
-		for(var i=0; i<type.length; i++) {
-			attacker=attacker.concat(Util.pieces_attacking(board, type[i], sq, colour));
+		for(var i=0; i<pieceTypes.length; i++) {
+			attackers=attackers.concat(Util.getAttackers(board, pieceTypes[i], square, colour));
 		}
 
-		attacker=attacker.concat(Util.pawns_attacking(board, sq, colour));
-		attacker=attacker.concat(Util.kings_attacking(board, sq, colour));
+		attackers=attackers.concat(Util.getPawnAttackers(board, square, colour));
+		attackers=attackers.concat(Util.getKingAttackers(board, square, colour));
 
-		return attacker;
+		return attackers;
 	},
 
-	set_castling: function(original, colour, side, allow) {
-		var field=1<<(colour*2+side);
-		return allow?(original|field):(~field)&original;
-	},
-
-	get_castling: function(original, colour, side) {
-		return (original>>(colour*2+side))&1;
-	},
-
-	disambiguate: function(board, type, colour, fs, ts) {
+	disambiguate: function(board, type, colour, from, to) {
 		var str="";
-		var pieces_in_range=Util.pieces_attacking(board, type, ts, colour);
+		var piecesInRange=Util.getAttackers(board, type, to, colour);
 		var n;
 
-		if(pieces_in_range.length>1) {
-			var disambiguation={
-				file: "",
-				rank: ""
-			};
+		var disambiguation={
+			file: "",
+			rank: ""
+		};
 
-			for(var i=0; i<pieces_in_range.length; i++) {
-				n=pieces_in_range[i];
+		for(var i=0; i<piecesInRange.length; i++) {
+			n=piecesInRange[i];
 
-				if(n!==fs) {
-					if(Util.rank(n)===Util.rank(fs)) {
-						disambiguation.file=Util.file(fs);
-					}
+			if(n!==from) {
+				if(Util.rankFromSquare(n)===Util.rankFromSquare(from)) {
+					disambiguation.file=Util.fileFromSquare(from);
+				}
 
-					if(Util.file(n)===Util.file(fs)) {
-						disambiguation.rank=Util.rank(fs);
-					}
+				if(Util.fileFromSquare(n)===Util.fileFromSquare(from)) {
+					disambiguation.rank=Util.rankFromSquare(from);
 				}
 			}
+		}
 
-			str=disambiguation.file+disambiguation.rank;
+		str=disambiguation.file+disambiguation.rank;
 
-			//if neither rank nor file is the same, specify file
+		//if neither rank nor file is the same, specify file
 
-			if(str.length===0) {
-				str=Util.file(fs);
-			}
+		if(piecesInRange.length>1 && str==="") {
+			str=Util.fileFromSquare(from);
 		}
 
 		return str;

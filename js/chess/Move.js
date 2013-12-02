@@ -29,7 +29,7 @@ Move.prototype.getFullmove=function() {
 }
 
 Move.prototype.getColour=function() {
-	return Util.hm_colour(this.halfmove);
+	return Util.colourFromHalfmove(this.halfmove);
 }
 
 Move.prototype.isFullmoveDisplayed=function() {

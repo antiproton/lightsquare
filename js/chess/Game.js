@@ -225,7 +225,7 @@ Game.prototype.move=function(from, to, promoteTo, dryrun) {
 		var relativeFrom=Util.rel_sq_no(from, colour);
 		var relativeTo=Util.rel_sq_no(to, colour);
 		var oppColour=Util.opp_colour(colour);
-		var isUnobstructed=(!Util.blocked(this.position.board, from, to) && (targetPiece.type===SQ_EMPTY || targetPiece.colour!==colour));
+		var isUnobstructed=(!Util.isBlocked(this.position.board, from, to) && (targetPiece.type===SQ_EMPTY || targetPiece.colour!==colour));
 
 		label.piece=Fen.piece_char[Util.piece(piece.type, WHITE)];
 		label.to=Util.alg_sq(to);
@@ -275,12 +275,12 @@ Game.prototype.move=function(from, to, promoteTo, dryrun) {
 						move.isValid=true;
 					}
 
-					else if(Util.pawn_move(relativeFrom, relativeTo)) {
+					else if(Util.isPawnMove(relativeFrom, relativeTo)) {
 						move.isValid=true;
 					}
 
 					else if(capturing && to===this.position.epTarget) {
-						move.boardChanges[Util.ep_pawn(from, to)]=SQ_EMPTY;
+						move.boardChanges[Util.getEpPawn(from, to)]=SQ_EMPTY;
 						label.sign=SIGN_CAPTURE;
 						move.capturedPiece=Util.piece(PAWN, oppColour);
 						move.isValid=true;
@@ -325,7 +325,7 @@ Game.prototype.move=function(from, to, promoteTo, dryrun) {
 					through check - king start, king end and anything between
 					*/
 
-					king_sq=this.position.kings[colour];
+					king_sq=this.position.kingPositions[colour];
 					rook_sq=null;
 
 					//find out whether it's kingside or queenside based on move direction
@@ -351,7 +351,7 @@ Game.prototype.move=function(from, to, promoteTo, dryrun) {
 					}
 
 					else {
-						var rook_squares=Util.squares_between(Util.coords_to_sq([edge, backrank]), king_sq, true);
+						var rook_squares=Util.getSquaresBetween(Util.coords_to_sq([edge, backrank]), king_sq, true);
 						var sq;
 
 						for(var i=0; i<rook_squares.length; i++) {
@@ -388,7 +388,7 @@ Game.prototype.move=function(from, to, promoteTo, dryrun) {
 							innermost_sq=king_dest_sq;
 						}
 
-						var squares=Util.squares_between(innermost_sq, outermost_sq, true);
+						var squares=Util.getSquaresBetween(innermost_sq, outermost_sq, true);
 
 						var kings=0;
 						var rooks=0;
@@ -418,13 +418,13 @@ Game.prototype.move=function(from, to, promoteTo, dryrun) {
 
 						if(kings===1 && rooks===1 && others===0) {
 							var through_check=false;
-							var between=Util.squares_between(king_sq, king_dest_sq);
+							var between=Util.getSquaresBetween(king_sq, king_dest_sq);
 							var n;
 
 							for(var i=0; i<between.length; i++) {
 								n=between[i];
 
-								if(Util.attackers(this.position.board, n, oppColour).length>0) {
+								if(Util.getAllAttackers(this.position.board, n, oppColour).length>0) {
 									through_check=true;
 
 									break;
@@ -455,20 +455,20 @@ Game.prototype.move=function(from, to, promoteTo, dryrun) {
 						//not blocked or through check
 
 						var through_check=false;
-						var between=Util.squares_between(from, to);
+						var between=Util.getSquaresBetween(from, to);
 						var n;
 
 						for(var i=0; i<between.length; i++) {
 							n=between[i];
 
-							if(Util.attackers(this.position.board, n, oppColour).length>0) {
+							if(Util.getAllAttackers(this.position.board, n, oppColour).length>0) {
 								through_check=true;
 
 								break;
 							}
 						}
 
-						if(!Util.blocked(this.position.board, from, castling.rookStartPos) && !through_check) {
+						if(!Util.isBlocked(this.position.board, from, castling.rookStartPos) && !through_check) {
 							label.piece="";
 							label.to="";
 							label.special=castling.sign;
@@ -493,7 +493,7 @@ Game.prototype.move=function(from, to, promoteTo, dryrun) {
 
 			//test whether the player is in check on temporary board
 
-			var playerKingAttackers=Util.attackers(position.board, position.kings[colour], oppColour);
+			var playerKingAttackers=Util.getAllAttackers(position.board, position.kingPositions[colour], oppColour);
 
 			if(playerKingAttackers.length===0) {
 				move.isLegal=true;
@@ -602,7 +602,7 @@ Game.prototype.move=function(from, to, promoteTo, dryrun) {
 }
 
 Game.prototype.isInCheck=function(colour) {
-	return (Util.attackers(this.position.board, this.position.kings[colour], Util.opp_colour(colour)).length>0);
+	return (Util.getAllAttackers(this.position.board, this.position.kingPositions[colour], Util.opp_colour(colour)).length>0);
 }
 
 Game.prototype.isMated=function(colour) {
