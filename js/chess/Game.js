@@ -4,9 +4,9 @@ function Game() {
 	this.owner=null;
 	this.white=null;
 	this.black=null;
-	this.state=GAME_STATE_PREGAME;
+	this.state=GAME_STATE_IN_PROGRESS;
 	this.fen=null;
-	this.mtimeStart=null;
+	this.mtimeStart=mtime();
 	this.mtimeFinish=null;
 	this.type=GAME_TYPE_STANDARD;
 	this.variant=VARIANT_STANDARD;
@@ -91,22 +91,16 @@ Game.prototype.countLegalMoves=function(colour) {
 	return legalMoves;
 }
 
-/*
-get a list of legal move destination squares from the specified from-square
-
-TODO check whether this works with 960 castling. probably does.
-*/
-
-Game.prototype.GetLegalMovesFrom=function(sq) {
+Game.prototype.getLegalMovesFrom=function(square) {
 	var legalMoves=[];
 	var available;
-	var piece=this.position.board[sq];
+	var piece=this.position.board[square];
 
 	if(piece!==SQ_EMPTY) {
-		available=Util.moves_available(Util.getType(piece), sq, Util.getColour(piece));
+		available=Util.getReachableSquares(Util.getType(piece), square, Util.getColour(piece));
 
 		for(var n=0; n<available.length; n++) {
-			if(this.move(sq, available[n], QUEEN, true).legal) {
+			if(this.move(square, available[n], QUEEN, true).legal) {
 				legalMoves.push(available[n]);
 			}
 		}
@@ -497,7 +491,11 @@ Game.prototype.move=function(from, to, promoteTo, dryrun) {
 }
 
 Game.prototype.isInCheck=function(colour) {
-	return (Util.getAllAttackers(this.position.board, this.position.kingPositions[colour], Util.getOppColour(colour)).length>0);
+	return (Util.getAllAttackers(
+		this.position.board,
+		this.position.kingPositions[colour],
+		Util.getOppColour(colour)
+	).length>0);
 }
 
 Game.prototype.isMated=function(colour) {
