@@ -1,45 +1,30 @@
 function PiecesTaken() {
-	this.pieces=[];
+	this._pieces=[];
+	this._pieces[WHITE]=[];
+	this._pieces[BLACK]=[];
 }
 
-/*
-Add - has to insert the piece in order for string checking on the server
-
-NOTE doing it this way (looking at the piece's numerical value) depends
-on the values (WHITE being 0 etc) because it's done differently but with
-the same result on the server.
-
-FIXME too coupled
-*/
-
 PiecesTaken.prototype.add=function(piece) {
-	var nextLowest=-1;
-	var currentPiece;
-
-	for(var i=0; i<this.pieces.length; i++) {
-		currentPiece=this.pieces[i];
-
-		if(currentPiece<piece && currentPiece>nextLowest) {
-			nextLowest=i;
-		}
-	}
-
-	this.pieces.splice(nextLowest+1, 0, piece);
+	this._pieces[Util.getColour(piece)].push(piece);
 }
 
 PiecesTaken.prototype.remove=function(piece) {
-	for(var i=0; i<this.pieces.length; i++) {
-		if(this.pieces[i]===piece) {
-			this.pieces.splice(i, 1);
+	var colour=Util.getColour(piece);
+
+	for(var i=0; i<this._pieces[colour].length; i++) {
+		if(this._pieces[colour][i]===piece) {
+			this._pieces[colour].splice(i, 1);
 
 			break;
 		}
 	}
 }
 
-PiecesTaken.prototype.taken=function(piece) {
-	for(var i=0; i<this.pieces.length; i++) {
-		if(this.pieces[i]===piece) {
+PiecesTaken.prototype.contains=function(piece) {
+	var colour=Util.getColour(piece);
+
+	for(var i=0; i<this._pieces[colour].length; i++) {
+		if(this._pieces[colour][i]===piece) {
 			return true;
 		}
 	}
@@ -48,5 +33,6 @@ PiecesTaken.prototype.taken=function(piece) {
 }
 
 PiecesTaken.prototype.clear=function() {
-	this.pieces=[];
+	this._pieces[WHITE]=[];
+	this._pieces[BLACK]=[];
 }

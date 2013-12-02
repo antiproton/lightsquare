@@ -1,12 +1,5 @@
-function Game(board, history, piecesTaken, clock) {
-	IEventHandlerLogging.implement(this);
-
+function Game() {
 	this.Moved=new Event(this);
-
-	//what moves the user can make on the game (any colour; only the colour they're playing; none)
-
-	this._userControl=Game.USER_CONTROL_ALL;
-	this._userColour=WHITE;
 
 	this.owner=null;
 	this.white=null;
@@ -46,71 +39,21 @@ function Game(board, history, piecesTaken, clock) {
 
 	this.position=new Position();
 	this.startingPosition=new Position();
+	this.board=new Board();
+	this.history=new History();
+	this.clock=new Clock();
+	this.piecesTaken=new PiecesTaken();
 
-	/*
-	pass in the Board, History etc if necessary (usually if using
-	LiveHistory, UiBoard etc).  otherwise standard ones will be
-	created.
-	*/
-
-	this.board=board||new Board();
-	this.history=history||new History();
-	this.clock=clock||new Clock();
-
-	/*
-	pieces taken - there is one for each colour (it can be the same one)
-	*/
-
-	if(is_array(piecesTaken)) {
-		this.piecesTaken=piecesTaken;
-	}
-
-	else if(piecesTaken) {
-		this.piecesTaken=[piecesTaken, piecesTaken];
-	}
-
-	else {
-		this.piecesTaken=[null, null];
-	}
-
-	for(var i=0; i<this.piecesTaken.length; i++) {
-		if(this.piecesTaken[i]===null) {
-			this.piecesTaken[i]=new PiecesTaken();
+	this.history.SelectedMoveChanged.addHandler(this, function(data) {
+		if(data.move!==null) {
+			this.position.setFen(data.move.resultingFen);
 		}
-	}
 
-	this.history.SelectedMoveChanged.AddHandler(this, function(data) {
-		if(!this.history.bulkUpdate) { //FIXME this seems wrong (checking it from out here as opposed to history not firing the update)
-			if(data.move!==null) {
-				this.position.setFen(data.move.fen);
-				this.board.setFen(data.move.fen);
-			}
-
-			else {
-				this.position.setFen(this.startingPosition.getFen());
-				this.board.setBoard(this.startingPosition.board);
-			}
+		else {
+			this.position.setFen(this.startingPosition.getFen());
 		}
-	});
 
-	this._initProps();
-}
-
-Game.USER_CONTROL_ALL=0;
-Game.USER_CONTROL_PLAYER=1;
-Game.USER_CONTROL_NONE=2;
-
-Game.prototype._initProps=function() { //FIXME probs get rid of this anyway
-	this.userColour=new Property(this, function() {
-		return this._userColour;
-	}, function(value) {
-		this._userColour=value;
-	});
-
-	this.userControl=new Property(this, function() {
-		return this._userControl;
-	}, function(value) {
-		this._userControl=value;
+		this.board.setBoard(this.position.board);
 	});
 }
 
@@ -124,40 +67,7 @@ Game.prototype.setFen=function(fen) {
 	this.position.setFen(fen);
 	this.board.setFen(fen);
 	this.history.startingColour.set(this.position.active);
-	this.history.startingFullmove.set(this.position.Fullmove);
-}
-
-Game.prototype.check_time=function(colour) {
-	if(this.time[colour]<1) {
-		var oppColour=Util.getOppColour(colour);
-		var result=this._canMate(oppColour)?oppColour:DRAW;
-		this._gameOver(result, RESULT_DETAILS_TIMEOUT);
-	}
-}
-
-Game.prototype._calculateTime=function() {
-	/*
-	LiveGame implements this with stuff about the server time
-	diff etc.  No point implementing it here yet.
-	*/
-}
-
-Game.prototype.checkThreefold=function() {
-	var fen=this.position.getFen();
-	var limit=3;
-	var n=0;
-
-	if(fen===this.startingPosition.getFen()) {
-		limit--;
-	}
-
-	this.history.mainLine.moveList.each(function(move) {
-		if(move.fen===fen) {
-			n++;
-		}
-	});
-
-	this.threefoldClaimable=(n>=limit);
+	this.history.startingFullmove.set(this.position.fullmove);
 }
 
 Game.prototype.countLegalMoves=function(colour) {
@@ -220,8 +130,8 @@ Game.prototype.move=function(from, to, promoteTo, dryrun) {
 	if(Util.isOnBoard(from) && Util.isOnBoard(to) && piece.type!==SQ_EMPTY && piece.colour===colour) {
 		var label=new MoveLabel();
 		var position=new Position(this.position.getFen());
-		var fromCoords=Util.sq_to_coords(from);
-		var toCoords=Util.sq_to_coords(to);
+		var fromCoords=Util.coordsFromSquare(from);
+		var toCoords=Util.coordsFromSquare(to);
 		var relFrom=Util.getRelativeSquare(from, colour);
 		var relTo=Util.getRelativeSquare(to, colour);
 		var oppColour=Util.getOppColour(colour);
@@ -231,7 +141,7 @@ Game.prototype.move=function(from, to, promoteTo, dryrun) {
 			&& (targetPiece.type===SQ_EMPTY || targetPiece.colour!==colour)
 		);
 
-		label.piece=Fen.piece_char[Util.getPiece(piece.type, WHITE)];
+		label.piece=Fen.getPieceChar[Util.getPiece(piece.type, WHITE)];
 		label.to=Util.getAlgebraicSquare(to);
 
 		if(piece.type!==PAWN && piece.type!==KING) {
@@ -266,7 +176,7 @@ Game.prototype.move=function(from, to, promoteTo, dryrun) {
 
 				if(promoteTo>=KNIGHT && promoteTo<=QUEEN) {
 					move.boardChanges[to]=Util.getPiece(promoteTo, colour);
-					label.special=SIGN_PROMOTE+Fen.piece_char[Util.getPiece(promoteTo, WHITE)];
+					label.special=SIGN_PROMOTE+Fen.getPieceChar[Util.getPiece(promoteTo, WHITE)];
 					move.promoteTo=promoteTo;
 					validPromotion=true;
 				}
@@ -308,29 +218,12 @@ Game.prototype.move=function(from, to, promoteTo, dryrun) {
 		else if((piece.type===KING || piece.type===ROOK) && !this.isInCheck(colour)) {
 			move.isCastling=true;
 
-			/*
-			standard and 960 castling are different enough that it is worth having them
-			completely separate.
-
-			the default block now contains the original standard chess castling code.
-			*/
-
 			if(this.variant===VARIANT_960) {
 				var backrank=[0, 7][colour];
 
 				if(Util.yFromSquare(from)===backrank && Util.yFromSquare(to)===backrank) {
-					/*
-					blocked - get furthest in and furthest out squares out of the king/rook
-					start/end positions - there can't be anything but the king and rook
-					between them (inclusive)
-					*/
-
-					/*
-					through check - king start, king end and anything between
-					*/
-
-					king_sq=this.position.kingPositions[colour];
-					rook_sq=null;
+					kingSquare=this.position.kingPositions[colour];
+					rookSquare=null;
 
 					//find out whether it's kingside or queenside based on move direction
 
@@ -344,25 +237,27 @@ Game.prototype.move=function(from, to, promoteTo, dryrun) {
 						side=(Util.xFromSquare(from)>Util.xFromSquare(to))?QUEENSIDE:KINGSIDE;
 					}
 
-					var rook_dest_file=[5, 3][side];
-					var king_dest_file=[6, 2][side];
+					var rookDestinationFile=[5, 3][side];
+					var kingDestinationFile=[6, 2][side];
 					var edge=[7, 0][side];
 
-					//if king move, look for the rook between the edge and the king
+					//if rook move, rook is on from square
 
 					if(piece.type===ROOK) {
-						rook_sq=from;
+						rookSquare=from;
 					}
 
+					//if king move, find rook between edge and king
+
 					else {
-						var rook_squares=Util.getSquaresBetween(Util.squareFromCoords([edge, backrank]), king_sq, true);
+						var rookSquares=Util.getSquaresBetween(Util.squareFromCoords([edge, backrank]), kingSquare, true);
 						var sq;
 
-						for(var i=0; i<rook_squares.length; i++) {
-							sq=rook_squares[i];
+						for(var i=0; i<rookSquares.length; i++) {
+							sq=rookSquares[i];
 
 							if(this.position.board[sq]===Util.getPiece(ROOK, colour)) {
-								rook_sq=sq;
+								rookSquare=sq;
 
 								break;
 							}
@@ -374,25 +269,25 @@ Game.prototype.move=function(from, to, promoteTo, dryrun) {
 					on the bit of the back rank used for castling are the king and the rook
 					*/
 
-					if(rook_sq!==null) {
-						var king_dest_sq=Util.squareFromCoords([king_dest_file, backrank]);
-						var rook_dest_sq=Util.squareFromCoords([rook_dest_file, backrank]);
+					if(rookSquare!==null) {
+						var kingDestination=Util.squareFromCoords([kingDestinationFile, backrank]);
+						var rookDestination=Util.squareFromCoords([rookDestinationFile, backrank]);
 
-						var outermost_sq=king_sq;
-						var innermost_sq=rook_sq;
+						var outermostSquare=kingSquare;
+						var innermostSquare=rookSquare;
 
-						var king_file=Util.xFromSquare(king_sq);
-						var rook_file=Util.xFromSquare(rook_sq);
+						var kingFile=Util.xFromSquare(kingSquare);
+						var rookFile=Util.xFromSquare(rookSquare);
 
-						if(Math.abs(edge-rook_dest_file)>Math.abs(edge-king_file)) { //rook dest is further out
-							outermost_sq=rook_dest_sq;
+						if(Math.abs(edge-rookDestinationFile)>Math.abs(edge-kingFile)) { //rook dest is further out
+							outermostSquare=rookDestination;
 						}
 
-						if(Math.abs(edge-king_dest_file)<Math.abs(edge-rook_file)) { //king dest is further in
-							innermost_sq=king_dest_sq;
+						if(Math.abs(edge-kingDestinationFile)<Math.abs(edge-rookFile)) { //king dest is further in
+							innermostSquare=kingDestination;
 						}
 
-						var squares=Util.getSquaresBetween(innermost_sq, outermost_sq, true);
+						var squares=Util.getSquaresBetween(innermostSquare, outermostSquare, true);
 
 						var kings=0;
 						var rooks=0;
@@ -421,29 +316,28 @@ Game.prototype.move=function(from, to, promoteTo, dryrun) {
 						}
 
 						if(kings===1 && rooks===1 && others===0) {
-							var through_check=false;
-							var between=Util.getSquaresBetween(king_sq, king_dest_sq);
+							var throughCheck=false;
+							var between=Util.getSquaresBetween(kingSquare, kingDestination);
 							var n;
 
 							for(var i=0; i<between.length; i++) {
 								n=between[i];
 
 								if(Util.getAllAttackers(this.position.board, n, oppColour).length>0) {
-									through_check=true;
+									throughCheck=true;
 
 									break;
 								}
 							}
 
-							if(!through_check) {
+							if(!throughCheck) {
 								label.piece="";
 								label.to="";
-								label.disambiguation=""; //might be a rook castle, in which case disamb. would get added
 								label.special=CastlingDetails.signs[side];
-								move.boardChanges[king_sq]=SQ_EMPTY;
-								move.boardChanges[rook_sq]=SQ_EMPTY;
-								move.boardChanges[king_dest_sq]=Util.getPiece(KING, colour);
-								move.boardChanges[rook_dest_sq]=Util.getPiece(ROOK, colour);
+								move.boardChanges[kingSquare]=SQ_EMPTY;
+								move.boardChanges[rookSquare]=SQ_EMPTY;
+								move.boardChanges[kingDestination]=Util.getPiece(KING, colour);
+								move.boardChanges[rookDestination]=Util.getPiece(ROOK, colour);
 								move.isValid=true;
 							}
 						}
@@ -455,10 +349,10 @@ Game.prototype.move=function(from, to, promoteTo, dryrun) {
 				if(piece.type===KING && isUnobstructed) {
 					var castling=new CastlingDetails(from, to);
 
-					if(castling.Valid && this.position.castlingRights.Get(colour, castling.Side)) {
+					if(castling.isValid && this.position.castlingRights.get(colour, castling.Side)) {
 						//not blocked or through check
 
-						var through_check=false;
+						var throughCheck=false;
 						var between=Util.getSquaresBetween(from, to);
 						var n;
 
@@ -466,13 +360,13 @@ Game.prototype.move=function(from, to, promoteTo, dryrun) {
 							n=between[i];
 
 							if(Util.getAllAttackers(this.position.board, n, oppColour).length>0) {
-								through_check=true;
+								throughCheck=true;
 
 								break;
 							}
 						}
 
-						if(!Util.isBlocked(this.position.board, from, castling.rookStartPos) && !through_check) {
+						if(!Util.isBlocked(this.position.board, from, castling.rookStartPos) && !throughCheck) {
 							label.piece="";
 							label.to="";
 							label.special=castling.sign;
@@ -505,13 +399,9 @@ Game.prototype.move=function(from, to, promoteTo, dryrun) {
 		}
 
 		if(move.isLegal) {
-			//everything until the if dryrun bit is done even if it is a dryrun so it should
-			//only modify Position (which will be set back)
-			//it needs to do all this so it can check whether it is check, mate etoCoords
-
 			var oldPosition=this.position;
 
-			this.position=pos;
+			this.position=position;
 
 			if(colour===BLACK) {
 				this.position.fullmove++;
@@ -549,11 +439,7 @@ Game.prototype.move=function(from, to, promoteTo, dryrun) {
 				label.check=SIGN_MATE;
 			}
 
-			if(dryrun) {
-				this.position=oldPosition;
-			}
-
-			else {
+			if(!dryrun) {
 				this.drawOffered=null; //FIXME using WHITE/BLACK/null for this .. call it "drawOfferedBy" or something?
 				this.undoRequested=false;
 
@@ -564,7 +450,7 @@ Game.prototype.move=function(from, to, promoteTo, dryrun) {
 				else {
 					//games are automatically drawn only if mate is impossible, not if it's just not forceable.
 
-					if(!this._canMate(WHITE) && !this._canMate(BLACK)) {
+					if(!this.canMate(WHITE) && !this.canMate(BLACK)) {
 						this._gameOver(RESULT_DRAW, RESULT_DETAILS_INSUFFICIENT);
 					}
 
@@ -585,7 +471,7 @@ Game.prototype.move=function(from, to, promoteTo, dryrun) {
 						this.fiftymoveClaimable=true;
 					}
 
-					this.checkThreefold();
+					this._checkThreefold();
 				}
 
 				move.resultingFen=this.position.getFen();
@@ -599,6 +485,10 @@ Game.prototype.move=function(from, to, promoteTo, dryrun) {
 				else { //if adding to the history fails for some reason, set back to the original position
 					this.position=oldPosition;
 				}
+			}
+
+			else {
+				this.position=oldPosition;
 			}
 		}
 	}
@@ -614,15 +504,13 @@ Game.prototype.isMated=function(colour) {
 	return (this.isInCheck(colour) && this.countLegalMoves(colour)===0);
 }
 
-Game.prototype._canMate=function(colour) {
+Game.prototype.canMate=function(colour) {
 	var pieces=[];
-
-	pieces[KNIGHT]=0;
-	pieces[BISHOP]=0;
-
 	var bishops=[];
 	var knights=[];
 
+	pieces[KNIGHT]=0;
+	pieces[BISHOP]=0;
 	bishops[WHITE]=0;
 	bishops[BLACK]=0;
 	knights[WHITE]=0;
@@ -652,11 +540,11 @@ Game.prototype._canMate=function(colour) {
 		}
 	}
 
-	if((bishops[WHITE]>0 && bishops[BLACK]>0) || (pieces[BISHOP]>0 && pieces[KNIGHT]>0) || (pieces[KNIGHT]>2 && knights[colour]>0)) {
-		return true;
-	}
-
-	return false;
+	return (
+		(bishops[WHITE]>0 && bishops[BLACK]>0)
+		|| (pieces[BISHOP]>0 && pieces[KNIGHT]>0)
+		|| (pieces[KNIGHT]>2 && knights[colour]>0)
+	);
 }
 
 Game.prototype.undo=function() {
@@ -682,6 +570,39 @@ Game.prototype.squareContainsMovablePiece=function(square) {
 	}
 
 	return result;
+}
+
+Game.prototype._checkTime=function(colour) {
+	if(this.time[colour]<1) {
+		var oppColour=Util.getOppColour(colour);
+		var result=this.canMate(oppColour)?oppColour:DRAW;
+		this._gameOver(result, RESULT_DETAILS_TIMEOUT);
+	}
+}
+
+Game.prototype._calculateTime=function() {
+	/*
+	LiveGame implements this with stuff about the server time
+	diff etc.  No point implementing it here yet.
+	*/
+}
+
+Game.prototype._checkThreefold=function() {
+	var fen=this.position.getFen();
+	var limit=3;
+	var n=0;
+
+	if(fen===this.startingPosition.getFen()) {
+		limit--;
+	}
+
+	this.history.mainLine.moveList.each(function(move) {
+		if(move.fen===fen) {
+			n++;
+		}
+	});
+
+	this.threefoldClaimable=(n>=limit);
 }
 
 Game.prototype._gameOver=function(result, result_details) {

@@ -198,14 +198,14 @@ History.prototype.move=function(move) {
 			}
 
 			case History.EDIT_MODE_OVERWRITE: {
-				variation.DeleteMove(nextMove);
+				variation.deleteMove(nextMove);
 				variation.add(move);
 
 				break;
 			}
 
 			case History.EDIT_MODE_BRANCH: {
-				var newVar=this._createVariation();
+				var newVar=this.createVariation();
 
 				variation.insertAfter(newVar, nextMove);
 				newVar.add(move);

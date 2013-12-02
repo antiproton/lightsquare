@@ -7,7 +7,7 @@ arr[KINGSIDE] .. arr[QUEENSIDE] etc
 */
 
 function CastlingDetails(fs, ts) {
-	this.valid=false;
+	this.isValid=false;
 
 	var kingStartPos=[4, 60];
 	var kingEndPos;
@@ -36,7 +36,7 @@ function CastlingDetails(fs, ts) {
 					this.rookStartPos=rook[side][0];
 					this.rookEndPos=rook[side][1];
 					this.sign=CastlingDetails.signs[side];
-					this.valid=true;
+					this.isValid=true;
 				}
 			}
 		}

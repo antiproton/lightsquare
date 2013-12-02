@@ -1,3 +1,10 @@
+/*
+this object represents the castling rights for both sides
+
+it handles regular notation (kqKQ) as well as the file notation used
+in Chess960 FENs (ahAH)
+*/
+
 function CastlingRights() {
 	this.privsBySide=[];
 	this.privsByFile=[];
@@ -67,13 +74,13 @@ CastlingRights.fileChars=[
    ]
 ];
 
-CastlingRights.fileToSide=[];
-CastlingRights.fileToSide[0]=QUEENSIDE;
-CastlingRights.fileToSide[7]=KINGSIDE;
+CastlingRights._fileToSide=[];
+CastlingRights._fileToSide[0]=QUEENSIDE;
+CastlingRights._fileToSide[7]=KINGSIDE;
 
-CastlingRights.sideToFile=[]
-CastlingRights.sideToFile[KINGSIDE]=7;
-CastlingRights.sideToFile[QUEENSIDE]=0;
+CastlingRights._sideToFile=[]
+CastlingRights._sideToFile[KINGSIDE]=7;
+CastlingRights._sideToFile[QUEENSIDE]=0;
 
 CastlingRights.prototype.reset=function() {
 	var colours=[WHITE, BLACK];
@@ -102,7 +109,7 @@ CastlingRights.prototype.set=function(colour, index, allow, mode) {
 	switch(mode) {
 		case CastlingRights.MODE_SIDE: {
 			this.privsBySide[colour][index]=allow;
-			this.privsByFile[colour][CastlingRights.sideToFile[index]]=allow;
+			this.privsByFile[colour][CastlingRights._sideToFile[index]]=allow;
 
 			break;
 		}
@@ -110,8 +117,8 @@ CastlingRights.prototype.set=function(colour, index, allow, mode) {
 		case CastlingRights.MODE_FILE: {
 			this.privsByFile[colour][index]=allow;
 
-			if(index in CastlingRights.fileToSide) {
-				this.privsBySide[colour][CastlingRights.fileToSide[index]]=allow;
+			if(index in CastlingRights._fileToSide) {
+				this.privsBySide[colour][CastlingRights._fileToSide[index]]=allow;
 			}
 
 			break;
@@ -164,7 +171,7 @@ CastlingRights.prototype.setStr=function(str) {
 				}
 			}
 
-			this.Set(colour, index, true, mode);
+			this.set(colour, index, true, mode);
 		}
 	}
 }
@@ -192,8 +199,8 @@ CastlingRights.prototype.getStr=function() {
 			if(this.privsByFile[colour][file]) {
 				ch=CastlingRights.fileChars[colour][file];
 
-				if(file in CastlingRights.fileToSide) {
-					ch=CastlingRights.sideChars[colour][CastlingRights.fileToSide[file]];
+				if(file in CastlingRights._fileToSide) {
+					ch=CastlingRights.sideChars[colour][CastlingRights._fileToSide[file]];
 				}
 
 				privs[colour].push(ch);
