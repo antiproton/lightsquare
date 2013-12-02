@@ -258,25 +258,25 @@ var Util={
 
 		switch(type) {
 			case PAWN: {
-				var relsq=Util.getRelativeSquare(from, colour);
+				var relativeSquare=Util.getRelativeSquare(from, colour);
 
 				//double
 
-				if(relsq<16) {
-					available.push(Util.getRelativeSquare(relsq+16, colour));
+				if(relativeSquare<16) {
+					available.push(Util.getRelativeSquare(relativeSquare+16, colour));
 				}
 
 				//single and captures
 
-				var relcoords=Util.coordsFromSquare(relsq);
-				var _x, _y;
+				var relativeCoords=Util.coordsFromSquare(relativeSquare);
+				var x, y;
 
-				for(var x_diff=-1; x_diff<2; x_diff++) {
-					_x=relcoords[X]+x_diff;
-					_y=relcoords[Y]+1;
+				for(var xDiff=-1; xDiff<2; xDiff++) {
+					x=relativeCoords[X]+xDiff;
+					y=relativeCoords[Y]+1;
 
-					if(_x>-1 && _x<8 && _y>-1 && _y<8) {
-						available.push(Util.getRelativeSquare(Util.squareFromCoords([_x, _y]), colour));
+					if(x>-1 && x<8 && y>-1 && y<8) {
+						available.push(Util.getRelativeSquare(Util.squareFromCoords([x, y]), colour));
 					}
 				}
 
@@ -287,14 +287,14 @@ var Util={
 				var xdiff=[-1, -1, 1, 1, -2, -2, 2, 2];
 				var ydiff=[-2, 2, -2, 2, 1, -1, 1, -1];
 
-				var _x, _y;
+				var x, y;
 
 				for(var i=0; i<8; i++) {
-					_x=fromCoords[X]+xdiff[i];
-					_y=fromCoords[Y]+ydiff[i];
+					x=fromCoords[X]+xdiff[i];
+					y=fromCoords[Y]+ydiff[i];
 
-					if(_x>-1 && _x<8 && _y>-1 && _y<8) {
-						available.push(Util.squareFromCoords([_x, _y]));
+					if(x>-1 && x<8 && y>-1 && y<8) {
+						available.push(Util.squareFromCoords([x, y]));
 					}
 				}
 
@@ -324,22 +324,22 @@ var Util={
 
 			case ROOK: {
 				/*
-				the algorithm here is to go off in both axes at once adding squares
+				the algorithm here is to go off on both axes at once adding squares
 				that are on the same file or rank as the from square
 				*/
 
-				var square;
+				var squareOnRank, squareOnFile;
 
-				for(var i=0; i<8; i++) {
-					square=[
-						(fromCoords[Y]*8)+i, //same rank
-						fromCoords[X]+(i*8) //same file
-					];
+				for(var n=0; n<8; n++) {
+					squareOnRank=(fromCoords[Y]*8)+n;
+					squareOnFile=fromCoords[X]+(n*8);
 
-					for(var n=0; n<square.length; n++) {
-						if(square[n]!==from) {
-							available.push(square[n]);
-						}
+					if(squareOnRank!==from) {
+						available.push(squareOnRank);
+					}
+
+					if(squareOnFile!==from) {
+						available.push(squareOnFile);
 					}
 				}
 
@@ -347,42 +347,42 @@ var Util={
 			}
 
 			case QUEEN: {
-				var r=Util.getAvailableMoves(ROOK, from, colour);
-				var b=Util.getAvailableMoves(BISHOP, from, colour);
+				var rookMovesAvailable=Util.getAvailableMoves(ROOK, from, colour);
+				var bishopMovesAvailable=Util.getAvailableMoves(BISHOP, from, colour);
 
-				available=[].concat(r, b);
+				available=[].concat(rookMovesAvailable, bishopMovesAvailable);
 
 				break;
 			}
 
 			case KING: {
-				//regular
+				//regular king moves:
 
-				var _x, _y;
+				var x, y;
 
-				for(var x_diff=-1; x_diff<2; x_diff++) {
-					_x=fromCoords[X]+x_diff;
+				for(var xDiff=-1; xDiff<2; xDiff++) {
+					x=fromCoords[X]+xDiff;
 
-					if(_x>-1 && _x<8) {
-						for(var y_diff=-1; y_diff<2; y_diff++) {
-							_y=fromCoords[Y]+y_diff;
+					if(x>-1 && x<8) {
+						for(var yDiff=-1; yDiff<2; yDiff++) {
+							y=fromCoords[Y]+yDiff;
 
-							if(_y>-1 && _y<8) {
-								available.push(Util.squareFromCoords([_x, _y]));
+							if(y>-1 && y<8) {
+								available.push(Util.squareFromCoords([x, y]));
 							}
 						}
 					}
 				}
 
-				//castling
+				//castling moves:
 
-				var x_diff=[-2, 2];
+				var xDiff=[-2, 2];
 
-				for(var i=0; i<x_diff.length; i++) {
-					_x=fromCoords[X]+x_diff[i];
+				for(var i=0; i<xDiff.length; i++) {
+					x=fromCoords[X]+xDiff[i];
 
-					if(_x>-1 && _x<8) {
-						available.push(Util.squareFromCoords([_x, fromCoords[Y]]));
+					if(x>-1 && x<8) {
+						available.push(Util.squareFromCoords([x, fromCoords[Y]]));
 					}
 				}
 
@@ -396,14 +396,14 @@ var Util={
 	getAttackers: function(board, type, square, colour) {
 		var attackers=[];
 		var piece=Util.getPiece(type, colour);
-		var squares=Util.getAvailableMoves(type, square, colour);
-		var n;
+		var candidateSquares=Util.getAvailableMoves(type, square, colour);
+		var candidateSquare;
 
-		for(var i=0; i<squares.length; i++) {
-			n=squares[i];
+		for(var i=0; i<candidateSquares.length; i++) {
+			candidateSquare=candidateSquares[i];
 
-			if(board[n]===piece && !Util.isBlocked(board, square, n)) {
-				attackers.push(n);
+			if(board[candidateSquare]===piece && !Util.isBlocked(board, square, candidateSquare)) {
+				attackers.push(candidateSquare);
 			}
 		}
 
@@ -411,24 +411,25 @@ var Util={
 	},
 
 	getPawnAttackers: function(board, square, colour) {
-		var piece=Util.piece(PAWN, colour);
-		var plr_colour=Util.getOppColour(colour);
-		var relsq=Util.getRelativeSquare(square, plr_colour);
-		var relcoords=Util.coordsFromSquare(relsq);
-		var x_diff=[-1, 1];
-		var d, _x, _y, n;
 		var attackers=[];
+		var piece=Util.getPiece(PAWN, colour);
+		var playerColour=Util.getOppColour(colour);
+		var relativeSquare=Util.getRelativeSquare(square, playerColour);
+		var relativeCoords=Util.coordsFromSquare(relativeSquare);
+		var xDiffs=[-1, 1];
+		var xDiff;
+		var x, y, candidateSquare;
 
-		for(var i=0; i<x_diff.length; i++) {
-			d=x_diff[i];
-			_x=relcoords[X]+d;
-			_y=relcoords[Y]+1;
+		for(var i=0; i<xDiffs.length; i++) {
+			xDiff=xDiffs[i];
+			x=relativeCoords[X]+xDiff;
+			y=relativeCoords[Y]+1;
 
-			if(_x>-1 && _x<8 && _y>-1 && _y<8) {
-				n=Util.getRelativeSquare(Util.squareFromCoords([_x, _y]), plr_colour);
+			if(x>-1 && x<8 && y>-1 && y<8) {
+				candidateSquare=Util.getRelativeSquare(Util.squareFromCoords([x, y]), playerColour);
 
-				if(board[n]===piece) {
-					attackers.push(n);
+				if(board[candidateSquare]===piece) {
+					attackers.push(candidateSquare);
 				}
 			}
 		}
@@ -437,23 +438,23 @@ var Util={
 	},
 
 	getKingAttackers: function(board, square, colour) {
+		var attackers=[];
 		var piece=Util.getPiece(KING, colour);
 		var coords=Util.coordsFromSquare(square);
-		var _x, _y, n;
-		var attackers=[];
+		var x, y, candidateSquare;
 
-		for(var x_diff=-1; x_diff<2; x_diff++) {
-			_x=coords[X]+x_diff;
+		for(var xDiff=-1; xDiff<2; xDiff++) {
+			x=coords[X]+xDiff;
 
-			if(_x>-1 && _x<8) {
-				for(var y_diff=-1; y_diff<2; y_diff++) {
-					_y=coords[Y]+y_diff;
+			if(x>-1 && x<8) {
+				for(var yDiff=-1; yDiff<2; yDiff++) {
+					y=coords[Y]+yDiff;
 
-					if(_y>-1 && _y<8) {
-						n=Util.squareFromCoords([_x, _y]);
+					if(y>-1 && y<8) {
+						candidateSquare=Util.squareFromCoords([x, y]);
 
-						if(board[n]===piece) {
-							attackers.push(n);
+						if(board[candidateSquare]===piece) {
+							attackers.push(candidateSquare);
 						}
 					}
 				}
@@ -480,7 +481,7 @@ var Util={
 	disambiguate: function(board, type, colour, from, to) {
 		var str="";
 		var piecesInRange=Util.getAttackers(board, type, to, colour);
-		var n;
+		var sq;
 
 		var disambiguation={
 			file: "",
@@ -488,14 +489,14 @@ var Util={
 		};
 
 		for(var i=0; i<piecesInRange.length; i++) {
-			n=piecesInRange[i];
+			sq=piecesInRange[i];
 
-			if(n!==from) {
-				if(Util.rankFromSquare(n)===Util.rankFromSquare(from)) {
+			if(sq!==from) {
+				if(Util.rankFromSquare(sq)===Util.rankFromSquare(from)) {
 					disambiguation.file=Util.fileFromSquare(from);
 				}
 
-				if(Util.fileFromSquare(n)===Util.fileFromSquare(from)) {
+				if(Util.fileFromSquare(sq)===Util.fileFromSquare(from)) {
 					disambiguation.rank=Util.rankFromSquare(from);
 				}
 			}
