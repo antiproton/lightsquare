@@ -1,14 +1,3 @@
-/*
-NOTE this is the exception to the rule of lowercase and underscore
-for private/titlecase for public.
-
-CLEAN:
-
-names
-
-what fullmove, halfmove etoCoords are
-*/
-
 var Util={
 	colourFromHalfmove: function(halfmove) {
 		return (Util.getHalfmoveIndex(halfmove)===1?BLACK:WHITE);
@@ -259,7 +248,7 @@ var Util={
 	pieces.
 	*/
 
-	squaresReachable: function(type, from, colour) {
+	getReachableSquares: function(type, from, colour) {
 		var fromCoords=Util.coordsFromSquare(from);
 		var squares=[];
 
@@ -352,10 +341,10 @@ var Util={
 			}
 
 			case QUEEN: {
-				var rookMovesAvailable=Util.squaresReachable(ROOK, from, colour);
-				var bishopMovesAvailable=Util.squaresReachable(BISHOP, from, colour);
+				var rookMovesAvailable=Util.getReachableSquares(ROOK, from, colour);
+				var bishopMovesAvailable=Util.getReachableSquares(BISHOP, from, colour);
 
-				squares=[].concat(rookMovesAvailable, bishopMovesAvailable);
+				squares=rookMovesAvailable.concat(bishopMovesAvailable);
 
 				break;
 			}
@@ -413,13 +402,13 @@ var Util={
 		}
 
 		/*
-		the rest can all use squaresReachable
+		the rest can all use getReachableSquares
 		*/
 
 		else {
 			var attackers=[];
 			var piece=Util.getPiece(type, colour);
-			var candidateSquares=Util.squaresReachable(type, square, colour);
+			var candidateSquares=Util.getReachableSquares(type, square, colour);
 			var candidateSquare;
 
 			for(var i=0; i<candidateSquares.length; i++) {
