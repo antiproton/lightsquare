@@ -1,7 +1,7 @@
 function MoveInfo() {
 	this.mode=MoveInfo.CLICK;
 	this.selected=false;
-	this.inProgress=false;
+	this.isInProgress=false;
 	this.piece=null;
 	this.from=null;
 	this.offsetX=0;
@@ -11,7 +11,7 @@ function MoveInfo() {
 MoveInfo.prototype.reset=function() {
 	this.mode=MoveInfo.CLICK;
 	this.selected=false;
-	this.inProgress=false;
+	this.isInProgress=false;
 	this.piece=null;
 	this.from=null;
 	this.offsetX=0;
@@ -19,4 +19,4 @@ MoveInfo.prototype.reset=function() {
 }
 
 MoveInfo.CLICK=0;
-MoveInfo.DRAG_DROP=1;
+MoveInfo.DRAG=1;

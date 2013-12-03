@@ -18,11 +18,11 @@ function UiBoard(parent) {
 	this._squareMouseCurrentlyOver=null;
 
 	//square the currently dragging piece will drop on if dropped (see Sq..Over/Out events)
-	this._squareCurrentlyDraggingPieceOver=null;
+	this._squareCurrentlydraggingPieceOver=null;
 
 	this.UserMove=new Event(this);
 	this.DragDrop=new Event(this);
-	this.DragMove=new Event(this);
+	this.DragPiece=new Event(this);
 	this.MouseOver=new Event(this);
 	this.PieceDraggedOff=new Event(this);
 	this.SquareClicked=new Event(this);
@@ -49,8 +49,8 @@ function UiBoard(parent) {
 	move action processing
 	*/
 
-	this.moveMode=MoveInfo.CLICK|MoveInfo.DRAG_DROP;
-	this.moveInfo=new MoveInfo();
+	this.moveMode=MoveInfo.CLICK|MoveInfo.DRAG;
+	this._moveInfo=new MoveInfo();
 
 	/*
 	putting the rank coords dead center made them look slightly too low.
@@ -342,7 +342,7 @@ UiBoard.prototype.init_props=function() {
 		}
 	});
 
-	this.ContainerBorder=setter(this, function() {
+	this.containerBorder=setter(this, function() {
 		return this.container_border;
 	}, function(value) {
 		if(this.container_border!==value) {
@@ -351,7 +351,7 @@ UiBoard.prototype.init_props=function() {
 		}
 	});
 
-	this.ContainerBackground=setter(this, function() {
+	this.containerBackground=setter(this, function() {
 		return this.container_background;
 	}, function(value) {
 		if(this.container_background!==value) {
@@ -360,7 +360,7 @@ UiBoard.prototype.init_props=function() {
 		}
 	});
 
-	this.ContainerShadow=setter(this, function() {
+	this.containerShadow=setter(this, function() {
 		return this.container_shadow;
 	}, function(value) {
 		if(this.container_shadow!==value) {
@@ -369,7 +369,7 @@ UiBoard.prototype.init_props=function() {
 		}
 	});
 
-	this.ContainerBorderBorderWidth=setter(this, function() {
+	this.containerBorderBorderWidth=setter(this, function() {
 		return this.container_border_border_width;
 	}, function(value) {
 		if(this.container_border_border_width!==value) {
@@ -378,7 +378,7 @@ UiBoard.prototype.init_props=function() {
 		}
 	});
 
-	this.ContainerBorderBorderColour=setter(this, function() {
+	this.containerBorderBorderColour=setter(this, function() {
 		return this.container_border_border_colour;
 	}, function(value) {
 		if(this.container_border_border_colour!==value) {
@@ -436,7 +436,7 @@ UiBoard.prototype._setupHtml=function() {
 	this.board_div=div(this.board_container);
 
 	this.board_div.addEventListener("mouseout", function(e) {
-		self._fireMouseOverEvents(e);
+		self._updateMouseOverInfo(e);
 	});
 
 	var coord, coord_outer, coord_inner;
@@ -450,8 +450,8 @@ UiBoard.prototype._setupHtml=function() {
 		coord_inner=div(coord_outer);
 
 		coord={
-			Container: coord_outer,
-			Node: coord_inner
+			container: coord_outer,
+			node: coord_inner
 		};
 
 		this._rankCoords.push(coord);
@@ -466,8 +466,8 @@ UiBoard.prototype._setupHtml=function() {
 		coord_inner=div(coord_outer);
 
 		coord={
-			Container: coord_outer,
-			Node: coord_inner
+			container: coord_outer,
+			node: coord_inner
 		};
 
 		this._fileCoords.push(coord);
@@ -511,10 +511,9 @@ UiBoard.prototype._setupHtml=function() {
 			});
 
 			square={
-				Container: sq_outer,
-				Node: sq_inner,
-				No: Util.squareFromCoords([f, r]),
-				Highlight: highlight
+				container: sq_outer,
+				node: sq_inner,
+				highlight: highlight
 			};
 
 			this._uiSquares.push(square);
@@ -618,7 +617,7 @@ UiBoard.prototype._updateHtml=function() { //after switching colours ,changing s
 	*/
 
 	for(var i=0; i<8; i++) {
-		style(this._rankCoords[i].Container, {
+		style(this._rankCoords[i].container, {
 			position: "absolute",
 			top: this.border.length+(this._squareSize*i),
 			left: 0,
@@ -629,7 +628,7 @@ UiBoard.prototype._updateHtml=function() { //after switching colours ,changing s
 			cursor: "default"
 		});
 
-		style(this._fileCoords[i].Container, {
+		style(this._fileCoords[i].container, {
 			position: "absolute",
 			top: (this.border.length*2)+board_size,
 			left: coord_size_r+this.border.length+(this._squareSize*i),
@@ -652,14 +651,14 @@ UiBoard.prototype._updateHtml=function() { //after switching colours ,changing s
 		}
 
 
-		this._rankCoords[i].Node.innerHTML=RANK.charAt(rank_index);
+		this._rankCoords[i].node.innerHTML=RANK.charAt(rank_index);
 
-		style(this._rankCoords[i].Node, {
+		style(this._rankCoords[i].node, {
 			marginTop: Math.round((this._squareSize/2)-(this.coords_font_size/2))-this.coord_r_hinting
 		});
 
 
-		this._fileCoords[i].Node.innerHTML=FILE.charAt(file_index);
+		this._fileCoords[i].node.innerHTML=FILE.charAt(file_index);
 
 		/*
 		NOTE these styles that are set by props (_fileCoordsontColor etc) are unnecessarily
@@ -683,7 +682,7 @@ UiBoard.prototype._updateHtml=function() { //after switching colours ,changing s
 		SOLUTION get rid of all the props, no point being able to change the font colour
 		*/
 
-		style(this._fileCoords[i].Node, {
+		style(this._fileCoords[i].node, {
 			fontFamily: this.coords_font_family,
 			fontSize: this.coords_font_size,
 			fontWeight: "normal",
@@ -692,7 +691,7 @@ UiBoard.prototype._updateHtml=function() { //after switching colours ,changing s
 			textAlign: "center"
 		});
 
-		style(this._rankCoords[i].Node, {
+		style(this._rankCoords[i].node, {
 			fontFamily: this.coords_font_family,
 			fontSize: this.coords_font_size,
 			color: this.coords_font_color,
@@ -744,7 +743,7 @@ UiBoard.prototype._updateHtml=function() { //after switching colours ,changing s
 	for(var sq=0; sq<this._uiSquares.length; sq++) {
 		square=this._uiSquares[sq];
 
-		style(square.Container, {
+		style(square.container, {
 			width: this._squareSize,
 			height: this._squareSize,
 			backgroundColor: "#"+this.square_colour[Util.getSquareColour(sq)]
@@ -752,12 +751,12 @@ UiBoard.prototype._updateHtml=function() { //after switching colours ,changing s
 
 		this._setSquarePos(square, sq);
 
-		style(square.Node, {
+		style(square.node, {
 			width: this._squareSize,
 			height: this._squareSize
 		});
 
-		style(square.Highlight, {
+		style(square.highlight, {
 			width: this._squareSize-(this.square_highlight_border*2),
 			height: this._squareSize-(this.square_highlight_border*2),
 			borderWidth: this.square_highlight_border
@@ -796,8 +795,8 @@ UiBoard.prototype._setHtmlSquare=function(sq, pc) {
 		bgimg="url("+this.img_dir_piece+"/"+this.piece_style+"/"+this._squareSize+"/"+Fen.getPieceChar(pc)+".png)";
 	}
 
-	if(this._uiSquares[sq].Node.style.backgroundImage!==bgimg) { //performance is noticeably better with this check
-		this._uiSquares[sq].Node.style.backgroundImage=bgimg;
+	if(this._uiSquares[sq].node.style.backgroundImage!==bgimg) { //performance is noticeably better with this check
+		this._uiSquares[sq].node.style.backgroundImage=bgimg;
 	}
 }
 
@@ -808,7 +807,7 @@ UiBoard.prototype._updateSquares=function() {
 }
 
 UiBoard.prototype.squareFromMouseEvent=function(e, use_offsets, offsets) { //useoffsets to calc for middle of piece
-	offsets=offsets||[this.moveInfo.OffsetX, this.moveInfo.OffsetY];
+	offsets=offsets||[this._moveInfo.offsetX, this._moveInfo.offsetY];
 
 	var x=e.pageX;
 	var y=e.pageY;
@@ -855,23 +854,23 @@ UiBoard.prototype._setSquarePos=function(square, sq) {
 	is absolute the squares don't have to add anything to these offsets
 	*/
 
-	style(square.Container, {
+	style(square.container, {
 		top: y,
 		left: x
 	});
 }
 
 UiBoard.prototype._resetSquarePos=function(uiSquare) { //return the inner bit to its container pos
-	style(uiSquare.Node, {
+	style(uiSquare.node, {
 		top: 0,
 		left: 0
 	});
 }
 
 UiBoard.prototype._setSquareXyPos=function(square, x, y) { //takes mouse coords
-	var os=getoffsets(square.Container);
+	var os=getoffsets(square.container);
 
-	style(square.Node, {
+	style(square.node, {
 		top: y-os[Y],
 		left: x-os[X]
 	});
@@ -883,15 +882,15 @@ UiBoard.prototype._boardMouseDown=function(e) {
 	if(this.mouseIsOnBoard(e)) {
 		var sq=this.squareFromMouseEvent(e);
 		var uiSquare=this._uiSquares[sq];
-		var os=getoffsets(uiSquare.Container);
+		var os=getoffsets(uiSquare.container);
 
-		if(this.moveMode!==MoveInfo.NONE && !this.moveInfo.Selected && !this.moveInfo.isInProgress && this.board[sq]!==SQ_EMPTY) { //first click or start of drag
+		if(!this._moveInfo.selected && !this._moveInfo.isInProgress && this.board[sq]!==SQ_EMPTY) { //first click or start of drag
 			this._setZIndexAboveRest(uiSquare);
-			this.moveInfo.Selected=true;
-			this.moveInfo.from=sq;
-			this.moveInfo.Piece=this.board[sq];
-			this.moveInfo.OffsetX=e.pageX-os[X];
-			this.moveInfo.OffsetY=e.pageY-os[Y];
+			this._moveInfo.selected=true;
+			this._moveInfo.from=sq;
+			this._moveInfo.piece=this.board[sq];
+			this._moveInfo.offsetX=e.pageX-os[X];
+			this._moveInfo.offsetY=e.pageY-os[Y];
 		}
 	}
 }
@@ -899,48 +898,55 @@ UiBoard.prototype._boardMouseDown=function(e) {
 UiBoard.prototype._boardMouseMove=function(e) {
 	e.preventDefault();
 
-	var sq=this.squareFromMouseEvent(e);
+	var square=this.squareFromMouseEvent(e);
 
 	//update mouseover sq and fire events
 
-	this._fireMouseOverEvents(e);
-	this._firePieceDragEvents(e);
+	this._updateMouseOverInfo(e);
+	this._updatePieceDragInfo(e);
 
 	var args;
 
-	if(this.moveInfo.Selected && !this.moveInfo.isInProgress) { //down and not already up on same square
+	if(this._moveInfo.selected && !this._moveInfo.isInProgress) { //down and not already up on same square
 		args={
-			Square: sq,
-			Piece: this.board[sq],
-			Dragging: true,
-			Cancel: false
+			square: square,
+			piece: this.board[square],
+			dragging: true,
+			cancel: false
 		};
 
 		this.SelectPiece.fire(args);
 
-		if(args.Cancel) {
-			this.moveInfo.reset();
-			this._resetZIndex(this._uiSquares[sq]);
+		if(args.cancel) {
+			this._moveInfo.reset();
+			this._resetZIndex(this._uiSquares[square]);
 		}
 
 		else {
-			this.moveInfo.mode=MoveInfo.DRAG_DROP;
-			this.moveInfo.isInProgress=true;
-			this.PieceSelected.fire({Sq: sq});
+			this._moveInfo.mode=MoveInfo.DRAG;
+			this._moveInfo.isInProgress=true;
+
+			this.PieceSelected.fire({
+				square: square
+			});
 		}
 	}
 
-	if(this.moveInfo.Selected && this.moveInfo.mode===MoveInfo.DRAG_DROP) {
+	if(this._moveInfo.selected && this._moveInfo.mode===MoveInfo.DRAG) {
 		args={
-			Square: sq,
-			Piece: this.moveInfo.Piece,
-			Cancel: false
+			square: square,
+			piece: this._moveInfo.piece,
+			cancel: false
 		};
 
-		this.DragMove.fire(args);
+		this.DragPiece.fire(args);
 
-		if(!args.Cancel) {
-			this._setSquareXyPos(this._uiSquares[this.moveInfo.from], e.pageX-this.moveInfo.OffsetX, e.pageY-this.moveInfo.OffsetY);
+		if(!args.cancel) {
+			this._setSquareXyPos(
+				this._uiSquares[this._moveInfo.from],
+				e.pageX-this._moveInfo.offsetX,
+				e.pageY-this._moveInfo.offsetY
+			);
 		}
 	}
 }
@@ -949,110 +955,116 @@ UiBoard.prototype._boardMouseUp=function(e) {
 	e.preventDefault();
 
 	var args;
+	var square=this.squareFromMouseEvent(e);
 
-	var sq=this.squareFromMouseEvent(e);
-
-	if(this.moveInfo.isInProgress && this.moveInfo.mode===MoveInfo.DRAG_DROP) {
-		sq=this.squareFromMouseEvent(e, true, [this.moveInfo.OffsetX, this.moveInfo.OffsetY]); //where the middle of the piece is
+	if(this._moveInfo.isInProgress && this._moveInfo.mode===MoveInfo.DRAG) {
+		square=this.squareFromMouseEvent(
+			e,
+			true,
+			[this._moveInfo.offsetX, this._moveInfo.offsetY]
+		);
 	}
 
 	var fromUiSquare=null;
 
-	if(this.moveInfo.from!==null) {
-		fromUiSquare=this._uiSquares[this.moveInfo.from];
+	if(this._moveInfo.from!==null) {
+		fromUiSquare=this._uiSquares[this._moveInfo.from];
 	}
 
 	args={
-		Square: sq,
-		MoveInfo: this.moveInfo,
-		Cancel: false,
-		Event: e
+		square: square,
+		moveInfo: this._moveInfo,
+		cancel: false,
+		event: e
 	};
 
-	if(this.moveInfo.mode===MoveInfo.CLICK) {
+	if(this._moveInfo.mode===MoveInfo.CLICK) {
 		this.SquareClicked.fire(args);
 	}
 
-	else if(this.moveInfo.mode===MoveInfo.DRAG_DROP && this.moveInfo.isInProgress) {
+	else if(this._moveInfo.mode===MoveInfo.DRAG && this._moveInfo.isInProgress) {
 		this.DragDrop.fire(args);
 	}
 
-	if(!args.Cancel) {
-		if(this.moveInfo.isInProgress) { //was dragging, now dropped; or second click
+	if(!args.cancel) {
+		if(this._moveInfo.isInProgress) { //was dragging, now dropped; or second click
 			this.Deselected.fire();
 
 			if(this.mouseIsOnBoard(e, true)) {
-				if(sq!=this.moveInfo.from) {
+				if(square!=this._moveInfo.from) {
 					this.UserMove.fire({
-						From: this.moveInfo.from,
-						To: sq,
-						Piece: this.getSquare(this.moveInfo.from),
-						Event: e
+						fom: this._moveInfo.from,
+						to: square,
+						piece: this.getSquare(this._moveInfo.from),
+						event: e
 					});
 				}
 			}
 
 			else {
 				this.PieceDraggedOff.fire({
-					From: this.moveInfo.from
+					from: this._moveInfo.from
 				});
 			}
 
 			this._resetSquarePos(fromUiSquare);
-			this.moveInfo.reset();
+			this._moveInfo.reset();
 		}
 
-		else if(this.moveMode&MoveInfo.CLICK && this.moveInfo.Selected && sq===this.moveInfo.from && !this.moveInfo.isInProgress) { //clicking on first square
+		else if(this.moveMode&MoveInfo.CLICK && this._moveInfo.selected && square===this._moveInfo.from && !this._moveInfo.isInProgress) { //clicking on first square
 			args={
-				Square: sq,
-				Piece: this.board[sq],
-				Dragging: false,
-				Cancel: false
+				Square: square,
+				Piece: this.board[square],
+				dragging: false,
+				cancel: false
 			};
 
 			this.SelectPiece.fire(args);
 
-			if(args.Cancel) {
-				this.moveInfo.reset();
+			if(args.cancel) {
+				this._moveInfo.reset();
 			}
 
 			else {
-				this.moveInfo.isInProgress=true;
-				this.moveInfo.mode=MoveInfo.CLICK;
-				this.PieceSelected.fire({Sq: sq});
+				this._moveInfo.isInProgress=true;
+				this._moveInfo.mode=MoveInfo.CLICK;
+
+				this.PieceSelected.fire({
+					square: square
+				});
 			}
 		}
 	}
 
 	else {
-		if(fromSquare!==null) {
+		if(fromUiSquare!==null) {
 			this._resetSquarePos(fromUiSquare);
 		}
 
-		this.moveInfo.reset();
+		this._moveInfo.reset();
 	}
 
 	if(fromUiSquare!==null) {
 		this._resetZIndex(fromUiSquare);
 	}
 
-	this._firePieceDragEvents(e);
+	this._updatePieceDragInfo(e);
 }
 
 UiBoard.prototype._setZIndexAboveRest=function(square) {
-	style(square.Node, {
+	style(square.node, {
 		zIndex: UiBoard.SQ_ZINDEX_ABOVE
 	});
 }
 
 UiBoard.prototype._resetZIndex=function(square) {
-	style(square.Node, {
+	style(square.node, {
 		zIndex: UiBoard.SQ_ZINDEX_NORMAL
 	});
 }
 
 UiBoard.prototype.mouseIsOnBoard=function(e, use_offsets, offsets) {
-	offsets=offsets||[this.moveInfo.OffsetX, this.moveInfo.OffsetY];
+	offsets=offsets||[this._moveInfo.offsetX, this._moveInfo.offsetY];
 
 	var x=e.pageX;
 	var y=e.pageY;
@@ -1069,11 +1081,13 @@ UiBoard.prototype.mouseIsOnBoard=function(e, use_offsets, offsets) {
 
 	y=this.getBoardSize()-y;
 
-	return this.coords_on_board(x, y);
+	return this._isXyOnBoard(x, y);
 }
 
-UiBoard.prototype.coords_on_board=function(x, y) {
-	return !(x<0 || x>this.getBoardSize() || y<0 || y>this.getBoardSize());
+UiBoard.prototype._isXyOnBoard=function(x, y) {
+	var boardSize=this.getBoardSize();
+
+	return !(x<0 || x>boardSize || y<0 || y>boardSize);
 }
 
 /*
@@ -1082,56 +1096,56 @@ look at all these fucking functions for highlighting squares
 and ones for fucking unhighlighting squares as well
 */
 
-UiBoard.prototype.hiliteSq=function(sq, style) {
-	style(this._uiSquares[sq].Highlight, style);
+UiBoard.prototype.hiliteSq=function(square, style) {
+	style(this._uiSquares[square].highlight, style);
 }
 
-UiBoard.prototype.unhiliteSq=function(sq) {
+UiBoard.prototype.unhiliteSq=function(square) {
 	if(sq!==null) {
-		style(this._uiSquares[sq].Highlight, this.HlNone);
+		style(this._uiSquares[square].highlight, this.HlNone);
 	}
 }
 
-UiBoard.prototype.hilitePossibilities=function(sqs) {
+UiBoard.prototype.hilitePossibilities=function(squares) {
 	for(var i=0; i<this.HilitPossibilities.length; i++) {
 		this.unhiliteSq(this.HilitPossibilities[i]);
 	}
 
-	this.HilitPossibilities=sqs;
+	this.HilitPossibilities=squares;
 
 	for(var i=0; i<this.HilitPossibilities.length; i++) {
 		this.hiliteSq(this.HilitPossibilities[i], this.HlPossibility);
 	}
 }
 
-UiBoard.prototype.hiliteLastMoveFrom=function(sq) {
+UiBoard.prototype.hiliteLastMoveFrom=function(square) {
 	this.unhiliteSq(this.HilitLastMoveFrom);
-	this.HilitLastMoveFrom=sq;
-	this.hiliteSq(sq, this.HlLastMoveFrom);
+	this.HilitLastMoveFrom=square;
+	this.hiliteSq(square, this.HlLastMoveFrom);
 }
 
-UiBoard.prototype.hiliteLastMoveTo=function(sq) {
+UiBoard.prototype.hiliteLastMoveTo=function(square) {
 	this.unhiliteSq(this.HilitLastMoveTo);
-	this.HilitLastMoveTo=sq;
-	this.hiliteSq(sq, this.HlLastMoveTo);
+	this.HilitLastMoveTo=square;
+	this.hiliteSq(square, this.HlLastMoveTo);
 }
 
 UiBoard.prototype.hiliteCanSelect=function(sq) {
 	this.unhiliteSq(this.HilitCanSelect);
-	this.HilitCanSelect=sq;
-	this.hiliteSq(sq, this.HlCanSelect);
+	this.HilitCanSelect=square;
+	this.hiliteSq(square, this.HlCanSelect);
 }
 
-UiBoard.prototype.hiliteCanDrop=function(sq) {
+UiBoard.prototype.hiliteCanDrop=function(square) {
 	this.unhiliteSq(this.HilitCanDrop);
-	this.HilitCanDrop=sq;
-	this.hiliteSq(sq, this.HlCanDrop);
+	this.HilitCanDrop=square;
+	this.hiliteSq(square, this.HlCanDrop);
 }
 
-UiBoard.prototype.hiliteSelected=function(sq) {
+UiBoard.prototype.hiliteSelected=function(square) {
 	this.unhiliteSq(this.HilitSelected);
-	this.HilitSelected=sq;
-	this.hiliteSq(sq, this.HlSelected);
+	this.HilitSelected=square;
+	this.hiliteSq(square, this.HlSelected);
 }
 
 UiBoard.prototype.unhilitePossibilities=function() {
@@ -1171,25 +1185,21 @@ UiBoard.prototype.getBoardSize=function() {
 	return this._squareSize*8;
 }
 
-/*
-FIXME these fire events and set some variables, should probs be renamed
-*/
+UiBoard.prototype._updateMouseOverInfo=function(e) {
+	var square=this.squareFromMouseEvent(e);
 
-UiBoard.prototype._fireMouseOverEvents=function(e) {
-	var sq=this.squareFromMouseEvent(e);
-
-	if(this.mouseIsOnBoard(e) && sq>-1 && sq<64) { //mouseIsOnBoard doesn't appear to be enough
-		if(this._squareMouseCurrentlyOver!=sq) {
+	if(this.mouseIsOnBoard(e) && square>-1 && square<64) { //mouseIsOnBoard doesn't appear to be enough
+		if(this._squareMouseCurrentlyOver!=square) {
 			if(this._squareMouseCurrentlyOver!==null) {
 				this.MouseLeavingSquare.fire({
-					Sq: this._squareMouseCurrentlyOver
+					square: this._squareMouseCurrentlyOver
 				});
 			}
 
-			this._squareMouseCurrentlyOver=sq;
+			this._squareMouseCurrentlyOver=square;
 
 			this.MouseOverSquare.fire({
-				Sq: sq
+				square: square
 			});
 		}
 	}
@@ -1197,7 +1207,7 @@ UiBoard.prototype._fireMouseOverEvents=function(e) {
 	else {
 		if(this._squareMouseCurrentlyOver!==null) {
 			this.MouseLeavingSquare.fire({
-				Sq: this._squareMouseCurrentlyOver
+				square: this._squareMouseCurrentlyOver
 			});
 		}
 
@@ -1205,19 +1215,19 @@ UiBoard.prototype._fireMouseOverEvents=function(e) {
 	}
 }
 
-UiBoard.prototype._firePieceDragEvents=function(e) {
+UiBoard.prototype._updatePieceDragInfo=function(e) {
 	var square=this.squareFromMouseEvent(e, true);
 
-	if(this.moveInfo.isInProgress && this.moveInfo.mode==MoveInfo.DRAG_DROP) {
+	if(this._moveInfo.isInProgress && this._moveInfo.mode==MoveInfo.DRAG) {
 		if(this.mouseIsOnBoard(e)) {
-			if(this._squareCurrentlyDraggingPieceOver!=square) {
-				if(this._squareCurrentlyDraggingPieceOver!==null) {
+			if(this._squareCurrentlydraggingPieceOver!=square) {
+				if(this._squareCurrentlydraggingPieceOver!==null) {
 					this.PieceLeavingSquare.fire({
-						square: this._squareCurrentlyDraggingPieceOver
+						square: this._squareCurrentlydraggingPieceOver
 					});
 				}
 
-				this._squareCurrentlyDraggingPieceOver=square;
+				this._squareCurrentlydraggingPieceOver=square;
 
 				this.PieceOverSquare.fire({
 					square: square
@@ -1226,31 +1236,31 @@ UiBoard.prototype._firePieceDragEvents=function(e) {
 		}
 
 		else {
-			if(this._squareCurrentlyDraggingPieceOver!==null) {
+			if(this._squareCurrentlydraggingPieceOver!==null) {
 				this.PieceLeavingSquare.fire({
-					square: this._squareCurrentlyDraggingPieceOver
+					square: this._squareCurrentlydraggingPieceOver
 				});
 			}
 
-			this._squareCurrentlyDraggingPieceOver=null;
+			this._squareCurrentlydraggingPieceOver=null;
 		}
 	}
 
 	else {
-		if(this._squareCurrentlyDraggingPieceOver!==null) {
+		if(this._squareCurrentlydraggingPieceOver!==null) {
 			this.PieceLeavingSquare.fire({
-				square: this._squareCurrentlyDraggingPieceOver
+				square: this._squareCurrentlydraggingPieceOver
 			});
 		}
 
-		this._squareCurrentlyDraggingPieceOver=null;
+		this._squareCurrentlydraggingPieceOver=null;
 	}
 }
 
 UiBoard.prototype.deselect=function() {
-	if(this.moveInfo.isInProgress) {
-		this._resetZIndex(this._uiSquares[this.moveInfo.from]);
-		this.moveInfo.reset();
+	if(this._moveInfo.isInProgress) {
+		this._resetZIndex(this._uiSquares[this._moveInfo.from]);
+		this._moveInfo.reset();
 	}
 }
 
