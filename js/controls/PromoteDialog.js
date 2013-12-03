@@ -167,7 +167,7 @@ PromoteDialog.prototype.UpdateHtml=function() {
 			left: (this.square_size*i),
 			width: this.square_size,
 			height: this.square_size,
-			backgroundImage: "url("+this.img_dir_piece+"/"+this.piece_style+"/"+this.square_size+"/"+Fen.getPieceChar(Util.piece(piece, this.colour))+".png)",
+			backgroundImage: "url("+this.img_dir_piece+"/"+this.piece_style+"/"+this.square_size+"/"+Fen.getPieceChar(Util.getPiece(piece, this.colour))+".png)",
 			cursor: (this.pointer_cursor?"pointer":"default")
 		});
 	}
