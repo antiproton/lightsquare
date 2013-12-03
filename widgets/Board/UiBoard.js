@@ -1,6 +1,6 @@
 /*
 NOTE for updating this in the future - MoveInfo is a complete wreck.
-definition is in ResetMoveInfo.  used in all kinds of places, don't
+definition is in moveInfo.reset.  used in all kinds of places, don't
 bother trying to edit.
 
 TODO refactor MoveInfo
@@ -10,33 +10,33 @@ function UiBoard(parent) {
 	Board.implement(this);
 	Control.implement(this, parent, true);
 
-	this.CoordsF=[];
-	this.CoordsR=[];
-	this.Squares=[]; //array of anonymous objects (see def in SetupHtml)
+	this._fileCoords=[];
+	this._rankCoords=[];
+	this._uiSquares=[]; //array of anonymous objects (see def in _setupHtml)
 
 	//square the mouse is over
-	this.CurrentMouseOverSq=null;
+	this._squareMouseCurrentlyOver=null;
 
 	//square the currently dragging piece will drop on if dropped (see Sq..Over/Out events)
-	this.CurrentPieceOverSq=null;
+	this._squareCurrentlyDraggingPieceOver=null;
 
 	this.UserMove=new Event(this);
 	this.DragDrop=new Event(this);
 	this.DragMove=new Event(this);
 	this.MouseOver=new Event(this);
-	this.DragOff=new Event(this);
+	this.PieceDraggedOff=new Event(this);
 	this.SquareClicked=new Event(this);
 	this.SelectPiece=new Event(this);
 	this.PieceSelected=new Event(this); //fires after SelectPiece if no one cancels it
 	this.Deselected=new Event(this);
-	this.SqMouseOver=new Event(this);
-	this.SqMouseOut=new Event(this);
-	this.SqPieceOver=new Event(this);
-	this.SqPieceOut=new Event(this);
+	this.MouseOverSquare=new Event(this);
+	this.MouseLeavingSquare=new Event(this);
+	this.PieceOverSquare=new Event(this);
+	this.PieceLeavingSquare=new Event(this);
 
 	this.init_hilite_styles();
 
-	//NOTE premove highlighting is done the manual way (board.HiliteSq(sq, board.HlPremoveFrom))
+	//NOTE premove highlighting is done the manual way (board.hiliteSq(sq, board.HlPremoveFrom))
 
 	this.HilitPossibilities=[];
 	this.HilitLastMoveFrom=null;
@@ -49,19 +49,8 @@ function UiBoard(parent) {
 	move action processing
 	*/
 
-	this.MoveMode=UiBoard.MOVE_MODE_CLICK_CLICK|UiBoard.MOVE_MODE_DRAG_DROP;
-	this.MoveInfo={};
-	this.ResetMoveInfo();
-
-	/*
-	MoveInfo
-
-		Mode: CLK or DD
-		Selected: have mousedowned on a piece
-		InProgress: (CLK) have clicked on a piece (DD) have started to drag (mousedown+moved)
-		Piece: the piece being moved, or null
-		From: the square being moved from, or null
-	*/
+	this.moveMode=MoveInfo.CLICK|MoveInfo.DRAG_DROP;
+	this.moveInfo=new MoveInfo();
 
 	/*
 	putting the rank coords dead center made them look slightly too low.
@@ -87,7 +76,7 @@ function UiBoard(parent) {
 	this.coords_font_family="sans-serif";
 	this.coords_font_size=11;
 	this.coords_font_color="#303030";
-	this.square_size=45;
+	this._squareSize=45;
 	this.view_as=WHITE;
 	this.img_dir_board="/img/board";
 	this.img_dir_piece="/img/piece";
@@ -97,7 +86,7 @@ function UiBoard(parent) {
 	this.square_colour[WHITE]="f0d9b5";
 	this.square_colour[BLACK]="b58863";
 	this.square_highlight_border=0; //gap around the edge of the highlight div to fit a border in
-	this.html_updates_enabled=true; //visual updates can be temporarily turned off entirely to ensure consistency when multiple events are causing updates
+	this.htmlUpdatesEnabled=true; //visual updates can be temporarily turned off entirely to ensure consistency when multiple events are causing updates
 	this.container_border=true;
 	this.container_background="#efefef";
 	this.container_shadow=true;
@@ -106,7 +95,7 @@ function UiBoard(parent) {
 
 	this.init_props();
 
-	this.SetupHtml();
+	this._setupHtml();
 }
 
 /*
@@ -116,12 +105,6 @@ NOTE PieceStore uses these as well
 UiBoard.SQ_ZINDEX_ABOVE=5; //currently dragging square
 UiBoard.SQ_ZINDEX_NORMAL=4; //normal square
 UiBoard.SQ_ZINDEX_BELOW=2; //square highlight nodes
-
-//exponential enum constants
-
-UiBoard.MOVE_MODE_NONE=1;
-UiBoard.MOVE_MODE_CLICK_CLICK=2;
-UiBoard.MOVE_MODE_DRAG_DROP=4;
 
 /*
 initialise default square highlighting styles
@@ -198,13 +181,13 @@ UiBoard.prototype.init_hilite_styles=function() {
 }
 
 UiBoard.prototype.init_props=function() {
-	this.HtmlUpdatesEnabled=setter(this, function() {
-		return this.html_updates_enabled;
+	this.Html_updatesEnabled=setter(this, function() {
+		return this.htmlUpdatesEnabled;
 	}, function(value) {
-		this.html_updates_enabled=value;
+		this.htmlUpdatesEnabled=value;
 
 		if(value===true) {
-			this.UpdateSquares();
+			this._updateSquares();
 		}
 	});
 
@@ -213,34 +196,34 @@ UiBoard.prototype.init_props=function() {
 	}, function(value) {
 		if(this.square_colour!==value) {
 			this.square_colour=value;
-			this.UpdateHtml();
+			this._updateHtml();
 		}
 	});
 
-	this.CoordsFontSize=setter(this, function() {
+	this._fileCoordsontSize=setter(this, function() {
 		return this.coords_font_size;
 	}, function(value) {
 		if(this.coords_font_size!==value) {
 			this.coords_font_size=value;
-			this.UpdateHtml();
+			this._updateHtml();
 		}
 	});
 
-	this.CoordsFontFamily=setter(this, function() {
+	this._fileCoordsontFamily=setter(this, function() {
 		return this.coords_font_family;
 	}, function(value) {
 		if(this.coords_font_family!==value) {
 			this.coords_font_family=value;
-			this.UpdateHtml();
+			this._updateHtml();
 		}
 	});
 
-	this.CoordsFontColor=setter(this, function() {
+	this._fileCoordsontColor=setter(this, function() {
 		return this.coords_font_color;
 	}, function(value) {
 		if(this.coords_font_color!==value) {
 			this.coords_font_color=value;
-			this.UpdateHtml();
+			this._updateHtml();
 		}
 	});
 
@@ -249,7 +232,7 @@ UiBoard.prototype.init_props=function() {
 	}, function(value) {
 		if(this.img_dir_board!==value) {
 			this.img_dir_board=value;
-			this.UpdateHtml();
+			this._updateHtml();
 		}
 	});
 
@@ -259,7 +242,7 @@ UiBoard.prototype.init_props=function() {
 		if(this.img_dir_piece!==value) {
 			this.img_dir_piece=value;
 			this.PromoteDialog.ImgDirPiece(value);
-			this.UpdateHtml();
+			this._updateHtml();
 		}
 	});
 
@@ -268,7 +251,7 @@ UiBoard.prototype.init_props=function() {
 	}, function(value) {
 		if(this.view_as!==value) {
 			this.view_as=value;
-			this.UpdateHtml();
+			this._updateHtml();
 		}
 	});
 
@@ -277,7 +260,7 @@ UiBoard.prototype.init_props=function() {
 	}, function(value) {
 		if(this.coord_size_f!==value) {
 			this.coord_size_f=value;
-			this.UpdateHtml();
+			this._updateHtml();
 		}
 	});
 
@@ -286,7 +269,7 @@ UiBoard.prototype.init_props=function() {
 	}, function(value) {
 		if(this.coord_size_r!==value) {
 			this.coord_size_r=value;
-			this.UpdateHtml();
+			this._updateHtml();
 		}
 	});
 
@@ -295,7 +278,7 @@ UiBoard.prototype.init_props=function() {
 	}, function(value) {
 		if(this.show_coords_padding!==value) {
 			this.show_coords_padding=value;
-			this.UpdateHtml();
+			this._updateHtml();
 		}
 	});
 
@@ -309,17 +292,17 @@ UiBoard.prototype.init_props=function() {
 				this.ShowCoordsPadding(true);
 			}
 
-			this.UpdateHtml();
+			this._updateHtml();
 		}
 	});
 
 	this.squareSize=setter(this, function() {
-		return this.square_size;
+		return this._squareSize;
 	}, function(value) {
-		if(this.square_size!==value) {
-			this.square_size=parseInt(value);
+		if(this._squareSize!==value) {
+			this._squareSize=parseInt(value);
 			this.PromoteDialog.SquareSize(value);
-			this.UpdateHtml();
+			this._updateHtml();
 		}
 	});
 
@@ -328,7 +311,7 @@ UiBoard.prototype.init_props=function() {
 	}, function(value) {
 		if(this.board_style!==value) {
 			this.board_style=value;
-			this.UpdateHtml();
+			this._updateHtml();
 		}
 	});
 
@@ -338,7 +321,7 @@ UiBoard.prototype.init_props=function() {
 		if(this.piece_style!==value) {
 			this.piece_style=value;
 			this.PromoteDialog.PieceStyle(value);
-			this.UpdateHtml();
+			this._updateHtml();
 		}
 	});
 
@@ -346,7 +329,7 @@ UiBoard.prototype.init_props=function() {
 		return this.border;
 	}, function(value) {
 		this.board_style=value;
-		this.UpdateHtml();
+		this._updateHtml();
 		this.UiUpdate.fire();
 	});
 
@@ -355,7 +338,7 @@ UiBoard.prototype.init_props=function() {
 	}, function(value) {
 		if(this.board_style!==value) {
 			this.board_style=value;
-			this.UpdateHtml();
+			this._updateHtml();
 		}
 	});
 
@@ -364,7 +347,7 @@ UiBoard.prototype.init_props=function() {
 	}, function(value) {
 		if(this.container_border!==value) {
 			this.container_border=value;
-			this.UpdateHtml();
+			this._updateHtml();
 		}
 	});
 
@@ -373,7 +356,7 @@ UiBoard.prototype.init_props=function() {
 	}, function(value) {
 		if(this.container_background!==value) {
 			this.container_background=value;
-			this.UpdateHtml();
+			this._updateHtml();
 		}
 	});
 
@@ -382,7 +365,7 @@ UiBoard.prototype.init_props=function() {
 	}, function(value) {
 		if(this.container_shadow!==value) {
 			this.container_shadow=value;
-			this.UpdateHtml();
+			this._updateHtml();
 		}
 	});
 
@@ -391,7 +374,7 @@ UiBoard.prototype.init_props=function() {
 	}, function(value) {
 		if(this.container_border_border_width!==value) {
 			this.container_border_border_width=value;
-			this.UpdateHtml();
+			this._updateHtml();
 		}
 	});
 
@@ -400,7 +383,7 @@ UiBoard.prototype.init_props=function() {
 	}, function(value) {
 		if(this.container_border_border_colour!==value) {
 			this.container_border_border_colour=value;
-			this.UpdateHtml();
+			this._updateHtml();
 		}
 	});
 
@@ -413,12 +396,12 @@ UiBoard.prototype.init_props=function() {
 	});
 }
 
-UiBoard.prototype.SetupHtml=function() {
+UiBoard.prototype._setupHtml=function() {
 	var self=this;
 
-	this.CoordsF=[];
-	this.CoordsR=[];
-	this.Squares=[];
+	this._fileCoords=[];
+	this._rankCoords=[];
+	this._uiSquares=[];
 
 	/*
 	inner container so that the absolute-positioned things
@@ -453,7 +436,7 @@ UiBoard.prototype.SetupHtml=function() {
 	this.board_div=div(this.board_container);
 
 	this.board_div.addEventListener("mouseout", function(e) {
-		self.UpdateMouseOverData(e);
+		self._fireMouseOverEvents(e);
 	});
 
 	var coord, coord_outer, coord_inner;
@@ -471,7 +454,7 @@ UiBoard.prototype.SetupHtml=function() {
 			Node: coord_inner
 		};
 
-		this.CoordsR.push(coord);
+		this._rankCoords.push(coord);
 	}
 
 	/*
@@ -487,7 +470,7 @@ UiBoard.prototype.SetupHtml=function() {
 			Node: coord_inner
 		};
 
-		this.CoordsF.push(coord);
+		this._fileCoords.push(coord);
 	}
 
 	/*
@@ -520,21 +503,21 @@ UiBoard.prototype.SetupHtml=function() {
 			});
 
 			sq_inner.addEventListener("mousedown", function(e) {
-				self.BoardMouseDown(e);
+				self._boardMouseDown(e);
 			});
 
 			sq_inner.addEventListener("mouseup", function(e) {
-				self.BoardMouseUp(e);
+				self._boardMouseUp(e);
 			});
 
 			square={
 				Container: sq_outer,
 				Node: sq_inner,
-				No: Util.fr_to_sq(f, r),
+				No: Util.squareFromCoords([f, r]),
 				Highlight: highlight
 			};
 
-			this.Squares.push(square);
+			this._uiSquares.push(square);
 		}
 	}
 
@@ -543,7 +526,7 @@ UiBoard.prototype.SetupHtml=function() {
 	*/
 
 	window.addEventListener("mousemove", function(e) {
-		self.BoardMouseMove(e);
+		self._boardMouseMove(e);
 	});
 
 	/*
@@ -555,7 +538,7 @@ UiBoard.prototype.SetupHtml=function() {
 	this.PromoteDialog.Zindex(UiBoard.SQ_ZINDEX_ABOVE);
 	this.PromoteDialog.ImgDirPiece(this.img_dir_piece);
 	this.PromoteDialog.PieceStyle(this.piece_style);
-	this.PromoteDialog.SquareSize(this.square_size);
+	this.PromoteDialog.SquareSize(this._squareSize);
 
 	/*
 	game over dialog - this is part of the board to simplifiy positioning it
@@ -572,22 +555,22 @@ UiBoard.prototype.SetupHtml=function() {
 	this.ForceResignDialog=new ForceResignDialog(this.board_div);
 	this.ForceResignDialog.Zindex(UiBoard.SQ_ZINDEX_ABOVE);
 
-	this.UpdateHtml();
+	this._updateHtml();
 }
 
 /*
 set the size, position and other style attributes on the elements
 */
 
-UiBoard.prototype.UpdateHtml=function() { //after switching colours ,changing size tec
+UiBoard.prototype._updateHtml=function() { //after switching colours ,changing size tec
 	var rank_index, file_index, text;
-	var board_size=this.GetBoardSize();
+	var board_size=this.getBoardSize();
 	var coord_size_r=this.CoordSizeR();
 	var coord_size_f=this.CoordSizeF();
-	var coord_display_size_r=this.show_coords_padding?coord_size_r:0;
-	var coord_display_size_f=this.show_coords_padding?coord_size_f:0;
-	var container_padding_r=this.container_border?coord_size_r:coord_display_size_r;
-	var container_padding_f=this.container_border?coord_size_f:coord_display_size_f;
+	var rankCoordsDisplaySize=this.show_coords_padding?coord_size_r:0;
+	var fileCoordsDisplaySize=this.show_coords_padding?coord_size_f:0;
+	var container_padding_r=this.container_border?coord_size_r:rankCoordsDisplaySize;
+	var container_padding_f=this.container_border?coord_size_f:fileCoordsDisplaySize;
 	var coords_display=this.show_coords_padding?"":"none";
 	var coords_visibility=this.show_coords?"":"hidden";
 
@@ -610,14 +593,7 @@ UiBoard.prototype.UpdateHtml=function() { //after switching colours ,changing si
 	border
 	*/
 
-	//Dom.ClearNode(this.border_container);
 	this.border_container.innerHTML="";
-	//FIXME this is insane; make this all a template instead
-	//make a template for the border and coords maybe, then
-	//no fuck that, keep it as a completely dynamic control (everything needs calculations if size changes etc)
-	//but make it better
-	//this is actually quite clean, or as clean as a pixel-calculated layout
-	//generation routine can be expected to be
 
 	var border;
 	var inner_border=this.border_container;
@@ -642,23 +618,23 @@ UiBoard.prototype.UpdateHtml=function() { //after switching colours ,changing si
 	*/
 
 	for(var i=0; i<8; i++) {
-		style(this.CoordsR[i].Container, {
+		style(this._rankCoords[i].Container, {
 			position: "absolute",
-			top: this.border.length+(this.square_size*i),
+			top: this.border.length+(this._squareSize*i),
 			left: 0,
-			height: this.square_size,
-			width: coord_display_size_r,
+			height: this._squareSize,
+			width: rankCoordsDisplaySize,
 			display: coords_display,
 			visibility: coords_visibility,
 			cursor: "default"
 		});
 
-		style(this.CoordsF[i].Container, {
+		style(this._fileCoords[i].Container, {
 			position: "absolute",
 			top: (this.border.length*2)+board_size,
-			left: coord_size_r+this.border.length+(this.square_size*i),
-			width: this.square_size,
-			height: coord_display_size_f,
+			left: coord_size_r+this.border.length+(this._squareSize*i),
+			width: this._squareSize,
+			height: fileCoordsDisplaySize,
 			display: coords_display,
 			visibility: coords_visibility,
 			cursor: "default"
@@ -676,17 +652,17 @@ UiBoard.prototype.UpdateHtml=function() { //after switching colours ,changing si
 		}
 
 
-		this.CoordsR[i].Node.innerHTML=RANK.charAt(rank_index);
+		this._rankCoords[i].Node.innerHTML=RANK.charAt(rank_index);
 
-		style(this.CoordsR[i].Node, {
-			marginTop: Math.round((this.square_size/2)-(this.coords_font_size/2))-this.coord_r_hinting
+		style(this._rankCoords[i].Node, {
+			marginTop: Math.round((this._squareSize/2)-(this.coords_font_size/2))-this.coord_r_hinting
 		});
 
 
-		this.CoordsF[i].Node.innerHTML=FILE.charAt(file_index);
+		this._fileCoords[i].Node.innerHTML=FILE.charAt(file_index);
 
 		/*
-		NOTE these styles that are set by props (CoordsFontColor etc) are unnecessarily
+		NOTE these styles that are set by props (_fileCoordsontColor etc) are unnecessarily
 		intensive - if something sets the font size and then the colour a whole load of
 		dom nodes are deleted and then recreated needlessly.  but the other way is to
 		have separate update functions for each style option, or do them directly in the
@@ -700,23 +676,23 @@ UiBoard.prototype.UpdateHtml=function() { //after switching colours ,changing si
 		noticeable delay on fairly old hardware, but if it starts getting slow this is
 		probably most of the problem.
 
-		noticeable pauses seem to arise with about 200 board.CoordsFontColor.Set calls
+		noticeable pauses seem to arise with about 200 board._fileCoordsontColor.Set calls
 		*/
 
 		/*
 		SOLUTION get rid of all the props, no point being able to change the font colour
 		*/
 
-		style(this.CoordsF[i].Node, {
+		style(this._fileCoords[i].Node, {
 			fontFamily: this.coords_font_family,
 			fontSize: this.coords_font_size,
 			fontWeight: "normal",
 			color: this.coords_font_color,
-			lineHeight: coord_display_size_f,
+			lineHeight: fileCoordsDisplaySize,
 			textAlign: "center"
 		});
 
-		style(this.CoordsR[i].Node, {
+		style(this._rankCoords[i].Node, {
 			fontFamily: this.coords_font_family,
 			fontSize: this.coords_font_size,
 			color: this.coords_font_color,
@@ -749,7 +725,7 @@ UiBoard.prototype.UpdateHtml=function() { //after switching colours ,changing si
 	var bgimg="none";
 
 	if(this.board_style!==null) {
-		bgimg=Base.App.CssImg(this.img_dir_board+"/"+this.board_style+"/"+this.square_size+".png");
+		bgimg=Base.App.CssImg(this.img_dir_board+"/"+this.board_style+"/"+this._squareSize+".png");
 	}
 
 	style(this.board_div, {
@@ -765,25 +741,25 @@ UiBoard.prototype.UpdateHtml=function() { //after switching colours ,changing si
 
 	var square;
 
-	for(var sq=0; sq<this.Squares.length; sq++) {
-		square=this.Squares[sq];
+	for(var sq=0; sq<this._uiSquares.length; sq++) {
+		square=this._uiSquares[sq];
 
 		style(square.Container, {
-			width: this.square_size,
-			height: this.square_size,
-			backgroundColor: "#"+this.square_colour[Util.sq_colour(sq)]
+			width: this._squareSize,
+			height: this._squareSize,
+			backgroundColor: "#"+this.square_colour[Util.getSquareColour(sq)]
 		});
 
-		this.SetSquarePos(square, sq);
+		this._setSquarePos(square, sq);
 
 		style(square.Node, {
-			width: this.square_size,
-			height: this.square_size
+			width: this._squareSize,
+			height: this._squareSize
 		});
 
 		style(square.Highlight, {
-			width: this.square_size-(this.square_highlight_border*2),
-			height: this.square_size-(this.square_highlight_border*2),
+			width: this._squareSize-(this.square_highlight_border*2),
+			height: this._squareSize-(this.square_highlight_border*2),
 			borderWidth: this.square_highlight_border
 		});
 	}
@@ -792,98 +768,86 @@ UiBoard.prototype.UpdateHtml=function() { //after switching colours ,changing si
 	pieces
 	*/
 
-	this.UpdateSquares();
+	this._updateSquares();
 
 	/*
 	dialogs
 	*/
 
-	var c=this.square_size*4; //center of the board
+	var c=this._squareSize*4; //center of the board
 
 	this.PromoteDialog.SetLocation([c, c], true);
 	this.GameOverDialog.SetLocation(c, c);
 	this.ForceResignDialog.SetLocation(c, c);
 }
 
-UiBoard.prototype.SetSquare=function(sq, pc) {
-	Board.prototype.SetSquare.call(this, sq, pc);
+UiBoard.prototype.setSquare=function(square, piece) {
+	Board.prototype.setSquare.call(this, square, piece);
 
-	if(this.html_updates_enabled) {
-		this.SetHtmlSquare(sq, pc);
+	if(this.htmlUpdatesEnabled) {
+		this._setHtmlSquare(square, piece);
 	}
 }
 
-UiBoard.prototype.SetHtmlSquare=function(sq, pc) {
+UiBoard.prototype._setHtmlSquare=function(sq, pc) {
 	var bgimg="none";
 
 	if(pc!==SQ_EMPTY) {
-		bgimg="url("+this.img_dir_piece+"/"+this.piece_style+"/"+this.square_size+"/"+Fen.getPieceChar(pc)+".png)";
+		bgimg="url("+this.img_dir_piece+"/"+this.piece_style+"/"+this._squareSize+"/"+Fen.getPieceChar(pc)+".png)";
 	}
 
-	if(this.Squares[sq].Node.style.backgroundImage!==bgimg) { //performance is noticeably better with this check
-		this.Squares[sq].Node.style.backgroundImage=bgimg;
+	if(this._uiSquares[sq].Node.style.backgroundImage!==bgimg) { //performance is noticeably better with this check
+		this._uiSquares[sq].Node.style.backgroundImage=bgimg;
 	}
 }
 
-UiBoard.prototype.UpdateSquares=function() {
+UiBoard.prototype._updateSquares=function() {
 	for(var sq=0; sq<this.board.length; sq++) {
-		this.SetHtmlSquare(sq, this.board[sq]);
+		this._setHtmlSquare(sq, this.board[sq]);
 	}
 }
 
-UiBoard.prototype.ResetMoveInfo=function() {
-	this.MoveInfo={
-		Mode: UiBoard.MOVE_MODE_CLICK_CLICK,
-		Selected: false,
-		InProgress: false,
-		Piece: null,
-		From: null,
-		OffsetX: 0,
-		OffsetY: 0
-	};
-}
-
-UiBoard.prototype.SqFromMouseEvent=function(e, use_offsets, offsets) { //useoffsets to calc for middle of piece
-	offsets=offsets||[this.MoveInfo.OffsetX, this.MoveInfo.OffsetY];
+UiBoard.prototype.squareFromMouseEvent=function(e, use_offsets, offsets) { //useoffsets to calc for middle of piece
+	offsets=offsets||[this.moveInfo.OffsetX, this.moveInfo.OffsetY];
 
 	var x=e.pageX;
 	var y=e.pageY;
 
 	if(use_offsets) {
-		x+=(Math.round(this.square_size/2)-offsets[X]);
-		y+=(Math.round(this.square_size/2)-offsets[Y]);
+		x+=(Math.round(this._squareSize/2)-offsets[X]);
+		y+=(Math.round(this._squareSize/2)-offsets[Y]);
 	}
 
 	var os=getoffsets(this.board_div);
 
-	return this.sq_from_offsets(x-os[X], this.GetBoardSize()-(y-os[Y]));
+	return this._squareFromOffsets(x-os[X], this.getBoardSize()-(y-os[Y]));
 }
 
-UiBoard.prototype.sq_from_offsets=function(x, y) {
-	var f=(x-(x%this.square_size))/this.square_size;
-	var r=(y-(y%this.square_size))/this.square_size;
+UiBoard.prototype._squareFromOffsets=function(x, y) {
+	var f=(x-(x%this._squareSize))/this._squareSize;
+	var r=(y-(y%this._squareSize))/this._squareSize;
 
 	if(this.view_as==BLACK) {
 		f=7-f;
 		r=7-r;
 	}
 
-	return Util.fr_to_sq(f, r);
+	return Util.squareFromCoords([f, r]);
 }
 
-UiBoard.prototype.SetSquarePos=function(square, sq) {
+UiBoard.prototype._setSquarePos=function(square, sq) {
 	var x, y;
-	var r=Util.y(sq);
-	var f=Util.x(sq);
+	var r=Util.yFromSquare(sq);
+	var f=Util.xFromSquare(sq);
 
 	if(this.view_as==BLACK) {
-		x=this.square_size*(7-f);
-		y=this.square_size*r;
+		x=this._squareSize*(7-f);
+		y=this._squareSize*r;
 	}
 
 	else {
-		x=this.square_size*f;
-		y=this.square_size*(7-r);
+		x=this._squareSize*f;
+		y=this._squareSize*(7-r);
 	}
 
 	/*
@@ -897,14 +861,14 @@ UiBoard.prototype.SetSquarePos=function(square, sq) {
 	});
 }
 
-UiBoard.prototype.ResetSquarePos=function(square) { //return the inner bit to its container pos
-	style(square.Node, {
+UiBoard.prototype._resetSquarePos=function(uiSquare) { //return the inner bit to its container pos
+	style(uiSquare.Node, {
 		top: 0,
 		left: 0
 	});
 }
 
-UiBoard.prototype.SetSquareXyPos=function(square, x, y) { //takes mouse coords
+UiBoard.prototype._setSquareXyPos=function(square, x, y) { //takes mouse coords
 	var os=getoffsets(square.Container);
 
 	style(square.Node, {
@@ -913,38 +877,38 @@ UiBoard.prototype.SetSquareXyPos=function(square, x, y) { //takes mouse coords
 	});
 }
 
-UiBoard.prototype.BoardMouseDown=function(e) {
+UiBoard.prototype._boardMouseDown=function(e) {
 	e.preventDefault();
 
-	if(this.MouseOnBoard(e)) {
-		var sq=this.SqFromMouseEvent(e);
-		var square=this.Squares[sq];
-		var os=getoffsets(square.Container);
+	if(this.mouseIsOnBoard(e)) {
+		var sq=this.squareFromMouseEvent(e);
+		var uiSquare=this._uiSquares[sq];
+		var os=getoffsets(uiSquare.Container);
 
-		if(this.MoveMode!==UiBoard.MOVE_MODE_NONE && !this.MoveInfo.Selected && !this.MoveInfo.InProgress && this.board[sq]!==SQ_EMPTY) { //first click or start of drag
-			this.inc_z_index(square);
-			this.MoveInfo.Selected=true;
-			this.MoveInfo.From=sq;
-			this.MoveInfo.Piece=this.board[sq];
-			this.MoveInfo.OffsetX=e.pageX-os[X];
-			this.MoveInfo.OffsetY=e.pageY-os[Y];
+		if(this.moveMode!==MoveInfo.NONE && !this.moveInfo.Selected && !this.moveInfo.isInProgress && this.board[sq]!==SQ_EMPTY) { //first click or start of drag
+			this._setZIndexAboveRest(uiSquare);
+			this.moveInfo.Selected=true;
+			this.moveInfo.from=sq;
+			this.moveInfo.Piece=this.board[sq];
+			this.moveInfo.OffsetX=e.pageX-os[X];
+			this.moveInfo.OffsetY=e.pageY-os[Y];
 		}
 	}
 }
 
-UiBoard.prototype.BoardMouseMove=function(e) {
+UiBoard.prototype._boardMouseMove=function(e) {
 	e.preventDefault();
 
-	var sq=this.SqFromMouseEvent(e);
+	var sq=this.squareFromMouseEvent(e);
 
 	//update mouseover sq and fire events
 
-	this.UpdateMouseOverData(e);
-	this.UpdatePieceOverData(e);
+	this._fireMouseOverEvents(e);
+	this._firePieceDragEvents(e);
 
 	var args;
 
-	if(this.MoveInfo.Selected && !this.MoveInfo.InProgress) { //down and not already up on same square
+	if(this.moveInfo.Selected && !this.moveInfo.isInProgress) { //down and not already up on same square
 		args={
 			Square: sq,
 			Piece: this.board[sq],
@@ -955,91 +919,90 @@ UiBoard.prototype.BoardMouseMove=function(e) {
 		this.SelectPiece.fire(args);
 
 		if(args.Cancel) {
-			this.ResetMoveInfo();
-			this.reset_z_index(this.Squares[sq]);
+			this.moveInfo.reset();
+			this._resetZIndex(this._uiSquares[sq]);
 		}
 
 		else {
-			this.MoveInfo.Mode=UiBoard.MOVE_MODE_DRAG_DROP;
-			this.MoveInfo.InProgress=true;
+			this.moveInfo.mode=MoveInfo.DRAG_DROP;
+			this.moveInfo.isInProgress=true;
 			this.PieceSelected.fire({Sq: sq});
 		}
 	}
 
-	if(this.MoveInfo.Selected && this.MoveInfo.Mode===UiBoard.MOVE_MODE_DRAG_DROP) {
+	if(this.moveInfo.Selected && this.moveInfo.mode===MoveInfo.DRAG_DROP) {
 		args={
 			Square: sq,
-			Piece: this.MoveInfo.Piece,
+			Piece: this.moveInfo.Piece,
 			Cancel: false
 		};
 
 		this.DragMove.fire(args);
 
 		if(!args.Cancel) {
-			this.SetSquareXyPos(this.Squares[this.MoveInfo.From], e.pageX-this.MoveInfo.OffsetX, e.pageY-this.MoveInfo.OffsetY);
+			this._setSquareXyPos(this._uiSquares[this.moveInfo.from], e.pageX-this.moveInfo.OffsetX, e.pageY-this.moveInfo.OffsetY);
 		}
 	}
 }
 
-UiBoard.prototype.BoardMouseUp=function(e) {
+UiBoard.prototype._boardMouseUp=function(e) {
 	e.preventDefault();
 
 	var args;
 
-	var sq=this.SqFromMouseEvent(e); //where the mouse pointer is
+	var sq=this.squareFromMouseEvent(e);
 
-	if(this.MoveInfo.InProgress && this.MoveInfo.Mode===UiBoard.MOVE_MODE_DRAG_DROP) {
-		sq=this.SqFromMouseEvent(e, true, [this.MoveInfo.OffsetX, this.MoveInfo.OffsetY]); //where the middle of the piece is
+	if(this.moveInfo.isInProgress && this.moveInfo.mode===MoveInfo.DRAG_DROP) {
+		sq=this.squareFromMouseEvent(e, true, [this.moveInfo.OffsetX, this.moveInfo.OffsetY]); //where the middle of the piece is
 	}
 
-	var square=this.Squares[sq];
-	var from_square=null;
+	var fromUiSquare=null;
 
-	if(this.MoveInfo.From!==null) {
-		from_square=this.Squares[this.MoveInfo.From];
+	if(this.moveInfo.from!==null) {
+		fromUiSquare=this._uiSquares[this.moveInfo.from];
 	}
 
 	args={
 		Square: sq,
-		MoveInfo: this.MoveInfo,
+		MoveInfo: this.moveInfo,
 		Cancel: false,
 		Event: e
 	};
 
-	if(this.MoveInfo.Mode===UiBoard.MOVE_MODE_CLICK_CLICK) {
+	if(this.moveInfo.mode===MoveInfo.CLICK) {
 		this.SquareClicked.fire(args);
 	}
 
-	else if(this.MoveInfo.Mode===UiBoard.MOVE_MODE_DRAG_DROP && this.MoveInfo.InProgress) {
+	else if(this.moveInfo.mode===MoveInfo.DRAG_DROP && this.moveInfo.isInProgress) {
 		this.DragDrop.fire(args);
 	}
 
 	if(!args.Cancel) {
-		if(this.MoveInfo.InProgress) { //was dragging, now dropped; or second click
+		if(this.moveInfo.isInProgress) { //was dragging, now dropped; or second click
 			this.Deselected.fire();
 
-			if(this.MouseOnBoard(e, true)) {
-				if(sq!=this.MoveInfo.From) {
+			if(this.mouseIsOnBoard(e, true)) {
+				if(sq!=this.moveInfo.from) {
 					this.UserMove.fire({
-						From: this.MoveInfo.From,
+						From: this.moveInfo.from,
 						To: sq,
-						Piece: this.getSquare(this.MoveInfo.From),
+						Piece: this.getSquare(this.moveInfo.from),
 						Event: e
 					});
 				}
 			}
 
 			else {
-				this.DragOff.fire({
-					From: this.MoveInfo.From
+				this.PieceDraggedOff.fire({
+					From: this.moveInfo.from
 				});
 			}
 
-			this.ResetSquarePos(from_square);
-			this.ResetMoveInfo();
+			this._resetSquarePos(fromUiSquare);
+			this.moveInfo.reset();
 		}
 
-		else if(this.MoveMode&UiBoard.MOVE_MODE_CLICK_CLICK && this.MoveInfo.Selected && sq===this.MoveInfo.From && !this.MoveInfo.InProgress) { //clicking on first square
+		else if(this.moveMode&MoveInfo.CLICK && this.moveInfo.Selected && sq===this.moveInfo.from && !this.moveInfo.isInProgress) { //clicking on first square
 			args={
 				Square: sq,
 				Piece: this.board[sq],
@@ -1050,53 +1013,53 @@ UiBoard.prototype.BoardMouseUp=function(e) {
 			this.SelectPiece.fire(args);
 
 			if(args.Cancel) {
-				this.ResetMoveInfo();
+				this.moveInfo.reset();
 			}
 
 			else {
-				this.MoveInfo.InProgress=true;
-				this.MoveInfo.Mode=UiBoard.MOVE_MODE_CLICK_CLICK;
+				this.moveInfo.isInProgress=true;
+				this.moveInfo.mode=MoveInfo.CLICK;
 				this.PieceSelected.fire({Sq: sq});
 			}
 		}
 	}
 
 	else {
-		if(from_square!==null) {
-			this.ResetSquarePos(from_square);
+		if(fromSquare!==null) {
+			this._resetSquarePos(fromUiSquare);
 		}
 
-		this.ResetMoveInfo();
+		this.moveInfo.reset();
 	}
 
-	if(from_square!==null) {
-		this.reset_z_index(from_square);
+	if(fromUiSquare!==null) {
+		this._resetZIndex(fromUiSquare);
 	}
 
-	this.UpdatePieceOverData(e); //no piece over if not dragging
+	this._firePieceDragEvents(e);
 }
 
-UiBoard.prototype.inc_z_index=function(square) {
+UiBoard.prototype._setZIndexAboveRest=function(square) {
 	style(square.Node, {
 		zIndex: UiBoard.SQ_ZINDEX_ABOVE
 	});
 }
 
-UiBoard.prototype.reset_z_index=function(square) {
+UiBoard.prototype._resetZIndex=function(square) {
 	style(square.Node, {
 		zIndex: UiBoard.SQ_ZINDEX_NORMAL
 	});
 }
 
-UiBoard.prototype.MouseOnBoard=function(e, use_offsets, offsets) {
-	offsets=offsets||[this.MoveInfo.OffsetX, this.MoveInfo.OffsetY];
+UiBoard.prototype.mouseIsOnBoard=function(e, use_offsets, offsets) {
+	offsets=offsets||[this.moveInfo.OffsetX, this.moveInfo.OffsetY];
 
 	var x=e.pageX;
 	var y=e.pageY;
 
 	if(use_offsets) {
-		x+=(Math.round(this.square_size/2)-offsets[X]);
-		y+=(Math.round(this.square_size/2)-offsets[Y]);
+		x+=(Math.round(this._squareSize/2)-offsets[X]);
+		y+=(Math.round(this._squareSize/2)-offsets[Y]);
 	}
 
 	var os=getoffsets(this.board_div);
@@ -1104,13 +1067,13 @@ UiBoard.prototype.MouseOnBoard=function(e, use_offsets, offsets) {
 	x-=os[X];
 	y-=os[Y];
 
-	y=this.GetBoardSize()-y;
+	y=this.getBoardSize()-y;
 
 	return this.coords_on_board(x, y);
 }
 
 UiBoard.prototype.coords_on_board=function(x, y) {
-	return !(x<0 || x>this.GetBoardSize() || y<0 || y>this.GetBoardSize());
+	return !(x<0 || x>this.getBoardSize() || y<0 || y>this.getBoardSize());
 }
 
 /*
@@ -1119,180 +1082,184 @@ look at all these fucking functions for highlighting squares
 and ones for fucking unhighlighting squares as well
 */
 
-UiBoard.prototype.HiliteSq=function(sq, style) {
-	style(this.Squares[sq].Highlight, style);
+UiBoard.prototype.hiliteSq=function(sq, style) {
+	style(this._uiSquares[sq].Highlight, style);
 }
 
-UiBoard.prototype.UnhiliteSq=function(sq) {
+UiBoard.prototype.unhiliteSq=function(sq) {
 	if(sq!==null) {
-		style(this.Squares[sq].Highlight, this.HlNone);
+		style(this._uiSquares[sq].Highlight, this.HlNone);
 	}
 }
 
-UiBoard.prototype.HilitePossibilities=function(sqs) {
+UiBoard.prototype.hilitePossibilities=function(sqs) {
 	for(var i=0; i<this.HilitPossibilities.length; i++) {
-		this.UnhiliteSq(this.HilitPossibilities[i]);
+		this.unhiliteSq(this.HilitPossibilities[i]);
 	}
 
 	this.HilitPossibilities=sqs;
 
 	for(var i=0; i<this.HilitPossibilities.length; i++) {
-		this.HiliteSq(this.HilitPossibilities[i], this.HlPossibility);
+		this.hiliteSq(this.HilitPossibilities[i], this.HlPossibility);
 	}
 }
 
-UiBoard.prototype.HiliteLastMoveFrom=function(sq) {
-	this.UnhiliteSq(this.HilitLastMoveFrom);
+UiBoard.prototype.hiliteLastMoveFrom=function(sq) {
+	this.unhiliteSq(this.HilitLastMoveFrom);
 	this.HilitLastMoveFrom=sq;
-	this.HiliteSq(sq, this.HlLastMoveFrom);
+	this.hiliteSq(sq, this.HlLastMoveFrom);
 }
 
-UiBoard.prototype.HiliteLastMoveTo=function(sq) {
-	this.UnhiliteSq(this.HilitLastMoveTo);
+UiBoard.prototype.hiliteLastMoveTo=function(sq) {
+	this.unhiliteSq(this.HilitLastMoveTo);
 	this.HilitLastMoveTo=sq;
-	this.HiliteSq(sq, this.HlLastMoveTo);
+	this.hiliteSq(sq, this.HlLastMoveTo);
 }
 
-UiBoard.prototype.HiliteCanSelect=function(sq) {
-	this.UnhiliteSq(this.HilitCanSelect);
+UiBoard.prototype.hiliteCanSelect=function(sq) {
+	this.unhiliteSq(this.HilitCanSelect);
 	this.HilitCanSelect=sq;
-	this.HiliteSq(sq, this.HlCanSelect);
+	this.hiliteSq(sq, this.HlCanSelect);
 }
 
-UiBoard.prototype.HiliteCanDrop=function(sq) {
-	this.UnhiliteSq(this.HilitCanDrop);
+UiBoard.prototype.hiliteCanDrop=function(sq) {
+	this.unhiliteSq(this.HilitCanDrop);
 	this.HilitCanDrop=sq;
-	this.HiliteSq(sq, this.HlCanDrop);
+	this.hiliteSq(sq, this.HlCanDrop);
 }
 
-UiBoard.prototype.HiliteSelected=function(sq) {
-	this.UnhiliteSq(this.HilitSelected);
+UiBoard.prototype.hiliteSelected=function(sq) {
+	this.unhiliteSq(this.HilitSelected);
 	this.HilitSelected=sq;
-	this.HiliteSq(sq, this.HlSelected);
+	this.hiliteSq(sq, this.HlSelected);
 }
 
-UiBoard.prototype.UnhilitePossibilities=function() {
+UiBoard.prototype.unhilitePossibilities=function() {
 	for(var i=0; i<this.HilitPossibilities.length; i++) {
-		this.UnhiliteSq(this.HilitPossibilities[i]);
+		this.unhiliteSq(this.HilitPossibilities[i]);
 	}
 
 	this.HilitPossibilities=[];
 }
 
-UiBoard.prototype.UnhiliteLastMoveFrom=function() {
-	this.UnhiliteSq(this.HilitLastMoveFrom);
+UiBoard.prototype.unhiliteLastMoveFrom=function() {
+	this.unhiliteSq(this.HilitLastMoveFrom);
 	this.HilitLastMoveFrom=null;
 }
 
-UiBoard.prototype.UnhiliteLastMoveTo=function() {
-	this.UnhiliteSq(this.HilitLastMoveTo);
+UiBoard.prototype.unhiliteLastMoveTo=function() {
+	this.unhiliteSq(this.HilitLastMoveTo);
 	this.HilitLastMoveTo=null;
 }
 
-UiBoard.prototype.UnhiliteCanSelect=function() {
-	this.UnhiliteSq(this.HilitCanSelect);
+UiBoard.prototype.unhiliteCanSelect=function() {
+	this.unhiliteSq(this.HilitCanSelect);
 	this.HilitCanSelect=null;
 }
 
-UiBoard.prototype.UnhiliteCanDrop=function() {
-	this.UnhiliteSq(this.HilitCanDrop);
+UiBoard.prototype.unhiliteCanDrop=function() {
+	this.unhiliteSq(this.HilitCanDrop);
 	this.HilitCanDrop=null;
 }
 
-UiBoard.prototype.UnhiliteSelected=function() {
-	this.UnhiliteSq(this.HilitSelected);
+UiBoard.prototype.unhiliteSelected=function() {
+	this.unhiliteSq(this.HilitSelected);
 	this.HilitSelected=null;
 }
 
-UiBoard.prototype.GetBoardSize=function() {
-	return this.square_size*8;
+UiBoard.prototype.getBoardSize=function() {
+	return this._squareSize*8;
 }
 
-UiBoard.prototype.UpdateMouseOverData=function(e) {
-	var sq=this.SqFromMouseEvent(e);
+/*
+FIXME these fire events and set some variables, should probs be renamed
+*/
 
-	if(this.MouseOnBoard(e) && sq>-1 && sq<64) { //MouseOnBoard doesn't appear to be enough
-		if(this.CurrentMouseOverSq!=sq) {
-			if(this.CurrentMouseOverSq!==null) {
-				this.SqMouseOut.fire({
-					Sq: this.CurrentMouseOverSq
+UiBoard.prototype._fireMouseOverEvents=function(e) {
+	var sq=this.squareFromMouseEvent(e);
+
+	if(this.mouseIsOnBoard(e) && sq>-1 && sq<64) { //mouseIsOnBoard doesn't appear to be enough
+		if(this._squareMouseCurrentlyOver!=sq) {
+			if(this._squareMouseCurrentlyOver!==null) {
+				this.MouseLeavingSquare.fire({
+					Sq: this._squareMouseCurrentlyOver
 				});
 			}
 
-			this.CurrentMouseOverSq=sq;
+			this._squareMouseCurrentlyOver=sq;
 
-			this.SqMouseOver.fire({
+			this.MouseOverSquare.fire({
 				Sq: sq
 			});
 		}
 	}
 
 	else {
-		if(this.CurrentMouseOverSq!==null) {
-			this.SqMouseOut.fire({
-				Sq: this.CurrentMouseOverSq
+		if(this._squareMouseCurrentlyOver!==null) {
+			this.MouseLeavingSquare.fire({
+				Sq: this._squareMouseCurrentlyOver
 			});
 		}
 
-		this.CurrentMouseOverSq=null;
+		this._squareMouseCurrentlyOver=null;
 	}
 }
 
-UiBoard.prototype.UpdatePieceOverData=function(e) {
-	var sq=this.SqFromMouseEvent(e, true);
+UiBoard.prototype._firePieceDragEvents=function(e) {
+	var square=this.squareFromMouseEvent(e, true);
 
-	if(this.MoveInfo.InProgress && this.MoveInfo.Mode==UiBoard.MOVE_MODE_DRAG_DROP) {
-		if(this.MouseOnBoard(e)) {
-			if(this.CurrentPieceOverSq!=sq) {
-				if(this.CurrentPieceOverSq!==null) {
-					this.SqPieceOut.fire({
-						Sq: this.CurrentPieceOverSq
+	if(this.moveInfo.isInProgress && this.moveInfo.mode==MoveInfo.DRAG_DROP) {
+		if(this.mouseIsOnBoard(e)) {
+			if(this._squareCurrentlyDraggingPieceOver!=square) {
+				if(this._squareCurrentlyDraggingPieceOver!==null) {
+					this.PieceLeavingSquare.fire({
+						square: this._squareCurrentlyDraggingPieceOver
 					});
 				}
 
-				this.CurrentPieceOverSq=sq;
+				this._squareCurrentlyDraggingPieceOver=square;
 
-				this.SqPieceOver.fire({
-					Sq: sq
+				this.PieceOverSquare.fire({
+					square: square
 				});
 			}
 		}
 
 		else {
-			if(this.CurrentPieceOverSq!==null) {
-				this.SqPieceOut.fire({
-					Sq: this.CurrentPieceOverSq
+			if(this._squareCurrentlyDraggingPieceOver!==null) {
+				this.PieceLeavingSquare.fire({
+					square: this._squareCurrentlyDraggingPieceOver
 				});
 			}
 
-			this.CurrentPieceOverSq=null;
+			this._squareCurrentlyDraggingPieceOver=null;
 		}
 	}
 
 	else {
-		if(this.CurrentPieceOverSq!==null) {
-			this.SqPieceOut.fire({
-				Sq: this.CurrentPieceOverSq
+		if(this._squareCurrentlyDraggingPieceOver!==null) {
+			this.PieceLeavingSquare.fire({
+				square: this._squareCurrentlyDraggingPieceOver
 			});
 		}
 
-		this.CurrentPieceOverSq=null;
+		this._squareCurrentlyDraggingPieceOver=null;
 	}
 }
 
-UiBoard.prototype.Deselect=function() {
-	if(this.MoveInfo.InProgress) {
-		this.reset_z_index(this.Squares[this.MoveInfo.From]);
-		this.ResetMoveInfo();
+UiBoard.prototype.deselect=function() {
+	if(this.moveInfo.isInProgress) {
+		this._resetZIndex(this._uiSquares[this.moveInfo.from]);
+		this.moveInfo.reset();
 	}
 }
 
 UiBoard.prototype.setFen=function(fen) {
 	Board.prototype.setFen.call(this, fen);
-	this.UpdateSquares();
+	this._updateSquares();
 }
 
-UiBoard.prototype.AnimateMove=function(piece, fs, ts, callback) {
+UiBoard.prototype.animateMove=function(piece, fs, ts, callback) {
 	//animate the move
 
 	//console.log("animating "+Fen.getPieceChar(piece)+" "+fs+" "+ts); //DEBUG
@@ -1308,7 +1275,7 @@ UiBoard.prototype.get_overall_size=function(dimension) {
 	var coord_size=[this.coord_size_r, this.coord_size_f][dimension];
 
 	return (
-		this.GetBoardSize()
+		this.getBoardSize()
 		+this.border.length*2
 		+(this.container_border?coord_size:0)
 		+(this.show_coords_padding?coord_size:0)
