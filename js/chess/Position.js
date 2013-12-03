@@ -1,6 +1,4 @@
 function Position(fen) {
-	fen=fen||null;
-
 	this.castlingRights=new CastlingRights();
 	this.board=[];
 	this.kingPositions=[];
@@ -9,12 +7,12 @@ function Position(fen) {
 	this.fiftymoveClock=0;
 	this.fullmove=1;
 
-	if(fen===null) {
-		this.setFen(FEN_INITIAL);
+	if(fen) {
+		this.setFen(fen);
 	}
 
 	else {
-		this.setFen(fen);
+		this.setFen(FEN_INITIAL);
 	}
 }
 

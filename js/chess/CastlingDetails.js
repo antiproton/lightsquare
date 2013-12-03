@@ -1,49 +1,42 @@
-/*
-NOTE this could really do with being ditched, same for the PHP version but
-this is worse as the sign/side indexing can't be made explicit without
-
-arr=[]
-arr[KINGSIDE] .. arr[QUEENSIDE] etc
-*/
-
-function CastlingDetails(fs, ts) {
+function CastlingDetails(from, to) {
 	this.isValid=false;
+	this.side;
+	this.rookStartPos;
+	this.rookEndPos;
+	this.sign;
+	
+	var kingEndSquares=[];
 
-	var kingStartPos=[4, 60];
-	var kingEndPos;
-	var n, side, o, rook;
+	kingEndSquares[KINGSIDE]=from+2;
+	kingEndSquares[QUEENSIDE]=from-2;
 
-	for(var i=0; i<kingStartPos.length; i++) {
-		n=kingStartPos[i];
+	var side=kingEndSquares.indexOf(to);
+	var kingEndSquare;
+	var rookPos;
 
-		if(fs===n) {
-			kingEndPos=[ //indexed by side
-				n+2,
-				n-2
-			];
+	if(side!==-1 && (from===KING_HOME_SQUARE_WHITE || from===KING_HOME_SQUARE_BLACK)) {
+		kingEndSquare=kingEndSquares[side];
 
-			for(var j=0; j<kingEndPos.length; j++) {
-				side=j;
-				o=kingEndPos[side];
+		rookPos=[];
 
-				if(ts===o) {
-					rook=[
-						[o+1, o-1],
-						[o-2, o+1]
-					];
+		rookPos[KINGSIDE]={
+			start: kingEndSquare+1,
+			end: kingEndSquare-1
+		};
 
-					this.side=side;
-					this.rookStartPos=rook[side][0];
-					this.rookEndPos=rook[side][1];
-					this.sign=CastlingDetails.signs[side];
-					this.isValid=true;
-				}
-			}
-		}
+		rookPos[QUEENSIDE]={
+			start: kingEndSquare-2,
+			end: kingEndSquare+1
+		};
+
+		this.isValid=true;
+		this.side=side;
+		this.rookStartPos=rookPos[side].start;
+		this.rookEndPos=rookPos[side].end;
+		this.sign=CastlingDetails.signs[side];
 	}
 }
 
-CastlingDetails.signs=[
-	SIGN_CASTLE_KS,
-	SIGN_CASTLE_QS
-];
+CastlingDetails.signs=[];
+CastlingDetails.signs[KINGSIDE]=SIGN_CASTLE_KS;
+CastlingDetails.signs[QUEENSIDE]=SIGN_CASTLE_QS;
