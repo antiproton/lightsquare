@@ -1,0 +1,95 @@
+	this.coord_size_r=18; //how big a gap to have for coordinates on the left
+	this.coord_size_f=18; //how big a gap to have for coordinates on the bottom
+	this.coords_font_family="sans-serif";
+	this.coords_font_size=11;
+	this.coords_font_color="#303030";
+	this.coord_r_hinting=1;
+	this.border=["#5f5f5f", "#5f5f5f"]; //colour of each pixel of border, from outside to inside
+	this.container_border=true;
+	this.container_background="#efefef";
+	this.container_shadow=true;
+	this.container_border_border_width=1;
+	this.container_border_border_colour="#dfdfdf";
+	this.img_dir_board="/img/board";
+	this.img_dir_piece="/img/piece";
+	this.board_style=null;
+
+		this.HlNone={
+		visibility: "hidden"
+	};
+
+	this.HlPossibility={
+		visibility: "inherit",
+		backgroundColor: "#99e457",
+		backgroundImage: "none",
+		opacity: ".9"
+	};
+
+	this.HlLastMoveFrom={
+		visibility: "inherit",
+		backgroundColor: "#62c1fe",
+		//backgroundColor: "#62afe0",
+		//backgroundImage: "-webkit-radial-gradient(center, ellipse cover, rgba(110, 182, 226, 1) 0%, rgba(110, 182, 226, 0) 70%)",
+		opacity: ".5"
+	};
+
+	this.HlLastMoveTo={
+		visibility: "inherit",
+		backgroundColor: "#62c1fe",
+		//backgroundColor: "#62afe0",
+		//backgroundImage: "-webkit-radial-gradient(center, ellipse cover, rgba(110, 182, 226, 1) 0%, rgba(110, 182, 226, 0) 70%)",
+		opacity: ".8"
+	};
+
+	this.HlPremoveFrom={
+		visibility: "inherit",
+		backgroundColor: "#199a65",
+		backgroundImage: "none",
+		opacity: ".9"
+	};
+
+	this.HlPremoveTo={
+		visibility: "inherit",
+		backgroundColor: "#199a65",
+		backgroundImage: "none",
+		opacity: ".9"
+	};
+
+	this.HlCanSelect={
+		visibility: "inherit",
+		backgroundColor: "#fbfddd",
+		backgroundImage: "none",
+		opacity: ".9"
+	};
+
+	this.HlCanDrop={
+		visibility: "inherit",
+		backgroundColor: "#fbfddd",
+		backgroundImage: "none",
+		opacity: ".9"
+	};
+
+	this.HlSelected={
+		visibility: "inherit",
+		backgroundColor: "#C9F06B",
+		//backgroundImage: "",
+		//boxShadow: "inset 0 0 3px 2px rgba(255, 255, 229, 0.8)",
+		opacity: ".8"
+	};
+
+			style(this._fileCoords[i].node, {
+			fontFamily: this.coords_font_family,
+			fontSize: this.coords_font_size,
+			fontWeight: "normal",
+			color: this.coords_font_color,
+			lineHeight: fileCoordsDisplaySize,
+			textAlign: "center"
+		});
+
+		style(this._rankCoords[i].node, {
+			fontFamily: this.coords_font_family,
+			fontSize: this.coords_font_size,
+			color: this.coords_font_color,
+			fontWeight: "normal",
+			textAlign: "center"
+		});
