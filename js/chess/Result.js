@@ -4,7 +4,7 @@ Result.string={};
 
 Result.string[RESULT_WHITE]="1-0";
 Result.string[RESULT_BLACK]="0-1";
-Result.string[RESULT_DRAW]="\u00bd-\u00bd"; //1/2-1/2 with fraction symbols
+Result.string[RESULT_DRAW]="\u00bd-\u00bd";
 
 Result.winResult=[
 	RESULT_WHITE,
@@ -32,3 +32,19 @@ Result.detailsString=function(game) {
 
 	return str;
 }
+
+
+
+	//getScore: function(result, colour) {
+	//	if(result===RESULT_DRAW) {
+	//		return SCORE_DRAW;
+	//	}
+	//
+	//	if(colour===WHITE) {
+	//		return result===RESULT_WHITE?SCORE_WIN:SCORE_LOSS;
+	//	}
+	//
+	//	if(colour===BLACK) {
+	//		return result===RESULT_BLACK?SCORE_WIN:SCORE_LOSS;
+	//	}
+	//},

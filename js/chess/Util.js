@@ -27,20 +27,6 @@ var Util={
 		return [".", "..."][colour];
 	},
 
-	getScore: function(result, colour) {
-		if(result===RESULT_DRAW) {
-			return SCORE_DRAW;
-		}
-
-		if(colour===WHITE) {
-			return result===RESULT_WHITE?SCORE_WIN:SCORE_LOSS;
-		}
-
-		if(colour===BLACK) {
-			return result===RESULT_BLACK?SCORE_WIN:SCORE_LOSS;
-		}
-	},
-
 	getHalfmoveIndex: function(halfmove) {
 		return halfmove%2;
 	},
