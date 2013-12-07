@@ -39,7 +39,6 @@ $widgetLoader->load([
 		script_tags_w("/js/controls");
 		script_tags_w("/js/livechess");
 		?>
-		<script src="/lib/jquery.js"></script>
 		<script>
 		<?php
 		$widgetLoader->outputJs();
@@ -77,9 +76,11 @@ $widgetLoader->load([
 		var ui=new UiLiveTableStandard(g("table"));
 
 
-		
-		ui.board.squareSize(45);
+
+		ui.board.squareSize.set(45);
 		ui.board.setFen(FEN_INITIAL);
+
+
 		</script>
 	</body>
 </html>
