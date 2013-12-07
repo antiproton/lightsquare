@@ -77,7 +77,7 @@ $widgetLoader->load([
 
 
 
-		ui.board.squareSize.set(45);
+		ui.board.setSquareSize(45);
 		ui.board.setFen(FEN_INITIAL);
 
 
