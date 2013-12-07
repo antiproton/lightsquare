@@ -115,13 +115,18 @@ Game.prototype.move=function(from, to, promoteTo, dryrun) {
 
 	var colour=this.position.active;
 	var piece=new Piece(this.position.board[from]);
-	var targetPiece=new Piece(this.position.board[to]);
 	var move=this.history.createMove();
 
 	move.from=from;
 	move.to=to;
 
 	if(Util.isOnBoard(from) && Util.isOnBoard(to) && piece.type!==SQ_EMPTY && piece.colour===colour) {
+		var targetPiece=null;
+
+		if(this.position.board[to]!==SQ_EMPTY) {
+			targetPiece=new Piece(this.position.board[to]);
+		}
+
 		var label=new MoveLabel();
 		var position=new Position(this.position.getFen());
 		var fromCoords=Util.coordsFromSquare(from);
@@ -132,7 +137,7 @@ Game.prototype.move=function(from, to, promoteTo, dryrun) {
 
 		var isUnobstructed=(
 			!Util.isBlocked(this.position.board, from, to)
-			&& (targetPiece.type===SQ_EMPTY || targetPiece.colour!==colour)
+			&& (targetPiece===null || targetPiece.colour!==colour)
 		);
 
 		label.piece=Fen.getPieceChar[Util.getPiece(piece.type, WHITE)];
@@ -142,7 +147,7 @@ Game.prototype.move=function(from, to, promoteTo, dryrun) {
 			label.disambiguation=Util.disambiguate(this.position.board, piece.type, colour, from, to);
 		}
 
-		if(targetPiece.colour===oppColour && targetPiece.type!==SQ_EMPTY) {
+		if(targetPiece!==null && targetPiece.colour===oppColour) {
 			label.sign=SIGN_CAPTURE;
 			move.capturedPiece=this.position.board[to];
 		}
@@ -177,7 +182,7 @@ Game.prototype.move=function(from, to, promoteTo, dryrun) {
 			}
 
 			if(validPromotion || !promotion) {
-				if(targetPiece.type===SQ_EMPTY) {
+				if(targetPiece===null) {
 					if(Util.isDoublePawnMove(relFrom, relTo)) {
 						position.epTarget=Util.getRelativeSquare(relTo-8, colour);
 						move.isValid=true;
