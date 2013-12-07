@@ -13,16 +13,16 @@ Board.prototype.move=function(from, to) {
 	this.setSquare(from, SQ_EMPTY);
 }
 
-Board.prototype.sSetSquare=function(sq, pc) {
-	this.board[sq]=pc;
+Board.prototype.setSquare=function(square, piece) {
+	this.board[square]=piece;
 
-	if(Util.type(pc)===KING) {
-		this.kings[Util.colour(pc)]=sq;
+	if(Util.getType(piece)===KING) {
+		this.kings[Util.getColour(piece)]=square;
 	}
 }
 
-Board.prototype.getSquare=function(sq) {
-	return this.board[sq];
+Board.prototype.getSquare=function(square) {
+	return this.board[square];
 }
 
 Board.prototype.setFen=function(fen) {
@@ -32,13 +32,13 @@ Board.prototype.setFen=function(fen) {
 }
 
 Board.prototype.setBoard=function(board) {
-	for(var sq=0; sq<64; sq++) {
-		this.setSquare(sq, board[sq]);
+	for(var square=0; square<64; square++) {
+		this.setSquare(square, board[square]);
 	}
 }
 
 Board.prototype.copy=function(board) {
-	for(var sq=0; sq<64; sq++) {
-		this.setSquare(sq, board.getSquare(sq));
+	for(var square=0; square<64; square++) {
+		this.setSquare(square, board.getSquare(square));
 	}
 }
