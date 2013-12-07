@@ -7,6 +7,10 @@ var Colour={
 		if(colour in this._codeFromName) {
 			return this._codeFromName[colour];
 		}
+
+		else {
+			return colour;
+		}
 	},
 
 	getFen: function(colour) {
