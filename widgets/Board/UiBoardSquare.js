@@ -4,77 +4,37 @@ function UiBoardSquare(parent, square, size, pieceStyle, pieceDir) {
 	this._size=size;
 	this._pieceStyle=pieceStyle;
 	this._pieceDir=pieceDir;
+	this._piece=SQ_EMPTY;
 
 	this.MouseDown=new Event(this);
 	this.MouseUp=new Event(this);
 
-	this.size=setter(this, function() {
-		return this._size;
-	}, function(value) {
-		if(this._size!==value) {
-			this._size=value;
-			this._updateHtml();
-		}
-	});
-
-	this.pieceStyle=setter(this, function() {
-		return this._pieceStyle;
-	}, function(value) {
-		if(this._pieceStyle!==value) {
-			this._pieceStyle=value;
-			this._updateHtml();
-		}
-	});
-
-	this.pieceDir=setter(this, function() {
-		return this._pieceDir;
-	}, function(value) {
-		if(this._pieceDir!==value) {
-			this._pieceDir=value;
-			this._updateHtml();
-		}
-	});
-
 	this._setupHtml();
 }
 
-UiBoardSquare.prototype._setupHtml=function() {
-	var self=this;
-	var colourName=Colour.getName(Util.getSquareColour(this.square));
-
-	this._template.root.classList.add("board_square_"+colourName);
-
-	this._template.piece.addEventListener("mousedown", function(e) {
-		self.MouseDown.fire({
-			event: e
-		});
-	});
-
-	this._template.piece.addEventListener("mouseup", function(e) {
-		self.MouseUp.fire({
-			event: e
-		});
-	});
+UiBoardSquare.prototype.setSize=function(size) {
+	this._size=size;
+	this._updateSize();
+	this._updatePiece();
 }
 
-UiBoardSquare.prototype.getOffsets=function() {
-	return getoffsets(this._template.root);
+UiBoardSquare.prototype.setPiece=function(piece) {
+	this._piece=piece;
+	this._updatePiece();
+}
+
+UiBoardSquare.prototype.setPieceStyle=function(pieceStyle) {
+	this._pieceStyle=pieceStyle;
+	this._updatePiece();
+}
+
+UiBoardSquare.prototype.setPieceDir=function(pieceDir) {
+	this._pieceDir=pieceDir;
+	this._updatePiece();
 }
 
 UiBoardSquare.prototype.setZIndex=function(zIndex) {
 	this._template.root.style.zIndex=zIndex;
-}
-
-UiBoardSquare.prototype.setPiece=function(piece, style) {
-	var backgroundImage="none";
-
-	if(piece!==SQ_EMPTY) {
-		backgroundImage="url("+this._pieceDir+"/"+this._pieceStyle+"/"+this._size+"/"+Fen.getPieceChar(piece)+".png)";
-	}
-
-	if(this._template.piece.style.backgroundImage!==backgroundImage) {
-		this._template.piece.style.backgroundImage=backgroundImage;
-	}
 }
 
 UiBoardSquare.prototype.setRootPosition=function(x, y) {
@@ -100,10 +60,47 @@ UiBoardSquare.prototype.resetPiecePosition=function() {
 	});
 }
 
-UiBoardSquare.prototype.setSize=function(size) {
+UiBoardSquare.prototype._setupHtml=function() {
+	var self=this;
+	var colourName=Colour.getName(Util.getSquareColour(this._square));
+
+	this._template.root.classList.add("board_square_"+colourName);
+
+	this._template.piece.addEventListener("mousedown", function(e) {
+		self.MouseDown.fire({
+			event: e
+		});
+	});
+
+	this._template.piece.addEventListener("mouseup", function(e) {
+		self.MouseUp.fire({
+			event: e
+		});
+	});
+
+	this._updateSize();
+}
+
+UiBoardSquare.prototype.getOffsets=function() {
+	return getoffsets(this._template.root);
+}
+
+UiBoardSquare.prototype._updatePiece=function() {
+	var backgroundImage="none";
+
+	if(this._piece!==SQ_EMPTY) {
+		backgroundImage="url("+this._pieceDir+"/"+this._pieceStyle+"/"+this._size+"/"+Fen.getPieceChar(this._piece)+".png)";
+	}
+
+	if(this._template.piece.style.backgroundImage!==backgroundImage) {
+		this._template.piece.style.backgroundImage=backgroundImage;
+	}
+}
+
+UiBoardSquare.prototype._updateSize=function() {
 	var css={
-		width: size,
-		height: size
+		width: this._size,
+		height: this._size
 	};
 
 	style(this._template.root, css);

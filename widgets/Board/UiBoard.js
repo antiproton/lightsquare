@@ -34,7 +34,7 @@ function UiBoard(parent) {
 	this._borderWidth=1;
 
 	this._htmlUpdatesEnabled=true;
-	this._initProperties();
+
 	this._setupHtml();
 }
 
@@ -56,93 +56,57 @@ UiBoard.HIGHLIGHT_CAN_SELECT="can_select";
 UiBoard.HIGHLIGHT_CAN_DROP="can_drop";
 UiBoard.HIGHLIGHT_SELECTED="selected";
 
-UiBoard.prototype._initProperties=function() {
-	this.htmlUpdatesEnabled=setter(this, function() {
-		return this._htmlUpdatesEnabled;
-	}, function(value) {
-		this._htmlUpdatesEnabled=value;
+UiBoard.prototype.setHtmlUpdatesEnabled=function(enabled) {
+	this._htmlUpdatesEnabled=enabled;
 
-		if(this._htmlUpdatesEnabled) {
-			this._updateSquares();
-		}
-	});
+	if(enabled) {
+		this._updateSquares();
+	}
+}
 
-	this.pieceDir=setter(this, function() {
-		return this._pieceDir;
-	}, function(value) {
-		if(this._pieceDir!==value) {
-			this._pieceDir=value;
-			this._updateHtml();
-		}
-	});
+UiBoard.prototype.setPieceDir=function(pieceDir) {
+	this._pieceDir=pieceDir;
+	this._updateHtml();
+}
 
-	this.boardSstyle=setter(this, function() {
-		return this._boardStyle;
-	}, function(value) {
-		if(this._boardStyle!==value) {
-			this._boardStyle=value;
-			this._updateHtml();
-		}
-	});
+UiBoard.prototype.setPieceStyle=function(pieceStyle) {
+	this._pieceStyle=pieceStyle;
+	this._updateHtml();
+}
 
-	this.viewingAs=setter(this, function() {
-		return this._viewingAs;
-	}, function(value) {
-		if(this._viewingAs!==value) {
-			this._viewingAs=value;
-			this._updateHtml();
-		}
-	});
+UiBoard.prototype.setSquareSize=function(squareSize) {
+	this._squareSize=squareSize;
+	this._updateHtml();
+}
 
-	this.showSurround=setter(this, function() {
-		return this._showSurround;
-	}, function(value) {
-		if(this._showSurround!==value) {
-			this._showSurround=value;
-			this._updateHtml();
-		}
-	});
+UiBoard.prototype.setShowCoords=function(showCoords) {
+	this._showCoords=showCoords;
+	this._updateHtml();
+}
 
-	this.showCoords=setter(this, function() {
-		return this._showCoords;
-	}, function(value) {
-		if(this._showCoords!==value) {
-			this._showCoords=value;
+UiBoard.prototype.setShowSurround=function(showSurround) {
+	this._showSurround=showSurround;
+	this._updateHtml();
+}
 
-			if(this._showCoords) {
-				this.showCoordsPadding(true);
-			}
+UiBoard.prototype.setBorderWidth=function(borderWidth) {
+	this._borderWidth=borderWidth;
+	this._updateHtml();
+}
 
-			this._updateHtml();
-		}
-	});
+UiBoard.prototype.setViewingAs=function(colour) {
+	this._viewingAs=colour;
+	this._updateHtml();
+}
 
-	this.borderWidth=setter(this, function() {
-		return this._borderWidth;
-	}, function(value) {
-		if(this._borderWidth!==value) {
-			this._borderWidth=value;
-			this._updateHtml();
-		}
-	});
+UiBoard.prototype.setBoardStyle=function(boardStyle) {
+	this._boardStyle=boardStyle;
+	this._updateHtml();
+}
 
-	this.squareSize=setter(this, function() {
-		return this._squareSize;
-	}, function(value) {
-		if(this._squareSize!==value) {
-			this._squareSize=parseInt(value);
-			this._updateHtml();
-		}
-	});
-
-	this.pieceStyle=setter(this, function() {
-		return this._pieceStyle;
-	}, function(value) {
-		if(this._pieceStyle!==value) {
-			this._pieceStyle=value;
-			this._updateHtml();
-		}
-	});
+UiBoard.prototype.setPieceDir=function(pieceDir) {
+	this._pieceDir=pieceDir;
+	this._updateHtml();
 }
 
 UiBoard.prototype._setupHtml=function() {
@@ -217,6 +181,10 @@ UiBoard.prototype._updateHtml=function() {
 	var paddingIfCoordsOrSurround=(this._showCoords || this._showSurround?this._coordsPadding:0);
 	var totalSize=paddingIfCoordsOrSurround+boardSize+borderSize+paddingIfSurround;
 
+	this.template.root.classList[
+		this._showSurround?"add":"remove"
+	]("board_with_surround");
+
 	style(this.template.root, {
 		width: totalSize,
 		height: totalSize
@@ -231,43 +199,54 @@ UiBoard.prototype._updateHtml=function() {
 
 	});
 
+	this.template.board.className="board_board board_"+this._boardStyle;
+
 	this._updateHtmlCoords();
 	this._updateHtmlSquares();
-	this._updateSquares(); //FIXME try commenting this out
 }
 
 UiBoard.prototype._updateHtmlCoords=function() {
 	var fileIndex, rankIndex;
-	var coordsDisplay=this._showSurround?"":"none";
-	var coordsVisibility=this._showCoords?"":"hidden";
+	var boardSize=this.getBoardSize();
+	var borderSize=this._borderWidth*2;
+	var paddingIfSurround=(this._showSurround?this._coordsPadding:0);
 
-	for(var i=0; i<8; i++) {
-		style(this._coords.rank[i], {
-			top: this._borderWidth+(this._squareSize*i),
-			height: this._squareSize,
-			display: coordsDisplay,
-			visibility: coordsVisibility
+	for(var axis in this._coordContainers) {
+		style(this._coordContainers[axis], {
+			display: this._showCoords?"":"none"
+		});
+	}
+
+	if(this._showCoords) {
+		style(this._coordContainers.file, {
+			top: boardSize+borderSize+paddingIfSurround
 		});
 
-		style(this._coords.file[i], {
-			left: this._borderWidth+(this._squareSize*i),
-			width: this._squareSize,
-			display: coordsDisplay,
-			visibility: coordsVisibility
-		});
+		for(var i=0; i<8; i++) {
+			style(this._coords.rank[i], {
+				top: this._borderWidth+(this._squareSize*i),
+				height: this._squareSize,
+				lineHeight: this._squareSize
+			});
 
-		if(this._viewingAs===WHITE) {
-			rankIndex=7-i;
-			fileIndex=i;
+			style(this._coords.file[i], {
+				left: this._borderWidth+(this._squareSize*i),
+				width: this._squareSize
+			});
+
+			if(this._viewingAs===WHITE) {
+				rankIndex=7-i;
+				fileIndex=i;
+			}
+
+			else {
+				rankIndex=i;
+				fileIndex=7-i;
+			}
+
+			this._coords.rank[i].innerHTML=RANK.charAt(rankIndex);
+			this._coords.file[i].innerHTML=FILE.charAt(fileIndex);
 		}
-
-		else {
-			rankIndex=i;
-			fileIndex=7-i;
-		}
-
-		this._coords.rank[i].innerHTML=RANK.charAt(rankIndex);
-		this._coords.file[i].innerHTML=FILE.charAt(fileIndex);
 	}
 }
 
@@ -278,6 +257,7 @@ UiBoard.prototype._updateHtmlSquares=function() {
 		uiSquare=this._uiSquares[square];
 
 		uiSquare.setSize(this._squareSize);
+		uiSquare.setPieceStyle(this._pieceStyle);
 
 		var posX, posY;
 		var boardX=Util.xFromSquare(square);
