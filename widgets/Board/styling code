@@ -93,3 +93,39 @@
 			fontWeight: "normal",
 			textAlign: "center"
 		});
+
+
+				style(this._rankCoords[i].container, {
+			position: "absolute",
+			top: this._borderWidth+(this._squareSize*i),
+			left: 0,
+			height: this._squareSize,
+			width: rankCoordsDisplaySize,
+			display: coords_display,
+			visibility: coords_visibility,
+			cursor: "default"
+		});
+
+		style(this._fileCoords[i].container, {
+			position: "absolute",
+			top: (this._borderWidth*2)+boardSize,
+			left: coord_size_r+this._borderWidth+(this._squareSize*i),
+			width: this._squareSize,
+			height: fileCoordsDisplaySize,
+			display: coords_display,
+			visibility: coords_visibility,
+			cursor: "default"
+		});
+
+	style(this.node, {
+		paddingTop: this.container_border?coord_size_f:0,
+		paddingRight: this.container_border?coord_size_r:0,
+		borderWidth: this.container_border?this.container_border_border_width:0,
+		borderColor: this.container_border_border_colour,
+		borderStyle: "solid",
+		//borderRadius: 3,
+		//boxShadow: (this.container_border && this.container_shadow)?"1px 1px 1px rgba(50, 50, 50, 0.3)":"none",
+		backgroundColor: this.container_border?this.container_background:"inherit"
+	});
+
+

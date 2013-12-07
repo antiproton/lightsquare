@@ -36,10 +36,9 @@ function UiBoard(parent) {
 	this._squareMouseCurrentlyOver=null;
 	this._squareCurrentlyDraggingPieceOver=null;
 
-	this._viewAs=WHITE;
-	this._showCoordsPadding=true;
+	this._viewingAs=WHITE;
+	this._showSurround=true;
 	this._showCoords=true;
-
 	this._squareSize=45;
 	this._pieceStyle=PIECE_STYLE_ALPHA;
 	this._squareColour=[];
@@ -49,7 +48,7 @@ function UiBoard(parent) {
 
 	this._htmlUpdatesEnabled=true; //visual updates can be temporarily turned off entirely to ensure consistency when multiple events are causing updates
 
-	this.init_props();
+	this._initSetters();
 
 	this._setupHtml();
 }
@@ -68,45 +67,45 @@ UiBoard.HIGHLIGHT_CAN_SELECT="can_select";
 UiBoard.HIGHLIGHT_CAN_DROP="can_drop";
 UiBoard.HIGHLIGHT_SELECTED="selected";
 
-UiBoard.prototype.init_props=function() {
-	this.htmlUpdatesEnabled=setter(this, function() {
+UiBoard.prototype._initSetters=function() {
+	this.htmlUpdatesEnabled=new Property(this, function() {
 		return this._htmlUpdatesEnabled;
 	}, function(value) {
 		this._htmlUpdatesEnabled=value;
 
-		if(value===true) {
+		if(this._htmlUpdatesEnabled) {
 			this._updateSquares();
 		}
 	});
 
-	this.squareColour=setter(this, function() {
-		return this._squareColour;
-	}, function(value) {
-		if(this._squareColour!==value) {
-			this._squareColour=value;
+	this.squareColour=new Property(this, function(colour) {
+		return this._squareColour[colour];
+	}, function(colour, value) {
+		if(this._squareColour[colour]!==value) {
+			this._squareColour[colour]=value;
 			this._updateHtml();
 		}
 	});
 
-	this.viewAs=setter(this, function() {
-		return this._viewAs;
+	this.viewingAs=new Property(this, function() {
+		return this._viewingAs;
 	}, function(value) {
-		if(this._viewAs!==value) {
-			this._viewAs=value;
+		if(this._viewingAs!==value) {
+			this._viewingAs=value;
 			this._updateHtml();
 		}
 	});
 
-	this.showCoordsPadding=setter(this, function() {
-		return this._showCoordsPadding;
+	this.showSurround=new Property(this, function() {
+		return this._showSurround;
 	}, function(value) {
-		if(this._showCoordsPadding!==value) {
-			this._showCoordsPadding=value;
+		if(this._showSurround!==value) {
+			this._showSurround=value;
 			this._updateHtml();
 		}
 	});
 
-	this.showCoords=setter(this, function() {
+	this.showCoords=new Property(this, function() {
 		return this._showCoords;
 	}, function(value) {
 		if(this._showCoords!==value) {
@@ -120,7 +119,7 @@ UiBoard.prototype.init_props=function() {
 		}
 	});
 
-	this.squareSize=setter(this, function() {
+	this.squareSize=new Property(this, function() {
 		return this._squareSize;
 	}, function(value) {
 		if(this._squareSize!==value) {
@@ -130,7 +129,7 @@ UiBoard.prototype.init_props=function() {
 		}
 	});
 
-	this.pieceStyle=setter(this, function() {
+	this.pieceStyle=new Property(this, function() {
 		return this._pieceStyle;
 	}, function(value) {
 		if(this._pieceStyle!==value) {
@@ -148,37 +147,7 @@ UiBoard.prototype._setupHtml=function() {
 	this._rankCoords=[];
 	this._uiSquares=[];
 
-	/*
-	inner container so that the absolute-positioned things
-	can be inside an absolute element, but the outer container (Node)
-	can still be non-absolute so that it fills up its container
-	*/
-
-	this._innerContainer=div(this.node);
-
-	style(this._innerContainer, {
-		position: "absolute"
-	});
-
-	/*
-	board
-	*/
-
-	this._borderContainer=div(this._innerContainer);
-
-	style(this._borderContainer, {
-		position: "absolute",
-		zIndex: 0
-	});
-
-	this._boardContainer=div(this._innerContainer);
-
-	style(this._boardContainer, {
-		position: "absolute",
-		zIndex: 1
-	});
-
-	this.board_div=div(this._boardContainer);
+	this.tpl=new Template("board", this.node);
 
 	this.board_div.addEventListener("mouseout", function(e) {
 		self._updateMouseOverInfo(e);
@@ -222,47 +191,20 @@ UiBoard.prototype._setupHtml=function() {
 	squares
 	*/
 
-	var square, sq_outer, sq_inner, highlight;
+	var uiSquare;
 
-	for(var r=0; r<8; r++) {
-		for(var f=0; f<8; f++) {
-			sq_outer=div(this.board_div);
-			highlight=div(sq_outer);
-			sq_inner=div(sq_outer);
+	for(var i=0; i<64; i++) {
+		uiSquare=new UiBoardSquare(this._boardContainer);
 
-			style(sq_outer, {
-				position: "absolute"
-			});
+		uiSquare.MouseDown.addHandler(this, function(data) {
+			this._boardMouseDown(data.event);
+		});
 
-			style(sq_inner, {
-				position: "absolute",
-				zIndex: UiBoard.SQUARE_ZINDEX_NORMAL
-			});
+		uiSquare.MouseUp.addHandler(this, function(data) {
+			this._boardMouseUp(data.event);
+		});
 
-			style(highlight, {
-				position: "absolute",
-				zIndex: UiBoard.SQUARE_ZINDEX_BELOW,
-				borderStyle: "solid",
-				borderColor: "transparent",
-				visibility: "hidden"
-			});
-
-			sq_inner.addEventListener("mousedown", function(e) {
-				self._boardMouseDown(e);
-			});
-
-			sq_inner.addEventListener("mouseup", function(e) {
-				self._boardMouseUp(e);
-			});
-
-			square={
-				container: sq_outer,
-				node: sq_inner,
-				highlight: highlight
-			};
-
-			this._uiSquares.push(square);
-		}
+		this._uiSquares.push(square);
 	}
 
 	/*
@@ -272,32 +214,6 @@ UiBoard.prototype._setupHtml=function() {
 	window.addEventListener("mousemove", function(e) {
 		self._boardMouseMove(e);
 	});
-
-	/*
-	promote dialog - the board gets a promote dialog ready as there will usually be aboard there
-	if the pd is needed, and it will usually have to be in the center of the board
-	*/
-
-	this.PromoteDialog=new PromoteDialog(this.board_div);
-	this.PromoteDialog.Zindex(UiBoard.SQUARE_ZINDEX_ABOVE);
-	this.PromoteDialog.ImgDirPiece(this.img_dir_piece);
-	this.PromoteDialog.PieceStyle(this._pieceStyle);
-	this.PromoteDialog.SquareSize(this._squareSize);
-
-	/*
-	game over dialog - this is part of the board to simplifiy positioning it
-	and getting the zIndex right.
-	*/
-
-	this.GameOverDialog=new GameOverDialog(this.board_div);
-	this.GameOverDialog.Zindex(UiBoard.SQUARE_ZINDEX_ABOVE);
-
-	/*
-	force resign dialog
-	*/
-
-	this.ForceResignDialog=new ForceResignDialog(this.board_div);
-	this.ForceResignDialog.Zindex(UiBoard.SQUARE_ZINDEX_ABOVE);
 
 	this._updateHtml();
 }
@@ -309,31 +225,9 @@ set the size, position and other style attributes on the elements
 UiBoard.prototype._updateHtml=function() { //after switching colours ,changing size tec
 	var rank_index, file_index, text;
 	var boardSize=this.getBoardSize();
-	var coord_size_r=this.CoordSizeR();
-	var coord_size_f=this.CoordSizeF();
-	var rankCoordsDisplaySize=this._showCoordsPadding?coord_size_r:0;
-	var fileCoordsDisplaySize=this._showCoordsPadding?coord_size_f:0;
-	var container_padding_r=this.container_border?coord_size_r:rankCoordsDisplaySize;
-	var container_padding_f=this.container_border?coord_size_f:fileCoordsDisplaySize;
-	
-	var coords_display=this._showCoordsPadding?"":"none";
-	var coords_visibility=this._showCoords?"":"hidden";
 
-	/*
-	container border (bit around the edge with the shadow)
-	*/
-
-	style(this.node, {
-		paddingTop: this.container_border?coord_size_f:0,
-		paddingRight: this.container_border?coord_size_r:0,
-		borderWidth: this.container_border?this.container_border_border_width:0,
-		borderColor: this.container_border_border_colour,
-		borderStyle: "solid",
-		//borderRadius: 3,
-		//boxShadow: (this.container_border && this.container_shadow)?"1px 1px 1px rgba(50, 50, 50, 0.3)":"none",
-		backgroundColor: this.container_border?this.container_background:"inherit"
-	});
-
+	var coordsDisplay=this._showSurround?"":"none";
+	var coordsVisibility=this._showCoords?"":"hidden";
 
 	style(this._boardContainer, {
 		width: boardSize,
@@ -344,44 +238,8 @@ UiBoard.prototype._updateHtml=function() { //after switching colours ,changing s
 	coords
 	*/
 
-	for(var i=0; i<8; i++) {
-		style(this._rankCoords[i].container, {
-			position: "absolute",
-			top: this._borderWidth+(this._squareSize*i),
-			left: 0,
-			height: this._squareSize,
-			width: rankCoordsDisplaySize,
-			display: coords_display,
-			visibility: coords_visibility,
-			cursor: "default"
-		});
+	this._updateHtmlCoords();
 
-		style(this._fileCoords[i].container, {
-			position: "absolute",
-			top: (this._borderWidth*2)+boardSize,
-			left: coord_size_r+this._borderWidth+(this._squareSize*i),
-			width: this._squareSize,
-			height: fileCoordsDisplaySize,
-			display: coords_display,
-			visibility: coords_visibility,
-			cursor: "default"
-		});
-
-
-		if(this._viewAs===WHITE) {
-			rank_index=7-i;
-			file_index=i;
-		}
-
-		else {
-			rank_index=i;
-			file_index=7-i;
-		}
-
-		this._rankCoords[i].node.innerHTML=RANK.charAt(rank_index);
-		this._fileCoords[i].node.innerHTML=FILE.charAt(file_index);
-
-	}
 
 	/*
 	board
@@ -404,12 +262,6 @@ UiBoard.prototype._updateHtml=function() { //after switching colours ,changing s
 		height: boardSize
 	});
 
-	var bgimg="none";
-
-	if(this.board_style!==null) {
-		bgimg=Base.App.CssImg(this.img_dir_board+"/"+this.board_style+"/"+this._squareSize+".png");
-	}
-
 	style(this.board_div, {
 		position: "absolute",
 		width: boardSize,
@@ -421,30 +273,7 @@ UiBoard.prototype._updateHtml=function() { //after switching colours ,changing s
 	squares
 	*/
 
-	var square;
 
-	for(var sq=0; sq<this._uiSquares.length; sq++) {
-		square=this._uiSquares[sq];
-
-		style(square.container, {
-			width: this._squareSize,
-			height: this._squareSize,
-			backgroundColor: "#"+this._squareColour[Util.getSquareColour(sq)]
-		});
-
-		this._setSquarePos(square, sq);
-
-		style(square.node, {
-			width: this._squareSize,
-			height: this._squareSize
-		});
-
-		style(square.highlight, {
-			width: this._squareSize-(this._squareHighlightBorder*2),
-			height: this._squareSize-(this._squareHighlightBorder*2),
-			borderWidth: this._squareHighlightBorder
-		});
-	}
 
 	/*
 	pieces
@@ -463,6 +292,72 @@ UiBoard.prototype._updateHtml=function() { //after switching colours ,changing s
 	this.ForceResignDialog.SetLocation(c, c);
 }
 
+UiBoard.prototype._updateHtmlCoords=function() {
+	for(var i=0; i<8; i++) {
+		style(this._rankCoords[i].container, {
+			top: this._borderWidth+(this._squareSize*i),
+			height: this._squareSize,
+			display: coordsDisplay,
+			visibility: coordsVisibility
+		});
+
+		style(this._fileCoords[i].container, {
+			left: this._borderWidth+(this._squareSize*i),
+			width: this._squareSize,
+			display: coordsDisplay,
+			visibility: coordsVisibility
+		});
+
+
+		if(this._viewingAs===WHITE) {
+			rank_index=7-i;
+			file_index=i;
+		}
+
+		else {
+			rank_index=i;
+			file_index=7-i;
+		}
+
+		this._rankCoords[i].node.innerHTML=RANK.charAt(rank_index);
+		this._fileCoords[i].node.innerHTML=FILE.charAt(file_index);
+
+	}
+}
+
+UiBoard.prototype._updateHtmlSquares=function() {
+	var uiSquare;
+
+	for(var square=0; square<64; square++) {
+		uiSquare=this._uiSquares[square];
+
+		uiSquare.setSize(this._squareSize);
+		uiSquare.setColour(this._squareColour[Util.getSquareColour(square)]);
+
+		/*
+		FIXME
+		need to clarify distinction between moving a square's node and moving
+		its container
+		*/
+
+		var posX, posY;
+		var boardX=Util.xFromSquare(square);
+		var boardY=Util.yFromSquare(square);
+
+		if(this._viewingAs===WHITE) {
+			posX=this._squareSize*boardX;
+			posY=this._squareSize*(7-boardY);
+		}
+
+		else {
+			posX=this._squareSize*(7-boardX);
+			posY=this._squareSize*boardY;
+		}
+
+		uiSquare.setRootPosition(posX, posY);
+	}
+}
+
 UiBoard.prototype.setSquare=function(square, piece) {
 	Board.prototype.setSquare.call(this, square, piece);
 
@@ -471,20 +366,12 @@ UiBoard.prototype.setSquare=function(square, piece) {
 	}
 }
 
-UiBoard.prototype._setHtmlSquare=function(sq, pc) {
-	var bgimg="none";
-
-	if(pc!==SQ_EMPTY) {
-		bgimg="url("+this.img_dir_piece+"/"+this._pieceStyle+"/"+this._squareSize+"/"+Fen.getPieceChar(pc)+".png)";
-	}
-
-	if(this._uiSquares[sq].node.style.backgroundImage!==bgimg) { //performance is noticeably better with this check
-		this._uiSquares[sq].node.style.backgroundImage=bgimg;
-	}
+UiBoard.prototype._setHtmlSquare=function(square, piece) {
+	this._uiSquares[square].setPiece(piece);
 }
 
 UiBoard.prototype._updateSquares=function() {
-	for(var sq=0; sq<this.board.length; sq++) {
+	for(var square=0; sq<this.board.length; sq++) {
 		this._setHtmlSquare(sq, this.board[sq]);
 	}
 }
@@ -504,59 +391,17 @@ UiBoard.prototype.squareFromMouseEvent=function(e, use_offsets, offsets) { //use
 
 	return this._squareFromOffsets(x-os[X], this.getBoardSize()-(y-os[Y]));
 }
-
+//FIXME probably clearer to merge this method into above (only place used)
 UiBoard.prototype._squareFromOffsets=function(x, y) {
-	var f=(x-(x%this._squareSize))/this._squareSize;
-	var r=(y-(y%this._squareSize))/this._squareSize;
+	var boardX=(x-(x%this._squareSize))/this._squareSize;
+	var boardY=(y-(y%this._squareSize))/this._squareSize;
 
-	if(this._viewAs==BLACK) {
-		f=7-f;
-		r=7-r;
+	if(this._viewingAs==BLACK) {
+		boardX=7-boardX;
+		boardY=7-boardY;
 	}
 
-	return Util.squareFromCoords([f, r]);
-}
-
-UiBoard.prototype._setSquarePos=function(square, sq) {
-	var x, y;
-	var r=Util.yFromSquare(sq);
-	var f=Util.xFromSquare(sq);
-
-	if(this._viewAs==BLACK) {
-		x=this._squareSize*(7-f);
-		y=this._squareSize*r;
-	}
-
-	else {
-		x=this._squareSize*f;
-		y=this._squareSize*(7-r);
-	}
-
-	/*
-	absolute is relative to first absolute ancestor, so now that the board
-	is absolute the squares don't have to add anything to these offsets
-	*/
-
-	style(square.container, {
-		top: y,
-		left: x
-	});
-}
-
-UiBoard.prototype._resetSquarePos=function(uiSquare) { //return the inner bit to its container pos
-	style(uiSquare.node, {
-		top: 0,
-		left: 0
-	});
-}
-
-UiBoard.prototype._setSquareXyPos=function(square, x, y) { //takes mouse coords
-	var os=getoffsets(square.container);
-
-	style(square.node, {
-		top: y-os[Y],
-		left: x-os[X]
-	});
+	return Util.squareFromCoords([boardX, boardY]);
 }
 
 UiBoard.prototype._boardMouseDown=function(e) {
@@ -738,16 +583,20 @@ UiBoard.prototype._boardMouseUp=function(e) {
 	this._updatePieceDragInfo(e);
 }
 
-UiBoard.prototype._setZIndexAboveRest=function(square) {
-	style(square.node, {
-		zIndex: UiBoard.SQUARE_ZINDEX_ABOVE
-	});
+UiBoard.prototype._setZIndexAboveRest=function(uiSquare) {
+	uiSquare.setZIndex(UiBoard.SQUARE_ZINDEX_ABOVE);
 }
 
-UiBoard.prototype._resetZIndex=function(square) {
-	style(square.node, {
-		zIndex: UiBoard.SQUARE_ZINDEX_NORMAL
-	});
+UiBoard.prototype._resetZIndex=function(uiSquare) {
+	uiSquare.setZIndex(UiBoard.SQUARE_ZINDEX_NORMAL);
+}
+
+UiBoard.prototype._resetSquarePos=function(uiSquare) { //return the inner bit to its container pos
+	uiSquare.resetPosition();
+}
+
+UiBoard.prototype._setSquareXyPos=function(uiSquare, x, y) { //takes mouse coords
+	uiSquare.setPosition(x, y);
 }
 
 UiBoard.prototype.mouseIsOnBoard=function(e, use_offsets, offsets) {
@@ -777,33 +626,23 @@ UiBoard.prototype._isXyOnBoard=function(x, y) {
 	return !(x<0 || x>boardSize || y<0 || y>boardSize);
 }
 
-UiBoard.prototype.highlightSquare=function(squares, className) {
-	this.unhighlightSquares(className);
+UiBoard.prototype.highlightSquare=function(squares, highlightType) {
+	this.unhighlightSquares(highlightType);
 
 	if(!is_array(squares)) {
 		squares=[squares];
 	}
 
-	this._highlightedSquares[className]=squares;
+	this._highlightedSquares[highlightType]=squares;
 
 	for(var i=0; i<squares.length; i++) {
-		this._uiSquares[squares[i]].highlight.className="highlight "+className;
+		this._uiSquares[squares[i]].setHighlight(highlightType);
 	}
 }
 
 UiBoard.prototype.unhighlightSquare=function(square) {
 	if(square!==null) {
-		this._uiSquares[square].highlight.className="highlight none";
-	}
-}
-
-UiBoard.prototype.highlightPossibilities=function(squares) {
-	this.unhighlightPossibilities();
-
-	this.highlitedPossibilities=squares;
-
-	for(var i=0; i<this.highlitedPossibilities.length; i++) {
-		this.highlightSquare(this.highlitedPossibilities[i], "possibility");
+		this._uiSquares[square].setHighlight("none");
 	}
 }
 
@@ -880,13 +719,6 @@ UiBoard.prototype._updatePieceDragInfo=function(e) {
 		}
 
 		this._squareCurrentlyDraggingPieceOver=null;
-	}
-}
-
-UiBoard.prototype.deselect=function() {
-	if(this._moveInfo.isInProgress) {
-		this._resetZIndex(this._uiSquares[this._moveInfo.from]);
-		this._moveInfo.reset();
 	}
 }
 
