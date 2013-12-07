@@ -1,93 +1,112 @@
-function UiBoardSquare() {
+function UiBoardSquare(parent, square, size, pieceStyle, pieceDir) {
+	this._template=new Template("board_square", parent);
+	this._square=square;
+	this._size=size;
+	this._pieceStyle=pieceStyle;
+	this._pieceDir=pieceDir;
 
+	this.MouseDown=new Event(this);
+	this.MouseUp=new Event(this);
+
+	this.size=setter(this, function() {
+		return this._size;
+	}, function(value) {
+		if(this._size!==value) {
+			this._size=value;
+			this._updateHtml();
+		}
+	});
+
+	this.pieceStyle=setter(this, function() {
+		return this._pieceStyle;
+	}, function(value) {
+		if(this._pieceStyle!==value) {
+			this._pieceStyle=value;
+			this._updateHtml();
+		}
+	});
+
+	this.pieceDir=setter(this, function() {
+		return this._pieceDir;
+	}, function(value) {
+		if(this._pieceDir!==value) {
+			this._pieceDir=value;
+			this._updateHtml();
+		}
+	});
+
+	this._setupHtml();
 }
 
-UiBoardSquare.prototype.setPiece=function(piece) {
-	var bgimg="none";
+UiBoardSquare.prototype._setupHtml=function() {
+	var self=this;
+	var colourName=Colour.getName(Util.getSquareColour(this.square));
+
+	this._template.root.classList.add("board_square_"+colourName);
+
+	this._template.piece.addEventListener("mousedown", function(e) {
+		self.MouseDown.fire({
+			event: e
+		});
+	});
+
+	this._template.piece.addEventListener("mouseup", function(e) {
+		self.MouseUp.fire({
+			event: e
+		});
+	});
+}
+
+UiBoardSquare.prototype.getOffsets=function() {
+	return getoffsets(this._template.root);
+}
+
+UiBoardSquare.prototype.setZIndex=function(zIndex) {
+	this._template.root.style.zIndex=zIndex;
+}
+
+UiBoardSquare.prototype.setPiece=function(piece, style) {
+	var backgroundImage="none";
 
 	if(piece!==SQ_EMPTY) {
-		bgimg="url("+this.img_dir_piece+"/"+this._pieceStyle+"/"+this._squareSize+"/"+Fen.getPieceChar(piece)+".png)";
+		backgroundImage="url("+this._pieceDir+"/"+this._pieceStyle+"/"+this._size+"/"+Fen.getPieceChar(piece)+".png)";
 	}
 
-	if(this._uiSquares[square].node.style.backgroundImage!==bgimg) { //performance is noticeably better with this check
-		this._uiSquares[square].node.style.backgroundImage=bgimg;
+	if(this._template.piece.style.backgroundImage!==backgroundImage) {
+		this._template.piece.style.backgroundImage=backgroundImage;
 	}
 }
 
-UiBoardSquare.prototype.resetPosition=function() {
-	style(this.node, {
-		top: 0,
-		left: 0
-	});
-}
-
-UiBoardSquare.prototype.setPosition=function(x, y) {
-
-	var os=getoffsets(square.container);
-
-	style(square.node, {
-		top: y-os[Y],
-		left: x-os[X]
-	});
-}
-
-UiBoardSquare.prototype.setContainerPosition=function(x, y) {
-
-	style(square.container, {
+UiBoardSquare.prototype.setRootPosition=function(x, y) {
+	style(this._template.root, {
 		top: y,
 		left: x
 	});
 }
 
-/*
-	for(var r=0; r<8; r++) {
-		for(var f=0; f<8; f++) {
-			sq_outer=div(this.board_div);
-			highlight=div(sq_outer);
-			sq_inner=div(sq_outer);
+UiBoardSquare.prototype.setPiecePosition=function(x, y) {
+	var offsets=getoffsets(this._template.root);
 
-			style(sq_outer, {
-				position: "absolute"
-			});
+	style(this._template.piece, {
+		top: y-offsets[Y],
+		left: x-offsets[X]
+	});
+}
 
-			style(sq_inner, {
-				position: "absolute",
-				zIndex: UiBoard.SQUARE_ZINDEX_NORMAL
-			});
-
-			style(highlight, {
-				position: "absolute",
-				zIndex: UiBoard.SQUARE_ZINDEX_BELOW,
-				borderStyle: "solid",
-				borderColor: "transparent",
-				visibility: "hidden"
-			});
-
-			sq_inner.addEventListener("mousedown", function(e) {
-				self._boardMouseDown(e);
-			});
-
-			sq_inner.addEventListener("mouseup", function(e) {
-				self._boardMouseUp(e);
-			});
-
-			square={
-				container: sq_outer,
-				node: sq_inner,
-				highlight: highlight
-			};
-
-			this._uiSquares.push(square);
-		}
-	}
-*/
+UiBoardSquare.prototype.resetPiecePosition=function() {
+	style(this._template.piece, {
+		top: 0,
+		left: 0
+	});
+}
 
 UiBoardSquare.prototype.setSize=function(size) {
-	//container
-	//node
-			style(uiSquare.highlight, {
-			width: this._squareSize-(this._squareHighlightBorder*2),
-			height: this._squareSize-(this._squareHighlightBorder*2),
-			borderWidth: this._squareHighlightBorder
-		});
+	var css={
+		width: size,
+		height: size
+	};
+
+	style(this._template.root, css);
+	style(this._template.highlight, css);
+	style(this._template.piece, css);
 }

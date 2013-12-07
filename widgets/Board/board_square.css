@@ -1,0 +1,13 @@
+.board_square_root{
+	position: absolute;
+}
+
+.board_square_highlight{
+	position: absolute;
+	z-index: 0;
+}
+
+.board_square_piece{
+	position: absolute;
+	z-index: 1;
+}

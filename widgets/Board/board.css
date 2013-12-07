@@ -1,11 +1,42 @@
-.board_surround
-{
+.board_root{
+	border: 1px solid #cfcfcf;
+	background: #efefef;
+}
+
+.board_board{
+	position: absolute;
+	border-color: #808080;
+	border-style: solid;
+	border-width: 0;
+}
+
+.board_absolute_wrapper{
+	position: absolute;
+}
+
+.board_board{
+	position: absolute;
+}
+
+.board_coords_container{
+	position: absolute;
+}
+
+.board_coords_container.board_file{
+	height: 18px;
+	line-height: 18px;
+}
+
+.board_coord{
+	text-align: center;
+	cursor: default;
+	user-select: none;
+}
+
+.board_coord.board_file{
 
 }
 
-.board_root.board_with_surround .board_surround,
-.board_root.board_with_coords_padding .board_surround
-{
+.board_coord.board_rank{
 
 }
-
