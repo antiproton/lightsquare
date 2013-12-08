@@ -280,7 +280,7 @@ UiBoard.prototype._updateHtmlSquares=function() {
 UiBoard.prototype.setSquare=function(square, piece) {
 	Board.prototype.setSquare.call(this, square, piece);
 
-	if(this.htmlUpdatesEnabled) {
+	if(this._htmlUpdatesEnabled) {
 		this._setHtmlSquare(square, piece);
 	}
 }
