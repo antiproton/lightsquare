@@ -1,7 +1,7 @@
 function UiBoard(parent) {
 	Board.implement(this);
 
-	this.template=new Template("board", parent);
+	this._template=new Template("board", parent);
 
 	this.UserMove=new Event(this);
 	this.DragDrop=new Event(this);
@@ -119,7 +119,7 @@ UiBoard.prototype._setupHtml=function() {
 		self._boardMouseMove(e);
 	});
 
-	this.template.board.addEventListener("mouseout", function(e) {
+	this._template.board.addEventListener("mouseout", function(e) {
 		self._updateMouseOverInfo(e);
 	});
 
@@ -128,8 +128,8 @@ UiBoard.prototype._setupHtml=function() {
 
 UiBoard.prototype._setupHtmlCoords=function() {
 	this._coordContainers={
-		rank: this.template.rank_coords,
-		file: this.template.file_coords
+		rank: this._template.rank_coords,
+		file: this._template.file_coords
 	};
 
 	this._coords={};
@@ -155,7 +155,7 @@ UiBoard.prototype._setupHtmlSquares=function() {
 
 	for(var i=0; i<64; i++) {
 		uiSquare=new UiBoardSquare(
-			this.template.board,
+			this._template.board,
 			i,
 			this._squareSize,
 			this._pieceStyle,
@@ -181,16 +181,16 @@ UiBoard.prototype._updateHtml=function() {
 	var paddingIfCoordsOrSurround=(this._showCoords || this._showSurround?this._coordsPadding:0);
 	var totalSize=paddingIfCoordsOrSurround+boardSize+borderSize+paddingIfSurround;
 
-	this.template.root.classList[
+	this._template.root.classList[
 		this._showSurround?"add":"remove"
 	]("board_with_surround");
 
-	style(this.template.root, {
+	style(this._template.root, {
 		width: totalSize,
 		height: totalSize
 	});
 
-	style(this.template.board_wrapper, {
+	style(this._template.board_wrapper, {
 		top: paddingIfSurround,
 		left: paddingIfCoordsOrSurround,
 		width: boardSize,
@@ -198,12 +198,12 @@ UiBoard.prototype._updateHtml=function() {
 		borderWidth: this._borderWidth
 	});
 
-	style(this.template.board, {
+	style(this._template.board, {
 		width: boardSize,
 		height: boardSize
 	});
 
-	this.template.board.className="board_board board_"+this._boardStyle;
+	this._template.board.className="board_board board_"+this._boardStyle;
 
 	this._updateHtmlCoords();
 	this._updateHtmlSquares();
@@ -308,7 +308,7 @@ UiBoard.prototype._squareFromMouseEvent=function(e, use_moveinfo_offsets) {
 		y+=(Math.round(this._squareSize/2)-this._moveInfo.mouseOffsets[Y]);
 	}
 
-	var os=getoffsets(this.template.board);
+	var os=getoffsets(this._template.board);
 
 	return this._squareFromOffsets(x-os[X], this.getBoardSize()-(y-os[Y]));
 }
@@ -326,7 +326,7 @@ UiBoard.prototype._squareFromOffsets=function(x, y) {
 }
 
 UiBoard.prototype._squareMouseOffsetsFromEvent=function(e) {
-	var boardOffsets=getoffsets(this.template.board);
+	var boardOffsets=getoffsets(this._template.board);
 
 	var mouseOffsets=[
 		((e.pageX-boardOffsets[X])%this._squareSize || this._squareSize),
@@ -352,15 +352,15 @@ UiBoard.prototype._boardMouseDown=function(event, targetUiSquare) {
 	}
 }
 
-UiBoard.prototype._boardMouseMove=function(e) {
-	e.preventDefault();
+UiBoard.prototype._boardMouseMove=function(event) {
+	event.preventDefault();
 
-	var square=this._squareFromMouseEvent(e);
+	var square=this._squareFromMouseEvent(event);
 
 	//update mouseover sq and fire events
 
-	this._updateMouseOverInfo(e);
-	this._updatePieceDragInfo(e);
+	this._updateMouseOverInfo(event);
+	this._updatePieceDragInfo(event);
 
 	var args;
 
@@ -400,21 +400,21 @@ UiBoard.prototype._boardMouseMove=function(e) {
 
 		if(!args.cancel) {
 			this._uiSquares[this._moveInfo.from].setPiecePosition(
-				e.pageX-this._moveInfo.mouseOffsets[X],
-				e.pageY-this._moveInfo.mouseOffsets[Y]
+				event.pageX-this._moveInfo.mouseOffsets[X],
+				event.pageY-this._moveInfo.mouseOffsets[Y]
 			);
 		}
 	}
 }
 
-UiBoard.prototype._boardMouseUp=function(e) {
-	e.preventDefault();
+UiBoard.prototype._boardMouseUp=function(event) {
+	event.preventDefault();
 
 	var args;
-	var square=this._squareFromMouseEvent(e);
+	var square=this._squareFromMouseEvent(event);
 
 	if(this._moveInfo.isInProgress && this._moveInfo.mode===UiBoardMoveInfo.DRAG) {
-		square=this._squareFromMouseEvent(e, true);
+		square=this._squareFromMouseEvent(event, true);
 	}
 
 	var fromUiSquare=null;
@@ -442,13 +442,13 @@ UiBoard.prototype._boardMouseUp=function(e) {
 
 			this.Deselected.fire();
 
-			if(this.mouseIsOnBoard(e, true)) {
+			if(this.mouseIsOnBoard(event, true)) {
 				if(square!==this._moveInfo.from) {
 					this.UserMove.fire({
 						from: this._moveInfo.from,
 						to: square,
 						piece: this.getSquare(this._moveInfo.from),
-						event: e
+						event: event
 					});
 				}
 			}
@@ -502,24 +502,24 @@ UiBoard.prototype._boardMouseUp=function(e) {
 		fromUiSquare.setZIndex(UiBoard._SQUARE_ZINDEX_NORMAL);
 	}
 
-	this._updatePieceDragInfo(e);
+	this._updatePieceDragInfo(event);
 }
 
-UiBoard.prototype.mouseIsOnBoard=function(e, use_offsets, offsets) {
+UiBoard.prototype.mouseIsOnBoard=function(event, use_offsets, offsets) {
 	offsets=offsets||[this._moveInfo.mouseOffsets[X], this._moveInfo.mouseOffsets[Y]];
 
-	var x=e.pageX;
-	var y=e.pageY;
+	var x=event.pageX;
+	var y=event.pageY;
 
 	if(use_offsets) {
 		x+=(Math.round(this._squareSize/2)-offsets[X]);
 		y+=(Math.round(this._squareSize/2)-offsets[Y]);
 	}
 
-	var os=getoffsets(this.template.board);
+	var boardOffsets=getoffsets(this._template.board);
 
-	x-=os[X];
-	y-=os[Y];
+	x-=boardOffsets[X];
+	y-=boardOffsets[Y];
 
 	y=this.getBoardSize()-y;
 
@@ -555,10 +555,10 @@ UiBoard.prototype.getBoardSize=function() {
 	return this._squareSize*8;
 }
 
-UiBoard.prototype._updateMouseOverInfo=function(e) {
-	var square=this._squareFromMouseEvent(e);
+UiBoard.prototype._updateMouseOverInfo=function(event) {
+	var square=this._squareFromMouseEvent(event);
 
-	if(this.mouseIsOnBoard(e) && square>-1 && square<64) { //mouseIsOnBoard doesn't appear to be enough
+	if(this.mouseIsOnBoard(event) && square>-1 && square<64) { //mouseIsOnBoard doesn't appear to be enough
 		if(this._squareMouseCurrentlyOver!=square) {
 			if(this._squareMouseCurrentlyOver!==null) {
 				this.MouseLeavingSquare.fire({
@@ -585,11 +585,11 @@ UiBoard.prototype._updateMouseOverInfo=function(e) {
 	}
 }
 
-UiBoard.prototype._updatePieceDragInfo=function(e) {
-	var square=this._squareFromMouseEvent(e, true);
+UiBoard.prototype._updatePieceDragInfo=function(event) {
+	var square=this._squareFromMouseEvent(event, true);
 
 	if(this._moveInfo.isInProgress && this._moveInfo.mode===UiBoardMoveInfo.DRAG) {
-		if(this.mouseIsOnBoard(e)) {
+		if(this.mouseIsOnBoard(event)) {
 			if(this._squareCurrentlyDraggingPieceOver!=square) {
 				if(this._squareCurrentlyDraggingPieceOver!==null) {
 					this.PieceLeavingSquare.fire({
