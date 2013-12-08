@@ -12,6 +12,10 @@ function UiBoardSquare(parent, square, size, pieceStyle, pieceDir) {
 	this._setupHtml();
 }
 
+UiBoardSquare.prototype.getSquare=function() {
+	return this._square;
+}
+
 UiBoardSquare.prototype.setSize=function(size) {
 	this._size=size;
 	this._updateSize();
@@ -37,7 +41,7 @@ UiBoardSquare.prototype.setZIndex=function(zIndex) {
 	this._template.root.style.zIndex=zIndex;
 }
 
-UiBoardSquare.prototype.setRootPosition=function(x, y) {
+UiBoardSquare.prototype.setSquarePosition=function(x, y) {
 	style(this._template.root, {
 		top: y,
 		left: x
@@ -66,30 +70,34 @@ UiBoardSquare.prototype._setupHtml=function() {
 
 	this._template.root.classList.add("board_square_"+colourName);
 
-	this._template.piece.addEventListener("mousedown", function(e) {
+	this._template.piece.addEventListener("mousedown", function(event) {
 		self.MouseDown.fire({
-			event: e
+			event: event
 		});
 	});
 
-	this._template.piece.addEventListener("mouseup", function(e) {
+	this._template.piece.addEventListener("mouseup", function(event) {
 		self.MouseUp.fire({
-			event: e
+			event: event
 		});
 	});
 
 	this._updateSize();
 }
 
-UiBoardSquare.prototype.getOffsets=function() {
-	return getoffsets(this._template.root);
-}
-
 UiBoardSquare.prototype._updatePiece=function() {
 	var backgroundImage="none";
+	var path;
 
 	if(this._piece!==SQ_EMPTY) {
-		backgroundImage="url("+this._pieceDir+"/"+this._pieceStyle+"/"+this._size+"/"+Fen.getPieceChar(this._piece)+".png)";
+		path=[
+			this._pieceDir,
+			this._pieceStyle,
+			this._size,
+			Fen.getPieceChar(this._piece)+".png"
+		];
+
+		backgroundImage="url("+path.join("/")+")";
 	}
 
 	if(this._template.piece.style.backgroundImage!==backgroundImage) {

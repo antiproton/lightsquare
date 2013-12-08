@@ -4,8 +4,10 @@
 			<div data-id="rank_coords" class="board_coords_container board_rank">
 
 			</div>
-			<div data-id="board" class="board_board">
+			<div data-id="board_wrapper" class="board_board_wrapper">
+				<div data-id="board" class="board_board">
 
+				</div>
 			</div>
 			<div data-id="file_coords" class="board_coords_container board_file">
 

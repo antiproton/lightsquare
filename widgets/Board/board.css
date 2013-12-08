@@ -7,11 +7,15 @@
 	position: absolute;
 }
 
-.board_board{
+.board_board_wrapper{
 	position: absolute;
 	border-color: #808080;
 	border-style: solid;
 	border-width: 0;
+}
+
+.board_board{
+	position: absolute;
 }
 
 .board_coords_container{

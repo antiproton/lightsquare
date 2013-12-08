@@ -8,8 +8,7 @@ UiBoardMoveInfo.prototype.reset=function() {
 	this.isInProgress=false;
 	this.piece=null;
 	this.from=null;
-	this.mouseOffsetX=0;
-	this.mouseOffsetY=0;
+	this.mouseOffsets=[0, 0]
 }
 
 UiBoardMoveInfo.CLICK=0;

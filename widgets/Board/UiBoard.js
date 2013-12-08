@@ -162,12 +162,12 @@ UiBoard.prototype._setupHtmlSquares=function() {
 			this._pieceDir
 		);
 
-		uiSquare.MouseDown.addHandler(this, function(data) {
-			this._boardMouseDown(data.event);
+		uiSquare.MouseDown.addHandler(this, function(data, sender) {
+			this._boardMouseDown(data.event, sender);
 		});
 
-		uiSquare.MouseUp.addHandler(this, function(data) {
-			this._boardMouseUp(data.event);
+		uiSquare.MouseUp.addHandler(this, function(data, sender) {
+			this._boardMouseUp(data.event, sender);
 		});
 
 		this._uiSquares.push(uiSquare);
@@ -190,13 +190,17 @@ UiBoard.prototype._updateHtml=function() {
 		height: totalSize
 	});
 
-	style(this.template.board, {
+	style(this.template.board_wrapper, {
 		top: paddingIfSurround,
 		left: paddingIfCoordsOrSurround,
 		width: boardSize,
 		height: boardSize,
-		borderWidth: this._borderWidth,
+		borderWidth: this._borderWidth
+	});
 
+	style(this.template.board, {
+		width: boardSize,
+		height: boardSize
 	});
 
 	this.template.board.className="board_board board_"+this._boardStyle;
@@ -273,7 +277,7 @@ UiBoard.prototype._updateHtmlSquares=function() {
 			posY=this._squareSize*boardY;
 		}
 
-		uiSquare.setRootPosition(posX, posY);
+		uiSquare.setSquarePosition(posX, posY);
 	}
 }
 
@@ -300,8 +304,8 @@ UiBoard.prototype._squareFromMouseEvent=function(e, use_moveinfo_offsets) {
 	var y=e.pageY;
 
 	if(use_moveinfo_offsets) { //get the square that the middle of the piece is over
-		x+=(Math.round(this._squareSize/2)-this._moveInfo.mouseOffsetX);
-		y+=(Math.round(this._squareSize/2)-this._moveInfo.mouseOffsetY);
+		x+=(Math.round(this._squareSize/2)-this._moveInfo.mouseOffsets[X]);
+		y+=(Math.round(this._squareSize/2)-this._moveInfo.mouseOffsets[Y]);
 	}
 
 	var os=getoffsets(this.template.board);
@@ -321,21 +325,29 @@ UiBoard.prototype._squareFromOffsets=function(x, y) {
 	return Util.squareFromCoords([boardX, boardY]);
 }
 
-UiBoard.prototype._boardMouseDown=function(e) {
-	e.preventDefault();
+UiBoard.prototype._squareMouseOffsetsFromEvent=function(e) {
+	var boardOffsets=getoffsets(this.template.board);
 
-	if(this.mouseIsOnBoard(e)) {
-		var square=this._squareFromMouseEvent(e);
-		var uiSquare=this._uiSquares[square];
-		var offsets=uiSquare.getOffsets();
+	var mouseOffsets=[
+		((e.pageX-boardOffsets[X])%this._squareSize || this._squareSize),
+		((e.pageY-boardOffsets[Y])%this._squareSize || this._squareSize)
+	];
+
+	return mouseOffsets
+}
+
+UiBoard.prototype._boardMouseDown=function(event, targetUiSquare) {
+	event.preventDefault();
+
+	if(this.mouseIsOnBoard(event)) {
+		var square=targetUiSquare.getSquare();
 
 		if(!this._moveInfo.selected && !this._moveInfo.isInProgress && this.board[square]!==SQ_EMPTY) {
-			uiSquare.setZIndex(UiBoard._SQUARE_ZINDEX_ABOVE);
+			targetUiSquare.setZIndex(UiBoard._SQUARE_ZINDEX_ABOVE);
 			this._moveInfo.selected=true;
 			this._moveInfo.from=square;
 			this._moveInfo.piece=this.board[square];
-			this._moveInfo.mouseOffsetX=e.pageX-offsets[X];
-			this._moveInfo.mouseOffsetY=e.pageY-offsets[Y];
+			this._moveInfo.mouseOffsets=[event.offsetX, event.offsetY];
 		}
 	}
 }
@@ -388,8 +400,8 @@ UiBoard.prototype._boardMouseMove=function(e) {
 
 		if(!args.cancel) {
 			this._uiSquares[this._moveInfo.from].setPiecePosition(
-				e.pageX-this._moveInfo.mouseOffsetX,
-				e.pageY-this._moveInfo.mouseOffsetY
+				e.pageX-this._moveInfo.mouseOffsets[X],
+				e.pageY-this._moveInfo.mouseOffsets[Y]
 			);
 		}
 	}
@@ -494,7 +506,7 @@ UiBoard.prototype._boardMouseUp=function(e) {
 }
 
 UiBoard.prototype.mouseIsOnBoard=function(e, use_offsets, offsets) {
-	offsets=offsets||[this._moveInfo.mouseOffsetX, this._moveInfo.mouseOffsetY];
+	offsets=offsets||[this._moveInfo.mouseOffsets[X], this._moveInfo.mouseOffsets[Y]];
 
 	var x=e.pageX;
 	var y=e.pageY;
