@@ -7,6 +7,7 @@ require_once "WidgetLoader.php";
 $widgetLoader=new WidgetLoader("widgets");
 
 $widgetLoader->load([
+	"BoardSquare",
 	"Board",
 	"History",
 	"LiveTableStandard"
