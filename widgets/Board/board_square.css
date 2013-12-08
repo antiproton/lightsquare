@@ -5,9 +5,42 @@
 .board_square_highlight{
 	position: absolute;
 	z-index: 0;
+	opacity: .9;
 }
 
 .board_square_piece{
 	position: absolute;
 	z-index: 1;
+}
+
+.board_square_highlight_possibility{
+	background: #99e457;
+}
+
+.board_square_highlight_last_move_from{
+	background: #62c1fe;
+}
+
+.board_square_highlight_last_move_to{
+	background: #62c1fe;
+}
+
+.board_square_highlight_premove_from{
+	background: #199a65;
+}
+
+.board_square_highlight_premove_to{
+	background: #199a65;
+}
+
+.board_square_highlight_can_select{
+	background: #fbfddd;
+}
+
+.board_square_highlight_can_drop{
+	background: #fbfddd;
+}
+
+.board_square_highlight_selected{
+	background: #c9f06b;
 }

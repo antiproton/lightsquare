@@ -5,11 +5,22 @@ function UiBoardSquare(parent, square, size, pieceStyle, pieceDir) {
 	this._pieceStyle=pieceStyle;
 	this._pieceDir=pieceDir;
 	this._piece=SQ_EMPTY;
+	this._highlightType=UiBoard.HIGHLIGHT_NONE;
 
 	this.MouseDown=new Event(this);
 	this.MouseUp=new Event(this);
 
 	this._setupHtml();
+}
+
+UiBoardSquare.prototype.setHighlight=function(highlightType) {
+	var oldClassName="board_square_highlight_"+this._highlightType;
+	var newClassName="board_square_highlight_"+highlightType;
+
+	this._template.highlight.classList.remove(oldClassName);
+	this._template.highlight.classList.add(newClassName);
+
+	this._highlightType=highlightType;
 }
 
 UiBoardSquare.prototype.getSquare=function() {

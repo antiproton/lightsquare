@@ -100,8 +100,7 @@ UiBoard.prototype.setViewingAs=function(colour) {
 }
 
 UiBoard.prototype.setBoardStyle=function(boardStyle) {
-	this._boardStyle=boardStyle;
-	this._updateHtml();
+	this._setBoardStyle(boardStyle, this._boardStyle);
 }
 
 UiBoard.prototype.setPieceDir=function(pieceDir) {
@@ -203,10 +202,9 @@ UiBoard.prototype._updateHtml=function() {
 		height: boardSize
 	});
 
-	this._template.board.className="board_board board_"+this._boardStyle;
-
 	this._updateHtmlCoords();
 	this._updateHtmlSquares();
+	this._setBoardStyle();
 }
 
 UiBoard.prototype._updateHtmlCoords=function() {
@@ -279,6 +277,19 @@ UiBoard.prototype._updateHtmlSquares=function() {
 
 		uiSquare.setSquarePosition(posX, posY);
 	}
+}
+
+UiBoard.prototype._setBoardStyle=function(newStyle, oldStyle) {
+	newStyle=newStyle||this._boardStyle;
+	oldStyle=oldStyle||this._boardStyle;
+
+	var oldClassName="board_"+oldStyle;
+	var newClassName="board_"+newStyle;
+
+	this._template.board.classList.remove(oldClassName);
+	this._template.board.classList.add(newClassName);
+
+	this._boardStyle=newStyle;
 }
 
 UiBoard.prototype.setSquare=function(square, piece) {
@@ -532,23 +543,28 @@ UiBoard.prototype._isXyOnBoard=function(x, y) {
 	return !(x<0 || x>boardSize || y<0 || y>boardSize);
 }
 
-UiBoard.prototype.highlightSquare=function(squares, highlightType) {
+UiBoard.prototype.highlightSquares=function(squares, highlightType) {
 	if(!is_array(squares)) {
 		squares=[squares];
 	}
 
-	this.unhighlightSquares(highlightType);
-	this._highlightedSquares[highlightType]=squares;
+	if(!(highlightType in this._highlightedSquares)) {
+		this._highlightedSquares[highlightType]=[];
+	}
+
+	this._highlightedSquares[highlightType]=this._highlightedSquares.concat(squares);
 
 	for(var i=0; i<squares.length; i++) {
 		this._uiSquares[squares[i]].setHighlight(highlightType);
 	}
 }
 
-UiBoard.prototype.unhighlightSquare=function(square) {
-	if(square!==null) {
-		this._uiSquares[square].setHighlight("none");
+UiBoard.prototype.unhighlightSquares=function(highlightType) {
+	for(var i=0; i<this._highlightedSquares[highlightType].length; i++) {
+		this._uiSquares[this._highlightedSquares[highlightType][i]].setHighlight(UiBoard.HIGHLIGHT_NONE);
 	}
+
+	this._highlightedSquares[highlightType]=[];
 }
 
 UiBoard.prototype.getBoardSize=function() {
