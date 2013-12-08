@@ -1,11 +1,11 @@
-function HistoryTextView(parent) {
+function HistoryTextViewWidget(parent) {
 	UiHistory.implement(this);
 
 	this._tpl=new Template("history_textview", parent);
 	this._tpl.root.appendChild(this.mainLine.node);
 }
 
-HistoryTextView.prototype.createMove=function() {
+HistoryTextViewWidget.prototype.createMove=function() {
 	var move=new MoveTextView();
 
 	this._setupMove(move);
@@ -13,6 +13,6 @@ HistoryTextView.prototype.createMove=function() {
 	return move;
 }
 
-HistoryTextView.prototype.createVariation=function() {
+HistoryTextViewWidget.prototype.createVariation=function() {
 	return new VariationTextView();
 }
