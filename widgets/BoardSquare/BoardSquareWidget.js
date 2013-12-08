@@ -1,11 +1,11 @@
-function UiBoardSquare(parent, square, size, pieceStyle, pieceDir) {
+function BoardSquareWidget(parent, square, size, pieceStyle, pieceDir) {
 	this._template=new Template("board_square", parent);
 	this._square=square;
 	this._size=size;
 	this._pieceStyle=pieceStyle;
 	this._pieceDir=pieceDir;
 	this._piece=SQ_EMPTY;
-	this._highlightType=UiBoard.HIGHLIGHT_NONE;
+	this._highlightType=BoardSquareWidget.HIGHLIGHT_NONE;
 
 	this.MouseDown=new Event(this);
 	this.MouseUp=new Event(this);
@@ -13,7 +13,17 @@ function UiBoardSquare(parent, square, size, pieceStyle, pieceDir) {
 	this._setupHtml();
 }
 
-UiBoardSquare.prototype.setHighlight=function(highlightType) {
+BoardSquareWidget.HIGHLIGHT_NONE="none";
+BoardSquareWidget.HIGHLIGHT_POSSIBILITY="possibility";
+BoardSquareWidget.HIGHLIGHT_LAST_MOVE_TO="last_move_to";
+BoardSquareWidget.HIGHLIGHT_LAST_MOVE_FROM="last_move_from";
+BoardSquareWidget.HIGHLIGHT_PREMOVE_TO="premove_to";
+BoardSquareWidget.HIGHLIGHT_PREMOVE_FROM="premove_from";
+BoardSquareWidget.HIGHLIGHT_CAN_SELECT="can_select";
+BoardSquareWidget.HIGHLIGHT_CAN_DROP="can_drop";
+BoardSquareWidget.HIGHLIGHT_SELECTED="selected";
+
+BoardSquareWidget.prototype.setHighlight=function(highlightType) {
 	var oldClassName="board_square_highlight_"+this._highlightType;
 	var newClassName="board_square_highlight_"+highlightType;
 
@@ -23,43 +33,47 @@ UiBoardSquare.prototype.setHighlight=function(highlightType) {
 	this._highlightType=highlightType;
 }
 
-UiBoardSquare.prototype.getSquare=function() {
+BoardSquareWidget.prototype.getSquare=function() {
 	return this._square;
 }
 
-UiBoardSquare.prototype.setSize=function(size) {
+BoardSquareWidget.prototype.setSize=function(size) {
 	this._size=size;
 	this._updateSize();
 	this._updatePiece();
 }
 
-UiBoardSquare.prototype.setPiece=function(piece) {
+BoardSquareWidget.prototype.setPiece=function(piece) {
 	this._piece=piece;
 	this._updatePiece();
 }
 
-UiBoardSquare.prototype.setPieceStyle=function(pieceStyle) {
+BoardSquareWidget.prototype.setPieceStyle=function(pieceStyle) {
 	this._pieceStyle=pieceStyle;
 	this._updatePiece();
 }
 
-UiBoardSquare.prototype.setPieceDir=function(pieceDir) {
+BoardSquareWidget.prototype.setPieceDir=function(pieceDir) {
 	this._pieceDir=pieceDir;
 	this._updatePiece();
 }
 
-UiBoardSquare.prototype.setZIndex=function(zIndex) {
-	this._template.root.style.zIndex=zIndex;
+BoardSquareWidget.prototype.setZIndexAbove=function() {
+	this._template.root.style.zIndex=2;
 }
 
-UiBoardSquare.prototype.setSquarePosition=function(x, y) {
+BoardSquareWidget.prototype.setZIndexNormal=function() {
+	this._template.root.style.zIndex=1;
+}
+
+BoardSquareWidget.prototype.setSquarePosition=function(x, y) {
 	style(this._template.root, {
 		top: y,
 		left: x
 	});
 }
 
-UiBoardSquare.prototype.setPiecePosition=function(x, y) {
+BoardSquareWidget.prototype.setPiecePosition=function(x, y) {
 	var offsets=getoffsets(this._template.root);
 
 	style(this._template.piece, {
@@ -68,14 +82,14 @@ UiBoardSquare.prototype.setPiecePosition=function(x, y) {
 	});
 }
 
-UiBoardSquare.prototype.resetPiecePosition=function() {
+BoardSquareWidget.prototype.resetPiecePosition=function() {
 	style(this._template.piece, {
 		top: 0,
 		left: 0
 	});
 }
 
-UiBoardSquare.prototype._setupHtml=function() {
+BoardSquareWidget.prototype._setupHtml=function() {
 	var self=this;
 	var colourName=Colour.getName(Util.getSquareColour(this._square));
 
@@ -96,7 +110,7 @@ UiBoardSquare.prototype._setupHtml=function() {
 	this._updateSize();
 }
 
-UiBoardSquare.prototype._updatePiece=function() {
+BoardSquareWidget.prototype._updatePiece=function() {
 	var backgroundImage="none";
 	var path;
 
@@ -116,7 +130,7 @@ UiBoardSquare.prototype._updatePiece=function() {
 	}
 }
 
-UiBoardSquare.prototype._updateSize=function() {
+BoardSquareWidget.prototype._updateSize=function() {
 	var css={
 		width: this._size,
 		height: this._size
