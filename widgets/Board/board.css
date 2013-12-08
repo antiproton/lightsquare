@@ -27,7 +27,7 @@
 }
 
 .board_coords_container.board_rank{
-	left: 4px;
+	left: 5px;
 }
 
 .board_root.board_with_surround .board_coords_container.board_rank{
