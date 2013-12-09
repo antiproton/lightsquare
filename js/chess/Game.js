@@ -11,14 +11,9 @@ function Game() {
 	this.type=GAME_TYPE_STANDARD;
 	this.variant=VARIANT_STANDARD;
 	this.subvariant=SUBVARIANT_NONE;
-	this.bughouseOtherGame=null;
 	this.format=GAME_FORMAT_QUICK;
 	this.result=null;
 	this.resultDetails=null;
-	this.whiteRatingOld=null;
-	this.whiteRatingNew=null;
-	this.blackRatingOld=null;
-	this.blackRatingNew=null;
 	this.clockStartIndex=1;
 	this.clockStartDelay=0;
 	this.timingInitial=600;
@@ -27,14 +22,9 @@ function Game() {
 	this.timingOvertime=false;
 	this.timingOvertimeCutoff=40;
 	this.timingOvertimeIncrement=600;
-	this.eventType=EVENT_TYPE_CASUAL;
-	this.event=null;
-	this.round=1;
 	this.threefoldClaimable=false;
 	this.fiftymoveClaimable=false;
-	this.drawOffered=null;
-	this.undoRequested=false;
-	this.undoGranted=false;
+	this.drawOffered=false;
 	this.rated=true;
 
 	this.position=new Position();
@@ -184,8 +174,8 @@ Game.prototype.move=function(from, to, promoteTo, dryrun) {
 			if(validPromotion || !promotion) {
 				if(targetPiece===null) {
 					if(Util.isDoublePawnMove(relFrom, relTo)) {
-						position.epTarget=Util.getRelativeSquare(relTo-8, colour);
 						move.isValid=true;
+						position.epTarget=Util.getRelativeSquare(relTo-8, colour);
 					}
 
 					else if(Util.isPawnMove(relFrom, relTo)) {
@@ -193,10 +183,10 @@ Game.prototype.move=function(from, to, promoteTo, dryrun) {
 					}
 
 					else if(capturing && to===this.position.epTarget) {
+						move.isValid=true;
 						move.boardChanges[Util.getEpPawn(from, to)]=SQ_EMPTY;
 						label.sign=SIGN_CAPTURE;
 						move.capturedPiece=Util.getPiece(PAWN, oppColour);
-						move.isValid=true;
 					}
 				}
 
@@ -330,6 +320,7 @@ Game.prototype.move=function(from, to, promoteTo, dryrun) {
 							}
 
 							if(!throughCheck) {
+								move.isValid=true;
 								label.piece="";
 								label.to="";
 								label.special=CastlingDetails.signs[side];
@@ -337,28 +328,22 @@ Game.prototype.move=function(from, to, promoteTo, dryrun) {
 								move.boardChanges[rookSquare]=SQ_EMPTY;
 								move.boardChanges[kingDestination]=Util.getPiece(KING, colour);
 								move.boardChanges[rookDestination]=Util.getPiece(ROOK, colour);
-								move.isValid=true;
 							}
 						}
 					}
 				}
 			}
 
-			else { //standard (could be GAME_TYPE_STANDARD or just null)
+			else {
 				if(piece.type===KING && isUnobstructed) {
 					var castling=new CastlingDetails(from, to);
 
 					if(castling.isValid && this.position.castlingRights.get(colour, castling.Side)) {
-						//not blocked or through check
-
 						var throughCheck=false;
 						var between=Util.getSquaresBetween(from, to);
-						var n;
 
 						for(var i=0; i<between.length; i++) {
-							n=between[i];
-
-							if(Util.getAllAttackers(this.position.board, n, oppColour).length>0) {
+							if(Util.getAllAttackers(this.position.board, between[i], oppColour).length>0) {
 								throughCheck=true;
 
 								break;
@@ -366,6 +351,7 @@ Game.prototype.move=function(from, to, promoteTo, dryrun) {
 						}
 
 						if(!Util.isBlocked(this.position.board, from, castling.rookStartPos) && !throughCheck) {
+							move.isValid=true;
 							label.piece="";
 							label.to="";
 							label.special=castling.sign;
@@ -373,7 +359,6 @@ Game.prototype.move=function(from, to, promoteTo, dryrun) {
 							move.boardChanges[to]=Util.getPiece(KING, colour);
 							move.boardChanges[castling.rookStartPos]=SQ_EMPTY;
 							move.boardChanges[castling.rookEndPos]=Util.getPiece(ROOK, colour);
-							move.isValid=true;
 						}
 					}
 				}
@@ -439,8 +424,7 @@ Game.prototype.move=function(from, to, promoteTo, dryrun) {
 			}
 
 			if(!dryrun) {
-				this.drawOffered=null; //FIXME using WHITE/BLACK/null for this .. call it "drawOfferedBy" or something?
-				this.undoRequested=false;
+				this.drawOffered=false;
 
 				if(this.isMated(oppColour)) {
 					this._gameOver(Result.WinResult[colour], RESULT_DETAILS_CHECKMATE);
@@ -521,25 +505,23 @@ Game.prototype.canMate=function(colour) {
 
 	var piece, pieceColour, pieceType;
 
-	for(var sq=0; sq<64; sq++) {
-		piece=this.position.board[sq];
-		pieceColour=Util.getColour(piece);
-		pieceType=Util.getType(piece);
+	for(var square=0; square<64; square++) {
+		piece=new Piece(this.position.board[square]);
 
-		if(pieceType!==SQ_EMPTY && pieceType!==KING) {
-			if(pieceColour===colour && (pieceType===PAWN || pieceType===ROOK || pieceType===QUEEN)) {
+		if(piece.type!==SQ_EMPTY && piece.type!==KING) {
+			if(piece.colour===colour && (piece.type===PAWN || piece.type===ROOK || piece.type===QUEEN)) {
 				return true;
 			}
 
-			if(pieceType===BISHOP) {
-				bishops[pieceColour]++;
+			if(piece.type===BISHOP) {
+				bishops[piece.colour]++;
+				pieces[BISHOP]++;
 			}
 
-			if(pieceType===KNIGHT) {
-				knights[pieceColour]++;
+			if(piece.type===KNIGHT) {
+				knights[piece.colour]++;
+				pieces[KNIGHT]++;
 			}
-
-			pieces[pieceType]++;
 		}
 	}
 
@@ -557,7 +539,6 @@ Game.prototype.undo=function() {
 Game.prototype.squareContainsMovablePiece=function(square) {
 	var piece=this.board.getSquare(square);
 	var colour=Util.getColour(piece);
-	var result=false;
 	var reachable;
 
 	if(piece!==SQ_EMPTY) {
@@ -565,14 +546,12 @@ Game.prototype.squareContainsMovablePiece=function(square) {
 
 		for(var i=0; i<reachable.length; i++) {
 			if(this.move(square, reachable[i], QUEEN, true).isLegal) {
-				result=true;
-
-				break;
+				return true;
 			}
 		}
 	}
 
-	return result;
+	return false;
 }
 
 Game.prototype._checkTime=function(colour) {
@@ -612,7 +591,5 @@ Game.prototype._gameOver=function(result, result_details) {
 	this.state=GAME_STATE_FINISHED;
 	this.result=result;
 	this.resultDetails=result_details;
-	this.drawOffered=null;
-	this.undoGranted=false;
-	this.undoRequested=false;
+	this.drawOffered=false;
 }
