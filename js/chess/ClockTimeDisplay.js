@@ -1,9 +1,3 @@
-/*
-NOTE parsing functionality has been removed - users input the initial time and
-increment in separate boxes so there is no need for it, and the old Parse didn't
-understand overtime.
-*/
-
 var ClockTimeDisplay={
 	/*
 	get short display string for basic time controls, e.g. "10m" or "10/5"
