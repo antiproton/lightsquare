@@ -1,5 +1,5 @@
 var Fen={
-	INITIAL: "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",
+	STARTING_FEN: "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",
 	NONE: "-",
 	ACTIVE_WHITE: "w",
 	ACTIVE_BLACK:" b",
