@@ -37,7 +37,7 @@ TimeParser.parse=function(str, defaultUnits) {
 	this._reset();
 	this._next();
 
-	while(!this.eof()) {
+	while(!this._eof()) {
 		this._currentTime+=this._readTime(defaultUnits);
 	}
 
@@ -182,7 +182,7 @@ TimeParser._reset=function() {
 }
 
 TimeParser._readTime=function(defaultUnits) {
-	var number=this.readNumber();
+	var number=this._readNumber();
 	var unit=this._readUnits(defaultUnits);
 	var multiplier=this._secondsMultipliers[unit];
 
