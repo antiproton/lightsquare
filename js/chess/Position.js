@@ -2,6 +2,8 @@ function Position(fen) {
 	this.castlingRights=new CastlingRights();
 	this.board=[];
 	this.kingPositions=[];
+	this.kingPositions[WHITE]=null;
+	this.kingPositions[BLACK]=null;
 	this.active=WHITE;
 	this.epTarget=null;
 	this.fiftymoveClock=0;
@@ -12,14 +14,14 @@ function Position(fen) {
 	}
 
 	else {
-		this.setFen(FEN_INITIAL);
+		this.setFen(Fen.STARTING_FEN);
 	}
 }
 
 Position.prototype.setSquare=function(square, piece) {
 	this.board[square]=piece;
 
-	if(Util.type(piece)===KING) {
+	if(Util.getType(piece)===KING) {
 		this.kingPositions[Util.getColour(piece)]=square;
 	}
 }
@@ -27,30 +29,30 @@ Position.prototype.setSquare=function(square, piece) {
 Position.prototype.setFen=function(str) {
 	var fen=Fen.fenToArray(str);
 
-	this.active=Colour.getCode(fen[FEN_FIELD_ACTIVE]);
-	this.castlingRights.setFenString(fen[FEN_FIELD_CASTLING]);
+	this.active=Colour.getCode(fen[Fen.FIELD_ACTIVE]);
+	this.castlingRights.setFenString(fen[Fen.FIELD_CASTLING]);
 
-	if(fen[FEN_FIELD_EP]===FEN_NONE) {
+	if(fen[Fen.FIELD_EP]===Fen.NONE) {
 		this.epTarget=null;
 	}
 
 	else {
-		this.epTarget=Util.squareFromAlgebraic(fen[FEN_FIELD_EP]);
+		this.epTarget=Util.squareFromAlgebraic(fen[Fen.FIELD_EP]);
 	}
 
 	this.fiftymoveClock=0;
 
-	if(fen[FEN_FIELD_CLOCK]) {
-		this.fiftymoveClock=parseInt(fen[FEN_FIELD_CLOCK]);
+	if(fen[Fen.FIELD_CLOCK]) {
+		this.fiftymoveClock=parseInt(fen[Fen.FIELD_CLOCK]);
 	}
 
 	this.fullmove=1;
 
-	if(fen[FEN_FIELD_FULLMOVE]) {
-		this.fullmove=parseInt(fen[FEN_FIELD_FULLMOVE]);
+	if(fen[Fen.FIELD_FULLMOVE]) {
+		this.fullmove=parseInt(fen[Fen.FIELD_FULLMOVE]);
 	}
 
-	var board=Fen.fenPositionToArray(fen[FEN_FIELD_POSITION]);
+	var board=Fen.fenPositionToBoard(fen[Fen.FIELD_POSITION]);
 
 	for(var square=0; square<64; square++) {
 		this.setSquare(square, board[square]);
@@ -62,7 +64,7 @@ Position.prototype.getFen=function() {
 		Fen.arrayToFenPosition(this.board),
 		Colour.getFen(this.active),
 		this.castlingRights.getFenString(),
-		(this.epTarget===null)?FEN_NONE:Util.algebraicFromSquare(this.epTarget),
+		(this.epTarget===null)?Fen.NONE:Util.algebraicFromSquare(this.epTarget),
 		this.fiftymoveClock.toString(),
 		this.fullmove.toString()
 	]);
