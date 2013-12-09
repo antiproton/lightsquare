@@ -1,50 +1,61 @@
-var Result={};
+var Result={
+	SCORE_WIN: 1,
+	SCORE_DRAW: .5,
+	SCORE_LOSS: 0,
 
-Result.string={};
+	getDetailsString: function(white, black, result, resultDetails) {
+		var str;
+		var winner=[white, black][Result.winningColour[result]];
 
-Result.string[RESULT_WHITE]="1-0";
-Result.string[RESULT_BLACK]="0-1";
-Result.string[RESULT_DRAW]="\u00bd-\u00bd";
+		if(result===RESULT_DRAW) {
+			str="Drawn by ";
+		}
 
-Result.winResult=[
-	RESULT_WHITE,
-	RESULT_BLACK
-];
+		else {
+			str=winner+" won by ";
+		}
 
-Result.winningColour={};
+		str+=DbEnums[RESULT_DETAILS][resultDetails].description.toLowerCase();
 
-Result.winningColour[RESULT_WHITE]=WHITE;
-Result.winningColour[RESULT_BLACK]=BLACK;
+		return str;
+	},
 
-Result.detailsString=function(game) {
-	var str;
-	var winner=[game.white, game.black][Result.winningColour[game.result]];
+	getString: function(result) {
+		return Result._string[result];
+	},
 
-	if(game.result===RESULT_DRAW) {
-		str="Drawn by ";
+	getWinningColour: function(result) {
+		return Result._winningColour[result];
+	},
+
+	getWinResult: function(colour) {
+		return Result._winResult[colour];
+	},
+
+	getScore: function(result, colour) {
+		if(result===RESULT_DRAW) {
+			return Result.SCORE_DRAW;
+		}
+
+		if(colour===WHITE) {
+			return (result===RESULT_WHITE?Result.SCORE_WIN:Result.SCORE_LOSS);
+		}
+
+		if(colour===BLACK) {
+			return (result===RESULT_BLACK?Result.SCORE_WIN:Result.SCORE_LOSS);
+		}
 	}
+};
 
-	else {
-		str=winner+" won by ";
-	}
+Result._string={};
+Result._string[RESULT_WHITE]="1-0";
+Result._string[RESULT_BLACK]="0-1";
+Result._string[RESULT_DRAW]="\u00bd-\u00bd";
 
-	str+=DbEnums[RESULT_DETAILS][game.resultDetails].description.toLowerCase();
+Result._winResult=[];
+Result._winResult[WHITE]=RESULT_WHITE;
+Result._winResult[BLACK]=RESULT_BLACK;
 
-	return str;
-}
-
-
-
-	//getScore: function(result, colour) {
-	//	if(result===RESULT_DRAW) {
-	//		return SCORE_DRAW;
-	//	}
-	//
-	//	if(colour===WHITE) {
-	//		return result===RESULT_WHITE?SCORE_WIN:SCORE_LOSS;
-	//	}
-	//
-	//	if(colour===BLACK) {
-	//		return result===RESULT_BLACK?SCORE_WIN:SCORE_LOSS;
-	//	}
-	//},
+Result._winningColour={};
+Result._winningColour[RESULT_WHITE]=WHITE;
+Result._winningColour[RESULT_BLACK]=BLACK;

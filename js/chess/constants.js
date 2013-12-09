@@ -6,7 +6,6 @@ var FILES="abcdefgh";
 
 var WHITE=0;
 var BLACK=1;
-var SCORE_DRAW=0.5;
 
 var SQ_EMPTY=0x0;
 
