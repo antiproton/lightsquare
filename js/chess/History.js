@@ -5,21 +5,6 @@ function History() {
 	this.editMode=History.EDIT_MODE_BRANCH;
 	this.mainLine=this.createVariation();
 
-	/*
-	bulkUpdate - set this to true before adding a lot of moves to
-	the history
-
-	things that handle the Moved/SelectedMoveChanged events can then check it
-	to avoid doing things unnecessarily
-
-	e.g. updating bughouse pieces available needs to get every move, but bringing
-	the board up to date only needs to happen for the latest move
-	*/
-
-	this.bulkUpdate=false;
-
-	//FIXME should probably be a method maybe like history.bulkUpdate(function() {...});
-
 	this.SelectedMoveChanged=new Event(this);
 	this.Moved=new Event(this);
 	this.Update=new Event(this);
