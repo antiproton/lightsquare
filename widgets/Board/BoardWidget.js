@@ -19,13 +19,13 @@ function BoardWidget(parent) {
 
 	this._highlightedSquares={};
 
-	this._moveInfo=new _MoveInfo();
+	this._moveInfo=new MoveInfo();
 	this._squareMouseCurrentlyOver=null;
 	this._squareCurrentlyDraggingPieceOver=null;
 
 	this._boardStyle=BoardWidget.STYLE_BROWN;
 	this._viewingAs=WHITE;
-	this._showSurround=true;
+	this._showSurround=false;
 	this._showCoords=true;
 	this._coordsPadding=18;
 	this._squareSize=45;
@@ -377,7 +377,7 @@ BoardWidget.prototype._boardMouseMove=function(event) {
 		}
 
 		else {
-			this._moveInfo.mode=_MoveInfo.DRAG;
+			this._moveInfo.mode=MoveInfo.DRAG;
 			this._moveInfo.isInProgress=true;
 
 			this.PieceSelected.fire({
@@ -386,7 +386,7 @@ BoardWidget.prototype._boardMouseMove=function(event) {
 		}
 	}
 
-	if(this._moveInfo.selected && this._moveInfo.mode===_MoveInfo.DRAG) {
+	if(this._moveInfo.selected && this._moveInfo.mode===MoveInfo.DRAG) {
 		args={
 			square: square,
 			piece: this._moveInfo.piece,
@@ -410,7 +410,7 @@ BoardWidget.prototype._boardMouseUp=function(event) {
 	var args;
 	var square=this._squareFromMouseEvent(event);
 
-	if(this._moveInfo.isInProgress && this._moveInfo.mode===_MoveInfo.DRAG) {
+	if(this._moveInfo.isInProgress && this._moveInfo.mode===MoveInfo.DRAG) {
 		square=this._squareFromMouseEvent(event, true);
 	}
 
@@ -425,11 +425,11 @@ BoardWidget.prototype._boardMouseUp=function(event) {
 		cancel: false
 	};
 
-	if(this._moveInfo.mode===_MoveInfo.CLICK) {
+	if(this._moveInfo.mode===MoveInfo.CLICK) {
 		this.SquareClicked.fire(args);
 	}
 
-	else if(this._moveInfo.mode===_MoveInfo.DRAG && this._moveInfo.isInProgress) {
+	else if(this._moveInfo.mode===MoveInfo.DRAG && this._moveInfo.isInProgress) {
 		this.DragDrop.fire(args);
 	}
 
@@ -474,7 +474,7 @@ BoardWidget.prototype._boardMouseUp=function(event) {
 
 			if(!args.cancel) {
 				this._moveInfo.isInProgress=true;
-				this._moveInfo.mode=_MoveInfo.CLICK;
+				this._moveInfo.mode=MoveInfo.CLICK;
 
 				this.PieceSelected.fire({
 					square: square
@@ -590,7 +590,7 @@ BoardWidget.prototype._updateMouseOverInfo=function(event) {
 BoardWidget.prototype._updatePieceDragInfo=function(event) {
 	var square=this._squareFromMouseEvent(event, true);
 
-	if(this._moveInfo.isInProgress && this._moveInfo.mode===_MoveInfo.DRAG) {
+	if(this._moveInfo.isInProgress && this._moveInfo.mode===MoveInfo.DRAG) {
 		if(this.mouseIsOnBoard(event)) {
 			if(this._squareCurrentlyDraggingPieceOver!=square) {
 				if(this._squareCurrentlyDraggingPieceOver!==null) {
