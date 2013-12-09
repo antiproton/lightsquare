@@ -115,7 +115,7 @@ var Util={
 			case PAWN: {
 				return false;
 			}
-			
+
 			case KNIGHT: {
 				return ((diff[X]===2 && diff[Y]===1) || (diff[X]===1 && diff[Y]===2));
 			}
@@ -168,16 +168,15 @@ var Util={
 	getSquaresBetween: function(from, to, inclusive) {
 		var squares=[];
 
-		//go from lower to higher sq so same loop can be used in either dir
-
 		var temp=from;
+
 		from=Math.min(from, to);
 		to=Math.max(temp, to);
 
 		var fromCoords=Util.coordsFromSquare(from);
 		var toCoords=Util.coordsFromSquare(to);
 
-		var difference=Math.abs(from-to);
+		var difference=to-from;
 		var increment;
 
 		if(inclusive) {
@@ -197,7 +196,7 @@ var Util={
 		}
 
 		else if(Util.isRegularMove(ROOK, fromCoords, toCoords)) {
-			increment=difference>7?8:1; //?vertical:horizontal
+			increment=(difference>7?8:1); //?vertical:horizontal
 
 			for(var n=from+increment; n<to; n+=increment) {
 				squares.push(n);
@@ -208,7 +207,7 @@ var Util={
 			squares.push(to);
 		}
 
-		return arr;
+		return squares;
 	},
 
 	isBlocked: function(board, from, to) {
@@ -224,10 +223,11 @@ var Util={
 	},
 
 	/*
-	returns a list of squares reachable from "from" by a piece of type "type", including
+	get a list of squares reachable from "from" by a piece of type "type", including
 	all pawn moves and castling, without taking into account any other information or
-	rules such as not moving through other pieces, moving into check, or capturing own
-	pieces.
+	rules such as not moving through other pieces, moving into check, capturing own
+	pieces or any castling rules other than "moving the king two squares to the left
+	or right".
 	*/
 
 	getReachableSquares: function(type, from, colour) {
@@ -299,23 +299,18 @@ var Util={
 			}
 
 			case ROOK: {
-				/*
-				the algorithm here is to go off on both axes at once adding squares
-				that are on the same file or rank as the from square
-				*/
-
-				var squareOnRank, squareOnFile;
+				var squareOnSameRank, squareOnSameFile;
 
 				for(var n=0; n<8; n++) {
-					squareOnRank=(fromCoords[Y]*8)+n;
-					squareOnFile=fromCoords[X]+(n*8);
+					squareOnSameRank=(fromCoords[Y]*8)+n;
+					squareOnSameFile=fromCoords[X]+(n*8);
 
-					if(squareOnRank!==from) {
-						squares.push(squareOnRank);
+					if(squareOnSameRank!==from) {
+						squares.push(squareOnSameRank);
 					}
 
-					if(squareOnFile!==from) {
-						squares.push(squareOnFile);
+					if(squareOnSameFile!==from) {
+						squares.push(squareOnSameFile);
 					}
 				}
 
@@ -323,16 +318,16 @@ var Util={
 			}
 
 			case QUEEN: {
-				var rookMovesAvailable=Util.getReachableSquares(ROOK, from, colour);
-				var bishopMovesAvailable=Util.getReachableSquares(BISHOP, from, colour);
+				var rookSquares=Util.getReachableSquares(ROOK, from, colour);
+				var bishopSquares=Util.getReachableSquares(BISHOP, from, colour);
 
-				squares=rookMovesAvailable.concat(bishopMovesAvailable);
+				squares=rookSquares.concat(bishopSquares);
 
 				break;
 			}
 
 			case KING: {
-				//regular king moves:
+				//regular king moves
 
 				var x, y;
 
@@ -350,12 +345,12 @@ var Util={
 					}
 				}
 
-				//castling moves:
+				//castling moves
 
-				var xDiff=[-2, 2];
+				var xDiffs=[-2, 2];
 
-				for(var i=0; i<xDiff.length; i++) {
-					x=fromCoords[X]+xDiff[i];
+				for(var i=0; i<xDiffs.length; i++) {
+					x=fromCoords[X]+xDiffs[i];
 
 					if(x>-1 && x<8) {
 						squares.push(Util.squareFromCoords([x, fromCoords[Y]]));
