@@ -5,7 +5,9 @@ function Board() {
 		this.board.push(SQ_EMPTY);
 	}
 
-	this.kings=[null, null];
+	this.kingPositions=[]
+	this.kingPositions[WHITE]=null;
+	this.kingPositions[BLACK]=null;
 }
 
 Board.prototype.move=function(from, to) {
@@ -17,18 +19,12 @@ Board.prototype.setSquare=function(square, piece) {
 	this.board[square]=piece;
 
 	if(Util.getType(piece)===KING) {
-		this.kings[Util.getColour(piece)]=square;
+		this.kingPositions[Util.getColour(piece)]=square;
 	}
 }
 
 Board.prototype.getSquare=function(square) {
 	return this.board[square];
-}
-
-Board.prototype.setFen=function(fen) {
-	var fields=Fen.fenToArray(fen);
-
-	this.board=Fen.fenPositionToBoard(fields[Fen.FIELD_POSITION]);
 }
 
 Board.prototype.setBoard=function(board) {
