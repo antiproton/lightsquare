@@ -133,7 +133,7 @@ Game.prototype.move=function(from, to, promoteTo, dryrun) {
 		}
 
 		if(targetPiece!==null && targetPiece.colour===oppColour) {
-			move.label.sign=SIGN_CAPTURE;
+			move.label.sign=MoveLabel.SIGN_CAPTURE;
 			move.capturedPiece=this.position.board[to];
 		}
 
@@ -150,7 +150,7 @@ Game.prototype.move=function(from, to, promoteTo, dryrun) {
 
 			if(capturing) {
 				move.label.disambiguation=Util.file_str(from);
-				move.label.sign=SIGN_CAPTURE;
+				move.label.sign=MoveLabel.SIGN_CAPTURE;
 			}
 
 			move.label.piece="";
@@ -160,7 +160,7 @@ Game.prototype.move=function(from, to, promoteTo, dryrun) {
 
 				if(promoteTo>=KNIGHT && promoteTo<=QUEEN) {
 					move.boardChanges[to]=Util.getPiece(promoteTo, colour);
-					move.label.special=SIGN_PROMOTE+Fen.getPieceChar[Util.getPiece(promoteTo, WHITE)];
+					move.label.special=MoveLabel.SIGN_PROMOTE+Fen.getPieceChar[Util.getPiece(promoteTo, WHITE)];
 					move.promoteTo=promoteTo;
 					validPromotion=true;
 				}
@@ -180,7 +180,7 @@ Game.prototype.move=function(from, to, promoteTo, dryrun) {
 					else if(capturing && to===this.position.epTarget) {
 						move.isValid=true;
 						move.boardChanges[Util.getEpPawn(from, to)]=SQ_EMPTY;
-						move.label.sign=SIGN_CAPTURE;
+						move.label.sign=MoveLabel.SIGN_CAPTURE;
 						move.capturedPiece=Util.getPiece(PAWN, oppColour);
 					}
 				}
@@ -411,11 +411,11 @@ Game.prototype.move=function(from, to, promoteTo, dryrun) {
 			}
 
 			if(this.isInCheck(oppColour)) {
-				move.label.check=SIGN_CHECK;
+				move.label.check=MoveLabel.SIGN_CHECK;
 			}
 
 			if(this.isMated(oppColour)) {
-				move.label.check=SIGN_MATE;
+				move.label.check=MoveLabel.SIGN_MATE;
 			}
 
 			if(!dryrun) {
