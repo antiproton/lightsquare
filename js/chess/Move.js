@@ -21,7 +21,7 @@ function Move() {
 	this.to=null;
 	this.piece=null; //for bughouse moves
 	this.isVariation=false; //for distinguishing between moves and variations in a move list
-	this.label="";
+	this.label=new MoveLabel();
 	this.isSelected=false;
 }
 
