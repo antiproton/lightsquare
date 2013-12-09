@@ -42,6 +42,63 @@ BoardWidget.STYLE_BROWN="brown";
 BoardWidget.STYLE_GREEN="green";
 BoardWidget.STYLE_BLUE="blue";
 
+BoardWidget.prototype.setSquare=function(square, piece) {
+	Board.prototype.setSquare.call(this, square, piece);
+
+	if(this._htmlUpdatesEnabled) {
+		this._setHtmlSquare(square, piece);
+	}
+}
+
+BoardWidget.prototype.highlightSquares=function(squares, highlightType) {
+	if(!is_array(squares)) {
+		squares=[squares];
+	}
+
+	if(!(highlightType in this._highlightedSquares)) {
+		this._highlightedSquares[highlightType]=[];
+	}
+
+	this._highlightedSquares[highlightType]=this._highlightedSquares.concat(squares);
+
+	for(var i=0; i<squares.length; i++) {
+		this._uiSquares[squares[i]].setHighlight(highlightType);
+	}
+}
+
+BoardWidget.prototype.unhighlightSquares=function(highlightType) {
+	for(var i=0; i<this._highlightedSquares[highlightType].length; i++) {
+		this._uiSquares[this._highlightedSquares[highlightType][i]].setHighlight(BoardWidget.HIGHLIGHT_NONE);
+	}
+
+	this._highlightedSquares[highlightType]=[];
+}
+
+BoardWidget.prototype.getBoardSize=function() {
+	return this._squareSize*8;
+}
+
+BoardWidget.prototype.mouseIsOnBoard=function(event, use_offsets, offsets) {
+	offsets=offsets||[this._moveInfo.mouseOffsets[X], this._moveInfo.mouseOffsets[Y]];
+
+	var x=event.pageX;
+	var y=event.pageY;
+
+	if(use_offsets) {
+		x+=(Math.round(this._squareSize/2)-offsets[X]);
+		y+=(Math.round(this._squareSize/2)-offsets[Y]);
+	}
+
+	var boardOffsets=getoffsets(this._template.board);
+
+	x-=boardOffsets[X];
+	y-=boardOffsets[Y];
+
+	y=this.getBoardSize()-y;
+
+	return this._isXyOnBoard(x, y);
+}
+
 BoardWidget.prototype.setHtmlUpdatesEnabled=function(enabled) {
 	this._htmlUpdatesEnabled=enabled;
 
@@ -278,14 +335,6 @@ BoardWidget.prototype._setBoardStyle=function(newStyle, oldStyle) {
 	this._boardStyle=newStyle;
 }
 
-BoardWidget.prototype.setSquare=function(square, piece) {
-	Board.prototype.setSquare.call(this, square, piece);
-
-	if(this._htmlUpdatesEnabled) {
-		this._setHtmlSquare(square, piece);
-	}
-}
-
 BoardWidget.prototype._setHtmlSquare=function(square, piece) {
 	this._uiSquares[square].setPiece(piece);
 }
@@ -502,59 +551,10 @@ BoardWidget.prototype._boardMouseUp=function(event) {
 	this._updatePieceDragInfo(event);
 }
 
-BoardWidget.prototype.mouseIsOnBoard=function(event, use_offsets, offsets) {
-	offsets=offsets||[this._moveInfo.mouseOffsets[X], this._moveInfo.mouseOffsets[Y]];
-
-	var x=event.pageX;
-	var y=event.pageY;
-
-	if(use_offsets) {
-		x+=(Math.round(this._squareSize/2)-offsets[X]);
-		y+=(Math.round(this._squareSize/2)-offsets[Y]);
-	}
-
-	var boardOffsets=getoffsets(this._template.board);
-
-	x-=boardOffsets[X];
-	y-=boardOffsets[Y];
-
-	y=this.getBoardSize()-y;
-
-	return this._isXyOnBoard(x, y);
-}
-
 BoardWidget.prototype._isXyOnBoard=function(x, y) {
 	var boardSize=this.getBoardSize();
 
 	return !(x<0 || x>boardSize || y<0 || y>boardSize);
-}
-
-BoardWidget.prototype.highlightSquares=function(squares, highlightType) {
-	if(!is_array(squares)) {
-		squares=[squares];
-	}
-
-	if(!(highlightType in this._highlightedSquares)) {
-		this._highlightedSquares[highlightType]=[];
-	}
-
-	this._highlightedSquares[highlightType]=this._highlightedSquares.concat(squares);
-
-	for(var i=0; i<squares.length; i++) {
-		this._uiSquares[squares[i]].setHighlight(highlightType);
-	}
-}
-
-BoardWidget.prototype.unhighlightSquares=function(highlightType) {
-	for(var i=0; i<this._highlightedSquares[highlightType].length; i++) {
-		this._uiSquares[this._highlightedSquares[highlightType][i]].setHighlight(BoardWidget.HIGHLIGHT_NONE);
-	}
-
-	this._highlightedSquares[highlightType]=[];
-}
-
-BoardWidget.prototype.getBoardSize=function() {
-	return this._squareSize*8;
 }
 
 BoardWidget.prototype._updateMouseOverInfo=function(event) {
@@ -627,10 +627,4 @@ BoardWidget.prototype._updatePieceDragInfo=function(event) {
 
 		this._squareCurrentlyDraggingPieceOver=null;
 	}
-}
-
-BoardWidget.prototype.setFen=function(fen) {
-	Board.prototype.setFen.call(this, fen);
-
-	this._updateSquares();
 }
