@@ -47,7 +47,7 @@ var FEN_FIELD_EP=3;
 var FEN_FIELD_CLOCK=4;
 var FEN_FIELD_FULLMOVE=5;
 
-var RANK="12345678";
+var RANK="12345678"; //FIXME see if these can be dropped
 var FILE="abcdefgh";
 
 var WHITE=0;
@@ -77,8 +77,8 @@ var BLACK_ROOK=0xC;
 var BLACK_QUEEN=0xD;
 var BLACK_KING=0xE;
 
-var TYPE=~8;
-var COLOUR=3;
+var BITWISE_UTIL_TYPE=~8;
+var BITWISE_UTIL_COLOUR=3;
 
 var KINGSIDE=0;
 var QUEENSIDE=1;

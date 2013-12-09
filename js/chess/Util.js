@@ -23,8 +23,13 @@ var Util={
 		return (fullmove-1)*2;
 	},
 
-	fullmoveDotFromColour: function(colour) { //NOTE relies on colours being 0 and 1
-		return [".", "..."][colour];
+	fullmoveDotFromColour: function(colour) {
+		var dots=[];
+
+		dots[WHITE]=".";
+		dots[BLACK]="...";
+
+		return dots[colour];
 	},
 
 	getHalfmoveIndex: function(halfmove) {
@@ -32,15 +37,15 @@ var Util={
 	},
 
 	getType: function(piece) {
-		return piece&TYPE;
+		return piece&BITWISE_UTIL_TYPE;
 	},
 
 	getColour: function(piece) {
-		return piece>>COLOUR;
+		return piece>>BITWISE_UTIL_COLOUR;
 	},
 
 	getPiece: function(type, colour) {
-		return (colour<<COLOUR)|type;
+		return (colour<<BITWISE_UTIL_COLOUR)|type;
 	},
 
 	isOnBoard: function(square) {
@@ -503,4 +508,4 @@ var Util={
 	elo: function(p, o, s) {
 		return Math.round((p+(((p>-1 && p<2100)?32:((p>2099 && p<2400)?24:16))*(s-(1/(1+(Math.pow(10, ((o-p)/400)))))))));
 	}
-}
+};
