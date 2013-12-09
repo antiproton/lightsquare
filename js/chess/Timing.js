@@ -3,42 +3,27 @@ see the serverside version for notes
 */
 
 var Timing={
-	overtime_chance: function(cutoff) {
-		var high_chance=15;
-		var low_chance=90;
-		var scale=low_chance-high_chance;
+	_CHANCE_OF_OVERTIME: .5,
+	_AVG_MOVES_PER_GAME: 40,
 
-		if(cutoff<high_chance) {
-			return 1;
-		}
-
-		else if(cutoff>low_chance) {
-			return 0.01;
-		}
-
-		else {
-			return (1/scale*(cutoff-high_chance));
-		}
-	},
-
-	GetFormat: function(style, initial, increment, overtime, overtime_increment, overtime_cutoff) {
-		if(style!==TIMING_BRONSTEIN_DELAY && style!==TIMING_FISCHER && style!==TIMING_FISCHER_AFTER && style!==TIMING_SIMPLE_DELAY) {
+	getGameFormat: function(style, initial, increment, overtime, overtimeIncrement, overtimeCutoff) {
+		if([TIMING_BRONSTEIN_DELAY, TIMING_FISCHER, TIMING_FISCHER_AFTER, TIMING_SIMPLE_DELAY].indexOf(style)===-1) {
 			increment=0;
 		}
 
-		var total_added=increment*Timing.AVG_MOVES_PER_GAME;
+		var totalAdded=increment*Timing._AVG_MOVES_PER_GAME;
 
 		if(overtime) {
-			total_added+=overtime_increment*Timing.overtime_chance(overtime_cutoff);
+			totalAdded+=overtimeIncrement*Timing._CHANCE_OF_OVERTIME;
 		}
 
-		var total_time=initial+total_added;
-		var max_time;
+		var totalTime=initial+totalAdded;
+		var maxTime;
 
-		for(var format in Timing.MaxTimes) {
-			max_time=Timing.MaxTimes[format];
+		for(var format in Timing._maxTimesByFormat) {
+			maxTime=Timing._maxTimesByFormat[format];
 
-			if(total_time<=max_time) {
+			if(totalTime<=maxTime) {
 				return format;
 			}
 		}
@@ -47,11 +32,9 @@ var Timing={
 	}
 };
 
-Timing.AVG_MOVES_PER_GAME=40;
+Timing._maxTimesByFormat={};
 
-Timing.MaxTimes={};
-
-Timing.MaxTimes[GAME_FORMAT_BULLET]=60;
-Timing.MaxTimes[GAME_FORMAT_BLITZ]=600;
-Timing.MaxTimes[GAME_FORMAT_QUICK]=1800;
-Timing.MaxTimes[GAME_FORMAT_STANDARD]=86400;
+Timing._maxTimesByFormat[GAME_FORMAT_BULLET]=60;
+Timing._maxTimesByFormat[GAME_FORMAT_BLITZ]=600;
+Timing._maxTimesByFormat[GAME_FORMAT_QUICK]=1800;
+Timing._maxTimesByFormat[GAME_FORMAT_STANDARD]=86400;
