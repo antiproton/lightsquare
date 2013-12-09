@@ -5,6 +5,11 @@ it handles regular notation (kqKQ) as well as the file notation used
 in Chess960 FENs (ahAH)
 */
 
+/*
+FIXME this is broken - it will mix up signs from different modes.  it should
+really just take a mode in the constructor and leave it at that
+*/
+
 function CastlingRights() {
 	this.rightsBySide=[];
 	this.rightsByFile=[];
@@ -36,49 +41,6 @@ function CastlingRights() {
 		}
 	}
 }
-
-CastlingRights.MODE_SIDE=0;
-CastlingRights.MODE_FILE=1;
-
-CastlingRights._sideChars=[];
-CastlingRights._sideChars[WHITE]=[];
-CastlingRights._sideChars[BLACK]=[];
-CastlingRights._sideChars[WHITE][KINGSIDE]=FEN_WHITE_CASTLE_KS;
-CastlingRights._sideChars[WHITE][QUEENSIDE]=FEN_WHITE_CASTLE_QS;
-CastlingRights._sideChars[BLACK][KINGSIDE]=FEN_BLACK_CASTLE_KS;
-CastlingRights._sideChars[BLACK][QUEENSIDE]=FEN_BLACK_CASTLE_QS;
-
-CastlingRights._fileChars=[];
-
-CastlingRights._fileChars[WHITE]=[
-	FEN_WHITE_CASTLE_A,
-	FEN_WHITE_CASTLE_B,
-	FEN_WHITE_CASTLE_C,
-	FEN_WHITE_CASTLE_D,
-	FEN_WHITE_CASTLE_E,
-	FEN_WHITE_CASTLE_F,
-	FEN_WHITE_CASTLE_G,
-	FEN_WHITE_CASTLE_H
-];
-
-CastlingRights._fileChars[BLACK]=[
-	FEN_BLACK_CASTLE_A,
-	FEN_BLACK_CASTLE_B,
-	FEN_BLACK_CASTLE_C,
-	FEN_BLACK_CASTLE_D,
-	FEN_BLACK_CASTLE_E,
-	FEN_BLACK_CASTLE_F,
-	FEN_BLACK_CASTLE_G,
-	FEN_BLACK_CASTLE_H
-];
-
-CastlingRights._sideFromFile=[];
-CastlingRights._sideFromFile[0]=QUEENSIDE;
-CastlingRights._sideFromFile[7]=KINGSIDE;
-
-CastlingRights._fileFromSide=[]
-CastlingRights._fileFromSide[KINGSIDE]=7;
-CastlingRights._fileFromSide[QUEENSIDE]=0;
 
 CastlingRights.prototype.reset=function() {
 	var colours=[WHITE, BLACK];
@@ -138,7 +100,7 @@ CastlingRights.prototype.get=function(colour, index, mode) {
 CastlingRights.prototype.setFenString=function(fenString) {
 	this.reset();
 
-	if(fenString!==FEN_NONE) {
+	if(fenString!==Fen.NONE) {
 		var arr=fenString.split("");
 		var ch, lowerChar, upperChar;
 		var colour, mode, index;
@@ -154,7 +116,7 @@ CastlingRights.prototype.setFenString=function(fenString) {
 
 			switch(mode) {
 				case CastlingRights.MODE_SIDE: {
-					index=(FEN_BLACK_CASTLE_KS+FEN_BLACK_CASTLE_QS).indexOf(lowerChar);
+					index=(Fen.BLACK_CASTLE_KS+Fen.BLACK_CASTLE_QS).indexOf(lowerChar);
 
 					break;
 				}
@@ -198,8 +160,51 @@ CastlingRights.prototype.getFenString=function() {
 	var fenString=rights[WHITE].join("")+rights[BLACK].join("");
 
 	if(fenString==="") {
-		fenString=FEN_NONE;
+		fenString=Fen.NONE;
 	}
 
 	return fenString;
 }
+
+CastlingRights.MODE_SIDE=0;
+CastlingRights.MODE_FILE=1;
+
+CastlingRights._sideChars=[];
+CastlingRights._sideChars[WHITE]=[];
+CastlingRights._sideChars[BLACK]=[];
+CastlingRights._sideChars[WHITE][KINGSIDE]=Fen.WHITE_CASTLE_KS;
+CastlingRights._sideChars[WHITE][QUEENSIDE]=Fen.WHITE_CASTLE_QS;
+CastlingRights._sideChars[BLACK][KINGSIDE]=Fen.BLACK_CASTLE_KS;
+CastlingRights._sideChars[BLACK][QUEENSIDE]=Fen.BLACK_CASTLE_QS;
+
+CastlingRights._fileChars=[];
+
+CastlingRights._fileChars[WHITE]=[
+	Fen.WHITE_CASTLE_A,
+	Fen.WHITE_CASTLE_B,
+	Fen.WHITE_CASTLE_C,
+	Fen.WHITE_CASTLE_D,
+	Fen.WHITE_CASTLE_E,
+	Fen.WHITE_CASTLE_F,
+	Fen.WHITE_CASTLE_G,
+	Fen.WHITE_CASTLE_H
+];
+
+CastlingRights._fileChars[BLACK]=[
+	Fen.BLACK_CASTLE_A,
+	Fen.BLACK_CASTLE_B,
+	Fen.BLACK_CASTLE_C,
+	Fen.BLACK_CASTLE_D,
+	Fen.BLACK_CASTLE_E,
+	Fen.BLACK_CASTLE_F,
+	Fen.BLACK_CASTLE_G,
+	Fen.BLACK_CASTLE_H
+];
+
+CastlingRights._sideFromFile=[];
+CastlingRights._sideFromFile[0]=QUEENSIDE;
+CastlingRights._sideFromFile[7]=KINGSIDE;
+
+CastlingRights._fileFromSide=[]
+CastlingRights._fileFromSide[KINGSIDE]=7;
+CastlingRights._fileFromSide[QUEENSIDE]=0;

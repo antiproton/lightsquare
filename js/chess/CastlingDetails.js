@@ -4,7 +4,7 @@ function CastlingDetails(from, to) {
 	this.rookStartPos;
 	this.rookEndPos;
 	this.sign;
-	
+
 	var kingEndSquares=[];
 
 	kingEndSquares[KINGSIDE]=from+2;
@@ -38,5 +38,5 @@ function CastlingDetails(from, to) {
 }
 
 CastlingDetails.signs=[];
-CastlingDetails.signs[KINGSIDE]=SIGN_CASTLE_KS;
-CastlingDetails.signs[QUEENSIDE]=SIGN_CASTLE_QS;
+CastlingDetails.signs[KINGSIDE]=MoveLabel.SIGN_CASTLE_KS;
+CastlingDetails.signs[QUEENSIDE]=MoveLabel.SIGN_CASTLE_QS;

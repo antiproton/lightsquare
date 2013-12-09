@@ -23,16 +23,16 @@ var Colour={
 };
 
 Colour._codeFromFen={};
-Colour._codeFromFen[FEN_ACTIVE_WHITE]=WHITE;
-Colour._codeFromFen[FEN_ACTIVE_BLACK]=BLACK;
+Colour._codeFromFen[Fen.ACTIVE_WHITE]=WHITE;
+Colour._codeFromFen[Fen.ACTIVE_BLACK]=BLACK;
 
 Colour._fenFromCode=[];
-Colour._fenFromCode[WHITE]=FEN_ACTIVE_WHITE;
-Colour._fenFromCode[BLACK]=FEN_ACTIVE_BLACK;
+Colour._fenFromCode[WHITE]=Fen.ACTIVE_WHITE;
+Colour._fenFromCode[BLACK]=Fen.ACTIVE_BLACK;
 
 Colour._codeFromName={
-	white: WHITE,
-	black: BLACK
+	"white": WHITE,
+	"black": BLACK
 };
 
 Colour._nameFromCode=[];

@@ -35,6 +35,8 @@ $widgetLoader->load([
 
 		script_tags_w("/js/constants.js");
 		script_tags_w("/js/chess/constants.js");
+		script_tags_w("/js/chess/MoveLabel.js");
+		script_tags_w("/js/chess/Fen.js");
 		script_tags_w("/js/chess");
 		?>
 		<script>
@@ -76,7 +78,7 @@ $widgetLoader->load([
 
 
 		tableWidget.board.setSquareSize(45);
-		tableWidget.board.setFen(FEN_INITIAL);
+		tableWidget.board.setFen(Fen.INITIAL);
 
 
 		</script>

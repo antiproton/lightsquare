@@ -1,4 +1,7 @@
 var Util={
+	_BITWISE_TYPE: ~8,
+	_BITWISE_COLOUR: 3,
+
 	colourFromHalfmove: function(halfmove) {
 		return (Util.getHalfmoveIndex(halfmove)===1?BLACK:WHITE);
 	},
@@ -37,15 +40,15 @@ var Util={
 	},
 
 	getType: function(piece) {
-		return piece&BITWISE_UTIL_TYPE;
+		return piece&Util._BITWISE_TYPE;
 	},
 
 	getColour: function(piece) {
-		return piece>>BITWISE_UTIL_COLOUR;
+		return piece>>Util._BITWISE_COLOUR;
 	},
 
 	getPiece: function(type, colour) {
-		return (colour<<BITWISE_UTIL_COLOUR)|type;
+		return (colour<<Util._BITWISE_COLOUR)|type;
 	},
 
 	isOnBoard: function(square) {

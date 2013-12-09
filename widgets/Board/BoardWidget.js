@@ -232,8 +232,8 @@ BoardWidget.prototype._updateHtmlCoords=function() {
 				fileIndex=7-i;
 			}
 
-			this._coords.rank[i].innerHTML=RANK.charAt(rankIndex);
-			this._coords.file[i].innerHTML=FILE.charAt(fileIndex);
+			this._coords.rank[i].innerHTML=RANKS.charAt(rankIndex);
+			this._coords.file[i].innerHTML=FILES.charAt(fileIndex);
 		}
 	}
 }
