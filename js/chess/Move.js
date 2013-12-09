@@ -10,6 +10,8 @@ function Move() {
 	this.success=false; //whether the move has been applied successfully (this can be false for legal moves)
 	this.mtime=null;
 
+	this.halfmove=null;
+	this.moveIndex=null;
 	this.isCastling=false;
 	this.capturedPiece=null;
 	this.promoteTo=null;
@@ -17,7 +19,6 @@ function Move() {
 	this.boardChanges=[]; //list of objects that describe changes to apply to the board
 	this.from=null;
 	this.to=null;
-	//TODO rename to from and to
 	this.piece=null; //for bughouse moves
 	this.isVariation=false; //for distinguishing between moves and variations in a move list
 	this.label="";
