@@ -143,7 +143,7 @@ var TimeParser=(function() {
 			var timeString="0";
 
 			if(time>0) {
-				var sections={};
+				var parts={};
 				var remaining=time;
 				var divider, quantity;
 
@@ -161,19 +161,19 @@ var TimeParser=(function() {
 					if(remaining>=divider) {
 						quantity=Math.floor(remaining/divider);
 						remaining=remaining%divider;
-						sections[units[i]]=quantity;
+						parts[units[i]]=quantity;
 					}
 				}
 
 				var unitStrings=[];
 
-				for(var unit in sections) {
+				for(var unit in parts) {
 					if(unit===defaultUnits && time%secondsMultipliers[unit]===0 && !displayDefaultUnits) {
-						unitStrings.push(sections[unit]);
+						unitStrings.push(parts[unit]);
 					}
 
 					else {
-						unitStrings.push(sections[unit]+unit);
+						unitStrings.push(parts[unit]+unit);
 					}
 				}
 
