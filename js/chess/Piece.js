@@ -1,6 +1,6 @@
 function Piece(piece) {
-	this.type=Util.type(piece);
-	this.colour=Util.colour(piece);
+	this.type=Util.getType(piece);
+	this.colour=Util.getColour(piece);
 }
 
 Piece.values=[];

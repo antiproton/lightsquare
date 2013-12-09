@@ -1,17 +1,12 @@
 function Game() {
 	this.Moved=new Event(this);
 
-	this.owner=null;
-	this.white=null;
-	this.black=null;
 	this.state=GAME_STATE_IN_PROGRESS;
-	this.fen=null;
 	this.mtimeStart=mtime();
 	this.mtimeFinish=null;
 	this.type=GAME_TYPE_STANDARD;
 	this.variant=VARIANT_STANDARD;
 	this.subvariant=SUBVARIANT_NONE;
-	this.format=GAME_FORMAT_QUICK;
 	this.result=null;
 	this.resultDetails=null;
 	this.clockStartIndex=1;
@@ -49,15 +44,15 @@ function Game() {
 
 Game.prototype.setStartingFen=function(fen) {
 	this.startingPosition.setFen(fen);
-	this.setFen(fen);
+	this.position.setFen(fen);
+	this.board.setBoard(this.position.board);
+	this.history.clear();
+	this.history.setStartingColour(this.position.active);
+	this.history.setStartingFullmove(this.position.fullmove);
 }
 
-Game.prototype.setFen=function(fen) {
-	this.history.clear();
-	this.position.setFen(fen);
-	this.board.setFen(fen);
-	this.history.startingColour.set(this.position.active);
-	this.history.startingFullmove.set(this.position.fullmove);
+Game.prototype.getStartingFen=function() {
+	return this.startingPosition.getFen();
 }
 
 Game.prototype.countLegalMoves=function(colour) {
@@ -83,15 +78,15 @@ Game.prototype.countLegalMoves=function(colour) {
 
 Game.prototype.getLegalMovesFrom=function(square) {
 	var legalMoves=[];
-	var available;
-	var piece=this.position.board[square];
+	var piece, reachableSquares;
 
-	if(piece!==SQ_EMPTY) {
-		available=Util.getReachableSquares(Util.getType(piece), square, Util.getColour(piece));
+	if(this.position.board[square]!==SQ_EMPTY) {
+		piece=new Piece(this.position.board[square]);
+		reachableSquares=Util.getReachableSquares(piece.type, square, piece.colour);
 
-		for(var n=0; n<available.length; n++) {
-			if(this.move(square, available[n], QUEEN, true).legal) {
-				legalMoves.push(available[n]);
+		for(var i=0; i<reachableSquares.length; i++) {
+			if(this.move(square, reachableSquares[i], QUEEN, true).isLegal) {
+				legalMoves.push(reachableSquares[i]);
 			}
 		}
 	}
@@ -534,24 +529,6 @@ Game.prototype.canMate=function(colour) {
 
 Game.prototype.undo=function() {
 	this.history.undo();
-}
-
-Game.prototype.squareContainsMovablePiece=function(square) {
-	var piece=this.board.getSquare(square);
-	var colour=Util.getColour(piece);
-	var reachable;
-
-	if(piece!==SQ_EMPTY) {
-		reachable=Util.getReachableSquares(Util.getType(piece), square, colour);
-
-		for(var i=0; i<reachable.length; i++) {
-			if(this.move(square, reachable[i], QUEEN, true).isLegal) {
-				return true;
-			}
-		}
-	}
-
-	return false;
 }
 
 Game.prototype._checkTime=function(colour) {
