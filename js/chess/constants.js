@@ -1,6 +1,6 @@
-var FEN_PIECES="pnbrqkPNBRQK";
+var FEN_PIECES="pnbrqkPNBRQK"; //FIXME see where this is used
 var FEN_SEPARATOR=" ";
-var FEN_POS_SEPARATOR="/";
+var FEN_RANK_SEPARATOR="/";
 var FEN_NONE="-";
 var FEN_ACTIVE_WHITE="w";
 var FEN_ACTIVE_BLACK="b";

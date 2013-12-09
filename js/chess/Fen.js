@@ -1,190 +1,130 @@
-var Fen={
-	pieceChar: [
-		"_",
-		"P",
-		"N",
-		"B",
-		"R",
-		"Q",
-		"K",
-		null,
-		null,
-		"p",
-		"n",
-		"b",
-		"r",
-		"q",
-		"k"
-	],
+var Fen={};
 
-	pieceInt: {
-		"_": SQ_EMPTY,
-		"P": WHITE_PAWN,
-		"N": WHITE_KNIGHT,
-		"B": WHITE_BISHOP,
-		"R": WHITE_ROOK,
-		"Q": WHITE_QUEEN,
-		"K": WHITE_KING,
-		"p": BLACK_PAWN,
-		"n": BLACK_KNIGHT,
-		"b": BLACK_BISHOP,
-		"r": BLACK_ROOK,
-		"q": BLACK_QUEEN,
-		"k": BLACK_KING
-	},
+Fen.getPieceCode=function(piece) {
+	return Fen._pieceCodes[piece];
+};
 
-	castlingSign: [
-		[
-			FEN_WHITE_CASTLE_KS,
-			FEN_WHITE_CASTLE_QS
-		],
-		[
-			FEN_BLACK_CASTLE_KS,
-			FEN_BLACK_CASTLE_QS
-		]
-	],
+Fen.getPieceChar=function(piece) {
+	return Fen._pieceChars[piece];
+};
 
-	getPieceInt: function(piece) {
-		return Fen.pieceInt[piece];
-	},
+Fen.fenPositionToArray=function(fenPosition) {
+	var arr=[];
+	var ranks=fenPosition.split(FEN_POS_SEPARATOR);
 
-	getPieceChar: function(piece) {
-		return Fen.pieceChar[piece];
-	},
+	var r, f, i, j, n;
+	var file, sq;
 
-	posToArray: function(pos) {
-		var arr=[];
-		var rank=pos.split(FEN_POS_SEPARATOR);
+	for(r=7; r>-1; r--) {
+		file=ranks[r].split("");
 
-		var r, f, i, j, n;
-		var file, sq;
+		i=0;
+		f=0;
 
-		for(r=7; r>-1; r--) {
-			file=rank[r].split("");
+		while(i<8) {
+			sq=file[f];
 
-			i=0;
-			f=0;
+			if(FEN_PIECES.indexOf(sq)!==-1) {
+				arr.push(Fen.getPieceInt(sq));
+				i++;
+			}
 
-			while(i<8) {
-				sq=file[f];
+			else if(RANK.indexOf(sq)!==-1) { //FIXME don't use RANK here - check if it's a number
+				n=parseInt(sq);
 
-				if(FEN_PIECES.indexOf(sq)!==-1) {
-					arr.push(Fen.getPieceInt(sq));
+				for(j=0; j<n; j++) {
+					arr.push(SQ_EMPTY);
 					i++;
 				}
-
-				else if(RANK.indexOf(sq)!==-1) {
-					n=parseInt(sq);
-
-					for(j=0; j<n; j++) {
-						arr.push(SQ_EMPTY);
-						i++;
-					}
-				}
-
-				else {
-					i++;
-				}
-
-				f++;
-			}
-		}
-
-		return arr;
-	},
-
-	arrayToPos: function(arr) {
-		var pos=[];
-		var rank=[];
-
-		for(var i=56; i>-1; i-=8) {
-			rank.push(arr.slice(i, i+8));
-		}
-
-		var n, fenRank, next, piece;
-
-		for(var r in rank) {
-			n=0;
-			fenRank="";
-
-			for(var j=0; j<rank[r].length; j++) {
-				piece=rank[r][j];
-
-				next=null;
-
-				if(j<7) {
-					next=rank[r][j+1];
-				}
-
-				if(piece===SQ_EMPTY) {
-					n++;
-
-					if(next!==SQ_EMPTY) {
-						fenRank+=n;
-						n=0;
-					}
-				}
-
-				else {
-					fenRank+=Fen.getPieceChar(piece);
-				}
 			}
 
-			pos.push(fenRank);
-		}
-
-		return pos.join(FEN_POS_SEPARATOR);
-	},
-
-	fenToArray: function(fen) {
-		return fen.split(FEN_SEPARATOR);
-	},
-
-	arrayToFen: function(arr) {
-		return arr.join(FEN_SEPARATOR);
-	},
-
-	castlingInt: function(str) {
-		if(str==FEN_NONE) {
-			return CASTLING_NONE;
-		}
-
-		var castling=CASTLING_NONE;
-		var n;
-
-		for(var colour=WHITE; colour<=BLACK; colour++) {
-			for(var side=KINGSIDE; side<=QUEENSIDE; side++) {
-				n=(str.indexOf(this.castlingSign[colour][side])===-1)?0:1;
-				castling=Util.set_castling(castling, colour, side, n);
+			else {
+				i++;
 			}
+
+			f++;
 		}
-
-		return castling;
-	},
-
-	castlingStr: function(n) {
-		if(n==CASTLING_NONE) {
-			return FEN_NONE;
-		}
-
-		var castling="";
-
-		for(var colour=WHITE; colour<=BLACK; colour++) {
-			for(var side=KINGSIDE; side<=QUEENSIDE; side++) {
-				if(Util.get_castling(n, colour, side)) {
-					castling+=Fen.castlingSign[colour][side];
-				}
-			}
-		}
-
-		return castling;
-	},
-
-	colourStr: function(colour) {
-		return colour===BLACK?FEN_ACTIVE_BLACK:FEN_ACTIVE_WHITE;
-	},
-
-	colourInt: function(str) {
-		return str===FEN_ACTIVE_BLACK?BLACK:WHITE;
 	}
+
+	return arr;
+};
+
+Fen.arrayToFenPosition=function(arr) {
+	var pos=[];
+	var rank=[];
+
+	for(var i=56; i>-1; i-=8) {
+		rank.push(arr.slice(i, i+8));
+	}
+
+	var n, fenRank, next, piece;
+
+	for(var r in rank) {
+		n=0;
+		fenRank="";
+
+		for(var j=0; j<rank[r].length; j++) {
+			piece=rank[r][j];
+
+			next=null;
+
+			if(j<7) {
+				next=rank[r][j+1];
+			}
+
+			if(piece===SQ_EMPTY) {
+				n++;
+
+				if(next!==SQ_EMPTY) {
+					fenRank+=n;
+					n=0;
+				}
+			}
+
+			else {
+				fenRank+=Fen.getPieceChar(piece);
+			}
+		}
+
+		pos.push(fenRank);
+	}
+
+	return pos.join(FEN_POS_SEPARATOR);
+};
+
+Fen.fenToArray=function(fen) {
+	return fen.split(FEN_SEPARATOR);
+};
+
+Fen.arrayToFen=function(array) {
+	return array.join(FEN_SEPARATOR);
+};
+
+Fen._pieceChars=[];
+Fen._pieceChars[WHITE_PAWN]="P";
+Fen._pieceChars[WHITE_KNIGHT]="N";
+Fen._pieceChars[WHITE_BISHOP]="B";
+Fen._pieceChars[WHITE_ROOK]="R";
+Fen._pieceChars[WHITE_QUEEN]="Q";
+Fen._pieceChars[WHITE_KING]="K";
+Fen._pieceChars[BLACK_PAWN]="p";
+Fen._pieceChars[BLACK_KNIGHT]="n";
+Fen._pieceChars[BLACK_BISHOP]="b";
+Fen._pieceChars[BLACK_ROOK]="r";
+Fen._pieceChars[BLACK_QUEEN]="q";
+Fen._pieceChars[BLACK_KING]="k";
+
+Fen._pieceCodes={
+	"P": WHITE_PAWN,
+	"N": WHITE_KNIGHT,
+	"B": WHITE_BISHOP,
+	"R": WHITE_ROOK,
+	"Q": WHITE_QUEEN,
+	"K": WHITE_KING,
+	"p": BLACK_PAWN,
+	"n": BLACK_KNIGHT,
+	"b": BLACK_BISHOP,
+	"r": BLACK_ROOK,
+	"q": BLACK_QUEEN,
+	"k": BLACK_KING
 };
