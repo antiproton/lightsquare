@@ -70,17 +70,17 @@ var Util={
 	},
 
 	fileFromSquare: function(square) {
-		return FILE.substr(square%8, 1);
+		return FILES.charAt(Util.xFromSquare(square));
 	},
 
-	rankFromSquare: function(sq) {
-		return RANK.substr(((sq-(sq%8))/8), 1);
+	rankFromSquare: function(square) {
+		return RANKS.charAt(Util.yFromSquare(square));
 	},
 
 	squareFromAlgebraic: function(algebraicSquare) {
 		return Util.squareFromCoords([
-			FILE.indexOf(algebraicSquare.charAt(X)),
-			RANK.indexOf(algebraicSquare.charAt(Y))
+			FILES.indexOf(algebraicSquare.charAt(X)),
+			RANKS.indexOf(algebraicSquare.charAt(Y))
 		]);
 	},
 
@@ -100,11 +100,11 @@ var Util={
 	},
 
 	squaresAreOnSameFile: function(squareA, squareB) {
-		return Util.fileFromSquare(squareA)===Util.fileFromSquare(squareB);
+		return Util.xFromSquare(squareA)===Util.xFromSquare(squareB);
 	},
 
-	squaresAreOnSameRank: function(squareA, squareB) { //abs sq nos
-		return Util.rankFromSquare(a)===Util.rankFromSquare(b);
+	squaresAreOnSameRank: function(squareA, squareB) {
+		return Util.yFromSquare(squareA)===Util.yFromSquare(squareB);
 	},
 
 	isRegularMove: function(type, fromCoords, toCoords) {
@@ -144,23 +144,23 @@ var Util={
 		}
 	},
 
-	isPawnMove: function(from, to) {
-		return (to-from===8);
+	isPawnMove: function(relFrom, relTo) {
+		return (relTo-relFrom===8);
 	},
 
-	isDoublePawnMove: function(from, to) {
-		return (from>7 && from<16 && to-from===16);
+	isDoublePawnMove: function(relFrom, relTo) {
+		return (relFrom>7 && relFrom<16 && relTo-relFrom===16);
 	},
 
-	isPawnCapture: function(from , to) {
-		var fromCoords=Util.coordsFromSquare(from);
-		var toCoords=Util.coordsFromSquare(to);
+	isPawnCapture: function(relFrom , relTo) {
+		var fromCoords=Util.coordsFromSquare(relFrom);
+		var toCoords=Util.coordsFromSquare(relTo);
 
 		return (toCoords[Y]-fromCoords[Y]===1 && Math.abs(toCoords[X]-fromCoords[X])===1);
 	},
 
-	isPawnPromotion: function(to) {
-		return (to>55);
+	isPawnPromotion: function(relTo) {
+		return (relTo>55);
 	},
 
 	getEpPawn: function(capturerFrom, capturerTo) {
@@ -195,17 +195,23 @@ var Util={
 			if(distance>0) {
 				increment=difference/distance;
 
-				for(var n=from+increment; n<to; n+=increment) {
-					squares.push(n);
+				for(var square=from+increment; square<to; square+=increment) {
+					squares.push(square);
 				}
 			}
 		}
 
 		else if(Util.isRegularMove(ROOK, fromCoords, toCoords)) {
-			increment=(difference>7?8:1); //?vertical:horizontal
+			if(difference>7) { //vertical move
+				increment=8;
+			}
 
-			for(var n=from+increment; n<to; n+=increment) {
-				squares.push(n);
+			else { //horizontal move
+				increment=1;
+			}
+
+			for(var square=from+increment; square<to; square+=increment) {
+				squares.push(square);
 			}
 		}
 
