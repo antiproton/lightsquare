@@ -38,7 +38,7 @@ Move.prototype.isFullmoveDisplayed=function() {
 }
 
 Move.prototype.getDot=function() {
-	return Util.fullmove_dot(this.getColour());
+	return Util.fullmoveDotFromColour(this.getColour());
 }
 
 Move.prototype.getFullLabel=function() {
