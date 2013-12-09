@@ -1,6 +1,3 @@
-var WHITE_PIECES="PNBRQK";
-var BLACK_PIECES="pnbrqk";
-
 var RANKS="12345678";
 var FILES="abcdefgh";
 
@@ -32,8 +29,6 @@ var BLACK_KING=0xE;
 
 var KINGSIDE=0;
 var QUEENSIDE=1;
-
-var CASTLING_NONE=0;
 
 var KING_HOME_SQUARE_WHITE=4;
 var KING_HOME_SQUARE_BLACK=60;
