@@ -78,7 +78,10 @@ $widgetLoader->load([
 
 
 		tableWidget.board.setSquareSize(45);
-		tableWidget.board.setFen(Fen.INITIAL);
+
+		var game=new Game();
+
+		tableWidget.board.setBoard(game.position.board);
 
 
 		</script>
