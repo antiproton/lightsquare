@@ -36,9 +36,6 @@ $widgetLoader->load([
 		script_tags_w("/js/constants.js");
 		script_tags_w("/js/chess/constants.js");
 		script_tags_w("/js/chess");
-		script_tags_w("/js/analysis");
-		script_tags_w("/js/controls");
-		script_tags_w("/js/livechess");
 		?>
 		<script>
 		<?php
