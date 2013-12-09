@@ -248,17 +248,17 @@ var Util={
 
 		switch(type) {
 			case PAWN: {
-				var relSquare=Util.getRelativeSquare(from, colour);
+				var relFrom=Util.getRelativeSquare(from, colour);
 
 				//double
 
-				if(relSquare<16) {
-					squares.push(Util.getRelativeSquare(relSquare+16, colour));
+				if(relFrom<16) {
+					squares.push(Util.getRelativeSquare(relFrom+16, colour));
 				}
 
 				//single and captures
 
-				var relCoords=Util.coordsFromSquare(relSquare);
+				var relCoords=Util.coordsFromSquare(relFrom);
 				var x, y;
 
 				for(var xDiff=-1; xDiff<2; xDiff++) {
@@ -478,38 +478,39 @@ var Util={
 	},
 
 	disambiguate: function(board, type, colour, from, to) {
-		var str="";
+		var disambiguationString="";
 		var piecesInRange=Util.getAttackers(board, type, to, colour);
-		var sq;
 
 		var disambiguation={
 			file: "",
 			rank: ""
 		};
 
-		for(var i=0; i<piecesInRange.length; i++) {
-			sq=piecesInRange[i];
+		var square;
 
-			if(sq!==from) {
-				if(Util.rankFromSquare(sq)===Util.rankFromSquare(from)) {
+		for(var i=0; i<piecesInRange.length; i++) {
+			square=piecesInRange[i];
+
+			if(square!==from) {
+				if(Util.xFromSquare(square)===Util.xFromSquare(from)) {
 					disambiguation.file=Util.fileFromSquare(from);
 				}
 
-				if(Util.fileFromSquare(sq)===Util.fileFromSquare(from)) {
+				if(Util.yFromSquare(square)===Util.yFromSquare(from)) {
 					disambiguation.rank=Util.rankFromSquare(from);
 				}
 			}
 		}
 
-		str=disambiguation.file+disambiguation.rank;
+		disambiguationString=disambiguation.file+disambiguation.rank;
 
 		//if neither rank nor file is the same, specify file
 
-		if(piecesInRange.length>1 && str==="") {
-			str=Util.fileFromSquare(from);
+		if(piecesInRange.length>1 && disambiguationString==="") {
+			disambiguationString=Util.fileFromSquare(from);
 		}
 
-		return str;
+		return disambiguationString;
 	},
 
 	elo: function(p, o, s) {
