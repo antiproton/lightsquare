@@ -34,7 +34,7 @@ History.prototype.setStartingColour=function(colour) {
 }
 
 History.prototype.getMainLineWithoutVariations=function() {
-	var variation=new Variation(this, true);
+	var variation=this.createVariation();
 
 	this.mainLine.moveList.each(function(item) {
 		if(!item.isVariation) {
