@@ -8,7 +8,7 @@ var Util={
 	},
 
 	getOppGame: function(gameId) {
-		return (gameId?0:1);
+		return [1, 0][gameId];
 	},
 
 	fullmoveIndexFromHalfmove: function(halfmove) { //which fullmove the halfmove is in, zero-based
@@ -53,7 +53,9 @@ var Util={
 	},
 
 	getSquareColour: function(square) {
-		return (!(((square%2)+(Math.floor(square/8)%2))%2))?BLACK:WHITE;
+		var coords=Util.coordsFromSquare(square);
+
+		return (coords[X]%2===coords[Y]%2?BLACK:WHITE);
 	},
 
 	getRelativeSquare: function(square, colour) {
