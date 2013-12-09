@@ -97,7 +97,7 @@ var TimeParser=(function() {
 	}
 
 	function eof() {
-		return (i>=string.length);
+		return (i>=timeString.length);
 	}
 
 	function read() {
@@ -138,17 +138,14 @@ var TimeParser=(function() {
 				displayDefaultUnits=true;
 			}
 
-			defaultUnits=defaultUnits||null;
+			defaultUnits=defaultUnits||this.defaultUnits;
 
 			var timeString="0";
 
 			if(time>0) {
-				var secondsMultipliers={};
 				var sections={};
 				var remaining=time;
 				var divider, quantity;
-
-				//first we need a reversed version of secondsMultipliers, to do years first
 
 				var units=[];
 
@@ -164,18 +161,11 @@ var TimeParser=(function() {
 					if(remaining>=divider) {
 						quantity=Math.floor(remaining/divider);
 						remaining=remaining%divider;
-						sections[unit[i]]=quantity;
+						sections[units[i]]=quantity;
 					}
 				}
 
 				var unitStrings=[];
-
-				/*
-				build up the strings ("1y", "3d" etc)
-				for the default units (e.g. minutes, where 20m should just be 20), don't display
-				the units if there is nothing after it (20 minutes and 3 seconds should be 20m3s
-				not just 203s)
-				*/
 
 				for(var unit in sections) {
 					if(unit===defaultUnits && time%secondsMultipliers[unit]===0 && !displayDefaultUnits) {
