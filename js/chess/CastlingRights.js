@@ -7,16 +7,13 @@ function CastlingRights() {
 	this._rightsByFile[WHITE]=[];
 	this._rightsByFile[BLACK]=[];
 
-	for(var file=0; file<8; file++) {
-		this._rightsByFile[WHITE][file]=false;
-		this._rightsByFile[BLACK][file]=false;
-	}
+	this.reset();
 }
 
 CastlingRights.prototype.reset=function() {
 	for(var file=0; file<8; file++) {
-		this.setByFile(WHITE, file, false);
-		this.setByFile(BLACK, file, false);
+		this._rightsByFile[WHITE][file]=false;
+		this._rightsByFile[BLACK][file]=false;
 	}
 }
 
@@ -25,9 +22,8 @@ CastlingRights.prototype.setByFile=function(colour, file, allow) {
 }
 
 CastlingRights.prototype.setBySide=function(colour, side, allow) {
-	this._rightsByFile[colour][CastlingRights._fileFromSide[index]]=allow;
+	this._rightsByFile[colour][CastlingRights._fileFromSide[side]]=allow;
 }
-
 
 CastlingRights.prototype.getByFile=function(colour, file) {
 	return this._rightsByFile[colour][file];
@@ -63,28 +59,17 @@ CastlingRights.prototype.setFenString=function(fenString) {
 	}
 }
 
-CastlingRights._getFenString=function(bySide) {
+CastlingRights.prototype.getFenStringByFile=function() {
 	var colours=[WHITE, BLACK];
 	var colour;
 	var fenString="";
-	var side;
 
 	for(var i=0; i<colours.length; i++) {
 		colour=colours[i];
 
 		for(var file=0; file<8; file++) {
 			if(this.getByFile(colour, file)) {
-				if(bySide) {
-					side=CastlingRights._fileFromSide.indexOf(file);
-
-					if(side!==-1) {
-						fenString+=CastlingRights._getSideChar(colour, side);
-					}
-				}
-
-				else {
-					fenString+=CastlingRights._getFileChar(colour, file);
-				}
+				fenString+=CastlingRights._getFileChar(colour, file);
 			}
 		}
 	}
@@ -96,12 +81,29 @@ CastlingRights._getFenString=function(bySide) {
 	return fenString;
 }
 
-CastlingRights.prototype.getFenStringByFile=function() {
-	return CastlingRights._getFenString(false);
-}
-
 CastlingRights.prototype.getFenStringBySide=function() {
-	return CastlingRights._getFenString(true);
+	var colours=[WHITE, BLACK];
+	var sides=[KINGSIDE, QUEENSIDE];
+	var colour, side;
+	var fenString="";
+
+	for(var i=0; i<colours.length; i++) {
+		colour=colours[i];
+
+		for(var j=0; j<sides.length; j++) {
+			side=sides[j];
+
+			if(this.getBySide(colour, side)) {
+				fenString+=CastlingRights._getSideChar(colour, side);
+			}
+		}
+	}
+
+	if(fenString==="") {
+		fenString=Fen.NONE;
+	}
+
+	return fenString;
 }
 
 CastlingRights._getSideChar=function(colour, side) {
