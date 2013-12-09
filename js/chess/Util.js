@@ -93,10 +93,6 @@ var Util={
 		return (coords[Y]*8)+coords[X];
 	},
 
-	diff: function(a, b) {
-		return Math.abs(a-b);
-	},
-
 	squaresAreOnSameFile: function(squareA, squareB) {
 		return Util.fileFromSquare(squareA)===Util.fileFromSquare(squareB);
 	},
@@ -106,40 +102,40 @@ var Util={
 	},
 
 	isRegularMove: function(type, fromCoords, toCoords) {
-		var d=[];
-		var coord=[X, Y];
+		var diff=[
+			Math.abs(fromCoords[X]-toCoords[X]),
+			Math.abs(fromCoords[Y]-toCoords[Y])
+		];
 
-		for(var i=0; i<coord.length; i++) {
-			d[coord[i]]=Util.diff(fromCoords[coord[i]], toCoords[coord[i]]);
-		}
-
-		if(d[X]===0 && d[Y]===0) {
+		if(diff[X]===0 && diff[Y]===0) {
 			return false;
 		}
 
 		switch(type) {
+			case PAWN: {
+				return false;
+			}
+			
 			case KNIGHT: {
-				return ((d[X]===2 && d[Y]===1) || (d[X]===1 && d[Y]===2));
+				return ((diff[X]===2 && diff[Y]===1) || (diff[X]===1 && diff[Y]===2));
 			}
 
 			case BISHOP: {
-				return (d[X]===d[Y]);
+				return (diff[X]===diff[Y]);
 			}
 
 			case ROOK: {
-				return (d[X]===0 || d[Y]===0);
+				return (diff[X]===0 || diff[Y]===0);
 			}
 
 			case QUEEN: {
-				return (Util.isRegularMove(ROOK, fromCoords, toCoords) || Util.isRegularMove(BISHOP, fromCoords, toCoords));
+				return (diff[X]===diff[Y] || (diff[X]===0 || diff[Y]===0));
 			}
 
 			case KING: {
-				return ((d[X]===1 || d[X]===0) && (d[Y]===1 || d[Y]===0));
+				return ((diff[X]===1 || diff[X]===0) && (diff[Y]===1 || diff[Y]===0));
 			}
 		}
-
-		return false;
 	},
 
 	isPawnMove: function(from, to) {
@@ -154,7 +150,7 @@ var Util={
 		var fromCoords=Util.coordsFromSquare(from);
 		var toCoords=Util.coordsFromSquare(to);
 
-		return (toCoords[Y]-fromCoords[Y]===1 && Util.diff(toCoords[X], fromCoords[X])===1);
+		return (toCoords[Y]-fromCoords[Y]===1 && Math.abs(toCoords[X]-fromCoords[X])===1);
 	},
 
 	isPawnPromotion: function(to) {
@@ -166,7 +162,7 @@ var Util={
 	},
 
 	getDiagonalDistance: function(fromCoords, toCoords) {
-		return Util.diff(fromCoords[X], toCoords[X]);
+		return Math.abs(fromCoords[X]-toCoords[X]);
 	},
 
 	getSquaresBetween: function(from, to, inclusive) {
@@ -181,7 +177,7 @@ var Util={
 		var fromCoords=Util.coordsFromSquare(from);
 		var toCoords=Util.coordsFromSquare(to);
 
-		var difference=Util.diff(from, to);
+		var difference=Math.abs(from-to);
 		var increment;
 
 		if(inclusive) {
