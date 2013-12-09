@@ -14,16 +14,16 @@ var Util={
 		return [1, 0][gameId];
 	},
 
-	fullmoveIndexFromHalfmove: function(halfmove) { //which fullmove the halfmove is in, zero-based
-		return Math.floor(halfmove/2);
-	},
-
-	fullmoveFromHalfmove: function(halfmove) { //PGN fullmove number
-		return Util.fullmoveIndexFromHalfmove(halfmove)+1;
+	fullmoveFromHalfmove: function(halfmove) {
+		return Math.floor(halfmove/2)+1;
 	},
 
 	halfmoveFromFullmove: function(fullmove) {
 		return (fullmove-1)*2;
+	},
+
+	getHalfmoveIndex: function(halfmove) {
+		return halfmove%2;
 	},
 
 	fullmoveDotFromColour: function(colour) {
@@ -33,10 +33,6 @@ var Util={
 		dots[BLACK]="...";
 
 		return dots[colour];
-	},
-
-	getHalfmoveIndex: function(halfmove) {
-		return halfmove%2;
 	},
 
 	getType: function(piece) {
