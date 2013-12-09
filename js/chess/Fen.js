@@ -10,7 +10,7 @@ Fen.getPieceChar=function(piece) {
 
 Fen.fenPositionToArray=function(fenPosition) {
 	var arr=[];
-	var ranks=fenPosition.split(FEN_POS_SEPARATOR);
+	var ranks=fenPosition.split(FEN_RANK_SEPARATOR);
 
 	var r, f, i, j, n;
 	var file, sq;
@@ -25,7 +25,7 @@ Fen.fenPositionToArray=function(fenPosition) {
 			sq=file[f];
 
 			if(FEN_PIECES.indexOf(sq)!==-1) {
-				arr.push(Fen.getPieceInt(sq));
+				arr.push(Fen.getPieceCode(sq));
 				i++;
 			}
 
@@ -89,7 +89,7 @@ Fen.arrayToFenPosition=function(arr) {
 		pos.push(fenRank);
 	}
 
-	return pos.join(FEN_POS_SEPARATOR);
+	return pos.join(FEN_RANK_SEPARATOR);
 };
 
 Fen.fenToArray=function(fen) {

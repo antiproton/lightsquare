@@ -28,7 +28,7 @@ Board.prototype.getSquare=function(square) {
 Board.prototype.setFen=function(fen) {
 	var fields=Fen.fenToArray(fen);
 
-	this.board=Fen.posToArray(fields[FEN_FIELD_POSITION]);
+	this.board=Fen.fenPositionToArray(fields[FEN_FIELD_POSITION]);
 }
 
 Board.prototype.setBoard=function(board) {
