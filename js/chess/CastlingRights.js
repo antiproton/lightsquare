@@ -36,22 +36,28 @@ CastlingRights.prototype.getBySide=function(colour, side) {
 CastlingRights.prototype.setFenString=function(fenString) {
 	this.reset();
 
+	var sides={};
+
+	sides[Fen.getPieceChar(WHITE_KING)]=KINGSIDE;
+	sides[Fen.getPieceChar(WHITE_QUEEN)]=QUEENSIDE;
+
 	if(fenString!==Fen.NONE) {
 		var fenChars=fenString.split("");
-		var fenChar;
+		var fenChar, fenCharLower, fenCharUpper;
 		var colour, file, side;
 
 		for(var i=0; i<fenChars.length; i++) {
 			fenChar=fenChars[i];
-			colour=(fenChar===fenChar.toUpperCase()?WHITE:BLACK);
-			side=CastlingRights._sideChars[colour].indexOf(fenChar);
+			fenCharLower=fenChar.toLowerCase();
+			fenCharUpper=fenChar.toUpperCase();
+			colour=(fenChar===fenCharUpper?WHITE:BLACK);
 
-			if(side!==-1) {
-				file=CastlingRights._fileFromSide[side];
+			if(fenCharUpper in sides) {
+				file=CastlingRights._fileFromSide[sides[fenCharUpper]];
 			}
 
 			else {
-				file=CastlingRights._fileChars[colour].indexOf(fenChar);
+				file=FILES.indexOf(fenCharLower);
 			}
 
 			this.setByFile(colour, file, true);
@@ -107,12 +113,7 @@ CastlingRights.prototype.getFenStringBySide=function() {
 }
 
 CastlingRights._getSideChar=function(colour, side) {
-	var pieceTypes=[];
-
-	pieceTypes[KINGSIDE]=KING;
-	pieceTypes[QUEENSIDE]=QUEEN;
-
-	return Fen.getPieceChar(Util.getPiece(pieceTypes[side], colour));
+	return Fen.getPieceChar(Util.getPiece(CastlingRights._pieceTypes[side], colour));
 }
 
 CastlingRights._getFileChar=function(colour, file) {
@@ -128,3 +129,7 @@ CastlingRights._getFileChar=function(colour, file) {
 CastlingRights._fileFromSide=[];
 CastlingRights._fileFromSide[KINGSIDE]=7;
 CastlingRights._fileFromSide[QUEENSIDE]=0;
+
+CastlingRights._pieceTypes=[];
+CastlingRights._pieceTypes[KINGSIDE]=KING;
+CastlingRights._pieceTypes[QUEENSIDE]=QUEEN;
