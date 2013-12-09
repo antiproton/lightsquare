@@ -7,7 +7,7 @@ function Move() {
 
 	this.isValid=false;
 	this.isLegal=false;
-	this.success=false; //whether the move has been applied successfully (this can be false for legal moves)
+	this.success=false
 	this.mtime=null;
 
 	this.halfmove=null;
@@ -16,11 +16,11 @@ function Move() {
 	this.capturedPiece=null;
 	this.promoteTo=null;
 	this.resultingFen=null;
-	this.boardChanges=[]; //list of objects that describe changes to apply to the board
+	this.boardChanges=[];
 	this.from=null;
 	this.to=null;
-	this.piece=null; //for bughouse moves
-	this.isVariation=false; //for distinguishing between moves and variations in a move list
+	this.bughouseDropPiece=null;
+	this.isVariation=false;
 	this.label=new MoveLabel();
 	this.isSelected=false;
 }
