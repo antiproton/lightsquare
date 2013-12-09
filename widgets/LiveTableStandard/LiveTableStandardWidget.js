@@ -1,4 +1,4 @@
-function UiLiveTableStandard(parent) {
+function LiveTableStandardWidget(parent) {
 	this._template=new Template("live_table_standard", parent);
 
 	this.playerInfo={
@@ -12,5 +12,5 @@ function UiLiveTableStandard(parent) {
 	};
 
 	this.board=new BoardWidget(this._template.board);
-	this.history=new HistoryColView(this._template.history);
+	this.history=new HistoryColViewWidget(this._template.history);
 }

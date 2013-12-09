@@ -74,12 +74,12 @@ $widgetLoader->load([
 			</div>
 		</div>
 		<script>
-		var ui=new UiLiveTableStandard(g("table"));
+		var tableWidget=new LiveTableStandardWidget(g("table"));
 
 
 
-		ui.board.setSquareSize(45);
-		ui.board.setFen(FEN_INITIAL);
+		tableWidget.board.setSquareSize(45);
+		tableWidget.board.setFen(FEN_INITIAL);
 
 
 		</script>
