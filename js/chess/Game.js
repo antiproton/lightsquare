@@ -26,7 +26,6 @@ function Game() {
 	this.startingPosition=new Position();
 	this.board=new Board();
 	this.history=new History();
-	this.clock=new Clock();
 	this.piecesTaken=new PiecesTaken();
 
 	this.history.SelectedMoveChanged.addHandler(this, function(data) {
