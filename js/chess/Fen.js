@@ -19,23 +19,6 @@ var Fen={
 	BLACK_CASTLE_KS: "k",
 	BLACK_CASTLE_QS: "q",
 
-	WHITE_CASTLE_A: "A",
-	WHITE_CASTLE_B: "B",
-	WHITE_CASTLE_C: "C",
-	WHITE_CASTLE_D: "D",
-	WHITE_CASTLE_E: "E",
-	WHITE_CASTLE_F: "F",
-	WHITE_CASTLE_G: "G",
-	WHITE_CASTLE_H: "H",
-	BLACK_CASTLE_A: "a",
-	BLACK_CASTLE_B: "b",
-	BLACK_CASTLE_C: "c",
-	BLACK_CASTLE_D: "d",
-	BLACK_CASTLE_E: "e",
-	BLACK_CASTLE_F: "f",
-	BLACK_CASTLE_G: "g",
-	BLACK_CASTLE_H: "h",
-
 	getPieceCode: function(piece) {
 		return Fen._pieceCodes[piece];
 	},
