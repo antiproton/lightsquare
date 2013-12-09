@@ -150,7 +150,7 @@ CastlingRights.prototype.setFenString=function(fenString) {
 			upperChar=ch.toUpperCase();
 
 			colour=(ch===upperChar)?WHITE:BLACK;
-			mode=(FILE.indexOf(lowerChar)!==-1)?CastlingRights.MODE_FILE:CastlingRights.MODE_SIDE;
+			mode=(FILES.indexOf(lowerChar)!==-1)?CastlingRights.MODE_FILE:CastlingRights.MODE_SIDE;
 
 			switch(mode) {
 				case CastlingRights.MODE_SIDE: {

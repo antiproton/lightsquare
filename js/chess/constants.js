@@ -1,54 +1,8 @@
-var FEN_PIECES="pnbrqkPNBRQK"; //FIXME see where this is used
-var FEN_SEPARATOR=" ";
-var FEN_RANK_SEPARATOR="/";
-var FEN_NONE="-";
-var FEN_ACTIVE_WHITE="w";
-var FEN_ACTIVE_BLACK="b";
-
-var FEN_WHITE_CASTLE_KS="K";
-var FEN_WHITE_CASTLE_QS="Q";
-var FEN_BLACK_CASTLE_KS="k";
-var FEN_BLACK_CASTLE_QS="q";
-
-var FEN_WHITE_CASTLE_A="A";
-var FEN_WHITE_CASTLE_B="B";
-var FEN_WHITE_CASTLE_C="C";
-var FEN_WHITE_CASTLE_D="D";
-var FEN_WHITE_CASTLE_E="E";
-var FEN_WHITE_CASTLE_F="F";
-var FEN_WHITE_CASTLE_G="G";
-var FEN_WHITE_CASTLE_H="H";
-var FEN_BLACK_CASTLE_A="a";
-var FEN_BLACK_CASTLE_B="b";
-var FEN_BLACK_CASTLE_C="c";
-var FEN_BLACK_CASTLE_D="d";
-var FEN_BLACK_CASTLE_E="e";
-var FEN_BLACK_CASTLE_F="f";
-var FEN_BLACK_CASTLE_G="g";
-var FEN_BLACK_CASTLE_H="h";
-
-var SIGN_CASTLE_KS="O-O";
-var SIGN_CASTLE_QS="O-O-O";
-var SIGN_CAPTURE="x";
-var SIGN_CHECK="+";
-var SIGN_MATE="#";
-var SIGN_PROMOTE="=";
-var SIGN_BUGHOUSE_DROP="@";
-
 var WHITE_PIECES="PNBRQK";
 var BLACK_PIECES="pnbrqk";
 
-var FEN_INITIAL="rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
-
-var FEN_FIELD_POSITION=0;
-var FEN_FIELD_ACTIVE=1;
-var FEN_FIELD_CASTLING=2;
-var FEN_FIELD_EP=3;
-var FEN_FIELD_CLOCK=4;
-var FEN_FIELD_FULLMOVE=5;
-
-var RANK="12345678"; //FIXME see if these can be dropped
-var FILE="abcdefgh";
+var RANKS="12345678";
+var FILES="abcdefgh";
 
 var WHITE=0;
 var BLACK=1;

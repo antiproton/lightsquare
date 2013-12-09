@@ -1,103 +1,121 @@
-var Fen={};
+var Fen={
+	INITIAL: "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",
+	NONE: "-",
+	ACTIVE_WHITE: "w",
+	ACTIVE_BLACK:" b",
 
-Fen.getPieceCode=function(piece) {
-	return Fen._pieceCodes[piece];
-};
+	_FIELD_SEPARATOR: " ",
+	_RANK_SEPARATOR: "/",
 
-Fen.getPieceChar=function(piece) {
-	return Fen._pieceChars[piece];
-};
+	FIELD_POSITION: 0,
+	FIELD_ACTIVE: 1,
+	FIELD_CASTLING: 2,
+	FIELD_EP: 3,
+	FIELD_CLOCK: 4,
+	FIELD_FULLMOVE: 5,
 
-Fen.fenPositionToArray=function(fenPosition) {
-	var arr=[];
-	var ranks=fenPosition.split(FEN_RANK_SEPARATOR);
+	WHITE_CASTLE_KS: "K",
+	WHITE_CASTLE_QS: "Q",
+	BLACK_CASTLE_KS: "k",
+	BLACK_CASTLE_QS: "q",
 
-	var r, f, i, j, n;
-	var file, sq;
+	WHITE_CASTLE_A: "A",
+	WHITE_CASTLE_B: "B",
+	WHITE_CASTLE_C: "C",
+	WHITE_CASTLE_D: "D",
+	WHITE_CASTLE_E: "E",
+	WHITE_CASTLE_F: "F",
+	WHITE_CASTLE_G: "G",
+	WHITE_CASTLE_H: "H",
+	BLACK_CASTLE_A: "a",
+	BLACK_CASTLE_B: "b",
+	BLACK_CASTLE_C: "c",
+	BLACK_CASTLE_D: "d",
+	BLACK_CASTLE_E: "e",
+	BLACK_CASTLE_F: "f",
+	BLACK_CASTLE_G: "g",
+	BLACK_CASTLE_H: "h",
 
-	for(r=7; r>-1; r--) {
-		file=ranks[r].split("");
+	getPieceCode: function(piece) {
+		return Fen._pieceCodes[piece];
+	},
 
-		i=0;
-		f=0;
+	getPieceChar: function(piece) {
+		return Fen._pieceChars[piece];
+	},
 
-		while(i<8) {
-			sq=file[f];
+	fenPositionToBoardArray: function(fenPosition) {
+		var board=[];
+		var ranks=fenPosition.split(Fen._RANK_SEPARATOR).reverse();
+		var rank, ch;
 
-			if(FEN_PIECES.indexOf(sq)!==-1) {
-				arr.push(Fen.getPieceCode(sq));
-				i++;
-			}
+		for(i=0; i<8; i++) {
+			rank=ranks[i].split("");
 
-			else if(RANK.indexOf(sq)!==-1) { //FIXME don't use RANK here - check if it's a number
-				n=parseInt(sq);
+			for(var j=0; j<rank.length; j++) {
+				ch=rank[j];
 
-				for(j=0; j<n; j++) {
-					arr.push(SQ_EMPTY);
-					i++;
+				if(ch in Fen._pieceCodes) {
+					board.push(Fen.getPieceCode(ch));
 				}
-			}
 
-			else {
-				i++;
-			}
-
-			f++;
-		}
-	}
-
-	return arr;
-};
-
-Fen.arrayToFenPosition=function(arr) {
-	var pos=[];
-	var rank=[];
-
-	for(var i=56; i>-1; i-=8) {
-		rank.push(arr.slice(i, i+8));
-	}
-
-	var n, fenRank, next, piece;
-
-	for(var r in rank) {
-		n=0;
-		fenRank="";
-
-		for(var j=0; j<rank[r].length; j++) {
-			piece=rank[r][j];
-
-			next=null;
-
-			if(j<7) {
-				next=rank[r][j+1];
-			}
-
-			if(piece===SQ_EMPTY) {
-				n++;
-
-				if(next!==SQ_EMPTY) {
-					fenRank+=n;
-					n=0;
+				else {
+					for(var k=0; k<parseInt(ch); k++) {
+						board.push(SQ_EMPTY);
+					}
 				}
-			}
-
-			else {
-				fenRank+=Fen.getPieceChar(piece);
 			}
 		}
 
-		pos.push(fenRank);
+		return board;
+	},
+
+	boardArrayToFenPosition: function(board) {
+		var fenRanks=[];
+		var ranks=[];
+
+		for(var i=56; i>-1; i-=8) {
+			ranks.push(board.slice(i, i+8));
+		}
+
+		var fenRank;
+		var piece;
+		var emptySquares;
+
+		for(var i=0; i<8; i++) {
+			emptySquares=0;
+			fenRank="";
+
+			for(var j=0; j<8; j++) {
+				piece=ranks[i][j];
+
+				if(piece===SQ_EMPTY) {
+					emptySquares++;
+				}
+
+				if(emptySquares>0 && (piece!==SQ_EMPTY || j===7)) {
+					fenRank+=emptySquares;
+					emptySquares=0;
+				}
+
+				if(piece!==SQ_EMPTY) {
+					fenRank+=Fen.getPieceChar(piece);
+				}
+			}
+
+			fenRanks.push(fenRank);
+		}
+
+		return fenRanks.join(Fen._RANK_SEPARATOR);
+	},
+
+	fenToArray: function(fen) {
+		return fen.split(Fen._FIELD_SEPARATOR);
+	},
+
+	arrayToFen: function(array) {
+		return array.join(Fen._FIELD_SEPARATOR);
 	}
-
-	return pos.join(FEN_RANK_SEPARATOR);
-};
-
-Fen.fenToArray=function(fen) {
-	return fen.split(FEN_SEPARATOR);
-};
-
-Fen.arrayToFen=function(array) {
-	return array.join(FEN_SEPARATOR);
 };
 
 Fen._pieceChars=[];
