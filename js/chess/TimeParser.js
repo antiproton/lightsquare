@@ -11,12 +11,18 @@ var TimeParser=new (function () {
 		"y": 52
 	};
 
-	this._secondsMultipliers={};
-	var m=1;
+	/*
+	calculate how many seconds are in one of each unit for later calculations
+	*/
 
-	for(var u in this._unitMultipliers) {
-		m*=this._unitMultipliers[u];
-		this._secondsMultipliers[u]=m;
+	this._secondsMultipliers={};
+
+	var multiplier=1;
+
+	for(var unit in this._unitMultipliers) {
+		multiplier*=this._unitMultipliers[unit];
+
+		this._secondsMultipliers[unit]=multiplier;
 	}
 
 	this.defaultUnits="m";
