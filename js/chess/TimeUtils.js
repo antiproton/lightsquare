@@ -1,4 +1,7 @@
 var TimeUtils={
+	_CHANCE_OF_OVERTIME: .5,
+	_AVG_MOVES_PER_GAME: 40,
+
 	getColonDisplay: function(mtime, displayTenths) {
 		var parts=[];
 		var time=Math.floor(mtime/MSEC_PER_SEC);
@@ -51,5 +54,37 @@ var TimeUtils={
 		}
 
 		return display;
+	},
+
+	getGameFormat: function(style, initial, increment, overtime, overtimeIncrement, overtimeCutoff) {
+		if([TIMING_BRONSTEIN_DELAY, TIMING_FISCHER, TIMING_FISCHER_AFTER, TIMING_SIMPLE_DELAY].indexOf(style)===-1) {
+			increment=0;
+		}
+
+		var totalAdded=increment*TimeUtils._AVG_MOVES_PER_GAME;
+
+		if(overtime) {
+			totalAdded+=overtimeIncrement*TimeUtils._CHANCE_OF_OVERTIME;
+		}
+
+		var totalTime=initial+totalAdded;
+		var maxTime;
+
+		for(var format in TimeUtils._maxTimesByFormat) {
+			maxTime=TimeUtils._maxTimesByFormat[format];
+
+			if(totalTime<=maxTime) {
+				return format;
+			}
+		}
+
+		return GAME_FORMAT_CORRESPONDENCE;
 	}
 };
+
+TimeUtils._maxTimesByFormat={};
+
+TimeUtils._maxTimesByFormat[GAME_FORMAT_BULLET]=60;
+TimeUtils._maxTimesByFormat[GAME_FORMAT_BLITZ]=600;
+TimeUtils._maxTimesByFormat[GAME_FORMAT_QUICK]=1800;
+TimeUtils._maxTimesByFormat[GAME_FORMAT_STANDARD]=86400;
