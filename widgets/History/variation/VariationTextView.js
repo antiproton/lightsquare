@@ -1,11 +1,11 @@
 function VariationTextView() {
 	Variation.implement(this);
 
-	this._tpl=new Template("variation_textview");
-
-	this._tpl.root.appendChild(this.moveList.node);
+	this._template=new Template("variation_textview");
+	this._template.root.appendChild(this.moveList.node);
+	this.node=this._template.root;
 }
 
 VariationTextView.prototype.createMoveList=function() {
-	return new MoveListTextView(this._tpl.move_list_container);
+	return new MoveListTextView();
 }

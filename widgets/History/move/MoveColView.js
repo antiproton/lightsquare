@@ -1,7 +1,7 @@
 function MoveColView() {
 	UiMove.implement(this);
 
-	this.parentFullmove=null;
+	this._parentFullmove=null;
 	this._template=new Template("move_colview");
 	this.node=this._template.root;
 }
@@ -10,6 +10,10 @@ MoveColView.prototype.isFullmoveDisplayed=function() {
 	return false;
 }
 
-MoveColView.prototype.setHalfmove=function() {
-	this.parentFullmove.setFullmove(this.getFullmove());
+MoveColView.prototype.setParentFullmove=function(fullmove) {
+	this._parentFullmove=fullmove;
+}
+
+MoveColView.prototype.getParentFullmove=function() {
+	return this._parentFullmove;
 }

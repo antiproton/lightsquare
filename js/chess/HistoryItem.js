@@ -1,40 +1,43 @@
-/*
-history item - a move or a variation
-*/
-
 function HistoryItem() {
-	this.resetPointers();
-}
-
-HistoryItem.prototype.resetPointers=function() {
 	this._variation=null;
-	this._previousMove=null;
-	this._previousVariation=null;
-	this._nextMove=null;
-	this._nextVariation=null;
 	this._previousItem=null;
 	this._nextItem=null;
-	this._itemIndex=null;
+	this.itemType;
 }
 
-HistoryItem.prototype.getVariation=function() {
-	return this._variation;
-}
+HistoryItem.MOVE=0;
+HistoryItem.VARIATION=1;
 
 HistoryItem.prototype.getPreviousMove=function() {
-	return this._previousMove;
-}
+	var item=this.getPreviousItem();
 
-HistoryItem.prototype.getPreviousVariation=function() {
-	return this._previousVariation;
+	while(item && item.itemType!==HistoryItem.MOVE) {
+		item=item.getPreviousItem();
+	}
+
+	return item;
 }
 
 HistoryItem.prototype.getNextMove=function() {
-	return this._nextMove;
+	var item=this.getNextItem();
+
+	while(item && item.itemType!==HistoryItem.MOVE) {
+		item=item.getNextItem();
+	}
+
+	return item;
+}
+
+HistoryItem.prototype._getItemOfType=function(item, type) {
+	return (item!==null && item.itemType===type)?item:null;
+}
+
+HistoryItem.prototype.getPreviousVariation=function() {
+	return this._getItemOfType(this._previousItem, HistoryItem.VARIATION);
 }
 
 HistoryItem.prototype.getNextVariation=function() {
-	return this._nextVariation;
+	return this._getItemOfType(this._nextItem, HistoryItem.VARIATION);
 }
 
 HistoryItem.prototype.getPreviousItem=function() {
@@ -45,28 +48,12 @@ HistoryItem.prototype.getNextItem=function() {
 	return this._nextItem;
 }
 
-HistoryItem.prototype.getItemIndex=function() {
-	return this._itemIndex;
+HistoryItem.prototype.getVariation=function() {
+	return this._variation;
 }
 
 HistoryItem.prototype.setVariation=function(variation) {
 	this._variation=variation;
-}
-
-HistoryItem.prototype.setPreviousMove=function(move) {
-	this._previousMove=move;
-}
-
-HistoryItem.prototype.setPreviousVariation=function(variation) {
-	this._previousVariation=variation;
-}
-
-HistoryItem.prototype.setNextMove=function(move) {
-	this._nextMove=move;
-}
-
-HistoryItem.prototype.setNextVariation=function(variation) {
-	this._nextVariation=variation;
 }
 
 HistoryItem.prototype.setPreviousItem=function(item) {
@@ -75,8 +62,4 @@ HistoryItem.prototype.setPreviousItem=function(item) {
 
 HistoryItem.prototype.setNextItem=function(item) {
 	this._nextItem=item;
-}
-
-HistoryItem.prototype.setItemIndex=function(index) {
-	this._itemIndex=index;
 }

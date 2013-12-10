@@ -1,7 +1,8 @@
-function MoveListTextView(parent) {
+function MoveListTextView() {
 	List.implement(this);
 
-	this._tpl=new Template("move_list_textview", parent);
+	this._template=new Template("move_list_textview");
+	this.node=this._template.root;
 }
 
 MoveListTextView.prototype.add=function(item) {
@@ -11,7 +12,7 @@ MoveListTextView.prototype.add=function(item) {
 MoveListTextView.prototype.insert=function(item, index) {
 	var space=t(" ");
 
-	if(index>=this.Length) {
+	if(index>=this.length) {
 		this.node.appendChild(item.node);
 		this.node.appendChild(space);
 	}

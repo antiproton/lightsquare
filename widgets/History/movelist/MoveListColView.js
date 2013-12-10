@@ -1,12 +1,9 @@
 function MoveListColView() {
 	List.implement(this);
 
-	this._startingFullmove=1;
-	this._currentFullmoveNo=1;
 	this._template=new Template("movelist_colview");
+	this._fullmoves=new List();
 	this.node=this._template.root;
-	this.fullmoves=new List();
-	this._currentFullmove=null;
 }
 
 MoveListColView.prototype.setStartingFullmove=function(fullmove) {
@@ -21,38 +18,24 @@ MoveListColView.prototype.insert=function(move) {
 MoveListColView.prototype.add=function(move) {
 	List.prototype.add.call(this, move);
 
-	if(this._currentFullmove===null || move.colour===WHITE) {
-		this._currentFullmove=this.fullmoves.add(new Fullmove(this._template.root, this._currentFullmoveNo++));
+	var lastFullmove=this._fullmoves.lastItem();
+
+	if(lastFullmove===null || move.getColour()===WHITE) {
+		lastFullmove=this._fullmoves.add(new Fullmove(this._template.root, move.getFullmove()));
 	}
 
-	this._currentFullmove.add(move);
+	lastFullmove.add(move);
 }
 
 MoveListColView.prototype.remove=function(move) {
 	List.prototype.remove.call(this, move);
 
-	var fullmove=move.parentFullmove;
+	var fullmove=move.getParentFullmove();
 
 	fullmove.remove(move);
 
 	if(fullmove.isEmpty()) {
-		this.fullmoves.remove(fullmove);
-		$(fullmove.node).remove();
+		this._fullmoves.remove(fullmove);
+		this._template.root.removeChild(fullmove.node);
 	}
-
-	if(this.fullmoves.length>0) {
-		this._currentFullmove=this.fullmoves.lastItem();
-	}
-
-	else {
-		this._currentFullmove=null;
-	}
-}
-
-MoveListColView.prototype._updateFullmoves=function() {
-	var fullmove=this._startingFullmove;
-
-	this.fullmoves.each(function(item) {
-		item.setFullmove(fullmove++);
-	});
 }
