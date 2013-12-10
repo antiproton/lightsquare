@@ -18,8 +18,8 @@ var Util={
 		return Math.floor(halfmove/2)+1;
 	},
 
-	halfmoveFromFullmove: function(fullmove) {
-		return (fullmove-1)*2;
+	getHalfmove: function(fullmove, colour) {
+		return ((fullmove-1)*2+(colour===WHITE?0:1));
 	},
 
 	getHalfmoveIndex: function(halfmove) {
