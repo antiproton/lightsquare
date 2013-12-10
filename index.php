@@ -83,6 +83,13 @@ $widgetLoader->load([
 
 		tableWidget.board.setBoard(game.position.board);
 
+		var history=tableWidget.history;
+
+		var move=history.createMove();
+		move.label.piece="N";
+
+		history.move(move);
+
 
 		</script>
 	</body>
