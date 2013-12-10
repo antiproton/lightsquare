@@ -56,19 +56,13 @@ Game.prototype.getStartingFen=function() {
 
 Game.prototype.countLegalMoves=function(colour) {
 	var legalMoves=0;
-	var piece, available;
+	var piece;
 
-	for(var sq=0; sq<this.position.board.length; sq++) {
-		piece=this.position.board[sq];
+	for(var square=0; square<64; square++) {
+		piece=this.position.board[square];
 
 		if(piece!==SQ_EMPTY && Util.getColour(piece)===colour) {
-			available=Util.moves_available(Util.getType(piece), sq, colour);
-
-			for(var n=0; n<available.length; n++) {
-				if(this.move(sq, available[n], QUEEN, true).legal) {
-					legalMoves++;
-				}
-			}
+			legalMoves+=this.getLegalMovesFrom(square).length;
 		}
 	}
 
@@ -401,12 +395,12 @@ Game.prototype.move=function(from, to, promoteTo, dryrun) {
 
 			if(piece.type===KING || move.isCastling) {
 				for(file=0; file<8; file++) {
-					this.position.castlingRights.set(colour, file, false, CastlingRights.MODE_FILE);
+					this.position.castlingRights.setByFile(colour, file, false);
 				}
 			}
 
 			else if(piece.type===ROOK) {
-				this.position.castlingRights.set(colour, Util.xFromSquare(from), false, CastlingRights.MODE_FILE);
+				this.position.castlingRights.setByFile(colour, Util.xFromSquare(from), false);
 			}
 
 			if(this.isInCheck(oppColour)) {
@@ -425,8 +419,6 @@ Game.prototype.move=function(from, to, promoteTo, dryrun) {
 				}
 
 				else {
-					//games are automatically drawn only if mate is impossible, not if it's just not forceable.
-
 					if(!this.canMate(WHITE) && !this.canMate(BLACK)) {
 						this._gameOver(RESULT_DRAW, RESULT_DETAILS_INSUFFICIENT);
 					}
@@ -435,9 +427,7 @@ Game.prototype.move=function(from, to, promoteTo, dryrun) {
 					moves available will sometimes return 0 in bughouse games, e.g.
 					when the player would be mated normally but can wait to put a
 					piece in the way, so stalemate by being unable to move has been
-					left out for bughouse.  obviously the best way would be to also
-					check whether it's possible that pieces will become available,
-					but that's too much of a performance hit (on the server at least).
+					left out for bughouse.
 					*/
 
 					if(this.countLegalMoves(oppColour)===0 && this.type!==GAME_TYPE_BUGHOUSE) {
@@ -448,7 +438,7 @@ Game.prototype.move=function(from, to, promoteTo, dryrun) {
 						this.fiftymoveClaimable=true;
 					}
 
-					this._checkThreefold();
+					this._checkThreefold(); //FIXME move isn't in the history yet so this is 1 move behind
 				}
 
 				move.resultingFen=this.position.getFen();
