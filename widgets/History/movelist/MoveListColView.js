@@ -3,8 +3,8 @@ function MoveListColView() {
 
 	this._startingFullmove=1;
 	this._currentFullmoveNo=1;
-	this._tpl=new Template("movelist_colview");
-	this.node=this._tpl.root;
+	this._template=new Template("movelist_colview");
+	this.node=this._template.root;
 	this.fullmoves=new List();
 	this._currentFullmove=null;
 }
@@ -22,7 +22,7 @@ MoveListColView.prototype.add=function(move) {
 	List.prototype.add.call(this, move);
 
 	if(this._currentFullmove===null || move.colour===WHITE) {
-		this._currentFullmove=this.fullmoves.add(new Fullmove(this._tpl.root, this._currentFullmoveNo++));
+		this._currentFullmove=this.fullmoves.add(new Fullmove(this._template.root, this._currentFullmoveNo++));
 	}
 
 	this._currentFullmove.add(move);

@@ -7,44 +7,76 @@ function HistoryItem() {
 }
 
 HistoryItem.prototype.resetPointers=function() {
-	this.variation=null;
-	this.previousMove=null;
-	this.previousVariation=null;
-	this.nextMove=null;
-	this.nextVariation=null;
-	this.previousItem=null;
-	this.nextItem=null;
-	this.itemIndex=null; //e4 e5 (h5 Nc3) d4 //d4 is 3 (variations are counted).  Nc3 is 1.
+	this._variation=null;
+	this._previousMove=null;
+	this._previousVariation=null;
+	this._nextMove=null;
+	this._nextVariation=null;
+	this._previousItem=null;
+	this._nextItem=null;
+	this._itemIndex=null;
+}
+
+HistoryItem.prototype.getVariation=function() {
+	return this._variation;
+}
+
+HistoryItem.prototype.getPreviousMove=function() {
+	return this._previousMove;
+}
+
+HistoryItem.prototype.getPreviousVariation=function() {
+	return this._previousVariation;
+}
+
+HistoryItem.prototype.getNextMove=function() {
+	return this._nextMove;
+}
+
+HistoryItem.prototype.getNextVariation=function() {
+	return this._nextVariation;
+}
+
+HistoryItem.prototype.getPreviousItem=function() {
+	return this._previousItem;
+}
+
+HistoryItem.prototype.getNextItem=function() {
+	return this._nextItem;
+}
+
+HistoryItem.prototype.getItemIndex=function() {
+	return this._itemIndex;
 }
 
 HistoryItem.prototype.setVariation=function(variation) {
-	this.variation=variation;
+	this._variation=variation;
 }
 
 HistoryItem.prototype.setPreviousMove=function(move) {
-	this.previousMove=move;
+	this._previousMove=move;
 }
 
 HistoryItem.prototype.setPreviousVariation=function(variation) {
-	this.previousVariation=variation;
+	this._previousVariation=variation;
 }
 
 HistoryItem.prototype.setNextMove=function(move) {
-	this.nextMove=move;
+	this._nextMove=move;
 }
 
 HistoryItem.prototype.setNextVariation=function(variation) {
-	this.nextVariation=variation;
+	this._nextVariation=variation;
 }
 
 HistoryItem.prototype.setPreviousItem=function(item) {
-	this.previousItem=item;
+	this._previousItem=item;
 }
 
 HistoryItem.prototype.setNextItem=function(item) {
-	this.nextItem=item;
+	this._nextItem=item;
 }
 
 HistoryItem.prototype.setItemIndex=function(index) {
-	this.itemIndex=index;
+	this._itemIndex=index;
 }

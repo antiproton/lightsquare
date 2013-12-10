@@ -33,59 +33,39 @@ History.prototype.setStartingColour=function(colour) {
 	this.mainLine.setStartingColour(colour);
 }
 
-History.prototype.getMainLineWithoutVariations=function() {
-	var variation=this.createVariation();
-
-	this.mainLine.moveList.each(function(item) {
-		if(!item.isVariation) {
-			variation.add(item);
-		}
-	});
-
-	return variation;
-}
-
 History.prototype.promoteCurrentVariation=function() {
 	var variation=this.mainLine;
 	var branchMove=null;
-	var parentVar=null;
+	var parentVariation=null;
 
 	if(this.selectedMove!==null) {
-		variation=this.selectedMove.variation;
+		variation=this.selectedMove.getVariation();
 	}
 
-	if(variation!=this.mainLine) {
-		branchMove=variation.branchMove;
-		parentVar=variation.variation;
+	if(variation!==this.mainLine) {
+		branchMove=variation.getBranchMove();
+		parentVariation=variation.getVariation();
 
 		var item;
-		var newVar=this._createVariation();
-
-		//turn off auto-updating pointers and store the original settings to set back later
-
-		var tempParent=parentVar.autoUpdatePointers;
-		var tempNew=newVar.autoUpdatePointers;
-
-		newVar.autoUpdatePointers=false;
-		parentVar.autoUpdatePointers=false;
+		var newVariation=this.createVariation();
 
 		//create a new variation and move the main line into it
 
-		parentVar.remove(branchMove);
-		newVar.add(branchMove);
+		parentVariation.remove(branchMove);
+		newVariation.add(branchMove);
 
-		var item=branchMove.nextMove;
+		var item=branchMove.getNextMove();
 
 		while(item!==null) {
-			parentVar.remove(item);
-			newVar.add(item);
+			parentVariation.remove(item);
+			newVariation.add(item);
 			item=item.nextItem;
 		}
 
 		//insert the first move of the promoted variation in the parent variation
 
-		var prev_move=branchMove.previousMove;
-		parentVar.insertAfterMove(variation.firstMove, prev_move);
+		var prevMove=branchMove.getPreviousMove();
+		parentVariation.insertAfterMove(variation.getFirstMove(), prevMove);
 
 		//insert the new variation at the end of the other variations in the main line
 
@@ -95,30 +75,23 @@ History.prototype.promoteCurrentVariation=function() {
 			item=item.nextVariation;
 		}
 
-		parentVar.insertAfter(newVar, item);
+		parentVariation.insertAfter(newVariation, item);
 
-		//insert the rest of the promoted variation (2nd move onwards) into the main line
+		//insert the rest of the promoted variation (2nd move onwards) into the parent variation
 
-		item=variation.firstMove.nextItem;
+		item=variation.firstMove.getNextItem();
 
 		while(item!==null) {
-			parentVar.add(item);
-			item=item.nextItem;
+			parentVariation.add(item);
+			item=item.getNextItem();
 		}
 
 		//delete the promoted variation (all the moves are now in the main line)
 
-		parentVar.remove(variation);
-
-		//set auto-updating pointers back to the original setting on each variation
-
-		parentVar.autoUpdatePointers=tempParent;
-		newVar.autoUpdatePointers=tempNew;
-
-		parentVar.updatePointers(true);
+		parentVariation.remove(variation);
 
 		this.SelectedMoveChanged.fire({
-			Move: this.selectedMove
+			move: this.selectedMove
 		});
 	}
 }
@@ -126,16 +99,16 @@ History.prototype.promoteCurrentVariation=function() {
 History.prototype.deleteCurrentMove=function() {
 	var move=this.selectedMove;
 	var variation;
-	var parentVar=null;
+	var parentVariation=null;
 
 	if(move!==null) {
 		variation=move.variation;
-		parentVar=variation.variation;
+		parentVariation=variation.variation;
 		move.variation.deleteMove(move);
 
 		if(variation.moveList.length===0 && !variation.IsMainline) {
 			this.select(variation.branchMove);
-			parentVar.remove(variation);
+			parentVariation.remove(variation);
 		}
 
 		else {
@@ -154,17 +127,17 @@ History.prototype.move=function(move) {
 	var success=true;
 	var variation=this.mainLine;
 	var currentMove=this.selectedMove;
-	var nextMove=variation.firstMove;
+	var nextMove=variation.getFirstMove();
 
 	if(currentMove!==null) {
-		variation=currentMove.variation;
+		variation=currentMove.getVariation();
 
-		if(currentMove.nextMove!==null) {
-			nextMove=currentMove.nextMove;
+		if(currentMove.getNextMove()!==null) {
+			nextMove=currentMove.getNextMove();
 		}
 	}
 
-	if(variation.moveList.length===0 || currentMove===variation.lastMove) {
+	if(variation.moveList.length===0 || currentMove===variation.getLastMove()) {
 		variation.add(move);
 	}
 
@@ -190,10 +163,10 @@ History.prototype.move=function(move) {
 			}
 
 			case History.EDIT_MODE_BRANCH: {
-				var newVar=this.createVariation();
+				var newVariation=this.createVariation();
 
-				variation.insertAfter(newVar, nextMove);
-				newVar.add(move);
+				variation.insertAfter(newVariation, nextMove);
+				newVariation.add(move);
 
 				break;
 			}

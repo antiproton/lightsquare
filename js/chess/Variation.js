@@ -3,11 +3,11 @@ function Variation() {
 
 	this._startingFullmove=1;
 	this._startingColour=WHITE;
-	this.autoUpdatePointers=true;
+	this._branchMove=null;
 	this.isVariation=true;
 	this.moveList=this._createMoveList();
-	this.firstMove=null;
-	this.lastMove=null;
+	this._firstMove=null;
+	this._lastMove=null;
 }
 
 Variation.prototype.getStartingFullmove=function() {
@@ -16,7 +16,7 @@ Variation.prototype.getStartingFullmove=function() {
 
 Variation.prototype.setStartingFullmove=function(fullmove) {
 	this._startingFullmove=fullmove;
-	this.updatePointers(true);
+	this._updatePointers(true);
 }
 
 Variation.prototype.getStartingColour=function() {
@@ -25,72 +25,74 @@ Variation.prototype.getStartingColour=function() {
 
 Variation.prototype.setStartingColour=function(colour) {
 	this._startingColour=colour;
-	this.updatePointers(true);
+	this._updatePointers(true);
 }
 
 Variation.prototype.resetPointers=function() {
 	HistoryItem.prototype.resetPointers.call(this);
 
-	this.branchMove=null; //the move before the first move of the variation
+	this._branchMove=null; //the move before the first move of the variation
 }
 
 Variation.prototype.setBranchMove=function(move) {
-	this.branchMove=move;
+	this._branchMove=move;
 }
 
-Variation.prototype.insert=function(item, index, noPointerUpdate) {
-	var updatePointers=noPointerUpdate?false:this.autoUpdatePointers;
+Variation.prototype.getBranchMove=function() {
+	return this._branchMove;
+}
 
+Variation.prototype._insert=function(item, index) {
 	this.moveList.insert(item, index);
-
-	if(updatePointers) {
-		this.updatePointers();
-	}
 }
 
-Variation.prototype.remove=function(item, noPointerUpdate) {
-	var updatePointers=noPointerUpdate?false:this.autoUpdatePointers;
+Variation.prototype.insert=function(item, index) {
+	this._insert(item, index);
+	this._updatePointers();
+}
 
+Variation.prototype._remove=function(item) {
 	this.moveList.remove(item);
-
-	if(updatePointers) {
-		this.updatePointers();
-	}
 }
 
-Variation.prototype.deleteMove=function(move, noPointerUpdate) {
-	var updatePointers=noPointerUpdate?false:this.autoUpdatePointers;
+Variation.prototype.remove=function(item) {
+	this._remove(item);
+	this._updatePointers();
+}
+
+Variation.prototype.deleteMove=function(move) {
 	var item=move;
 
 	while(item!==null) {
-		this.remove(item, true);
+		this._remove(item);
 		item=item.nextItem;
 	}
 
-	if(updatePointers) {
-		this.updatePointers();
-	}
+	this._updatePointers();
 }
 
-Variation.prototype.add=function(item, noPointerUpdate) {
-	this.insert(item, this.moveList.length, noPointerUpdate);
+Variation.prototype.add=function(item) {
+	this._insert(item, this.moveList.length);
+	this._updatePointers();
 }
 
-Variation.prototype.insertAfter=function(item, prevItem, noPointerUpdate) {
+Variation.prototype.insertAfter=function(item, prevItem) {
 	if(prevItem===null) {
-		this.insert(item, 0, noPointerUpdate);
+		this.insert(item, 0);
 	}
 
 	else {
 		var i=0;
 
-		this.moveList.Each(function(item, index) {
+		this.moveList.each(function(item, index) {
 			if(item===prevItem) {
 				i=index;
+
+				return true;
 			}
 		});
 
-		this.insert(item, i+1, noPointerUpdate);
+		this.insert(item, i+1);
 	}
 }
 
@@ -98,9 +100,9 @@ Variation.prototype.insertAfter=function(item, prevItem, noPointerUpdate) {
 insertAfterMove - the item will come after the move and all its variations
 */
 
-Variation.prototype.insertAfterMove=function(item, prevMove, noPointerUpdate) {
+Variation.prototype.insertAfterMove=function(item, prevMove) {
 	if(prevMove===null) {
-		this.insert(item, 0, noPointerUpdate);
+		this.insert(item, 0);
 	}
 
 	else {
@@ -110,30 +112,26 @@ Variation.prototype.insertAfterMove=function(item, prevMove, noPointerUpdate) {
 			prevItem=prevItem.nextVariation;
 		}
 
-		this.insertAfter(item, prevItem, noPointerUpdate);
+		this.insertAfter(item, prevItem);
 	}
 }
 
-Variation.prototype.updatePointers=function(recursive) {
-	this.firstMove=null;
-	this.lastMove=null;
+Variation.prototype._updatePointers=function() {
+	this._firstMove=null;
+	this._lastMove=null;
 
-	if(this.moveList.Length>0) {
+	if(this.moveList.length>0) {
 		var lastMove=null;
 		var previousVariation=null;
 		var lastItem=null;
 		var moveIndex=0;
-		var halfmove=Util.halfmove(this._startingFullmove);
-
-		if(this._startingColour===BLACK) {
-			halfmove++;
-		}
+		var halfmove=Util.getHalfmove(this._startingFullmove, this._startingColour);
 
 		if(!this.isMainline()) {
-			halfmove=this.branchMove.halfmove;
+			halfmove=this.getBranchMove().getHalfmove();
 		}
 
-		this.firstMove=this.line.firstItem();
+		this._firstMove=this.moveList.firstItem();
 
 		this.moveList.each(function(item, i) {
 			item.resetPointers();
@@ -142,12 +140,8 @@ Variation.prototype.updatePointers=function(recursive) {
 			item.setPreviousMove(lastMove);
 			item.setPreviousItem(lastItem);
 
-			if(item.IsVariation) {
+			if(item.isVariation) {
 				item.setBranchMove(lastMove);
-
-				if(recursive) {
-					item.updatePointers(true);
-				}
 
 				if(lastItem!==null) {
 					lastItem.setNextVariation(item);
@@ -157,11 +151,11 @@ Variation.prototype.updatePointers=function(recursive) {
 			}
 
 			else {
-				this.LastMove=item;
+				this._lastMove=item;
 
-				item.setPreviousVariation(previous_variation);
+				item.setPreviousVariation(previousVariation);
 				item.setHalfmove(halfmove);
-				item.setMoveIndex(move_index);
+				item.setMoveIndex(moveIndex);
 
 				if(lastItem!==null) {
 					lastItem.setNextMove(item);
@@ -187,7 +181,7 @@ Variation.prototype.updatePointers=function(recursive) {
 }
 
 Variation.prototype.isMainline=function() {
-	return (this.variation===null);
+	return (this._variation===null);
 }
 
 Variation.prototype._createMoveList=function() {
