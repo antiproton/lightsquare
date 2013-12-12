@@ -1,8 +1,8 @@
 function Board() {
-	this.board=[];
+	this._board=[];
 
 	for(var i=0; i<64; i++) {
-		this.board.push(SQ_EMPTY);
+		this._board.push(SQ_EMPTY);
 	}
 
 	this.kingPositions=[]
@@ -16,7 +16,7 @@ Board.prototype.move=function(from, to) {
 }
 
 Board.prototype.setSquare=function(square, piece) {
-	this.board[square]=piece;
+	this._board[square]=piece;
 
 	if(Util.getType(piece)===KING) {
 		this.kingPositions[Util.getColour(piece)]=square;
@@ -24,17 +24,21 @@ Board.prototype.setSquare=function(square, piece) {
 }
 
 Board.prototype.getSquare=function(square) {
-	return this.board[square];
+	return this._board[square];
 }
 
-Board.prototype.setBoard=function(board) {
+Board.prototype.setBoardArray=function(board) {
 	for(var square=0; square<64; square++) {
 		this.setSquare(square, board[square]);
 	}
 }
 
+Board.prototype.getBoardArray=function() {
+	return this._board;
+}
+
 Board.prototype.copy=function(board) {
-	for(var square=0; square<64; square++) {
-		this.setSquare(square, board.getSquare(square));
-	}
+	var board=new this.constructor();
+
+	board.setBoardArray(this.getBoardArray());
 }

@@ -1,11 +1,11 @@
 function Fullmove(parent, fullmove) {
-	this._template=new Template("fullmove", parent);
-	this._setupTemplate();
-
 	this._fullmove=fullmove;
 	this._hasMove=[];
 	this._hasMove[WHITE]=false;
 	this._hasMove[BLACK]=false;
+
+	this._template=new Template("fullmove", parent);
+	this._setupTemplate();
 }
 
 Fullmove.prototype._setupTemplate=function() {

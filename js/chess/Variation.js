@@ -72,6 +72,8 @@ Variation.prototype.insert=function(item, index) {
 		else if(!this.isMainline()) {
 			halfmove=this.getBranchMove().getHalfmove();
 		}
+
+		move.setHalfmove(halfmove);
 	}
 
 	item.setPreviousItem(prevItem);

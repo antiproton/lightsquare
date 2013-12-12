@@ -1,9 +1,6 @@
 function Position(fen) {
 	this.castlingRights=new CastlingRights();
-	this.board=[];
-	this.kingPositions=[];
-	this.kingPositions[WHITE]=null;
-	this.kingPositions[BLACK]=null;
+	this.board=new Board();
 	this.active=WHITE;
 	this.epTarget=null;
 	this.fiftymoveClock=0;
@@ -15,14 +12,6 @@ function Position(fen) {
 
 	else {
 		this.setFen(Fen.STARTING_FEN);
-	}
-}
-
-Position.prototype.setSquare=function(square, piece) {
-	this.board[square]=piece;
-
-	if(Util.getType(piece)===KING) {
-		this.kingPositions[Util.getColour(piece)]=square;
 	}
 }
 
@@ -52,20 +41,24 @@ Position.prototype.setFen=function(str) {
 		this.fullmove=parseInt(fen[Fen.FIELD_FULLMOVE]);
 	}
 
-	var board=Fen.fenPositionToBoard(fen[Fen.FIELD_POSITION]);
+	var boardArray=Fen.fenPositionToBoardArray(fen[Fen.FIELD_POSITION]);
 
 	for(var square=0; square<64; square++) {
-		this.setSquare(square, board[square]);
+		this.board.setSquare(square, boardArray[square]);
 	}
 }
 
 Position.prototype.getFen=function() {
 	return Fen.arrayToFen([
-		Fen.arrayToFenPosition(this.board),
+		Fen.boardArrayToFenPosition(this.board.board),
 		Colour.getFen(this.active),
 		this.castlingRights.getFenString(),
 		(this.epTarget===null)?Fen.NONE:Util.algebraicFromSquare(this.epTarget),
 		this.fiftymoveClock.toString(),
 		this.fullmove.toString()
 	]);
+}
+
+Position.prototype.copy=function() {
+	return new Position(this.getFen());
 }

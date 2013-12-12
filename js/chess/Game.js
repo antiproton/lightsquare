@@ -24,7 +24,6 @@ function Game() {
 
 	this.position=new Position();
 	this.startingPosition=new Position();
-	this.board=new Board();
 	this.history=new History();
 	this.piecesTaken=new PiecesTaken();
 
@@ -36,15 +35,12 @@ function Game() {
 		else {
 			this.position.setFen(this.startingPosition.getFen());
 		}
-
-		this.board.setBoard(this.position.board);
 	});
 }
 
 Game.prototype.setStartingFen=function(fen) {
 	this.startingPosition.setFen(fen);
 	this.position.setFen(fen);
-	this.board.setBoard(this.position.board);
 	this.history.clear();
 	this.history.setStartingColour(this.position.active);
 	this.history.setStartingFullmove(this.position.fullmove);
@@ -59,7 +55,7 @@ Game.prototype.countLegalMoves=function(colour) {
 	var piece;
 
 	for(var square=0; square<64; square++) {
-		piece=this.position.board[square];
+		piece=this.position.board.getSquare(square);
 
 		if(piece!==SQ_EMPTY && Util.getColour(piece)===colour) {
 			legalMoves+=this.getLegalMovesFrom(square).length;
@@ -73,8 +69,8 @@ Game.prototype.getLegalMovesFrom=function(square) {
 	var legalMoves=[];
 	var piece, reachableSquares;
 
-	if(this.position.board[square]!==SQ_EMPTY) {
-		piece=new Piece(this.position.board[square]);
+	if(this.position.board.getSquare(square)!==SQ_EMPTY) {
+		piece=new Piece(this.position.board.getSquare(square));
 		reachableSquares=Util.getReachableSquares(piece.type, square, piece.colour);
 
 		for(var i=0; i<reachableSquares.length; i++) {
@@ -92,7 +88,7 @@ Game.prototype.move=function(from, to, promoteTo, dryrun) {
 	dryrun=dryrun||false;
 
 	var colour=this.position.active;
-	var piece=new Piece(this.position.board[from]);
+	var piece=new Piece(this.position.board.getSquare(from));
 	var move=this.history.createMove();
 
 	move.from=from;
@@ -101,12 +97,12 @@ Game.prototype.move=function(from, to, promoteTo, dryrun) {
 	if(Util.isOnBoard(from) && Util.isOnBoard(to) && piece.type!==SQ_EMPTY && piece.colour===colour) {
 		var targetPiece=null;
 
-		if(this.position.board[to]!==SQ_EMPTY) {
-			targetPiece=new Piece(this.position.board[to]);
+		if(this.position.board.getSquare(to)!==SQ_EMPTY) {
+			targetPiece=new Piece(this.position.board.getSquare(to));
 		}
 
 		var label=new MoveLabel();
-		var position=new Position(this.position.getFen());
+		var oldPosition=this.position.copy();
 		var fromCoords=Util.coordsFromSquare(from);
 		var toCoords=Util.coordsFromSquare(to);
 		var relFrom=Util.getRelativeSquare(from, colour);
@@ -114,26 +110,26 @@ Game.prototype.move=function(from, to, promoteTo, dryrun) {
 		var oppColour=Util.getOppColour(colour);
 
 		var isUnobstructed=(
-			!Util.isBlocked(this.position.board, from, to)
+			!Util.isBlocked(this.position.board.getBoardArray(), from, to)
 			&& (targetPiece===null || targetPiece.colour!==colour)
 		);
 
-		move.label.piece=Fen.getPieceChar[Util.getPiece(piece.type, WHITE)];
-		move.label.to=Util.getAlgebraicSquare(to);
+		label.piece=Fen.getPieceChar[Util.getPiece(piece.type, WHITE)];
+		label.to=Util.getAlgebraicSquare(to);
 
 		if(piece.type!==PAWN && piece.type!==KING) {
-			move.label.disambiguation=Util.disambiguate(this.position.board, piece.type, colour, from, to);
+			label.disambiguation=Util.disambiguate(this.position.board.getBoardArray(), piece.type, colour, from, to);
 		}
 
 		if(targetPiece!==null && targetPiece.colour===oppColour) {
-			move.label.sign=MoveLabel.SIGN_CAPTURE;
-			move.capturedPiece=this.position.board[to];
+			label.sign=MoveLabel.SIGN_CAPTURE;
+			move.capturedPiece=this.position.board.getSquare(to);
 		}
 
 		if(Util.isRegularMove(piece.type, fromCoords, toCoords) && isUnobstructed) {
 			move.isValid=true;
 			move.boardChanges[from]=SQ_EMPTY;
-			move.boardChanges[to]=this.position.board[from];
+			move.boardChanges[to]=this.position.board.getSquare(from);
 		}
 
 		else if(piece.type===PAWN && isUnobstructed) {
@@ -142,18 +138,18 @@ Game.prototype.move=function(from, to, promoteTo, dryrun) {
 			var promotion=false;
 
 			if(capturing) {
-				move.label.disambiguation=Util.file_str(from);
-				move.label.sign=MoveLabel.SIGN_CAPTURE;
+				label.disambiguation=Util.file_str(from);
+				label.sign=MoveLabel.SIGN_CAPTURE;
 			}
 
-			move.label.piece="";
+			label.piece="";
 
 			if(Util.isPawnPromotion(relTo)) {
 				promotion=true;
 
 				if(promoteTo>=KNIGHT && promoteTo<=QUEEN) {
 					move.boardChanges[to]=Util.getPiece(promoteTo, colour);
-					move.label.special=MoveLabel.SIGN_PROMOTE+Fen.getPieceChar[Util.getPiece(promoteTo, WHITE)];
+					label.special=MoveLabel.SIGN_PROMOTE+Fen.getPieceChar[Util.getPiece(promoteTo, WHITE)];
 					move.promoteTo=promoteTo;
 					validPromotion=true;
 				}
@@ -173,7 +169,7 @@ Game.prototype.move=function(from, to, promoteTo, dryrun) {
 					else if(capturing && to===this.position.epTarget) {
 						move.isValid=true;
 						move.boardChanges[Util.getEpPawn(from, to)]=SQ_EMPTY;
-						move.label.sign=MoveLabel.SIGN_CAPTURE;
+						label.sign=MoveLabel.SIGN_CAPTURE;
 						move.capturedPiece=Util.getPiece(PAWN, oppColour);
 					}
 				}
@@ -187,7 +183,7 @@ Game.prototype.move=function(from, to, promoteTo, dryrun) {
 				move.boardChanges[from]=SQ_EMPTY;
 
 				if(!promotion) {
-					move.boardChanges[to]=this.position.board[from];
+					move.boardChanges[to]=this.position.board.getSquare(from);
 				}
 			}
 		}
@@ -233,7 +229,7 @@ Game.prototype.move=function(from, to, promoteTo, dryrun) {
 						for(var i=0; i<rookSquares.length; i++) {
 							sq=rookSquares[i];
 
-							if(this.position.board[sq]===Util.getPiece(ROOK, colour)) {
+							if(this.position.board.getSquare(sq)===Util.getPiece(ROOK, colour)) {
 								rookSquare=sq;
 
 								break;
@@ -273,7 +269,7 @@ Game.prototype.move=function(from, to, promoteTo, dryrun) {
 
 						for(var i=0; i<squares.length; i++) {
 							sq=squares[i];
-							pc=this.position.board[sq];
+							pc=this.position.board.getSquare(sq);
 
 							if(pc!==SQ_EMPTY) {
 								if(pc===Util.getPiece(ROOK, colour)) {
@@ -300,7 +296,7 @@ Game.prototype.move=function(from, to, promoteTo, dryrun) {
 							for(var i=0; i<between.length; i++) {
 								n=between[i];
 
-								if(Util.getAllAttackers(this.position.board, n, oppColour).length>0) {
+								if(Util.getAllAttackers(this.position.board.getBoardArray(), n, oppColour).length>0) {
 									throughCheck=true;
 
 									break;
@@ -309,9 +305,9 @@ Game.prototype.move=function(from, to, promoteTo, dryrun) {
 
 							if(!throughCheck) {
 								move.isValid=true;
-								move.label.piece="";
-								move.label.to="";
-								move.label.special=CastlingDetails.signs[side];
+								label.piece="";
+								label.to="";
+								label.special=CastlingDetails.signs[side];
 								move.boardChanges[kingSquare]=SQ_EMPTY;
 								move.boardChanges[rookSquare]=SQ_EMPTY;
 								move.boardChanges[kingDestination]=Util.getPiece(KING, colour);
@@ -331,18 +327,26 @@ Game.prototype.move=function(from, to, promoteTo, dryrun) {
 						var between=Util.getSquaresBetween(from, to);
 
 						for(var i=0; i<between.length; i++) {
-							if(Util.getAllAttackers(this.position.board, between[i], oppColour).length>0) {
+							if(Util.getAllAttackers(
+								this.position.board.getBoardArray(),
+								between[i],
+								oppColour
+							).length>0) {
 								throughCheck=true;
 
 								break;
 							}
 						}
 
-						if(!Util.isBlocked(this.position.board, from, castling.rookStartPos) && !throughCheck) {
+						if(!Util.isBlocked(
+							this.position.board.getBoardArray(),
+							from,
+							castling.rookStartPos
+						) && !throughCheck) {
 							move.isValid=true;
-							move.label.piece="";
-							move.label.to="";
-							move.label.special=castling.sign;
+							label.piece="";
+							label.to="";
+							label.special=castling.sign;
 							move.boardChanges[from]=SQ_EMPTY;
 							move.boardChanges[to]=Util.getPiece(KING, colour);
 							move.boardChanges[castling.rookStartPos]=SQ_EMPTY;
@@ -358,12 +362,16 @@ Game.prototype.move=function(from, to, promoteTo, dryrun) {
 
 			for(var square in move.boardChanges) {
 				square=parseInt(square);
-				position.setSquare(square, move.boardChanges[square]);
+				this.position.board.setSquare(square, move.boardChanges[square]);
 			}
 
 			//test whether the player is in check on temporary board
 
-			var playerKingAttackers=Util.getAllAttackers(position.board, position.kingPositions[colour], oppColour);
+			var playerKingAttackers=Util.getAllAttackers(
+				this.position.board.getBoardArray(),
+				this.position.board.kingPositions[colour],
+				oppColour
+			);
 
 			if(playerKingAttackers.length===0) {
 				move.isLegal=true;
@@ -371,10 +379,6 @@ Game.prototype.move=function(from, to, promoteTo, dryrun) {
 		}
 
 		if(move.isLegal) {
-			var oldPosition=this.position;
-
-			this.position=position;
-
 			if(colour===BLACK) {
 				this.position.fullmove++;
 			}
@@ -404,11 +408,11 @@ Game.prototype.move=function(from, to, promoteTo, dryrun) {
 			}
 
 			if(this.isInCheck(oppColour)) {
-				move.label.check=MoveLabel.SIGN_CHECK;
+				label.check=MoveLabel.SIGN_CHECK;
 			}
 
 			if(this.isMated(oppColour)) {
-				move.label.check=MoveLabel.SIGN_MATE;
+				label.check=MoveLabel.SIGN_MATE;
 			}
 
 			if(!dryrun) {
@@ -442,19 +446,16 @@ Game.prototype.move=function(from, to, promoteTo, dryrun) {
 				}
 
 				move.resultingFen=this.position.getFen();
+				move.setLabel(label);
 
 				if(this.history.move(move)) {
 					move.success=true;
 
 					this.Moved.fire();
 				}
-
-				else { //if adding to the history fails for some reason, set back to the original position
-					this.position=oldPosition;
-				}
 			}
 
-			else {
+			if(dryrun || !move.success) {
 				this.position=oldPosition;
 			}
 		}
@@ -465,7 +466,7 @@ Game.prototype.move=function(from, to, promoteTo, dryrun) {
 
 Game.prototype.isInCheck=function(colour) {
 	return (Util.getAllAttackers(
-		this.position.board,
+		this.position.board.getBoardArray(),
 		this.position.kingPositions[colour],
 		Util.getOppColour(colour)
 	).length>0);
@@ -490,7 +491,7 @@ Game.prototype.canMate=function(colour) {
 	var piece, pieceColour, pieceType;
 
 	for(var square=0; square<64; square++) {
-		piece=new Piece(this.position.board[square]);
+		piece=new Piece(this.position.board.getSquare(square));
 
 		if(piece.type!==SQ_EMPTY && piece.type!==KING) {
 			if(piece.colour===colour && (piece.type===PAWN || piece.type===ROOK || piece.type===QUEEN)) {

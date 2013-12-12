@@ -25,6 +25,10 @@ function Move() {
 	this.bughouseDropPiece=null;
 }
 
+Move.prototype.setLabel=function(label) {
+	this._label=label;
+}
+
 Move.prototype.getHalfmove=function() {
 	return this._halfmove;
 }
@@ -35,7 +39,7 @@ Move.prototype.setHalfmove=function(halfmove) {
 
 Move.prototype.getFullmove=function() {
 	if(this._halfmove!==null) {
-		return Util.fullmove(this._halfmove);
+		return Util.fullmoveFromHalfmove(this._halfmove);
 	}
 
 	else {

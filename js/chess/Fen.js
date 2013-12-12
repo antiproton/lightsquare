@@ -27,7 +27,7 @@ var Fen={
 		return Fen._pieceChars[piece];
 	},
 
-	fenPositionToBoard: function(fenPosition) {
+	fenPositionToBoardArray: function(fenPosition) {
 		var board=[];
 		var ranks=fenPosition.split(Fen._RANK_SEPARATOR).reverse();
 		var rank, ch;
@@ -53,7 +53,7 @@ var Fen={
 		return board;
 	},
 
-	boardToFenPosition: function(board) {
+	boardArrayToFenPosition: function(board) {
 		var fenRanks=[];
 		var ranks=[];
 

@@ -341,7 +341,7 @@ BoardWidget.prototype._setHtmlSquare=function(square, piece) {
 
 BoardWidget.prototype._updateSquares=function() {
 	for(var square=0; square<64; square++) {
-		this._setHtmlSquare(square, this.board[square]);
+		this._setHtmlSquare(square, this._board[square]);
 	}
 }
 
@@ -388,11 +388,11 @@ BoardWidget.prototype._boardMouseDown=function(event, targetUiSquare) {
 	if(this.mouseIsOnBoard(event)) {
 		var square=targetUiSquare.getSquare();
 
-		if(!this._moveInfo.selected && !this._moveInfo.isInProgress && this.board[square]!==SQ_EMPTY) {
+		if(!this._moveInfo.selected && !this._moveInfo.isInProgress && this._board[square]!==SQ_EMPTY) {
 			targetUiSquare.setZIndexAbove();
 			this._moveInfo.selected=true;
 			this._moveInfo.from=square;
-			this._moveInfo.piece=this.board[square];
+			this._moveInfo.piece=this._board[square];
 			this._moveInfo.mouseOffsets=[event.offsetX, event.offsetY];
 		}
 	}
@@ -413,7 +413,7 @@ BoardWidget.prototype._boardMouseMove=function(event) {
 	if(this._moveInfo.selected && !this._moveInfo.isInProgress) { //down and not already up on same square
 		args={
 			square: square,
-			piece: this.board[square],
+			piece: this._board[square],
 			dragging: true,
 			cancel: false
 		};
@@ -514,7 +514,7 @@ BoardWidget.prototype._boardMouseUp=function(event) {
 
 			args={
 				square: square,
-				piece: this.board[square],
+				piece: this._board[square],
 				dragging: false,
 				cancel: false
 			};

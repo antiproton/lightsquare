@@ -6,6 +6,12 @@ function MoveColView() {
 	this.node=this._template.root;
 }
 
+MoveColView.prototype.setLabel=function(label) {
+	Move.prototype.setLabel.call(this, label);
+
+	this.node.innerHTML=label;
+}
+
 MoveColView.prototype.isFullmoveDisplayed=function() {
 	return false;
 }

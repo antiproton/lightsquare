@@ -81,12 +81,15 @@ $widgetLoader->load([
 
 		var game=new Game();
 
-		tableWidget.board.setBoard(game.position.board);
+		tableWidget.board.setBoardArray(game.position.board.getBoardArray());
 
 		var history=tableWidget.history;
 
 		var move=history.createMove();
-		move.label.piece="N";
+		var label=new MoveLabel();
+
+		label.piece="N";
+		move.setLabel(label);
 
 		history.move(move);
 
