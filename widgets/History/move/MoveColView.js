@@ -1,25 +1,34 @@
-function MoveColView() {
-	UiMove.implement(this);
+define(function() {
+	var Template=require("js/dom/Template");
+	var UiMove=require("./UiMove");
 
-	this._parentFullmove=null;
-	this._template=new Template("move_colview");
-	this.node=this._template.root;
-}
+	function MoveColView() {
+		UiMove.call(this);
 
-MoveColView.prototype.setLabel=function(label) {
-	Move.prototype.setLabel.call(this, label);
+		this._parentFullmove=null;
+		this._template=new Template("move_colview");
+		this.node=this._template.root;
+	}
 
-	this.node.innerHTML=label;
-}
+	MoveColView.implement(UiMove);
 
-MoveColView.prototype.isFullmoveDisplayed=function() {
-	return false;
-}
+	MoveColView.prototype.setLabel=function(label) {
+		Move.prototype.setLabel.call(this, label);
 
-MoveColView.prototype.setParentFullmove=function(fullmove) {
-	this._parentFullmove=fullmove;
-}
+		this.node.innerHTML=label;
+	}
 
-MoveColView.prototype.getParentFullmove=function() {
-	return this._parentFullmove;
-}
+	MoveColView.prototype.isFullmoveDisplayed=function() {
+		return false;
+	}
+
+	MoveColView.prototype.setParentFullmove=function(fullmove) {
+		this._parentFullmove=fullmove;
+	}
+
+	MoveColView.prototype.getParentFullmove=function() {
+		return this._parentFullmove;
+	}
+
+	return MoveColView;
+});

@@ -1,226 +1,230 @@
-function History() {
-	this._startingColour=WHITE;
-	this._startingFullmove=1;
-	this.selectedMove=null;
-	this.editMode=History.EDIT_MODE_BRANCH;
-	this.mainLine=this.createVariation();
+define(function() {
+	function History() {
+		this._startingColour=WHITE;
+		this._startingFullmove=1;
+		this.selectedMove=null;
+		this.editMode=History.EDIT_MODE_BRANCH;
+		this.mainLine=this.createVariation();
 
-	this.SelectedMoveChanged=new Event(this);
-	this.Moved=new Event(this);
-	this.Update=new Event(this);
-}
-
-History.EDIT_MODE_FAIL=0;
-History.EDIT_MODE_OVERWRITE=1;
-History.EDIT_MODE_BRANCH=2;
-History.EDIT_MODE_APPEND=3;
-
-History.prototype.getStartingFullmove=function() {
-	return this._startingFullmove;
-}
-
-History.prototype.setStartingFullmove=function(fullmove) {
-	this._startingFullmove=fullmove;
-	this.mainLine.setStartingFullmove(fullmove);
-}
-
-History.prototype.getStartingColour=function() {
-	return this._startingColour;
-}
-
-History.prototype.setStartingColour=function(colour) {
-	this._startingColour=colour;
-	this.mainLine.setStartingColour(colour);
-}
-
-History.prototype.promoteCurrentVariation=function() {
-	var variation=this.mainLine;
-	var branchMove=null;
-	var parentVariation=null;
-
-	if(this.selectedMove!==null) {
-		variation=this.selectedMove.getVariation();
+		this.SelectedMoveChanged=new Event(this);
+		this.Moved=new Event(this);
+		this.Update=new Event(this);
 	}
 
-	if(variation!==this.mainLine) {
-		branchMove=variation.getBranchMove();
-		parentVariation=variation.getVariation();
+	History.EDIT_MODE_FAIL=0;
+	History.EDIT_MODE_OVERWRITE=1;
+	History.EDIT_MODE_BRANCH=2;
+	History.EDIT_MODE_APPEND=3;
 
-		var item;
-		var newVariation=this.createVariation();
+	History.prototype.getStartingFullmove=function() {
+		return this._startingFullmove;
+	}
 
-		//create a new variation and move the main line into it
+	History.prototype.setStartingFullmove=function(fullmove) {
+		this._startingFullmove=fullmove;
+		this.mainLine.setStartingFullmove(fullmove);
+	}
 
-		parentVariation.remove(branchMove);
-		newVariation.add(branchMove);
+	History.prototype.getStartingColour=function() {
+		return this._startingColour;
+	}
 
-		var item=branchMove.getNextMove();
+	History.prototype.setStartingColour=function(colour) {
+		this._startingColour=colour;
+		this.mainLine.setStartingColour(colour);
+	}
 
-		while(item!==null) {
-			parentVariation.remove(item);
-			newVariation.add(item);
-			item=item.nextItem;
+	History.prototype.promoteCurrentVariation=function() {
+		var variation=this.mainLine;
+		var branchMove=null;
+		var parentVariation=null;
+
+		if(this.selectedMove!==null) {
+			variation=this.selectedMove.getVariation();
 		}
 
-		//insert the first move of the promoted variation in the parent variation
+		if(variation!==this.mainLine) {
+			branchMove=variation.getBranchMove();
+			parentVariation=variation.getVariation();
 
-		var prevMove=branchMove.getPreviousMove();
-		parentVariation.insertAfterMove(variation.getFirstMove(), prevMove);
+			var item;
+			var newVariation=this.createVariation();
 
-		//insert the new variation at the end of the other variations in the main line
+			//create a new variation and move the main line into it
 
-		item=branchMove;
+			parentVariation.remove(branchMove);
+			newVariation.add(branchMove);
 
-		while(item.nextVariation!==null) {
-			item=item.nextVariation;
+			var item=branchMove.getNextMove();
+
+			while(item!==null) {
+				parentVariation.remove(item);
+				newVariation.add(item);
+				item=item.nextItem;
+			}
+
+			//insert the first move of the promoted variation in the parent variation
+
+			var prevMove=branchMove.getPreviousMove();
+			parentVariation.insertAfterMove(variation.getFirstMove(), prevMove);
+
+			//insert the new variation at the end of the other variations in the main line
+
+			item=branchMove;
+
+			while(item.nextVariation!==null) {
+				item=item.nextVariation;
+			}
+
+			parentVariation.insertAfter(newVariation, item);
+
+			//insert the rest of the promoted variation (2nd move onwards) into the parent variation
+
+			item=variation.firstMove.getNextItem();
+
+			while(item!==null) {
+				parentVariation.add(item);
+				item=item.getNextItem();
+			}
+
+			//delete the promoted variation (all the moves are now in the main line)
+
+			parentVariation.remove(variation);
+
+			this.SelectedMoveChanged.fire({
+				move: this.selectedMove
+			});
+		}
+	}
+
+	History.prototype.deleteCurrentMove=function() {
+		var move=this.selectedMove;
+		var variation;
+		var parentVariation=null;
+
+		if(move!==null) {
+			variation=move.variation;
+			parentVariation=variation.variation;
+			move.variation.deleteMove(move);
+
+			if(variation.moveList.length===0 && !variation.IsMainline) {
+				this.select(variation.branchMove);
+				parentVariation.remove(variation);
+			}
+
+			else {
+				if(move.previousMove!==null) {
+					this.select(move.previousMove);
+				}
+
+				else { //move was first of main line, the history is empty now
+					this.deselect();
+				}
+			}
+		}
+	}
+
+	History.prototype.move=function(move) {
+		var success=true;
+		var variation=this.mainLine;
+		var currentMove=this.selectedMove;
+		var nextMove=variation.getFirstMove();
+
+		if(currentMove!==null) {
+			variation=currentMove.getVariation();
+
+			if(currentMove.getNextMove()!==null) {
+				nextMove=currentMove.getNextMove();
+			}
 		}
 
-		parentVariation.insertAfter(newVariation, item);
-
-		//insert the rest of the promoted variation (2nd move onwards) into the parent variation
-
-		item=variation.firstMove.getNextItem();
-
-		while(item!==null) {
-			parentVariation.add(item);
-			item=item.getNextItem();
+		if(variation.moveList.length===0 || currentMove===variation.getLastMove()) {
+			variation.add(move);
 		}
 
-		//delete the promoted variation (all the moves are now in the main line)
+		else {
+			switch(this.editMode) {
+				case History.EDIT_MODE_APPEND: {
+					variation.add(move);
 
-		parentVariation.remove(variation);
+					break;
+				}
+
+				case History.EDIT_MODE_FAIL: {
+					success=false;
+
+					break;
+				}
+
+				case History.EDIT_MODE_OVERWRITE: {
+					variation.deleteMove(nextMove);
+					variation.add(move);
+
+					break;
+				}
+
+				case History.EDIT_MODE_BRANCH: {
+					var newVariation=this.createVariation();
+
+					variation.insertAfter(newVariation, nextMove);
+					newVariation.add(move);
+
+					break;
+				}
+			}
+		}
+
+		if(success) {
+			this.Moved.fire({
+				move: move
+			});
+
+			this.select(move);
+		}
+
+		return success;
+	}
+
+	History.prototype.clear=function() {
+		if(this.mainLine.firstMove!==null) {
+			this.mainLine.deleteMove(this.mainLine.firstMove);
+		}
+
+		this.deselect();
+	}
+
+	History.prototype.undo=function() {
+		this.mainLine.remove(this.mainLine.lastMove);
+		this.select(this.mainLine.lastMove);
+	}
+
+	History.prototype.select=function(move) {
+		if(this.selectedMove!==null) {
+			this.selectedMove.deselect();
+		}
+
+		this.selectedMove=move;
+
+		if(move!==null) {
+			move.select();
+		}
 
 		this.SelectedMoveChanged.fire({
 			move: this.selectedMove
 		});
 	}
-}
 
-History.prototype.deleteCurrentMove=function() {
-	var move=this.selectedMove;
-	var variation;
-	var parentVariation=null;
-
-	if(move!==null) {
-		variation=move.variation;
-		parentVariation=variation.variation;
-		move.variation.deleteMove(move);
-
-		if(variation.moveList.length===0 && !variation.IsMainline) {
-			this.select(variation.branchMove);
-			parentVariation.remove(variation);
-		}
-
-		else {
-			if(move.previousMove!==null) {
-				this.select(move.previousMove);
-			}
-
-			else { //move was first of main line, the history is empty now
-				this.deselect();
-			}
-		}
-	}
-}
-
-History.prototype.move=function(move) {
-	var success=true;
-	var variation=this.mainLine;
-	var currentMove=this.selectedMove;
-	var nextMove=variation.getFirstMove();
-
-	if(currentMove!==null) {
-		variation=currentMove.getVariation();
-
-		if(currentMove.getNextMove()!==null) {
-			nextMove=currentMove.getNextMove();
-		}
+	History.prototype.deselect=function() {
+		this.select(null);
 	}
 
-	if(variation.moveList.length===0 || currentMove===variation.getLastMove()) {
-		variation.add(move);
+	History.prototype.createVariation=function() {
+		return new Variation();
 	}
 
-	else {
-		switch(this.editMode) {
-			case History.EDIT_MODE_APPEND: {
-				variation.add(move);
-
-				break;
-			}
-
-			case History.EDIT_MODE_FAIL: {
-				success=false;
-
-				break;
-			}
-
-			case History.EDIT_MODE_OVERWRITE: {
-				variation.deleteMove(nextMove);
-				variation.add(move);
-
-				break;
-			}
-
-			case History.EDIT_MODE_BRANCH: {
-				var newVariation=this.createVariation();
-
-				variation.insertAfter(newVariation, nextMove);
-				newVariation.add(move);
-
-				break;
-			}
-		}
+	History.prototype.createMove=function() {
+		return new Move();
 	}
 
-	if(success) {
-		this.Moved.fire({
-			move: move
-		});
-
-		this.select(move);
-	}
-
-	return success;
-}
-
-History.prototype.clear=function() {
-	if(this.mainLine.firstMove!==null) {
-		this.mainLine.deleteMove(this.mainLine.firstMove);
-	}
-
-	this.deselect();
-}
-
-History.prototype.undo=function() {
-	this.mainLine.remove(this.mainLine.lastMove);
-	this.select(this.mainLine.lastMove);
-}
-
-History.prototype.select=function(move) {
-	if(this.selectedMove!==null) {
-		this.selectedMove.deselect();
-	}
-
-	this.selectedMove=move;
-
-	if(move!==null) {
-		move.select();
-	}
-
-	this.SelectedMoveChanged.fire({
-		move: this.selectedMove
-	});
-}
-
-History.prototype.deselect=function() {
-	this.select(null);
-}
-
-History.prototype.createVariation=function() {
-	return new Variation();
-}
-
-History.prototype.createMove=function() {
-	return new Move();
-}
+	return History;
+});
