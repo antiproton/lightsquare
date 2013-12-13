@@ -1,4 +1,4 @@
-define(function() {
+define(function(require) {
 	var HistoryItem=require("./HistoryItem");
 
 	function Variation() {

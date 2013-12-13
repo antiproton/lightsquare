@@ -1,4 +1,4 @@
-define(function() {
+define(function(require) {
 	var Template=require("js/dom/Template");
 	var UiMove=require("./UiMove");
 

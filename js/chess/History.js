@@ -1,4 +1,4 @@
-define(function() {
+define(function(require) {
 	function History() {
 		this._startingColour=WHITE;
 		this._startingFullmove=1;

@@ -1,4 +1,4 @@
-define(function() {
+define(function(require) {
 	function Move() {
 		HistoryItem.call(this);
 

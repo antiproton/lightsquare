@@ -1,6 +1,6 @@
-define(function() {
+define(function(require) {
 	var Template=require("js/dom/Template");
-	
+
 	function Fullmove(parent, fullmove) {
 		this._fullmove=fullmove;
 		this._hasMove=[];

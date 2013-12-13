@@ -1,4 +1,4 @@
-define(function() {
+define(function(require) {
 	var List=require("js/List");
 	var Template=require("js/dom/Template");
 

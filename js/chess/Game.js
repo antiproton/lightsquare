@@ -1,4 +1,4 @@
-define(function() {
+define(function(require) {
 	var Event=require("js/Event");
 
 	var Position=require("./Position");
