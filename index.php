@@ -22,33 +22,12 @@ $widgetLoader->load([
 		style_tags_s("/lib/css/reset.css");
 		style_tags_s("/lib/css/common.css");
 		?>
-		<?php
-		script_tags_s("/lib/js/util");
-		script_tags_s("/lib/js/server");
-		script_tags_s("/lib/js/events");
-		script_tags_s("/lib/js/dom");
-		script_tags_s("/lib/js/List.js");
-		script_tags_s("/lib/js/serialise.js");
-
-		script_tags_s("/lib/js/dbenums/chess.js");
-		script_tags_s("/lib/js/dbcodes/chess.js");
-
-		script_tags_w("/js/constants.js");
-		script_tags_w("/js/chess/constants.js");
-		script_tags_w("/js/chess/MoveLabel.js");
-		script_tags_w("/js/chess/Fen.js");
-		script_tags_w("/js/chess");
-		?>
-		<script>
-		<?php
-		$widgetLoader->outputJs();
-		?>
-		</script>
 		<style>
 		<?php
 		$widgetLoader->outputCss();
 		?>
 		</style>
+		<script data-main="js/main" src="/lib/js/require.js"></script>
 	</head>
 	<body>
 		<?php
@@ -72,28 +51,5 @@ $widgetLoader->load([
 				</div>
 			</div>
 		</div>
-		<script>
-		var tableWidget=new LiveTableStandardWidget(g("table"));
-
-
-
-		tableWidget.board.setSquareSize(45);
-
-		var game=new Game();
-
-		tableWidget.board.setBoardArray(game.position.board.getBoardArray());
-
-		var history=tableWidget.history;
-
-		var move=history.createMove();
-		var label=new MoveLabel();
-
-		label.piece="N";
-		move.setLabel(label);
-
-		history.move(move);
-
-
-		</script>
 	</body>
 </html>
