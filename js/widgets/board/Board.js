@@ -2,7 +2,7 @@ define(function(require) {
 	var Template=require("lib/dom/Template");
 	var Event=require("lib/Event");
 	var Base=require("chess/Board");
-	var MoveInfo=require("./_MoveInfo");
+	var MoveAction=require("./_MoveAction");
 	var Square=require("./_Square");
 
 	function Board(parent) {
@@ -26,7 +26,7 @@ define(function(require) {
 
 		this._highlightedSquares={};
 
-		this._moveInfo=new MoveInfo();
+		this._moveAction=new MoveAction();
 		this._squareMouseCurrentlyOver=null;
 		this._squareCurrentlyDraggingPieceOver=null;
 
@@ -88,7 +88,7 @@ define(function(require) {
 	}
 
 	Board.prototype.mouseIsOnBoard=function(event, use_offsets, offsets) {
-		offsets=offsets||[this._moveInfo.mouseOffsets[X], this._moveInfo.mouseOffsets[Y]];
+		offsets=offsets||[this._moveAction.mouseOffsets[X], this._moveAction.mouseOffsets[Y]];
 
 		var x=event.pageX;
 		var y=event.pageY;
@@ -359,8 +359,8 @@ define(function(require) {
 		var y=e.pageY;
 
 		if(use_moveinfo_offsets) { //get the square that the middle of the piece is over
-			x+=(Math.round(this._squareSize/2)-this._moveInfo.mouseOffsets[X]);
-			y+=(Math.round(this._squareSize/2)-this._moveInfo.mouseOffsets[Y]);
+			x+=(Math.round(this._squareSize/2)-this._moveAction.mouseOffsets[X]);
+			y+=(Math.round(this._squareSize/2)-this._moveAction.mouseOffsets[Y]);
 		}
 
 		var os=getoffsets(this._template.board);
@@ -397,12 +397,12 @@ define(function(require) {
 		if(this.mouseIsOnBoard(event)) {
 			var square=targetUiSquare.getSquare();
 
-			if(!this._moveInfo.selected && !this._moveInfo.isInProgress && this._board[square]!==SQ_EMPTY) {
+			if(!this._moveAction.selected && !this._moveAction.isInProgress && this._board[square]!==SQ_EMPTY) {
 				targetUiSquare.setZIndexAbove();
-				this._moveInfo.selected=true;
-				this._moveInfo.from=square;
-				this._moveInfo.piece=this._board[square];
-				this._moveInfo.mouseOffsets=[event.offsetX, event.offsetY];
+				this._moveAction.selected=true;
+				this._moveAction.from=square;
+				this._moveAction.piece=this._board[square];
+				this._moveAction.mouseOffsets=[event.offsetX, event.offsetY];
 			}
 		}
 	}
@@ -419,7 +419,7 @@ define(function(require) {
 
 		var args;
 
-		if(this._moveInfo.selected && !this._moveInfo.isInProgress) { //down and not already up on same square
+		if(this._moveAction.selected && !this._moveAction.isInProgress) { //down and not already up on same square
 			args={
 				square: square,
 				piece: this._board[square],
@@ -430,13 +430,13 @@ define(function(require) {
 			this.SelectPiece.fire(args);
 
 			if(args.cancel) {
-				this._moveInfo.reset();
+				this._moveAction.reset();
 				this._uiSquares[square].setZIndexNormal();
 			}
 
 			else {
-				this._moveInfo.mode=MoveInfo.DRAG;
-				this._moveInfo.isInProgress=true;
+				this._moveAction.mode=MoveAction.DRAG;
+				this._moveAction.isInProgress=true;
 
 				this.PieceSelected.fire({
 					square: square
@@ -444,19 +444,19 @@ define(function(require) {
 			}
 		}
 
-		if(this._moveInfo.selected && this._moveInfo.mode===MoveInfo.DRAG) {
+		if(this._moveAction.selected && this._moveAction.mode===MoveAction.DRAG) {
 			args={
 				square: square,
-				piece: this._moveInfo.piece,
+				piece: this._moveAction.piece,
 				cancel: false
 			};
 
 			this.DragPiece.fire(args);
 
 			if(!args.cancel) {
-				this._uiSquares[this._moveInfo.from].setPiecePosition(
-					event.pageX-this._moveInfo.mouseOffsets[X],
-					event.pageY-this._moveInfo.mouseOffsets[Y]
+				this._uiSquares[this._moveAction.from].setPiecePosition(
+					event.pageX-this._moveAction.mouseOffsets[X],
+					event.pageY-this._moveAction.mouseOffsets[Y]
 				);
 			}
 		}
@@ -468,14 +468,14 @@ define(function(require) {
 		var args;
 		var square=this._squareFromMouseEvent(event);
 
-		if(this._moveInfo.isInProgress && this._moveInfo.mode===MoveInfo.DRAG) {
+		if(this._moveAction.isInProgress && this._moveAction.mode===MoveAction.DRAG) {
 			square=this._squareFromMouseEvent(event, true);
 		}
 
 		var fromUiSquare=null;
 
-		if(this._moveInfo.from!==null) {
-			fromUiSquare=this._uiSquares[this._moveInfo.from];
+		if(this._moveAction.from!==null) {
+			fromUiSquare=this._uiSquares[this._moveAction.from];
 		}
 
 		args={
@@ -483,26 +483,26 @@ define(function(require) {
 			cancel: false
 		};
 
-		if(this._moveInfo.mode===MoveInfo.CLICK) {
+		if(this._moveAction.mode===MoveAction.CLICK) {
 			this.SquareClicked.fire(args);
 		}
 
-		else if(this._moveInfo.mode===MoveInfo.DRAG && this._moveInfo.isInProgress) {
+		else if(this._moveAction.mode===MoveAction.DRAG && this._moveAction.isInProgress) {
 			this.DragDrop.fire(args);
 		}
 
 		if(!args.cancel) {
-			if(this._moveInfo.isInProgress) {
+			if(this._moveAction.isInProgress) {
 				//either dragged and dropped, or clicking on second square to complete click-click move
 
 				this.Deselected.fire();
 
 				if(this.mouseIsOnBoard(event, true)) {
-					if(square!==this._moveInfo.from) {
+					if(square!==this._moveAction.from) {
 						this.UserMove.fire({
-							from: this._moveInfo.from,
+							from: this._moveAction.from,
 							to: square,
-							piece: this.getSquare(this._moveInfo.from),
+							piece: this.getSquare(this._moveAction.from),
 							event: event
 						});
 					}
@@ -510,15 +510,15 @@ define(function(require) {
 
 				else {
 					this.PieceDraggedOff.fire({
-						from: this._moveInfo.from
+						from: this._moveAction.from
 					});
 				}
 
 				fromUiSquare.resetPiecePosition();
-				this._moveInfo.reset();
+				this._moveAction.reset();
 			}
 
-			else if(this._moveInfo.selected && square===this._moveInfo.from && !this._moveInfo.isInProgress) {
+			else if(this._moveAction.selected && square===this._moveAction.from && !this._moveAction.isInProgress) {
 				//clicking on first square to select a piece
 
 				args={
@@ -531,8 +531,8 @@ define(function(require) {
 				this.SelectPiece.fire(args);
 
 				if(!args.cancel) {
-					this._moveInfo.isInProgress=true;
-					this._moveInfo.mode=MoveInfo.CLICK;
+					this._moveAction.isInProgress=true;
+					this._moveAction.mode=MoveAction.CLICK;
 
 					this.PieceSelected.fire({
 						square: square
@@ -540,7 +540,7 @@ define(function(require) {
 				}
 
 				else {
-					this._moveInfo.reset();
+					this._moveAction.reset();
 				}
 			}
 		}
@@ -550,7 +550,7 @@ define(function(require) {
 				fromUiSquare.resetPiecePosition();
 			}
 
-			this._moveInfo.reset();
+			this._moveAction.reset();
 		}
 
 		if(fromUiSquare!==null) {
@@ -599,7 +599,7 @@ define(function(require) {
 	Board.prototype._updatePieceDragInfo=function(event) {
 		var square=this._squareFromMouseEvent(event, true);
 
-		if(this._moveInfo.isInProgress && this._moveInfo.mode===MoveInfo.DRAG) {
+		if(this._moveAction.isInProgress && this._moveAction.mode===MoveAction.DRAG) {
 			if(this.mouseIsOnBoard(event)) {
 				if(this._squareCurrentlyDraggingPieceOver!=square) {
 					if(this._squareCurrentlyDraggingPieceOver!==null) {

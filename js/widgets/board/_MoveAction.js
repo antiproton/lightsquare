@@ -1,9 +1,9 @@
 define(function(require) {
-	function MoveInfo() {
+	function MoveAction() {
 		this.reset();
 	}
 
-	MoveInfo.prototype.reset=function() {
+	MoveAction.prototype.reset=function() {
 		this.mode=MoveInfo.CLICK;
 		this.selected=false;
 		this.isInProgress=false;
@@ -12,8 +12,8 @@ define(function(require) {
 		this.mouseOffsets=[0, 0]
 	}
 
-	MoveInfo.CLICK=0;
-	MoveInfo.DRAG=1;
+	MoveAction.CLICK=0;
+	MoveAction.DRAG=1;
 
-	return MoveInfo;
+	return MoveAction;
 });
