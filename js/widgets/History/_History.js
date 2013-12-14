@@ -4,8 +4,6 @@ define(function(require) {
 
 	function History() {
 		Base.call(this);
-
-		this.UserSelect=new Event(this);
 	}
 
 	History.implement(Base);
