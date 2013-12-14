@@ -4,7 +4,7 @@ define(function(require) {
 	}
 
 	MoveAction.prototype.reset=function() {
-		this.mode=MoveInfo.CLICK;
+		this.mode=MoveAction.CLICK;
 		this.selected=false;
 		this.isInProgress=false;
 		this.piece=null;
