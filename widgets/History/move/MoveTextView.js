@@ -1,32 +1,31 @@
-function MoveTextView() {
-	UiMove.implement(this);
+define(function(require) {
+	var UiMove=require("./UiMove");
+	var Template=require("js/dom/Template");
 
-	this._tpl=new Template("move_textview");
-	this.node=this._tpl.root;
-}
+	function MoveTextView() {
+		UiMove.call(this);
 
-MoveTextView.prototype.setPreviousVariation=function(variation) {
-	Move.prototype.setPreviousVariation.call(this, variation);
+		this._template=new Template("move_textview");
+		this.node=this._template.root;
+	}
 
-	this._updateFullmove();
-}
+	MoveTextView.implement(UiMove);
 
-MoveTextView.prototype.setFullmove=function(fullmove) {
-	this.fullmove=fullmove;
-	this._updateFullmove();
-}
+	MoveTextView.prototype.setPreviousVariation=function(variation) {
+		UiMove.prototype.setPreviousVariation.call(this, variation);
 
-MoveTextView.prototype.setHalfmove=function(halfmove) {
-	this.halfmove=halfmove;
-	this._updateFullmove();
-}
+		this._updateFullmove();
+	}
 
-MoveTextView.prototype._updateFullmove=function() {
-	this._tpl.fullmove.style.visibility=(
-		this.displayFullmove.get()?
-		"visible":
-		"hidden"
-	);
+	MoveTextView.prototype.setHalfmove=function(halfmove) {
+		this._halfmove=halfmove;
+		this._updateFullmove();
+	}
 
-	this._tpl.fullmove.innerHTML=this.fullmove+this.dot.Get();
-}
+	MoveTextView.prototype._updateFullmove=function() {
+		this._template.fullmove.style.visibility=(this.isFullmoveDisplayed()?"":"hidden");
+		this._template.fullmove.innerHTML=this.fullmove+this.dot.Get();
+	}
+
+	return MoveTextView;
+});
