@@ -3,6 +3,7 @@ define(function(require) {
 	var Event=require("lib/Event");
 	var ChessBoard=require("chess/Board");
 	var MoveInfo=require("./_MoveInfo");
+	var Square=require("./Square");
 
 	function Board(parent) {
 		ChessBoard.call(this);
@@ -204,7 +205,7 @@ define(function(require) {
 		var uiSquare;
 
 		for(var i=0; i<64; i++) {
-			uiSquare=new BoardSquareWidget(
+			uiSquare=new Square(
 				this._template.board,
 				i,
 				this._squareSize,
