@@ -1,31 +1,41 @@
-function UiMove() {
-	Move.implement(this);
+define(function(require) {
+	var Move=require("chess/Move");
+	var Event=require("./Event");
+	var chess=require("chess");
 
-	this.UserSelect=new Event(this);
-}
+	function UiMove() {
+		Move.call(this);
 
-UiMove.prototype.isFullmoveDisplayed=function() {
-	if(this._variation!==null) {
-		return (
-			this.getColour()===WHITE
-			|| this===this._variation.getFirstMove()
-			|| this.getPreviousVariation()!==null
-		);
+		this.UserSelect=new Event(this);
 	}
 
-	else {
-		return false;
+	UiMove.implement(Move);
+
+	UiMove.prototype.isFullmoveDisplayed=function() {
+		if(this._variation!==null) {
+			return (
+				this.getColour()===WHITE
+				|| this===this._variation.getFirstMove()
+				|| this.getPreviousVariation()!==null
+			);
+		}
+
+		else {
+			return false;
+		}
 	}
-}
 
-UiMove.prototype.select=function() {
-	Move.prototype.select.call(this);
+	UiMove.prototype.select=function() {
+		Move.prototype.select.call(this);
 
-	this.node.classList.add("move_selected");
-}
+		this.node.classList.add("move_selected");
+	}
 
-UiMove.prototype.deselect=function() {
-	Move.prototype.deselect.call(this);
+	UiMove.prototype.deselect=function() {
+		Move.prototype.deselect.call(this);
 
-	this.node.classList.remove("move_selected");
-}
+		this.node.classList.remove("move_selected");
+	}
+
+	return UiMove;
+});
