@@ -38,7 +38,7 @@ $widgetLoader->load([
 			}
 		};
 		</script>
-		<script data-main="js/main" src="/lib/js/require.js"></script>
+		<script data-main="main" src="/lib/js/require.js"></script>
 	</head>
 	<body>
 		<?php
