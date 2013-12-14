@@ -1,12 +1,12 @@
 define(function(require) {
 	var Template=require("lib/dom/Template");
 	var Event=require("lib/Event");
-	var ChessBoard=require("chess/Board");
+	var Base=require("chess/Board");
 	var MoveInfo=require("./_MoveInfo");
-	var Square=require("./Square");
+	var Square=require("./_Square");
 
 	function Board(parent) {
-		ChessBoard.call(this);
+		Base.call(this);
 
 		this._template=new Template("board", parent);
 
@@ -45,14 +45,14 @@ define(function(require) {
 		this._setupHtml();
 	}
 
-	Board.implement(ChessBoard);
+	Board.implement(Base);
 
 	Board.STYLE_BROWN="brown";
 	Board.STYLE_GREEN="green";
 	Board.STYLE_BLUE="blue";
 
 	Board.prototype.setSquare=function(square, piece) {
-		ChessBoard.prototype.setSquare.call(this, square, piece);
+		Base.prototype.setSquare.call(this, square, piece);
 
 		if(this._htmlUpdatesEnabled) {
 			this._setHtmlSquare(square, piece);
