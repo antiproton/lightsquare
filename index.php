@@ -27,7 +27,7 @@ $widgetLoader->load([
 		$widgetLoader->outputCss();
 		?>
 		</style>
-		<script src="/lib/js/util/Function.js"></script>
+		<script src="/lib/js/Function.js"></script>
 		<!-- use regular php (or js version of) loadw/loads here -->
 		<script>
 		var require={
