@@ -1,6 +1,7 @@
 define(function(require) {
-	var LiveTableStandard=require("./widgets/LiveTableStandard/index");
-	var g=require("js/g");
+	var LiveTableStandard=require("./widgets/LiveTableStandard/_");
+	var g=require("lib/g");
+
 	var tableWidget=new LiveTableStandard(g("table"));
 
 
