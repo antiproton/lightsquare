@@ -27,6 +27,17 @@ $widgetLoader->load([
 		$widgetLoader->outputCss();
 		?>
 		</style>
+		<script src="/lib/js/util/Function.js"></script>
+		<!-- use regular php (or js version of) loadw/loads here -->
+		<script>
+		var require={
+			baseUrl: "js",
+
+			paths: {
+				"lib": "/lib/js"
+			}
+		};
+		</script>
 		<script data-main="js/main" src="/lib/js/require.js"></script>
 	</head>
 	<body>
