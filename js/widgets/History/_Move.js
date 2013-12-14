@@ -1,14 +1,14 @@
 define(function(require) {
-	var ChessMove=require("chess/Move");
+	var Base=require("chess/Move");
 	var Event=require("lib/Event");
 
 	function Move() {
-		ChessMove.call(this);
+		Base.call(this);
 
 		this.UserSelect=new Event(this);
 	}
 
-	Move.implement(ChessMove);
+	Move.implement(Base);
 
 	Move.prototype.isFullmoveDisplayed=function() {
 		if(this._variation!==null) {
@@ -25,13 +25,13 @@ define(function(require) {
 	}
 
 	Move.prototype.select=function() {
-		ChessMove.prototype.select.call(this);
+		Base.prototype.select.call(this);
 
 		this.node.classList.add("move_selected");
 	}
 
 	Move.prototype.deselect=function() {
-		ChessMove.prototype.deselect.call(this);
+		Base.prototype.deselect.call(this);
 
 		this.node.classList.remove("move_selected");
 	}

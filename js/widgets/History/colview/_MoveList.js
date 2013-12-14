@@ -1,8 +1,8 @@
 define(function(require) {
-	var List=require("js/List");
-	var Template=require("js/dom/Template");
+	var List=require("lib/List");
+	var Template=require("lib/dom/Template");
 
-	function MoveListColView() {
+	function MoveList() {
 		List.call(this);
 
 		this._template=new Template("movelist_colview");
@@ -10,18 +10,18 @@ define(function(require) {
 		this.node=this._template.root;
 	}
 
-	MoveListTextView.implement(List);
+	MoveList.implement(List);
 
-	MoveListColView.prototype.setStartingFullmove=function(fullmove) {
+	MoveList.prototype.setStartingFullmove=function(fullmove) {
 		this._startingFullmove=fullmove;
 		this._updateFullmoves();
 	}
 
-	MoveListColView.prototype.insert=function(move) {
+	MoveList.prototype.insert=function(move) {
 		this.add(move);
 	}
 
-	MoveListColView.prototype.add=function(move) {
+	MoveList.prototype.add=function(move) {
 		List.prototype.add.call(this, move);
 
 		var lastFullmove=this._fullmoves.lastItem();
@@ -33,7 +33,7 @@ define(function(require) {
 		lastFullmove.add(move);
 	}
 
-	MoveListColView.prototype.remove=function(move) {
+	MoveList.prototype.remove=function(move) {
 		List.prototype.remove.call(this, move);
 
 		var fullmove=move.getParentFullmove();
@@ -46,5 +46,5 @@ define(function(require) {
 		}
 	}
 
-	return MoveListColView;
+	return MoveList;
 });

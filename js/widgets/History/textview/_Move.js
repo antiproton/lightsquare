@@ -1,31 +1,31 @@
 define(function(require) {
-	var Move=require("./_Move");
+	var Base=require("./_Move");
 	var Template=require("lib/dom/Template");
 
-	function MoveTextView() {
-		Move.call(this);
+	function Move() {
+		Base.call(this);
 
 		this._template=new Template("move_textview");
 		this.node=this._template.root;
 	}
 
-	MoveTextView.implement(Move);
+	Move.implement(Base);
 
-	MoveTextView.prototype.setPreviousVariation=function(variation) {
+	Move.prototype.setPreviousVariation=function(variation) {
 		Move.prototype.setPreviousVariation.call(this, variation);
 
 		this._updateFullmove();
 	}
 
-	MoveTextView.prototype.setHalfmove=function(halfmove) {
+	Move.prototype.setHalfmove=function(halfmove) {
 		this._halfmove=halfmove;
 		this._updateFullmove();
 	}
 
-	MoveTextView.prototype._updateFullmove=function() {
+	Move.prototype._updateFullmove=function() {
 		this._template.fullmove.style.visibility=(this.isFullmoveDisplayed()?"":"hidden");
-		this._template.fullmove.innerHTML=this.fullmove+this.dot.Get();
+		this._template.fullmove.innerHTML=this.getFullmove()+this.getDot();
 	}
 
-	return MoveTextView;
+	return Move;
 });

@@ -1,17 +1,17 @@
 define(function(require) {
-	var ChessHistory=require("chess/History");
+	var Base=require("chess/History");
 	var Event=require("lib/Event");
 
 	function History() {
-		ChessHistory.call(this);
+		Base.call(this);
 
 		this.UserSelect=new Event(this);
 	}
 
-	History.implement(ChessHistory);
+	History.implement(Base);
 
 	History.prototype.select=function(move) {
-		ChessHistory.prototype.select.call(this, move);
+		Base.prototype.select.call(this, move);
 
 		if(move!==null) {
 			/*
