@@ -1,17 +1,16 @@
 define(function(require) {
-	var Move=require("chess/Move");
-	var Event=require("./Event");
-	var chess=require("chess");
+	var ChessMove=require("chess/Move");
+	var Event=require("lib/Event");
 
-	function UiMove() {
-		Move.call(this);
+	function Move() {
+		ChessMove.call(this);
 
 		this.UserSelect=new Event(this);
 	}
 
-	UiMove.implement(Move);
+	Move.implement(ChessMove);
 
-	UiMove.prototype.isFullmoveDisplayed=function() {
+	Move.prototype.isFullmoveDisplayed=function() {
 		if(this._variation!==null) {
 			return (
 				this.getColour()===WHITE
@@ -25,17 +24,17 @@ define(function(require) {
 		}
 	}
 
-	UiMove.prototype.select=function() {
-		Move.prototype.select.call(this);
+	Move.prototype.select=function() {
+		ChessMove.prototype.select.call(this);
 
 		this.node.classList.add("move_selected");
 	}
 
-	UiMove.prototype.deselect=function() {
-		Move.prototype.deselect.call(this);
+	Move.prototype.deselect=function() {
+		ChessMove.prototype.deselect.call(this);
 
 		this.node.classList.remove("move_selected");
 	}
 
-	return UiMove;
+	return Move;
 });

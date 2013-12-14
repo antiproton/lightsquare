@@ -1,16 +1,16 @@
 define(function(require) {
-	var Template=require("js/dom/Template");
-	var UiMove=require("./UiMove");
+	var Template=require("lib/dom/Template");
+	var Move=require("./_Move");
 
 	function MoveColView() {
-		UiMove.call(this);
+		Move.call(this);
 
 		this._parentFullmove=null;
 		this._template=new Template("move_colview");
 		this.node=this._template.root;
 	}
 
-	MoveColView.implement(UiMove);
+	MoveColView.implement(Move);
 
 	MoveColView.prototype.setLabel=function(label) {
 		Move.prototype.setLabel.call(this, label);

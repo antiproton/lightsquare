@@ -1,5 +1,5 @@
 define(function(require) {
-	var Template=require("js/dom/Template");
+	var Template=require("lib/dom/Template");
 
 	function Fullmove(parent, fullmove) {
 		this._fullmove=fullmove;

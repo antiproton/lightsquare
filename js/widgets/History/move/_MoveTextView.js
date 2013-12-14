@@ -1,18 +1,18 @@
 define(function(require) {
-	var UiMove=require("./UiMove");
-	var Template=require("js/dom/Template");
+	var Move=require("./_Move");
+	var Template=require("lib/dom/Template");
 
 	function MoveTextView() {
-		UiMove.call(this);
+		Move.call(this);
 
 		this._template=new Template("move_textview");
 		this.node=this._template.root;
 	}
 
-	MoveTextView.implement(UiMove);
+	MoveTextView.implement(Move);
 
 	MoveTextView.prototype.setPreviousVariation=function(variation) {
-		UiMove.prototype.setPreviousVariation.call(this, variation);
+		Move.prototype.setPreviousVariation.call(this, variation);
 
 		this._updateFullmove();
 	}
