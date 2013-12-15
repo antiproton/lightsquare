@@ -4,13 +4,12 @@ require_once "include_utils.php";
 require_once "php/init.php";
 require_once "WidgetLoader.php";
 
-$widgetLoader=new WidgetLoader("widgets");
+$widgetLoader=new WidgetLoader("js/widgets");
 
 $widgetLoader->load([
-	"BoardSquare",
-	"Board",
-	"History",
-	"LiveTableStandard"
+	"board",
+	"history",
+	"table"
 ]);
 ?>
 <!DOCTYPE html>
@@ -38,7 +37,9 @@ $widgetLoader->load([
 
 			paths: {
 				"lib": "/lib/js"
-			}
+			},
+
+			urlArgs: "timestamp="+(new Date()).valueOf()
 		};
 		</script>
 		<script data-main="main" src="/lib/js/require.js"></script>
