@@ -1,11 +1,12 @@
 define(function(require) {
 	var Template=require("lib/dom/Template");
-
 	var Board=require("widgets/board/Board");
 	var History=require("widgets/history/colview/History");
+	var html=require("file@./resources/table.html");
+	require("css@./resources/table.css");
 
 	function Table(parent) {
-		this._template=new Template("live_table_standard", parent);
+		this._template=new Template(html, parent);
 
 		//this.playerInfo={
 		//	player: new PlayerInfo(this._template.player_info_player),
