@@ -13,7 +13,7 @@ define(function(require) {
 	function Square(parent, square, size) {
 		this._template=new Template(html, parent);
 		this._square=square;
-		this._size=size;
+		this._size=size||Square.DEFAULT_SIZE;
 		this._highlightType=Square.HIGHLIGHT_NONE;
 
 		this.MouseDown=new Event(this);
@@ -21,6 +21,8 @@ define(function(require) {
 
 		this._setupHtml();
 	}
+
+	Square.DEFAULT_SIZE=Piece.DEFAULT_SIZE;
 
 	Square.HIGHLIGHT_NONE="none";
 	Square.HIGHLIGHT_POSSIBILITY="possibility";
