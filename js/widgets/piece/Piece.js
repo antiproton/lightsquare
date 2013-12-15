@@ -1,13 +1,27 @@
 define(function(require, exports, module) {
 	var Template=require("lib/dom/Template");
 	var html=require("file@./resources/piece.html");
+	var style=require("lib/dom/style");
+	var Fen=require("chess/Fen");
 
 	function Piece(parent) {
 		this._template=new Template(html, parent);
+		this._style="Alpha";
 		this._piece=SQ_EMPTY;
 	}
 
+	Piece.styles=[
+		"Alpha",
+		"Linares",
+		"Merida"
+	];
+
 	Piece.prototype.setPiece=function(piece) {
+		this._piece=piece;
+		this._updatePiece();
+	}
+
+	Piece.prototype._updatePiece=function() {
 		var backgroundImage="none";
 		var path;
 
@@ -15,7 +29,8 @@ define(function(require, exports, module) {
 			path=[
 				module.path,
 				"resources",
-				this._pieceStyle,
+				"pieces",
+				this._style,
 				this._size,
 				Fen.getPieceChar(this._piece)+".png"
 			];
@@ -30,10 +45,18 @@ define(function(require, exports, module) {
 
 	Piece.prototype.setStlye=function(style) {
 		this._style=style;
+		this._updatePiece();
 	}
 
 	Piece.prototype.setSize=function(size) {
 		this._size=size;
+
+		style(this._template.root, {
+			width: this._size,
+			height: this._size
+		});
+		
+		this._updatePiece();
 	}
 
 	return Piece;

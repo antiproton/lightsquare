@@ -11,8 +11,6 @@ define(function(require) {
 	require("css@./resources/board.css");
 	var html=require("file@./resources/board.html");
 
-	console.log(html);
-
 	function Board(parent) {
 		Base.call(this);
 

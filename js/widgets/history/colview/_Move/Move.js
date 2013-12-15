@@ -1,12 +1,13 @@
 define(function(require) {
 	var Template=require("lib/dom/Template");
 	var Base=require("../../_Move");
+	var html=require("file@./resources/move.html");
 
 	function Move() {
 		Base.call(this);
 
 		this._parentFullmove=null;
-		this._template=new Template("move_colview");
+		this._template=new Template(html);
 		this.node=this._template.root;
 	}
 

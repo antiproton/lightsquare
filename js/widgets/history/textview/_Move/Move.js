@@ -1,5 +1,5 @@
 define(function(require) {
-	var Base=require("widgets/history/_Move");
+	var Base=require("../../_Move");
 	var Template=require("lib/dom/Template");
 	var html=require("file@./resources/move.html");
 

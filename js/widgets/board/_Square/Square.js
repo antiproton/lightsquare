@@ -6,6 +6,7 @@ define(function(require) {
 	var style=require("lib/dom/style");
 	var Fen=require("chess/Fen");
 	var Piece=require("widgets/piece/Piece");
+	var dom=require("lib/dom/util");
 	var html=require("file@./resources/square.html");
 	require("css@./resources/square.css");
 
@@ -74,7 +75,7 @@ define(function(require) {
 	}
 
 	Square.prototype.setPiecePosition=function(x, y) {
-		var offsets=getoffsets(this._template.root);
+		var offsets=dom.getOffsets(this._template.root);
 
 		style(this._template.piece, {
 			top: y-offsets[Y],
@@ -108,6 +109,7 @@ define(function(require) {
 		});
 
 		this._piece=new Piece(this._template.piece);
+		this._piece.setSize(this._size);
 
 		this._updateSize();
 	}

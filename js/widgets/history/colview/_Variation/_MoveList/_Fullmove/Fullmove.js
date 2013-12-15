@@ -1,5 +1,7 @@
 define(function(require) {
 	var Template=require("lib/dom/Template");
+	var html=require("file@./resources/fullmove.html");
+	require("css@./resources/fullmove.css");
 
 	function Fullmove(parent, fullmove) {
 		this._fullmove=fullmove;
@@ -7,7 +9,7 @@ define(function(require) {
 		this._hasMove[WHITE]=false;
 		this._hasMove[BLACK]=false;
 
-		this._template=new Template("fullmove", parent);
+		this._template=new Template(html, parent);
 		this._setupTemplate();
 	}
 
