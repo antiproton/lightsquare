@@ -2,15 +2,6 @@
 require_once "base.php";
 require_once "include_utils.php";
 require_once "php/init.php";
-require_once "WidgetLoader.php";
-
-$widgetLoader=new WidgetLoader("js/widgets");
-
-$widgetLoader->load([
-	"board",
-	"history",
-	"table"
-]);
 ?>
 <!DOCTYPE html>
 <html>
@@ -21,33 +12,30 @@ $widgetLoader->load([
 		style_tags_s("/lib/css/reset.css");
 		style_tags_s("/lib/css/common.css");
 		?>
-		<style>
-		<?php
-		$widgetLoader->outputCss();
-		?>
-		</style>
 		<script>
 		var global=window;
 		</script>
 		<script src="/lib/js/Function.js"></script>
+		<script src="/js/chess/constants.js"></script>
 		<!-- use regular php (or js version of) loadw/loads here -->
 		<script>
 		var require={
 			baseUrl: "js",
-
 			paths: {
 				"lib": "/lib/js"
 			},
-
+			map: {
+				"*": {
+					"css": "lib/require-css/css",
+					"file": "lib/text/text"
+				}
+			},
 			urlArgs: "timestamp="+(new Date()).valueOf()
 		};
 		</script>
 		<script data-main="main" src="/lib/js/require.js"></script>
 	</head>
 	<body>
-		<?php
-		$widgetLoader->outputTemplates();
-		?>
 		<div id="topbar">
 			<div class="layout_main">
 				<div id="title">
