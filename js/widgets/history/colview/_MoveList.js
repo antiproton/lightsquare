@@ -1,4 +1,4 @@
-define(function(require) {
+define(function(require, exports, module) {
 	var List=require("lib/List");
 	var Template=require("lib/dom/Template");
 	var Fullmove=require("./_Fullmove");

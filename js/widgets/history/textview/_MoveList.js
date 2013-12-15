@@ -1,6 +1,7 @@
-define(function(require) {
+define(function(require, exports, module) {
 	var Template=require("lib/dom/Template");
 	var List=require("lib/List");
+	var html=require("file@./resources/movelist.html");
 
 	function MoveList() {
 		List.call(this);
