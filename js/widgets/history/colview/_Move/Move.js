@@ -1,6 +1,6 @@
 define(function(require) {
 	var Template=require("lib/dom/Template");
-	var Base=require("../_Move");
+	var Base=require("../../_Move");
 
 	function Move() {
 		Base.call(this);

@@ -3,11 +3,13 @@ define(function(require) {
 	var Variation=require("./_Variation/Variation");
 	var Move=require("./_Move/Move");
 	var Template=require("lib/dom/Template");
+	var html=require("file@./resources/history.html");
+	require("css@./resources/history.css");
 
 	function History(parent) {
 		Base.call(this);
 
-		this._template=new Template("history_colview", parent);
+		this._template=new Template(html, parent);
 		this._template.root.appendChild(this.mainLine.node);
 	}
 
