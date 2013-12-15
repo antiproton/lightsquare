@@ -41,7 +41,7 @@ define(function(require) {
 		this._showSurround=false;
 		this._showCoords=true;
 		this._coordsPadding=18;
-		this._squareSize=45;
+		this._squareSize=Square.DEFAULT_SIZE;
 		this._borderWidth=1;
 
 		this._htmlUpdatesEnabled=true;
