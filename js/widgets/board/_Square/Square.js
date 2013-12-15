@@ -5,14 +5,14 @@ define(function(require) {
 	var Util=require("chess/Util");
 	var style=require("lib/dom/style");
 	var Fen=require("chess/Fen");
+	var Piece=require("widgets/piece/Piece");
+	var html=require("text!./resources/square.html");
+	require("css!./resources/square.css");
 
-	function Square(parent, square, size, pieceStyle, pieceDir) {
-		this._template=new Template("board_square", parent);
+	function Square(parent, square, size) {
+		this._template=new Template(html, parent);
 		this._square=square;
 		this._size=size;
-		this._pieceStyle=pieceStyle;
-		this._pieceDir=pieceDir;
-		this._piece=SQ_EMPTY;
 		this._highlightType=Square.HIGHLIGHT_NONE;
 
 		this.MouseDown=new Event(this);
@@ -48,22 +48,14 @@ define(function(require) {
 	Square.prototype.setSize=function(size) {
 		this._size=size;
 		this._updateSize();
-		this._updatePiece();
 	}
 
 	Square.prototype.setPiece=function(piece) {
-		this._piece=piece;
-		this._updatePiece();
+		this._piece.setPiece(piece);
 	}
 
 	Square.prototype.setPieceStyle=function(pieceStyle) {
-		this._pieceStyle=pieceStyle;
-		this._updatePiece();
-	}
-
-	Square.prototype.setPieceDir=function(pieceDir) {
-		this._pieceDir=pieceDir;
-		this._updatePiece();
+		this._piece.setStyle(pieceStyle);
 	}
 
 	Square.prototype.setZIndexAbove=function() {
@@ -115,27 +107,9 @@ define(function(require) {
 			});
 		});
 
+		this._piece=new Piece(this._template.piece);
+
 		this._updateSize();
-	}
-
-	Square.prototype._updatePiece=function() {
-		var backgroundImage="none";
-		var path;
-
-		if(this._piece!==SQ_EMPTY) {
-			path=[
-				this._pieceDir,
-				this._pieceStyle,
-				this._size,
-				Fen.getPieceChar(this._piece)+".png"
-			];
-
-			backgroundImage="url("+path.join("/")+")";
-		}
-
-		if(this._template.piece.style.backgroundImage!==backgroundImage) {
-			this._template.piece.style.backgroundImage=backgroundImage;
-		}
 	}
 
 	Square.prototype._updateSize=function() {
@@ -147,6 +121,8 @@ define(function(require) {
 		style(this._template.root, css);
 		style(this._template.highlight, css);
 		style(this._template.piece, css);
+
+		this._piece.setSize(this._size);
 	}
 
 	return Square;

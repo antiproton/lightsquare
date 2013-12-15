@@ -3,15 +3,17 @@ define(function(require) {
 	var Event=require("lib/Event");
 	var Base=require("chess/Board");
 	var MoveAction=require("./_MoveAction");
-	var Square=require("./_Square");
+	var Square=require("./_Square/Square");
 	var dom=require("lib/dom/util");
 	var style=require("lib/dom/style");
 	var Util=require("chess/Util");
+	require("css@./resources/board.css");
+	var html=require("file@./resources/board.html");
 
 	function Board(parent) {
 		Base.call(this);
 
-		this._template=new Template("board", parent);
+		this._template=new Template(html, parent);
 
 		this.UserMove=new Event(this);
 		this.DragDrop=new Event(this);
@@ -39,8 +41,6 @@ define(function(require) {
 		this._showCoords=true;
 		this._coordsPadding=18;
 		this._squareSize=45;
-		this._pieceStyle=PIECE_STYLE_ALPHA;
-		this._pieceDir="/img/pieces";
 		this._borderWidth=1;
 
 		this._htmlUpdatesEnabled=true;
@@ -119,14 +119,10 @@ define(function(require) {
 		}
 	}
 
-	Board.prototype.setPieceDir=function(pieceDir) {
-		this._pieceDir=pieceDir;
-		this._updateHtml();
-	}
-
 	Board.prototype.setPieceStyle=function(pieceStyle) {
-		this._pieceStyle=pieceStyle;
-		this._updateHtml();
+		for(var square=0; square<64; square++) {
+			this._uiSquares[square].setPieceStyle(pieceStyle);
+		}
 	}
 
 	Board.prototype.setSquareSize=function(squareSize) {
@@ -156,11 +152,6 @@ define(function(require) {
 
 	Board.prototype.setBoardStyle=function(boardStyle) {
 		this._setBoardStyle(boardStyle, this._boardStyle);
-	}
-
-	Board.prototype.setPieceDir=function(pieceDir) {
-		this._pieceDir=pieceDir;
-		this._updateHtml();
 	}
 
 	Board.prototype._setupHtml=function() {
@@ -211,9 +202,7 @@ define(function(require) {
 			uiSquare=new Square(
 				this._template.board,
 				i,
-				this._squareSize,
-				this._pieceStyle,
-				this._pieceDir
+				this._squareSize
 			);
 
 			uiSquare.MouseDown.addHandler(this, function(data, sender) {
@@ -314,7 +303,6 @@ define(function(require) {
 			uiSquare=this._uiSquares[square];
 
 			uiSquare.setSize(this._squareSize);
-			uiSquare.setPieceStyle(this._pieceStyle);
 
 			var posX, posY;
 			var boardX=Util.xFromSquare(square);
