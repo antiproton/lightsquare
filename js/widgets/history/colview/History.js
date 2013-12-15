@@ -1,7 +1,7 @@
 define(function(require) {
 	var Base=require("../_History");
-	var Variation=require("./_Variation");
-	var Move=require("./_Move");
+	var Variation=require("./_Variation/Variation");
+	var Move=require("./_Move/Move");
 	var Template=require("lib/dom/Template");
 
 	function History(parent) {
