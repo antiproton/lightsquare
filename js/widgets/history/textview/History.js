@@ -1,17 +1,19 @@
 define(function(require) {
-	var BaseHistory=require("../_History");
-	var Variation=require("./variation/_Variation");
-	var Move=require("./move/_Move");
+	var Base=require("../_History");
+	var Variation=require("./_Variation/Variation");
+	var Move=require("./_Move/Move");
 	var Template=require("lib/dom/Template");
+	require("css@./resources/history.css");
+	var html=require("file@./resources/history.html");
 
 	function History(parent) {
-		BaseHistory.call(this);
+		Base.call(this);
 
-		this._tpl=new Template("history_textview", parent);
+		this._tpl=new Template(html, parent);
 		this._tpl.root.appendChild(this.mainLine.node);
 	}
 
-	History.implement(BaseHistory);
+	History.implement(Base);
 
 	History.prototype.createMove=function() {
 		var move=new Move();
