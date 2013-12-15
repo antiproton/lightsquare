@@ -6,7 +6,7 @@ define(function(require, exports, module) {
 	function MoveList() {
 		List.call(this);
 
-		this._template=new Template("move_list_textview");
+		this._template=new Template(html);
 		this.node=this._template.root;
 	}
 

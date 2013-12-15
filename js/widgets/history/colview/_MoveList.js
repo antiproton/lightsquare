@@ -2,11 +2,12 @@ define(function(require, exports, module) {
 	var List=require("lib/List");
 	var Template=require("lib/dom/Template");
 	var Fullmove=require("./_Fullmove");
+	var html=require("file@./resources/movelist.html");
 
 	function MoveList() {
 		List.call(this);
 
-		this._template=new Template("movelist_colview");
+		this._template=new Template(html);
 		this._fullmoves=new List();
 		this.node=this._template.root;
 	}
