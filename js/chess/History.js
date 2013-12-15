@@ -1,4 +1,8 @@
 define(function(require) {
+	var Move=require("./Move");
+	var Variation=require("./Variation");
+	var Event=require("lib/Event");
+
 	function History() {
 		this._startingColour=WHITE;
 		this._startingFullmove=1;

@@ -2,7 +2,7 @@ define(function(require) {
 	var Template=require("lib/dom/Template");
 
 	var Board=require("widgets/board/Board");
-	var Board=require("widgets/history/colview/History");
+	var History=require("widgets/history/colview/History");
 
 	function Table(parent) {
 		this._template=new Template("live_table_standard", parent);

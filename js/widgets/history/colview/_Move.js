@@ -13,7 +13,7 @@ define(function(require) {
 	Move.implement(Base);
 
 	Move.prototype.setLabel=function(label) {
-		Move.prototype.setLabel.call(this, label);
+		Base.prototype.setLabel.call(this, label);
 
 		this.node.innerHTML=label;
 	}

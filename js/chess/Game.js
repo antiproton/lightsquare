@@ -1,17 +1,18 @@
 define(function(require) {
-	var Event=require("js/Event");
+	var Event=require("lib/Event");
 
 	var Position=require("./Position");
 	var History=require("./History");
 	var PiecesTaken=require("./PiecesTaken");
-	var Chess=require("./Chess");
+	var Util=require("./Util");
+	var time=require("lib/time");
 
 	function Game() {
 		this.Moved=new Event(this);
 
 		this.state=GAME_STATE_IN_PROGRESS;
-		this.mtimeStart=mtime();
-		this.mtimeFinish=null;
+		this.timeStart=time();
+		this.timeFinish=null;
 		this.type=GAME_TYPE_STANDARD;
 		this.variant=VARIANT_STANDARD;
 		this.subvariant=SUBVARIANT_NONE;

@@ -1,5 +1,7 @@
 define(function(require) {
 	var Base=require("chess/Variation");
+	var MoveList=require("./_MoveList");
+	var Template=require("lib/dom/Template");
 
 	function Variation() {
 		Base.call(this);

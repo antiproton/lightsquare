@@ -1,5 +1,7 @@
 define(function(require) {
+	var List=require("lib/List");
 	var HistoryItem=require("./HistoryItem");
+	var Util=require("./Util");
 
 	function Variation() {
 		HistoryItem.call(this);
@@ -78,7 +80,7 @@ define(function(require) {
 				halfmove=this.getBranchMove().getHalfmove();
 			}
 
-			move.setHalfmove(halfmove);
+			item.setHalfmove(halfmove);
 		}
 
 		item.setPreviousItem(prevItem);

@@ -4,6 +4,9 @@ define(function(require) {
 	var Base=require("chess/Board");
 	var MoveAction=require("./_MoveAction");
 	var Square=require("./_Square");
+	var dom=require("lib/dom/util");
+	var style=require("lib/dom/style");
+	var Util=require("chess/Util");
 
 	function Board(parent) {
 		Base.call(this);
@@ -98,7 +101,7 @@ define(function(require) {
 			y+=(Math.round(this._squareSize/2)-offsets[Y]);
 		}
 
-		var boardOffsets=getoffsets(this._template.board);
+		var boardOffsets=dom.getOffsets(this._template.board);
 
 		x-=boardOffsets[X];
 		y-=boardOffsets[Y];
@@ -191,7 +194,7 @@ define(function(require) {
 			this._coords[axis]=[];
 
 			for(var i=0; i<8; i++) {
-				coord=div(this._coordContainers[axis]);
+				coord=dom.div(this._coordContainers[axis]);
 				coord.className="board_coord board_"+axis;
 
 				this._coords[axis].push(coord);
@@ -363,7 +366,7 @@ define(function(require) {
 			y+=(Math.round(this._squareSize/2)-this._moveAction.mouseOffsets[Y]);
 		}
 
-		var os=getoffsets(this._template.board);
+		var os=dom.getOffsets(this._template.board);
 
 		return this._squareFromOffsets(x-os[X], this.getBoardSize()-(y-os[Y]));
 	}
@@ -381,7 +384,7 @@ define(function(require) {
 	}
 
 	Board.prototype._squareMouseOffsetsFromEvent=function(e) {
-		var boardOffsets=getoffsets(this._template.board);
+		var boardOffsets=dom.getOffsets(this._template.board);
 
 		var mouseOffsets=[
 			((e.pageX-boardOffsets[X])%this._squareSize || this._squareSize),

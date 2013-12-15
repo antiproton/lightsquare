@@ -1,6 +1,7 @@
 define(function(require) {
 	var HistoryItem=require("./HistoryItem");
-	
+	var Util=require("./Util");
+
 	function Move() {
 		HistoryItem.call(this);
 

@@ -1,6 +1,10 @@
 define(function(require) {
 	var Template=require("lib/dom/Template");
 	var Event=require("lib/Event");
+	var Colour=require("chess/Colour");
+	var Util=require("chess/Util");
+	var style=require("lib/dom/style");
+	var Fen=require("chess/Fen");
 
 	function Square(parent, square, size, pieceStyle, pieceDir) {
 		this._template=new Template("board_square", parent);
