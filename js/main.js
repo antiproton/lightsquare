@@ -1,10 +1,16 @@
 define(function(require) {
-	var LiveTableStandard=require("./widgets/LiveTableStandard/_");
-	var g=require("lib/g");
+	require("lib/ready!");
+	require("lib/constants");
+	require("chess/constants");
+	require("lib/dbenums/chess");
+	require("lib/dbcodes/chess");
 
-	var tableWidget=new LiveTableStandard(g("table"));
+	var Game=require("chess/Game");
+	var Table=require("./widgets/table/standard/Table");
+	var g=require("lib/dom/byId");
+	var MoveLabel=require("chess/MoveLabel");
 
-
+	var tableWidget=new Table(g("table"));
 
 	tableWidget.board.setSquareSize(45);
 
