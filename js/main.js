@@ -12,7 +12,7 @@ define(function(require) {
 
 	var tableWidget=new Table(g("table"));
 
-	tableWidget.board.setSquareSize(45);
+	//tableWidget.board.setSquareSize(45);
 
 	var game=new Game();
 
