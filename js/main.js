@@ -1,5 +1,5 @@
 define(function(require) {
-	require("lib/ready!");
+	require("lib/ready@");
 	require("lib/constants");
 	require("chess/constants");
 	require("lib/dbenums/chess");
