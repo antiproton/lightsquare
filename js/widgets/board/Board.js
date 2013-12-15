@@ -1,12 +1,12 @@
 define(function(require) {
 	var Template=require("lib/dom/Template");
+	var create=require("lib/dom/create");
+	var style=require("lib/dom/style");
+	var getOffsets=require("lib/dom/getOffsets");
 	var Event=require("lib/Event");
 	var Base=require("chess/Board");
 	var MoveAction=require("./_MoveAction");
 	var Square=require("./_Square/Square");
-	var create=require("lib/dom/create");
-	var style=require("lib/dom/style");
-	var dom=require("lib/dom/util");
 	var Util=require("chess/Util");
 	require("css@./resources/board.css");
 	var html=require("file@./resources/board.html");
@@ -102,7 +102,7 @@ define(function(require) {
 			y+=(Math.round(this._squareSize/2)-offsets[Y]);
 		}
 
-		var boardOffsets=dom.getOffsets(this._template.board);
+		var boardOffsets=getOffsets(this._template.board);
 
 		x-=boardOffsets[X];
 		y-=boardOffsets[Y];
@@ -355,7 +355,7 @@ define(function(require) {
 			y+=(Math.round(this._squareSize/2)-this._moveAction.mouseOffsets[Y]);
 		}
 
-		var os=dom.getOffsets(this._template.board);
+		var os=getOffsets(this._template.board);
 
 		return this._squareFromOffsets(x-os[X], this.getBoardSize()-(y-os[Y]));
 	}
@@ -373,7 +373,7 @@ define(function(require) {
 	}
 
 	Board.prototype._squareMouseOffsetsFromEvent=function(e) {
-		var boardOffsets=dom.getOffsets(this._template.board);
+		var boardOffsets=getOffsets(this._template.board);
 
 		var mouseOffsets=[
 			((e.pageX-boardOffsets[X])%this._squareSize || this._squareSize),
