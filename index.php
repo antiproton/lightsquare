@@ -27,7 +27,7 @@ require_once "php/init.php";
 			map: {
 				"*": {
 					"css": "lib/require-css/css",
-					"file": "lib/text/text"
+					"file": "lib/require-text/text"
 				}
 			},
 			urlArgs: "timestamp="+(new Date()).valueOf()
