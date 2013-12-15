@@ -4,17 +4,33 @@ define(function(require, exports, module) {
 	var style=require("lib/dom/style");
 	var Fen=require("chess/Fen");
 
-	function Piece(parent) {
+	function Piece(parent, size) {
 		this._template=new Template(html, parent);
-		this._style="Alpha";
+		this._style="Merida";
 		this._piece=SQ_EMPTY;
+		this._size=size||Piece.DEFAULT_SIZE;
+		this._setupHtml();
 	}
 
 	Piece.styles=[
 		"Alpha",
-		"Linares",
 		"Merida"
 	];
+
+	Piece.DEFAULT_SIZE=90;
+
+	Piece.prototype._setupHtml=function() {
+		this._updateHtml();
+	}
+
+	Piece.prototype._updateHtml=function() {
+		style(this._template.root, {
+			width: this._size,
+			height: this._size
+		});
+
+		this._updatePiece();
+	}
 
 	Piece.prototype.setPiece=function(piece) {
 		this._piece=piece;
@@ -50,13 +66,7 @@ define(function(require, exports, module) {
 
 	Piece.prototype.setSize=function(size) {
 		this._size=size;
-
-		style(this._template.root, {
-			width: this._size,
-			height: this._size
-		});
-		
-		this._updatePiece();
+		this._updateHtml();
 	}
 
 	return Piece;
