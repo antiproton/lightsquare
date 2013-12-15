@@ -4,11 +4,14 @@ define(function(require) {
 	var Base=require("chess/Board");
 	var MoveAction=require("./_MoveAction");
 	var Square=require("./_Square/Square");
-	var dom=require("lib/dom/util");
+	var create=require("lib/dom/create");
 	var style=require("lib/dom/style");
+	var dom=require("lib/dom/util");
 	var Util=require("chess/Util");
 	require("css@./resources/board.css");
 	var html=require("file@./resources/board.html");
+
+	console.log(html);
 
 	function Board(parent) {
 		Base.call(this);
@@ -185,7 +188,7 @@ define(function(require) {
 			this._coords[axis]=[];
 
 			for(var i=0; i<8; i++) {
-				coord=dom.div(this._coordContainers[axis]);
+				coord=create("div", this._coordContainers[axis]);
 				coord.className="board_coord board_"+axis;
 
 				this._coords[axis].push(coord);

@@ -3,7 +3,7 @@ define(function(require, exports, module) {
 	var html=require("file@./resources/piece.html");
 
 	function Piece(parent) {
-		this._template=new Template(parent, html);
+		this._template=new Template(html, parent);
 		this._piece=SQ_EMPTY;
 	}
 
@@ -13,7 +13,8 @@ define(function(require, exports, module) {
 
 		if(this._piece!==SQ_EMPTY) {
 			path=[
-				this._pieceDir,
+				module.path,
+				"resources",
 				this._pieceStyle,
 				this._size,
 				Fen.getPieceChar(this._piece)+".png"
@@ -22,8 +23,8 @@ define(function(require, exports, module) {
 			backgroundImage="url("+path.join("/")+")";
 		}
 
-		if(this._template.piece.style.backgroundImage!==backgroundImage) {
-			this._template.piece.style.backgroundImage=backgroundImage;
+		if(this._template.root.style.backgroundImage!==backgroundImage) {
+			this._template.root.style.backgroundImage=backgroundImage;
 		}
 	}
 
