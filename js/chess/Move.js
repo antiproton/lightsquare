@@ -1,6 +1,6 @@
 define(function(require) {
 	var HistoryItem=require("./HistoryItem");
-	var Util=require("./Util");
+	var Chess=require("./Chess");
 
 	function Move() {
 		HistoryItem.call(this);
@@ -45,7 +45,7 @@ define(function(require) {
 
 	Move.prototype.getFullmove=function() {
 		if(this._halfmove!==null) {
-			return Util.fullmoveFromHalfmove(this._halfmove);
+			return Chess.fullmoveFromHalfmove(this._halfmove);
 		}
 
 		else {
@@ -55,7 +55,7 @@ define(function(require) {
 
 	Move.prototype.getColour=function() {
 		if(this._halfmove!==null) {
-			return Util.colourFromHalfmove(this._halfmove);
+			return Chess.colourFromHalfmove(this._halfmove);
 		}
 
 		else {
@@ -65,7 +65,7 @@ define(function(require) {
 
 	Move.prototype.getDot=function() {
 		if(this._halfmove!==null) {
-			return Util.fullmoveDotFromColour(this.getColour());
+			return Chess.fullmoveDotFromColour(this.getColour());
 		}
 
 		else {

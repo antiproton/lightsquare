@@ -7,7 +7,8 @@ define(function(require) {
 	var Base=require("chess/Board");
 	var MoveAction=require("./_MoveAction");
 	var Square=require("./_Square/Square");
-	var Util=require("chess/Util");
+	var Chess=require("chess/Chess");
+	var Piece=require("chess/Piece");
 	require("css@./resources/board.css");
 	var html=require("file@./resources/board.html");
 
@@ -37,7 +38,7 @@ define(function(require) {
 		this._squareCurrentlyDraggingPieceOver=null;
 
 		this._boardStyle=Board.STYLE_BROWN;
-		this._viewingAs=WHITE;
+		this._viewingAs=Piece.WHITE;
 		this._showSurround=false;
 		this._showCoords=true;
 		this._coordsPadding=18;
@@ -281,7 +282,7 @@ define(function(require) {
 					width: this._squareSize
 				});
 
-				if(this._viewingAs===WHITE) {
+				if(this._viewingAs===Piece.WHITE) {
 					rankIndex=7-i;
 					fileIndex=i;
 				}
@@ -291,8 +292,8 @@ define(function(require) {
 					fileIndex=7-i;
 				}
 
-				this._coords.rank[i].innerHTML=RANKS.charAt(rankIndex);
-				this._coords.file[i].innerHTML=FILES.charAt(fileIndex);
+				this._coords.rank[i].innerHTML=Chess.RANKS.charAt(rankIndex);
+				this._coords.file[i].innerHTML=Chess.FILES.charAt(fileIndex);
 			}
 		}
 	}
@@ -306,10 +307,10 @@ define(function(require) {
 			uiSquare.setSize(this._squareSize);
 
 			var posX, posY;
-			var boardX=Util.xFromSquare(square);
-			var boardY=Util.yFromSquare(square);
+			var boardX=Chess.xFromSquare(square);
+			var boardY=Chess.yFromSquare(square);
 
-			if(this._viewingAs===WHITE) {
+			if(this._viewingAs===Piece.WHITE) {
 				posX=this._squareSize*boardX;
 				posY=this._squareSize*(7-boardY);
 			}
@@ -364,12 +365,12 @@ define(function(require) {
 		var boardX=(x-(x%this._squareSize))/this._squareSize;
 		var boardY=(y-(y%this._squareSize))/this._squareSize;
 
-		if(this._viewingAs==BLACK) {
+		if(this._viewingAs==Piece.BLACK) {
 			boardX=7-boardX;
 			boardY=7-boardY;
 		}
 
-		return Util.squareFromCoords([boardX, boardY]);
+		return Chess.squareFromCoords([boardX, boardY]);
 	}
 
 	Board.prototype._squareMouseOffsetsFromEvent=function(e) {
@@ -389,7 +390,7 @@ define(function(require) {
 		if(this.mouseIsOnBoard(event)) {
 			var square=targetUiSquare.getSquare();
 
-			if(!this._moveAction.selected && !this._moveAction.isInProgress && this._board[square]!==SQ_EMPTY) {
+			if(!this._moveAction.selected && !this._moveAction.isInProgress && this._board[square]!==Chess.SQ_EMPTY) {
 				targetUiSquare.setZIndexAbove();
 				this._moveAction.selected=true;
 				this._moveAction.from=square;

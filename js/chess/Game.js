@@ -4,7 +4,7 @@ define(function(require) {
 	var Position=require("./Position");
 	var History=require("./History");
 	var PiecesTaken=require("./PiecesTaken");
-	var Util=require("./Util");
+	var Chess=require("./Chess");
 	var time=require("lib/time");
 
 	function Game() {
@@ -66,7 +66,7 @@ define(function(require) {
 		for(var square=0; square<64; square++) {
 			piece=this.position.board.getSquare(square);
 
-			if(piece!==SQ_EMPTY && Util.getColour(piece)===colour) {
+			if(piece!==Chess.SQ_EMPTY && Piece.getColour(piece)===colour) {
 				legalMoves+=this.getLegalMovesFrom(square).length;
 			}
 		}
@@ -78,12 +78,12 @@ define(function(require) {
 		var legalMoves=[];
 		var piece, reachableSquares;
 
-		if(this.position.board.getSquare(square)!==SQ_EMPTY) {
+		if(this.position.board.getSquare(square)!==Chess.SQ_EMPTY) {
 			piece=new Piece(this.position.board.getSquare(square));
-			reachableSquares=Util.getReachableSquares(piece.type, square, piece.colour);
+			reachableSquares=Chess.getReachableSquares(piece.type, square, piece.colour);
 
 			for(var i=0; i<reachableSquares.length; i++) {
-				if(this.move(square, reachableSquares[i], QUEEN, true).isLegal) {
+				if(this.move(square, reachableSquares[i], Chess.QUEEN, true).isLegal) {
 					legalMoves.push(reachableSquares[i]);
 				}
 			}
@@ -93,7 +93,7 @@ define(function(require) {
 	}
 
 	Game.prototype.move=function(from, to, promoteTo, dryrun) {
-		promoteTo=promoteTo||QUEEN;
+		promoteTo=promoteTo||Chess.QUEEN;
 		dryrun=dryrun||false;
 
 		var colour=this.position.active;
@@ -103,31 +103,31 @@ define(function(require) {
 		move.from=from;
 		move.to=to;
 
-		if(Util.isOnBoard(from) && Util.isOnBoard(to) && piece.type!==SQ_EMPTY && piece.colour===colour) {
+		if(Chess.isOnBoard(from) && Chess.isOnBoard(to) && piece.type!==Chess.SQ_EMPTY && piece.colour===colour) {
 			var targetPiece=null;
 
-			if(this.position.board.getSquare(to)!==SQ_EMPTY) {
+			if(this.position.board.getSquare(to)!==Chess.SQ_EMPTY) {
 				targetPiece=new Piece(this.position.board.getSquare(to));
 			}
 
 			var label=new MoveLabel();
 			var oldPosition=this.position.copy();
-			var fromCoords=Util.coordsFromSquare(from);
-			var toCoords=Util.coordsFromSquare(to);
-			var relFrom=Util.getRelativeSquare(from, colour);
-			var relTo=Util.getRelativeSquare(to, colour);
-			var oppColour=Util.getOppColour(colour);
+			var fromCoords=Chess.coordsFromSquare(from);
+			var toCoords=Chess.coordsFromSquare(to);
+			var relFrom=Chess.getRelativeSquare(from, colour);
+			var relTo=Chess.getRelativeSquare(to, colour);
+			var oppColour=Chess.getOppColour(colour);
 
 			var isUnobstructed=(
-				!Util.isBlocked(this.position.board.getBoardArray(), from, to)
+				!Chess.isBlocked(this.position.board.getBoardArray(), from, to)
 				&& (targetPiece===null || targetPiece.colour!==colour)
 			);
 
-			label.piece=Fen.getPieceChar[Util.getPiece(piece.type, WHITE)];
-			label.to=Util.getAlgebraicSquare(to);
+			label.piece=Fen.getPieceChar(Piece.getPiece(piece.type, Piece.WHITE));
+			label.to=Chess.getAlgebraicSquare(to);
 
-			if(piece.type!==PAWN && piece.type!==KING) {
-				label.disambiguation=Util.disambiguate(this.position.board.getBoardArray(), piece.type, colour, from, to);
+			if(piece.type!==Chess.PAWN && piece.type!==Chess.KING) {
+				label.disambiguation=Chess.disambiguate(this.position.board.getBoardArray(), piece.type, colour, from, to);
 			}
 
 			if(targetPiece!==null && targetPiece.colour===oppColour) {
@@ -135,30 +135,30 @@ define(function(require) {
 				move.capturedPiece=this.position.board.getSquare(to);
 			}
 
-			if(Util.isRegularMove(piece.type, fromCoords, toCoords) && isUnobstructed) {
+			if(Chess.isRegularMove(piece.type, fromCoords, toCoords) && isUnobstructed) {
 				move.isValid=true;
-				move.boardChanges[from]=SQ_EMPTY;
+				move.boardChanges[from]=Chess.SQ_EMPTY;
 				move.boardChanges[to]=this.position.board.getSquare(from);
 			}
 
-			else if(piece.type===PAWN && isUnobstructed) {
-				var capturing=Util.isPawnCapture(relFrom, relTo);
+			else if(piece.type===Chess.PAWN && isUnobstructed) {
+				var capturing=Chess.isPawnCapture(relFrom, relTo);
 				var validPromotion=false;
 				var promotion=false;
 
 				if(capturing) {
-					label.disambiguation=Util.file_str(from);
+					label.disambiguation=Chess.file_str(from);
 					label.sign=MoveLabel.SIGN_CAPTURE;
 				}
 
 				label.piece="";
 
-				if(Util.isPawnPromotion(relTo)) {
+				if(Chess.isPawnPromotion(relTo)) {
 					promotion=true;
 
-					if(promoteTo>=KNIGHT && promoteTo<=QUEEN) {
-						move.boardChanges[to]=Util.getPiece(promoteTo, colour);
-						label.special=MoveLabel.SIGN_PROMOTE+Fen.getPieceChar[Util.getPiece(promoteTo, WHITE)];
+					if(promoteTo>=Chess.KNIGHT && promoteTo<=Chess.QUEEN) {
+						move.boardChanges[to]=Piece.getPiece(promoteTo, colour);
+						label.special=MoveLabel.SIGN_PROMOTE+Fen.getPieceChar[Piece.getPiece(promoteTo, Piece.WHITE)];
 						move.promoteTo=promoteTo;
 						validPromotion=true;
 					}
@@ -166,20 +166,20 @@ define(function(require) {
 
 				if(validPromotion || !promotion) {
 					if(targetPiece===null) {
-						if(Util.isDoublePawnMove(relFrom, relTo)) {
+						if(Chess.isDoublePawnMove(relFrom, relTo)) {
 							move.isValid=true;
-							position.epTarget=Util.getRelativeSquare(relTo-8, colour);
+							position.epTarget=Chess.getRelativeSquare(relTo-8, colour);
 						}
 
-						else if(Util.isPawnMove(relFrom, relTo)) {
+						else if(Chess.isPawnMove(relFrom, relTo)) {
 							move.isValid=true;
 						}
 
 						else if(capturing && to===this.position.epTarget) {
 							move.isValid=true;
-							move.boardChanges[Util.getEpPawn(from, to)]=SQ_EMPTY;
+							move.boardChanges[Chess.getEpPawn(from, to)]=Chess.SQ_EMPTY;
 							label.sign=MoveLabel.SIGN_CAPTURE;
-							move.capturedPiece=Util.getPiece(PAWN, oppColour);
+							move.capturedPiece=Piece.getPiece(Chess.PAWN, oppColour);
 						}
 					}
 
@@ -189,7 +189,7 @@ define(function(require) {
 				}
 
 				if(move.isValid) {
-					move.boardChanges[from]=SQ_EMPTY;
+					move.boardChanges[from]=Chess.SQ_EMPTY;
 
 					if(!promotion) {
 						move.boardChanges[to]=this.position.board.getSquare(from);
@@ -197,13 +197,13 @@ define(function(require) {
 				}
 			}
 
-			else if((piece.type===KING || piece.type===ROOK) && !this.isInCheck(colour)) {
+			else if((piece.type===Chess.KING || piece.type===Chess.ROOK) && !this.isInCheck(colour)) {
 				move.isCastling=true;
 
 				if(this.variant===VARIANT_960) {
 					var backrank=[0, 7][colour];
 
-					if(Util.yFromSquare(from)===backrank && Util.yFromSquare(to)===backrank) {
+					if(Chess.yFromSquare(from)===backrank && Chess.yFromSquare(to)===backrank) {
 						kingSquare=this.position.kingPositions[colour];
 						rookSquare=null;
 
@@ -211,12 +211,12 @@ define(function(require) {
 
 						var side;
 
-						if(piece.type===ROOK) {
-							side=(Util.xFromSquare(from)<Util.xFromSquare(to))?QUEENSIDE:KINGSIDE;
+						if(piece.type===Chess.ROOK) {
+							side=(Chess.xFromSquare(from)<Chess.xFromSquare(to))?Chess.QUEENSIDE:Chess.KINGSIDE;
 						}
 
-						else if(piece.type===KING) {
-							side=(Util.xFromSquare(from)>Util.xFromSquare(to))?QUEENSIDE:KINGSIDE;
+						else if(piece.type===Chess.KING) {
+							side=(Chess.xFromSquare(from)>Chess.xFromSquare(to))?Chess.QUEENSIDE:Chess.KINGSIDE;
 						}
 
 						var rookDestinationFile=[5, 3][side];
@@ -225,20 +225,20 @@ define(function(require) {
 
 						//if rook move, rook is on from square
 
-						if(piece.type===ROOK) {
+						if(piece.type===Chess.ROOK) {
 							rookSquare=from;
 						}
 
 						//if king move, find rook between edge and king
 
 						else {
-							var rookSquares=Util.getSquaresBetween(Util.squareFromCoords([edge, backrank]), kingSquare, true);
+							var rookSquares=Chess.getSquaresBetween(Chess.squareFromCoords([edge, backrank]), kingSquare, true);
 							var sq;
 
 							for(var i=0; i<rookSquares.length; i++) {
 								sq=rookSquares[i];
 
-								if(this.position.board.getSquare(sq)===Util.getPiece(ROOK, colour)) {
+								if(this.position.board.getSquare(sq)===Piece.getPiece(Chess.ROOK, colour)) {
 									rookSquare=sq;
 
 									break;
@@ -252,14 +252,14 @@ define(function(require) {
 						*/
 
 						if(rookSquare!==null) {
-							var kingDestination=Util.squareFromCoords([kingDestinationFile, backrank]);
-							var rookDestination=Util.squareFromCoords([rookDestinationFile, backrank]);
+							var kingDestination=Chess.squareFromCoords([kingDestinationFile, backrank]);
+							var rookDestination=Chess.squareFromCoords([rookDestinationFile, backrank]);
 
 							var outermostSquare=kingSquare;
 							var innermostSquare=rookSquare;
 
-							var kingFile=Util.xFromSquare(kingSquare);
-							var rookFile=Util.xFromSquare(rookSquare);
+							var kingFile=Chess.xFromSquare(kingSquare);
+							var rookFile=Chess.xFromSquare(rookSquare);
 
 							if(Math.abs(edge-rookDestinationFile)>Math.abs(edge-kingFile)) { //rook dest is further out
 								outermostSquare=rookDestination;
@@ -269,7 +269,7 @@ define(function(require) {
 								innermostSquare=kingDestination;
 							}
 
-							var squares=Util.getSquaresBetween(innermostSquare, outermostSquare, true);
+							var squares=Chess.getSquaresBetween(innermostSquare, outermostSquare, true);
 
 							var kings=0;
 							var rooks=0;
@@ -280,12 +280,12 @@ define(function(require) {
 								sq=squares[i];
 								pc=this.position.board.getSquare(sq);
 
-								if(pc!==SQ_EMPTY) {
-									if(pc===Util.getPiece(ROOK, colour)) {
+								if(pc!==Chess.SQ_EMPTY) {
+									if(pc===Piece.getPiece(Chess.ROOK, colour)) {
 										rooks++;
 									}
 
-									else if(pc===Util.getPiece(KING, colour)) {
+									else if(pc===Piece.getPiece(Chess.KING, colour)) {
 										kings++;
 									}
 
@@ -299,13 +299,13 @@ define(function(require) {
 
 							if(kings===1 && rooks===1 && others===0) {
 								var throughCheck=false;
-								var between=Util.getSquaresBetween(kingSquare, kingDestination);
+								var between=Chess.getSquaresBetween(kingSquare, kingDestination);
 								var n;
 
 								for(var i=0; i<between.length; i++) {
 									n=between[i];
 
-									if(Util.getAllAttackers(this.position.board.getBoardArray(), n, oppColour).length>0) {
+									if(Chess.getAllAttackers(this.position.board.getBoardArray(), n, oppColour).length>0) {
 										throughCheck=true;
 
 										break;
@@ -317,10 +317,10 @@ define(function(require) {
 									label.piece="";
 									label.to="";
 									label.special=CastlingDetails.signs[side];
-									move.boardChanges[kingSquare]=SQ_EMPTY;
-									move.boardChanges[rookSquare]=SQ_EMPTY;
-									move.boardChanges[kingDestination]=Util.getPiece(KING, colour);
-									move.boardChanges[rookDestination]=Util.getPiece(ROOK, colour);
+									move.boardChanges[kingSquare]=Chess.SQ_EMPTY;
+									move.boardChanges[rookSquare]=Chess.SQ_EMPTY;
+									move.boardChanges[kingDestination]=Piece.getPiece(Chess.KING, colour);
+									move.boardChanges[rookDestination]=Piece.getPiece(Chess.ROOK, colour);
 								}
 							}
 						}
@@ -328,15 +328,15 @@ define(function(require) {
 				}
 
 				else {
-					if(piece.type===KING && isUnobstructed) {
+					if(piece.type===Chess.KING && isUnobstructed) {
 						var castling=new CastlingDetails(from, to);
 
 						if(castling.isValid && this.position.castlingRights.get(colour, castling.Side)) {
 							var throughCheck=false;
-							var between=Util.getSquaresBetween(from, to);
+							var between=Chess.getSquaresBetween(from, to);
 
 							for(var i=0; i<between.length; i++) {
-								if(Util.getAllAttackers(
+								if(Chess.getAllAttackers(
 									this.position.board.getBoardArray(),
 									between[i],
 									oppColour
@@ -347,7 +347,7 @@ define(function(require) {
 								}
 							}
 
-							if(!Util.isBlocked(
+							if(!Chess.isBlocked(
 								this.position.board.getBoardArray(),
 								from,
 								castling.rookStartPos
@@ -356,10 +356,10 @@ define(function(require) {
 								label.piece="";
 								label.to="";
 								label.special=castling.sign;
-								move.boardChanges[from]=SQ_EMPTY;
-								move.boardChanges[to]=Util.getPiece(KING, colour);
-								move.boardChanges[castling.rookStartPos]=SQ_EMPTY;
-								move.boardChanges[castling.rookEndPos]=Util.getPiece(ROOK, colour);
+								move.boardChanges[from]=Chess.SQ_EMPTY;
+								move.boardChanges[to]=Piece.getPiece(Chess.KING, colour);
+								move.boardChanges[castling.rookStartPos]=Chess.SQ_EMPTY;
+								move.boardChanges[castling.rookEndPos]=Piece.getPiece(Chess.ROOK, colour);
 							}
 						}
 					}
@@ -376,7 +376,7 @@ define(function(require) {
 
 				//test whether the player is in check on temporary board
 
-				var playerKingAttackers=Util.getAllAttackers(
+				var playerKingAttackers=Chess.getAllAttackers(
 					this.position.board.getBoardArray(),
 					this.position.board.kingPositions[colour],
 					oppColour
@@ -388,13 +388,13 @@ define(function(require) {
 			}
 
 			if(move.isLegal) {
-				if(colour===BLACK) {
+				if(colour===Piece.BLACK) {
 					this.position.fullmove++;
 				}
 
 				this.position.active=oppColour;
 
-				if(move.capturedPiece!==null || piece.type===PAWN) {
+				if(move.capturedPiece!==null || piece.type===Chess.PAWN) {
 					this.position.fiftymoveClock=0;
 				}
 
@@ -402,18 +402,18 @@ define(function(require) {
 					this.position.fiftymoveClock++;
 				}
 
-				if(piece.type!==PAWN || !Util.isDoublePawnMove(relFrom, relTo)) {
+				if(piece.type!==Chess.PAWN || !Chess.isDoublePawnMove(relFrom, relTo)) {
 					this.position.epTarget=null;
 				}
 
-				if(piece.type===KING || move.isCastling) {
+				if(piece.type===Chess.KING || move.isCastling) {
 					for(file=0; file<8; file++) {
 						this.position.castlingRights.setByFile(colour, file, false);
 					}
 				}
 
-				else if(piece.type===ROOK) {
-					this.position.castlingRights.setByFile(colour, Util.xFromSquare(from), false);
+				else if(piece.type===Chess.ROOK) {
+					this.position.castlingRights.setByFile(colour, Chess.xFromSquare(from), false);
 				}
 
 				if(this.isInCheck(oppColour)) {
@@ -432,7 +432,7 @@ define(function(require) {
 					}
 
 					else {
-						if(!this.canMate(WHITE) && !this.canMate(BLACK)) {
+						if(!this.canMate(Piece.WHITE) && !this.canMate(Piece.BLACK)) {
 							this._gameOver(RESULT_DRAW, RESULT_DETAILS_INSUFFICIENT);
 						}
 
@@ -474,10 +474,10 @@ define(function(require) {
 	}
 
 	Game.prototype.isInCheck=function(colour) {
-		return (Util.getAllAttackers(
+		return (Chess.getAllAttackers(
 			this.position.board.getBoardArray(),
 			this.position.kingPositions[colour],
-			Util.getOppColour(colour)
+			Chess.getOppColour(colour)
 		).length>0);
 	}
 
@@ -490,39 +490,39 @@ define(function(require) {
 		var bishops=[];
 		var knights=[];
 
-		pieces[KNIGHT]=0;
-		pieces[BISHOP]=0;
-		bishops[WHITE]=0;
-		bishops[BLACK]=0;
-		knights[WHITE]=0;
-		knights[BLACK]=0;
+		pieces[Chess.KNIGHT]=0;
+		pieces[Chess.BISHOP]=0;
+		bishops[Piece.WHITE]=0;
+		bishops[Piece.BLACK]=0;
+		knights[Piece.WHITE]=0;
+		knights[Piece.BLACK]=0;
 
 		var piece, pieceColour, pieceType;
 
 		for(var square=0; square<64; square++) {
 			piece=new Piece(this.position.board.getSquare(square));
 
-			if(piece.type!==SQ_EMPTY && piece.type!==KING) {
-				if(piece.colour===colour && (piece.type===PAWN || piece.type===ROOK || piece.type===QUEEN)) {
+			if(piece.type!==Chess.SQ_EMPTY && piece.type!==Chess.KING) {
+				if(piece.colour===colour && (piece.type===Chess.PAWN || piece.type===Chess.ROOK || piece.type===Chess.QUEEN)) {
 					return true;
 				}
 
-				if(piece.type===BISHOP) {
+				if(piece.type===Chess.BISHOP) {
 					bishops[piece.colour]++;
-					pieces[BISHOP]++;
+					pieces[Chess.BISHOP]++;
 				}
 
-				if(piece.type===KNIGHT) {
+				if(piece.type===Chess.KNIGHT) {
 					knights[piece.colour]++;
-					pieces[KNIGHT]++;
+					pieces[Chess.KNIGHT]++;
 				}
 			}
 		}
 
 		return (
-			(bishops[WHITE]>0 && bishops[BLACK]>0)
-			|| (pieces[BISHOP]>0 && pieces[KNIGHT]>0)
-			|| (pieces[KNIGHT]>2 && knights[colour]>0)
+			(bishops[Piece.WHITE]>0 && bishops[Piece.BLACK]>0)
+			|| (pieces[Chess.BISHOP]>0 && pieces[Chess.KNIGHT]>0)
+			|| (pieces[Chess.KNIGHT]>2 && knights[colour]>0)
 		);
 	}
 
@@ -532,7 +532,7 @@ define(function(require) {
 
 	Game.prototype._checkTime=function(colour) {
 		if(this.time[colour]<1) {
-			var oppColour=Util.getOppColour(colour);
+			var oppColour=Chess.getOppColour(colour);
 			var result=this.canMate(oppColour)?oppColour:DRAW;
 			this._gameOver(result, RESULT_DETAILS_TIMEOUT);
 		}

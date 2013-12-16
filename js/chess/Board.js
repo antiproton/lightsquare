@@ -1,28 +1,29 @@
 define(function(require) {
-	var Util=require("./Util");
+	var Chess=require("./Chess");
+	var Piece=require("./Piece");
 	
 	function Board() {
 		this._board=[];
 
 		for(var i=0; i<64; i++) {
-			this._board.push(SQ_EMPTY);
+			this._board.push(Chess.SQ_EMPTY);
 		}
 
 		this.kingPositions=[]
-		this.kingPositions[WHITE]=null;
-		this.kingPositions[BLACK]=null;
+		this.kingPositions[Piece.WHITE]=null;
+		this.kingPositions[Piece.BLACK]=null;
 	}
 
 	Board.prototype.move=function(from, to) {
 		this.setSquare(to, this.getSquare(from));
-		this.setSquare(from, SQ_EMPTY);
+		this.setSquare(from, Chess.SQ_EMPTY);
 	}
 
 	Board.prototype.setSquare=function(square, piece) {
 		this._board[square]=piece;
 
-		if(Util.getType(piece)===KING) {
-			this.kingPositions[Util.getColour(piece)]=square;
+		if(Piece.getType(piece)===Chess.KING) {
+			this.kingPositions[Piece.getColour(piece)]=square;
 		}
 	}
 

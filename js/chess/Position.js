@@ -3,11 +3,13 @@ define(function(require) {
 	var CastlingRights=require("./CastlingRights");
 	var Board=require("./Board");
 	var Colour=require("./Colour");
-	
+	var Chess=require("./Chess");
+	var Piece=require("./Piece");
+
 	function Position(fen) {
 		this.castlingRights=new CastlingRights();
 		this.board=new Board();
-		this.active=WHITE;
+		this.active=Piece.WHITE;
 		this.epTarget=null;
 		this.fiftymoveClock=0;
 		this.fullmove=1;
@@ -32,7 +34,7 @@ define(function(require) {
 		}
 
 		else {
-			this.epTarget=Util.squareFromAlgebraic(fen[Fen.FIELD_EP]);
+			this.epTarget=Chess.squareFromAlgebraic(fen[Fen.FIELD_EP]);
 		}
 
 		this.fiftymoveClock=0;
@@ -59,7 +61,7 @@ define(function(require) {
 			Fen.boardArrayToFenPosition(this.board.board),
 			Colour.getFen(this.active),
 			this.castlingRights.getFenString(),
-			(this.epTarget===null)?Fen.NONE:Util.algebraicFromSquare(this.epTarget),
+			(this.epTarget===null)?Fen.NONE:Chess.algebraicFromSquare(this.epTarget), //FIXME should be Square.getAlgebraic or something.  Number.prototype.toAlgebraic is tempting also.
 			this.fiftymoveClock.toString(),
 			this.fullmove.toString()
 		]);

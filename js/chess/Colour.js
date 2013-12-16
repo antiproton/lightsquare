@@ -1,6 +1,7 @@
 define(function(require) {
 	var Fen=require("./Fen");
-	
+	var Piece=require("./Piece");
+
 	var Colour={
 		getCode: function(colour) {
 			if(colour in this._codeFromFen) {
@@ -26,21 +27,21 @@ define(function(require) {
 	};
 
 	Colour._codeFromFen={};
-	Colour._codeFromFen[Fen.ACTIVE_WHITE]=WHITE;
-	Colour._codeFromFen[Fen.ACTIVE_BLACK]=BLACK;
+	Colour._codeFromFen[Fen.ACTIVE_WHITE]=Piece.WHITE;
+	Colour._codeFromFen[Fen.ACTIVE_BLACK]=Piece.BLACK;
 
 	Colour._fenFromCode=[];
-	Colour._fenFromCode[WHITE]=Fen.ACTIVE_WHITE;
-	Colour._fenFromCode[BLACK]=Fen.ACTIVE_BLACK;
+	Colour._fenFromCode[Piece.WHITE]=Fen.ACTIVE_WHITE;
+	Colour._fenFromCode[Piece.BLACK]=Fen.ACTIVE_BLACK;
 
 	Colour._codeFromName={
-		"white": WHITE,
-		"black": BLACK
+		"white": Piece.WHITE,
+		"black": Piece.BLACK
 	};
 
 	Colour._nameFromCode=[];
-	Colour._nameFromCode[WHITE]="white";
-	Colour._nameFromCode[BLACK]="black";
+	Colour._nameFromCode[Piece.WHITE]="white";
+	Colour._nameFromCode[Piece.BLACK]="black";
 
 	return Colour;
 });

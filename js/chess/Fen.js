@@ -1,4 +1,6 @@
 define(function(require) {
+	var Piece=require("./Piece");
+
 	var Fen={
 		STARTING_FEN: "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",
 		NONE: "-",
@@ -45,7 +47,7 @@ define(function(require) {
 
 					else {
 						for(var k=0; k<parseInt(ch); k++) {
-							board.push(SQ_EMPTY);
+							board.push(Piece.NONE);
 						}
 					}
 				}
@@ -73,16 +75,16 @@ define(function(require) {
 				for(var j=0; j<8; j++) {
 					piece=ranks[i][j];
 
-					if(piece===SQ_EMPTY) {
+					if(piece===Piece.NONE) {
 						emptySquares++;
 					}
 
-					if(emptySquares>0 && (piece!==SQ_EMPTY || j===7)) {
+					if(emptySquares>0 && (piece!==Piece.NONE || j===7)) {
 						fenRank+=emptySquares;
 						emptySquares=0;
 					}
 
-					if(piece!==SQ_EMPTY) {
+					if(piece!==Piece.NONE) {
 						fenRank+=Fen.getPieceChar(piece);
 					}
 				}
@@ -103,32 +105,32 @@ define(function(require) {
 	};
 
 	Fen._pieceChars=[];
-	Fen._pieceChars[WHITE_PAWN]="P";
-	Fen._pieceChars[WHITE_KNIGHT]="N";
-	Fen._pieceChars[WHITE_BISHOP]="B";
-	Fen._pieceChars[WHITE_ROOK]="R";
-	Fen._pieceChars[WHITE_QUEEN]="Q";
-	Fen._pieceChars[WHITE_KING]="K";
-	Fen._pieceChars[BLACK_PAWN]="p";
-	Fen._pieceChars[BLACK_KNIGHT]="n";
-	Fen._pieceChars[BLACK_BISHOP]="b";
-	Fen._pieceChars[BLACK_ROOK]="r";
-	Fen._pieceChars[BLACK_QUEEN]="q";
-	Fen._pieceChars[BLACK_KING]="k";
+	Fen._pieceChars[Piece.WHITE_PAWN]="P";
+	Fen._pieceChars[Piece.WHITE_KNIGHT]="N";
+	Fen._pieceChars[Piece.WHITE_BISHOP]="B";
+	Fen._pieceChars[Piece.WHITE_ROOK]="R";
+	Fen._pieceChars[Piece.WHITE_QUEEN]="Q";
+	Fen._pieceChars[Piece.WHITE_KING]="K";
+	Fen._pieceChars[Piece.BLACK_PAWN]="p";
+	Fen._pieceChars[Piece.BLACK_KNIGHT]="n";
+	Fen._pieceChars[Piece.BLACK_BISHOP]="b";
+	Fen._pieceChars[Piece.BLACK_ROOK]="r";
+	Fen._pieceChars[Piece.BLACK_QUEEN]="q";
+	Fen._pieceChars[Piece.BLACK_KING]="k";
 
 	Fen._pieceCodes={
-		"P": WHITE_PAWN,
-		"N": WHITE_KNIGHT,
-		"B": WHITE_BISHOP,
-		"R": WHITE_ROOK,
-		"Q": WHITE_QUEEN,
-		"K": WHITE_KING,
-		"p": BLACK_PAWN,
-		"n": BLACK_KNIGHT,
-		"b": BLACK_BISHOP,
-		"r": BLACK_ROOK,
-		"q": BLACK_QUEEN,
-		"k": BLACK_KING
+		"P": Piece.WHITE_PAWN,
+		"N": Piece.WHITE_KNIGHT,
+		"B": Piece.WHITE_BISHOP,
+		"R": Piece.WHITE_ROOK,
+		"Q": Piece.WHITE_QUEEN,
+		"K": Piece.WHITE_KING,
+		"p": Piece.BLACK_PAWN,
+		"n": Piece.BLACK_KNIGHT,
+		"b": Piece.BLACK_BISHOP,
+		"r": Piece.BLACK_ROOK,
+		"q": Piece.BLACK_QUEEN,
+		"k": Piece.BLACK_KING
 	};
 
 	return Fen;

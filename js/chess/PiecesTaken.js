@@ -1,18 +1,18 @@
 define(function(require) {
-	var Util=require("./Util");
-	
+	var Piece=require("./Piece");
+
 	function PiecesTaken() {
 		this._pieces=[];
-		this._pieces[WHITE]=[];
-		this._pieces[BLACK]=[];
+		this._pieces[Piece.WHITE]=[];
+		this._pieces[Piece.BLACK]=[];
 	}
 
 	PiecesTaken.prototype.add=function(piece) {
-		this._pieces[Util.getColour(piece)].push(piece);
+		this._pieces[Piece.getColour(piece)].push(piece);
 	}
 
 	PiecesTaken.prototype.remove=function(piece) {
-		var colour=Util.getColour(piece);
+		var colour=Piece.getColour(piece);
 
 		for(var i=0; i<this._pieces[colour].length; i++) {
 			if(this._pieces[colour][i]===piece) {
@@ -24,7 +24,7 @@ define(function(require) {
 	}
 
 	PiecesTaken.prototype.contains=function(piece) {
-		var colour=Util.getColour(piece);
+		var colour=Piece.getColour(piece);
 
 		for(var i=0; i<this._pieces[colour].length; i++) {
 			if(this._pieces[colour][i]===piece) {
@@ -36,8 +36,8 @@ define(function(require) {
 	}
 
 	PiecesTaken.prototype.clear=function() {
-		this._pieces[WHITE]=[];
-		this._pieces[BLACK]=[];
+		this._pieces[Piece.WHITE]=[];
+		this._pieces[Piece.BLACK]=[];
 	}
 
 	return PiecesTaken;

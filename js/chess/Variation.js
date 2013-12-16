@@ -1,7 +1,8 @@
 define(function(require) {
 	var List=require("lib/List");
 	var HistoryItem=require("./HistoryItem");
-	var Util=require("./Util");
+	var Chess=require("./Chess");
+	var Piece=require("./Piece");
 
 	function Variation() {
 		HistoryItem.call(this);
@@ -9,7 +10,7 @@ define(function(require) {
 		this.itemType=HistoryItem.VARIATION;
 
 		this._startingFullmove=1;
-		this._startingColour=WHITE;
+		this._startingColour=Piece.WHITE;
 
 		this.moveList=this._createMoveList();
 	}
@@ -70,7 +71,7 @@ define(function(require) {
 
 		if(item.itemType===HistoryItem.MOVE) {
 			var prevMove=item.getPreviousMove();
-			var halfmove=Util.getHalfmove(this._startingFullmove, this._startingColour);
+			var halfmove=Chess.getHalfmove(this._startingFullmove, this._startingColour);
 
 			if(prevMove!==null) {
 				halfmove=prevMove.getHalfmove()+1;

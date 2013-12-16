@@ -2,7 +2,7 @@ define(function(require) {
 	var Template=require("lib/dom/Template");
 	var Event=require("lib/Event");
 	var Colour=require("chess/Colour");
-	var Util=require("chess/Util");
+	var Chess=require("chess/Chess");
 	var style=require("lib/dom/style");
 	var Fen=require("chess/Fen");
 	var Piece=require("widgets/piece/Piece");
@@ -94,7 +94,7 @@ define(function(require) {
 
 	Square.prototype._setupHtml=function() {
 		var self=this;
-		var colourName=Colour.getName(Util.getSquareColour(this._square));
+		var colourName=Colour.getName(Chess.getSquareColour(this._square)); //FIXME should be Square.getColour or something.  no need for Chess.getSquareColour and it needn't be WHITE or BLACK either
 
 		this._template.root.classList.add("board_square_"+colourName);
 

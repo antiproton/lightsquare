@@ -1,4 +1,6 @@
 define(function(require) {
+	var Piece=require("./Piece");
+	
 	var Chess={
 		RANKS: "12345678",
 		FILES: "abcdefgh",
@@ -6,44 +8,20 @@ define(function(require) {
 		WHITE: 0,
 		BLACK: 1,
 
-		SQ_EMPTY: 0x0,
-
-		PAWN: 0x1,
-		KNIGHT: 0x2,
-		BISHOP: 0x3,
-		ROOK: 0x4,
-		QUEEN: 0x5,
-		KING: 0x6,
-
-		WHITE_PAWN: 0x1,
-		WHITE_KNIGHT: 0x2,
-		WHITE_BISHOP: 0x3,
-		WHITE_ROOK: 0x4,
-		WHITE_QUEEN: 0x5,
-		WHITE_KING: 0x6,
-
-		BLACK_PAWN: 0x9,
-		BLACK_KNIGHT: 0xA,
-		BLACK_BISHOP: 0xB,
-		BLACK_ROOK: 0xC,
-		BLACK_QUEEN: 0xD,
-		BLACK_KING: 0xE,
-
 		KINGSIDE: 0,
 		QUEENSIDE: 1,
 
 		KING_HOME_SQUARE_WHITE: 4,
 		KING_HOME_SQUARE_BLACK: 60,
 
-		_BITWISE_TYPE: ~8,
-		_BITWISE_COLOUR: 3,
+
 
 		colourFromHalfmove: function(halfmove) {
-			return (Chess.getHalfmoveIndex(halfmove)===1?BLACK:WHITE);
+			return (Chess.getHalfmoveIndex(halfmove)===1?Piece.BLACK:Piece.WHITE);
 		},
 
 		getOppColour: function(colour) {
-			return (colour===BLACK?WHITE:BLACK);
+			return (colour===Piece.BLACK?Piece.WHITE:Piece.BLACK);
 		},
 
 		getOppGame: function(gameId) {
@@ -55,7 +33,7 @@ define(function(require) {
 		},
 
 		getHalfmove: function(fullmove, colour) {
-			return ((fullmove-1)*2+(colour===WHITE?0:1));
+			return ((fullmove-1)*2+(colour===Piece.WHITE?0:1));
 		},
 
 		getHalfmoveIndex: function(halfmove) {
@@ -65,22 +43,10 @@ define(function(require) {
 		fullmoveDotFromColour: function(colour) {
 			var dots=[];
 
-			dots[WHITE]=".";
-			dots[BLACK]="...";
+			dots[Piece.WHITE]=".";
+			dots[Piece.BLACK]="...";
 
 			return dots[colour];
-		},
-
-		getType: function(piece) {
-			return piece&Chess._BITWISE_TYPE;
-		},
-
-		getColour: function(piece) {
-			return piece>>Chess._BITWISE_COLOUR;
-		},
-
-		getPiece: function(type, colour) {
-			return (colour<<Chess._BITWISE_COLOUR)|type;
 		},
 
 		isOnBoard: function(square) {
@@ -90,11 +56,11 @@ define(function(require) {
 		getSquareColour: function(square) {
 			var coords=Chess.coordsFromSquare(square);
 
-			return (coords[X]%2===coords[Y]%2?BLACK:WHITE);
+			return (coords[X]%2===coords[Y]%2?Piece.BLACK:Piece.WHITE);
 		},
 
 		getRelativeSquare: function(square, colour) {
-			return (colour===BLACK?63-square:square);
+			return (colour===Piece.BLACK?63-square:square);
 		},
 
 		xFromSquare: function(square) {
@@ -106,17 +72,17 @@ define(function(require) {
 		},
 
 		fileFromSquare: function(square) {
-			return FILES.charAt(Chess.xFromSquare(square));
+			return Chess.FILES.charAt(Chess.xFromSquare(square));
 		},
 
 		rankFromSquare: function(square) {
-			return RANKS.charAt(Chess.yFromSquare(square));
+			return Chess.RANKS.charAt(Chess.yFromSquare(square));
 		},
 
 		squareFromAlgebraic: function(algebraicSquare) {
 			return Chess.squareFromCoords([
-				FILES.indexOf(algebraicSquare.charAt(X)),
-				RANKS.indexOf(algebraicSquare.charAt(Y))
+				Chess.FILES.indexOf(algebraicSquare.charAt(X)),
+				Chess.RANKS.indexOf(algebraicSquare.charAt(Y))
 			]);
 		},
 
@@ -154,27 +120,27 @@ define(function(require) {
 			}
 
 			switch(type) {
-				case PAWN: {
+				case Piece.PAWN: {
 					return false;
 				}
 
-				case KNIGHT: {
+				case Piece.KNIGHT: {
 					return ((diff[X]===2 && diff[Y]===1) || (diff[X]===1 && diff[Y]===2));
 				}
 
-				case BISHOP: {
+				case Piece.BISHOP: {
 					return (diff[X]===diff[Y]);
 				}
 
-				case ROOK: {
+				case Piece.ROOK: {
 					return (diff[X]===0 || diff[Y]===0);
 				}
 
-				case QUEEN: {
+				case Piece.QUEEN: {
 					return (diff[X]===diff[Y] || (diff[X]===0 || diff[Y]===0));
 				}
 
-				case KING: {
+				case Piece.KING: {
 					return ((diff[X]===1 || diff[X]===0) && (diff[Y]===1 || diff[Y]===0));
 				}
 			}
@@ -225,7 +191,7 @@ define(function(require) {
 				squares.push(from);
 			}
 
-			if(Chess.isRegularMove(BISHOP, fromCoords, toCoords)) {
+			if(Chess.isRegularMove(Piece.BISHOP, fromCoords, toCoords)) {
 				var distance=Chess.getDiagonalDistance(fromCoords, toCoords);
 
 				if(distance>0) {
@@ -237,7 +203,7 @@ define(function(require) {
 				}
 			}
 
-			else if(Chess.isRegularMove(ROOK, fromCoords, toCoords)) {
+			else if(Chess.isRegularMove(Piece.ROOK, fromCoords, toCoords)) {
 				if(difference>7) { //vertical move
 					increment=8;
 				}
@@ -262,7 +228,7 @@ define(function(require) {
 			var squares=Chess.getSquaresBetween(from, to);
 
 			for(var i=0; i<squares.length; i++) {
-				if(board[squares[i]]!==SQ_EMPTY) {
+				if(board[squares[i]]!==Chess.SQ_EMPTY) {
 					return true;
 				}
 			}
@@ -283,7 +249,7 @@ define(function(require) {
 			var squares=[];
 
 			switch(type) {
-				case PAWN: {
+				case Piece.PAWN: {
 					var relFrom=Chess.getRelativeSquare(from, colour);
 
 					//double
@@ -309,7 +275,7 @@ define(function(require) {
 					break;
 				}
 
-				case KNIGHT: {
+				case Piece.KNIGHT: {
 					var xDiffs=[-1, -1, 1, 1, -2, -2, 2, 2];
 					var yDiffs=[-2, 2, -2, 2, 1, -1, 1, -1];
 					var x, y;
@@ -326,7 +292,7 @@ define(function(require) {
 					break;
 				}
 
-				case BISHOP: {
+				case Piece.BISHOP: {
 					var diffs=[1, -1];
 					var coords;
 
@@ -346,7 +312,7 @@ define(function(require) {
 					break;
 				}
 
-				case ROOK: {
+				case Piece.ROOK: {
 					var squareOnSameRank, squareOnSameFile;
 
 					for(var n=0; n<8; n++) {
@@ -365,16 +331,16 @@ define(function(require) {
 					break;
 				}
 
-				case QUEEN: {
-					var rookSquares=Chess.getReachableSquares(ROOK, from, colour);
-					var bishopSquares=Chess.getReachableSquares(BISHOP, from, colour);
+				case Piece.QUEEN: {
+					var rookSquares=Chess.getReachableSquares(Piece.ROOK, from, colour);
+					var bishopSquares=Chess.getReachableSquares(Piece.BISHOP, from, colour);
 
 					squares=rookSquares.concat(bishopSquares);
 
 					break;
 				}
 
-				case KING: {
+				case Piece.KING: {
 					//regular king moves
 
 					var x, y;
@@ -418,11 +384,11 @@ define(function(require) {
 			aren't attacking the squares they can castle to)
 			*/
 
-			if(type===PAWN) {
+			if(type===Piece.PAWN) {
 				return Chess.getPawnAttackers(board, square, colour);
 			}
 
-			else if(type===KING) {
+			else if(type===Piece.KING) {
 				return Chess.getKingAttackers(board, square, colour);
 			}
 
@@ -432,7 +398,7 @@ define(function(require) {
 
 			else {
 				var attackers=[];
-				var piece=Chess.getPiece(type, colour);
+				var piece=Piece.getPiece(type, colour);
 				var candidateSquares=Chess.getReachableSquares(type, square, colour);
 				var candidateSquare;
 
@@ -450,7 +416,7 @@ define(function(require) {
 
 		getPawnAttackers: function(board, square, colour) {
 			var attackers=[];
-			var piece=Chess.getPiece(PAWN, colour);
+			var piece=Piece.getPiece(Piece.PAWN, colour);
 			var playerColour=Chess.getOppColour(colour);
 			var relSquare=Chess.getRelativeSquare(square, playerColour);
 			var relCoords=Chess.coordsFromSquare(relSquare);
@@ -477,7 +443,7 @@ define(function(require) {
 
 		getKingAttackers: function(board, square, colour) {
 			var attackers=[];
-			var piece=Chess.getPiece(KING, colour);
+			var piece=Piece.getPiece(Piece.KING, colour);
 			var coords=Chess.coordsFromSquare(square);
 			var x, y, candidateSquare;
 
@@ -504,7 +470,7 @@ define(function(require) {
 
 		getAllAttackers: function(board, square, colour) {
 			var attackers=[];
-			var pieceTypes=[PAWN, KNIGHT, BISHOP, ROOK, QUEEN, KING];
+			var pieceTypes=[Piece.PAWN, Piece.KNIGHT, Piece.BISHOP, Piece.ROOK, Piece.QUEEN, Piece.KING];
 
 			for(var i=0; i<pieceTypes.length; i++) {
 				attackers=attackers.concat(Chess.getAttackers(board, pieceTypes[i], square, colour));

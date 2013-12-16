@@ -1,18 +1,20 @@
 define(function(require) {
 	var Fen=require("./Fen");
-	
+	var Chess=require("./Chess");
+	var Piece=require("./Piece");
+
 	function CastlingRights() {
 		this._rightsByFile=[];
-		this._rightsByFile[WHITE]=[];
-		this._rightsByFile[BLACK]=[];
+		this._rightsByFile[Piece.WHITE]=[];
+		this._rightsByFile[Piece.BLACK]=[];
 
 		this.reset();
 	}
 
 	CastlingRights.prototype.reset=function() {
 		for(var file=0; file<8; file++) {
-			this._rightsByFile[WHITE][file]=false;
-			this._rightsByFile[BLACK][file]=false;
+			this._rightsByFile[Piece.WHITE][file]=false;
+			this._rightsByFile[Piece.BLACK][file]=false;
 		}
 	}
 
@@ -41,21 +43,21 @@ define(function(require) {
 			var colour, file, side;
 			var sides={};
 
-			sides[Fen.getPieceChar(WHITE_KING)]=KINGSIDE;
-			sides[Fen.getPieceChar(WHITE_QUEEN)]=QUEENSIDE;
+			sides[Fen.getPieceChar(Piece.WHITE_KING)]=CastlingRights.KINGSIDE;
+			sides[Fen.getPieceChar(Piece.WHITE_QUEEN)]=CastlingRights.QUEENSIDE;
 
 			for(var i=0; i<fenChars.length; i++) {
 				fenChar=fenChars[i];
 				fenCharLower=fenChar.toLowerCase();
 				fenCharUpper=fenChar.toUpperCase();
-				colour=(fenChar===fenCharUpper?WHITE:BLACK);
+				colour=(fenChar===fenCharUpper?Piece.WHITE:Piece.BLACK);
 
 				if(fenCharUpper in sides) {
 					file=CastlingRights._fileFromSide[sides[fenCharUpper]];
 				}
 
 				else {
-					file=FILES.indexOf(fenCharLower);
+					file=Chess.FILES.indexOf(fenCharLower);
 				}
 
 				this.setByFile(colour, file, true);
@@ -64,7 +66,7 @@ define(function(require) {
 	}
 
 	CastlingRights.prototype.getFenStringByFile=function() {
-		var colours=[WHITE, BLACK];
+		var colours=[Piece.WHITE, Piece.BLACK];
 		var colour;
 		var fenString="";
 
@@ -86,8 +88,8 @@ define(function(require) {
 	}
 
 	CastlingRights.prototype.getFenStringBySide=function() {
-		var colours=[WHITE, BLACK];
-		var sides=[KINGSIDE, QUEENSIDE];
+		var colours=[Piece.WHITE, Piece.BLACK];
+		var sides=[CastlingRights.KINGSIDE, CastlingRights.QUEENSIDE];
 		var colour, side;
 		var fenString="";
 
@@ -113,16 +115,16 @@ define(function(require) {
 	CastlingRights._getSideChar=function(colour, side) {
 		var pieceTypes=[]
 
-		pieceTypes[KINGSIDE]=KING;
-		pieceTypes[QUEENSIDE]=QUEEN;
+		pieceTypes[CastlingRights.KINGSIDE]=Chess.KING;
+		pieceTypes[CastlingRights.QUEENSIDE]=Chess.QUEEN;
 
-		return Fen.getPieceChar(Util.getPiece(pieceTypes[side], colour));
+		return Fen.getPieceChar(Piece.getPiece(pieceTypes[side], colour));
 	}
 
 	CastlingRights._getFileChar=function(colour, file) {
-		var fenChar=FILES.charAt(file);
+		var fenChar=Chess.FILES.charAt(file);
 
-		if(colour===WHITE) {
+		if(colour===Piece.WHITE) {
 			fenChar=fenChar.toUpperCase();
 		}
 
@@ -130,8 +132,8 @@ define(function(require) {
 	}
 
 	CastlingRights._fileFromSide=[];
-	CastlingRights._fileFromSide[KINGSIDE]=7;
-	CastlingRights._fileFromSide[QUEENSIDE]=0;
+	CastlingRights._fileFromSide[CastlingRights.KINGSIDE]=7;
+	CastlingRights._fileFromSide[CastlingRights.QUEENSIDE]=0;
 
 	return CastlingRights;
 });

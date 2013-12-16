@@ -2,9 +2,10 @@ define(function(require) {
 	var Move=require("./Move");
 	var Variation=require("./Variation");
 	var Event=require("lib/Event");
+	var Piece=require("./Piece");
 
 	function History() {
-		this._startingColour=WHITE;
+		this._startingColour=Piece.WHITE;
 		this._startingFullmove=1;
 		this.selectedMove=null;
 		this.editMode=History.EDIT_MODE_BRANCH;
