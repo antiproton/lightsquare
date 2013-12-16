@@ -17,7 +17,7 @@ define(function(require, exports, module) {
 		"Merida"
 	];
 
-	Piece.DEFAULT_SIZE=90;
+	Piece.DEFAULT_SIZE=60;
 
 	Piece.prototype._setupHtml=function() {
 		this._updateHtml();
