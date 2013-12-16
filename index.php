@@ -17,7 +17,6 @@ require_once "php/init.php";
 		</script>
 		<script src="/lib/js/Function.js"></script>
 		<script src="/lib/js/constants.js"></script>
-		<script src="/js/chess/constants.js"></script>
 		<!-- use regular php (or js version of) loadw/loads here -->
 		<script>
 		var require={
