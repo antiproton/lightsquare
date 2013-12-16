@@ -1,0 +1,38 @@
+define(function(require, exports, module) {
+	return {
+		RANKS: "12345678",
+		FILES: "abcdefgh",
+
+		WHITE: 0,
+		BLACK: 1,
+
+		SQ_EMPTY: 0x0,
+
+		PAWN: 0x1,
+		KNIGHT: 0x2,
+		BISHOP: 0x3,
+		ROOK: 0x4,
+		QUEEN: 0x5,
+		KING: 0x6,
+
+		WHITE_PAWN: 0x1,
+		WHITE_KNIGHT: 0x2,
+		WHITE_BISHOP: 0x3,
+		WHITE_ROOK: 0x4,
+		WHITE_QUEEN: 0x5,
+		WHITE_KING: 0x6,
+
+		BLACK_PAWN: 0x9,
+		BLACK_KNIGHT: 0xA,
+		BLACK_BISHOP: 0xB,
+		BLACK_ROOK: 0xC,
+		BLACK_QUEEN: 0xD,
+		BLACK_KING: 0xE,
+
+		KINGSIDE: 0,
+		QUEENSIDE: 1,
+
+		KING_HOME_SQUARE_WHITE: 4,
+		KING_HOME_SQUARE_BLACK: 60
+	};
+});
