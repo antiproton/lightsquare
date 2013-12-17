@@ -115,8 +115,8 @@ define(function(require) {
 	CastlingRights._getSideChar=function(colour, side) {
 		var pieceTypes=[]
 
-		pieceTypes[CastlingRights.KINGSIDE]=Chess.KING;
-		pieceTypes[CastlingRights.QUEENSIDE]=Chess.QUEEN;
+		pieceTypes[CastlingRights.KINGSIDE]=Piece.KING;
+		pieceTypes[CastlingRights.QUEENSIDE]=Piece.QUEEN;
 
 		return Fen.getPieceChar(Piece.getPiece(pieceTypes[side], colour));
 	}

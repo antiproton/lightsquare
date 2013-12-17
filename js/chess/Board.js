@@ -1,7 +1,7 @@
 define(function(require) {
 	var Chess=require("./Chess");
 	var Piece=require("./Piece");
-	
+
 	function Board() {
 		this._board=[];
 
@@ -22,7 +22,7 @@ define(function(require) {
 	Board.prototype.setSquare=function(square, piece) {
 		this._board[square]=piece;
 
-		if(Piece.getType(piece)===Chess.KING) {
+		if(Piece.getType(piece)===Piece.KING) {
 			this.kingPositions[Piece.getColour(piece)]=square;
 		}
 	}
