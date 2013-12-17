@@ -1,6 +1,6 @@
 define(function(require) {
 	var Piece=require("./Piece");
-	
+
 	var Chess={
 		RANKS: "12345678",
 		FILES: "abcdefgh",
@@ -228,7 +228,7 @@ define(function(require) {
 			var squares=Chess.getSquaresBetween(from, to);
 
 			for(var i=0; i<squares.length; i++) {
-				if(board[squares[i]]!==Chess.SQ_EMPTY) {
+				if(board[squares[i]]!==Piece.NONE) {
 					return true;
 				}
 			}
