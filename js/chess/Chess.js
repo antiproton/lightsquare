@@ -5,16 +5,8 @@ define(function(require) {
 		RANKS: "12345678",
 		FILES: "abcdefgh",
 
-		WHITE: 0,
-		BLACK: 1,
-
-		KINGSIDE: 0,
-		QUEENSIDE: 1,
-
 		KING_HOME_SQUARE_WHITE: 4,
 		KING_HOME_SQUARE_BLACK: 60,
-
-
 
 		colourFromHalfmove: function(halfmove) {
 			return (Chess.getHalfmoveIndex(halfmove)===1?Piece.BLACK:Piece.WHITE);
