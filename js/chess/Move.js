@@ -2,14 +2,57 @@ define(function(require) {
 	var HistoryItem=require("./HistoryItem");
 	var Chess=require("./Chess");
 
-	function Move() {
+	/*
+	widget Move
+
+	- overrides getPositionAfter to return the position after from the db
+	- calls this class in its constructor using a Position generated from
+	the last move's positionafter or the game's starting fen.
+	*/
+
+	function Class(positionBefore, from, to) {
+		this._positionBefore=positionBefore;
+		this._from=from;
+		this._to=to;
+		this._hasBeenChecked=false;
+		this._positionAfter=null;
+	}
+
+	Class.prototype.check=function() {
+		//...
+
+		this._hasBeenChecked=true;
+	}
+
+	Class.prototype.isLegal=function() {
+		if(this._hasBeenChecked) {
+
+		}
+	}
+
+	Class.prototype.setPositionBefore=function(position) {
+		this._positionBefore=position;
+		this._hasBeenChecked=false;
+	}
+
+	Class.prototype.setPositionAfter=function(position) { //FIXME should this be allowed?  would basically be to avoid having to check it every time for loading moves from the db.
+		this._positionAfter=position;
+		this._hasBeenChecked=false;
+	}
+
+	Class.prototype.setFrom=function(from) {
+		this._from=from;
+		this._hasBeenChecked=false;
+	}
+
+	Class.prototype.setTo=function(to) {
+		this._to=to;
+		this._hasBeenChecked=false;
+	}
+	function Class() {
 		HistoryItem.call(this);
 
 		this.itemType=HistoryItem.MOVE;
-
-		this.engineBestMove=null; //best reply to this move e.g. "e8=Q#"
-		this.engineScore=null; //eval result at this move e.g. 1.96 or number of moves to mate
-		this.engineScoreType=null; //"cp" or "mate".  says what EngineScore means
 
 		this._halfmove=null;
 		this._isSelected=false;
@@ -29,75 +72,47 @@ define(function(require) {
 		this.bughouseDropPiece=null;
 	}
 
-	Move.implement(HistoryItem);
+	Class.implement(HistoryItem);
 
-	Move.prototype.setLabel=function(label) {
+	Class.prototype.setLabel=function(label) {
 		this._label=label;
 	}
 
-	Move.prototype.getHalfmove=function() {
+	Class.prototype.getHalfmove=function() {
 		return this._halfmove;
 	}
 
-	Move.prototype.setHalfmove=function(halfmove) {
-		this._halfmove=halfmove;
+	Class.prototype.getFullmove=function() {
+		return Chess.fullmoveFromHalfmove(this._halfmove);
 	}
 
-	Move.prototype.getFullmove=function() {
-		if(this._halfmove!==null) {
-			return Chess.fullmoveFromHalfmove(this._halfmove);
-		}
-
-		else {
-			return null;
-		}
+	Class.prototype.getColour=function() {
+		return Chess.colourFromHalfmove(this._halfmove);
 	}
 
-	Move.prototype.getColour=function() {
-		if(this._halfmove!==null) {
-			return Chess.colourFromHalfmove(this._halfmove);
-		}
-
-		else {
-			return null;
-		}
+	Class.prototype.getDot=function() {
+		return Chess.fullmoveDotFromColour(this.getColour());
 	}
 
-	Move.prototype.getDot=function() {
-		if(this._halfmove!==null) {
-			return Chess.fullmoveDotFromColour(this.getColour());
-		}
-
-		else {
-			return null;
-		}
-	}
-
-	Move.prototype.getLabel=function() {
+	Class.prototype.getLabel=function() {
 		return this._label;
 	}
 
-	Move.prototype.getFullLabel=function() {
-		if(this._halfmove!==null) {
-			return this.getFullmove()+this.getDot()+" "+this._label;
-		}
-
-		else {
-			return null;
-		}
+	Class.prototype.getFullLabel=function() {
+		return this.getFullmove()+this.getDot()+" "+this._label;
 	}
 
-	Move.prototype.select=function() {
+	Class.prototype.select=function() {
 		this.isSelected=true;
 	}
 
-	Move.prototype.deselect=function() {
+	Class.prototype.deselect=function() {
 		this.isSelected=false;
 	}
 
-	Move.prototype.isSelected=function() {
+	Class.prototype.isSelected=function() {
 		return this._isSelected;
 	}
 
-	return Move;
+	return Class;
 });
