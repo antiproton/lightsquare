@@ -390,7 +390,7 @@ define(function(require) {
 		if(this.mouseIsOnBoard(event)) {
 			var square=targetUiSquare.getSquare();
 
-			if(!this._moveAction.selected && !this._moveAction.isInProgress && this._board[square]!==Chess.SQ_EMPTY) {
+			if(!this._moveAction.selected && !this._moveAction.isInProgress && this._board[square]!==Piece.NONE) {
 				targetUiSquare.setZIndexAbove();
 				this._moveAction.selected=true;
 				this._moveAction.from=square;

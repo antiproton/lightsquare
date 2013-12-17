@@ -6,7 +6,7 @@ define(function(require) {
 		this._board=[];
 
 		for(var i=0; i<64; i++) {
-			this._board.push(Chess.SQ_EMPTY);
+			this._board.push(Piece.NONE);
 		}
 
 		this.kingPositions=[]
@@ -16,7 +16,7 @@ define(function(require) {
 
 	Board.prototype.move=function(from, to) {
 		this.setSquare(to, this.getSquare(from));
-		this.setSquare(from, Chess.SQ_EMPTY);
+		this.setSquare(from, Piece.NONE);
 	}
 
 	Board.prototype.setSquare=function(square, piece) {

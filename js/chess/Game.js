@@ -66,7 +66,7 @@ define(function(require) {
 		for(var square=0; square<64; square++) {
 			piece=this.position.board.getSquare(square);
 
-			if(piece!==Chess.SQ_EMPTY && Piece.getColour(piece)===colour) {
+			if(piece!==Piece.NONE && Piece.getColour(piece)===colour) {
 				legalMoves+=this.getLegalMovesFrom(square).length;
 			}
 		}
@@ -78,7 +78,7 @@ define(function(require) {
 		var legalMoves=[];
 		var piece, reachableSquares;
 
-		if(this.position.board.getSquare(square)!==Chess.SQ_EMPTY) {
+		if(this.position.board.getSquare(square)!==Piece.NONE) {
 			piece=new Piece(this.position.board.getSquare(square));
 			reachableSquares=Chess.getReachableSquares(piece.type, square, piece.colour);
 
@@ -103,10 +103,10 @@ define(function(require) {
 		move.from=from;
 		move.to=to;
 
-		if(Chess.isOnBoard(from) && Chess.isOnBoard(to) && piece.type!==Chess.SQ_EMPTY && piece.colour===colour) {
+		if(Chess.isOnBoard(from) && Chess.isOnBoard(to) && piece.type!==Piece.NONE && piece.colour===colour) {
 			var targetPiece=null;
 
-			if(this.position.board.getSquare(to)!==Chess.SQ_EMPTY) {
+			if(this.position.board.getSquare(to)!==Piece.NONE) {
 				targetPiece=new Piece(this.position.board.getSquare(to));
 			}
 
@@ -137,7 +137,7 @@ define(function(require) {
 
 			if(Chess.isRegularMove(piece.type, fromCoords, toCoords) && isUnobstructed) {
 				move.isValid=true;
-				move.boardChanges[from]=Chess.SQ_EMPTY;
+				move.boardChanges[from]=Piece.NONE;
 				move.boardChanges[to]=this.position.board.getSquare(from);
 			}
 
@@ -177,7 +177,7 @@ define(function(require) {
 
 						else if(capturing && to===this.position.epTarget) {
 							move.isValid=true;
-							move.boardChanges[Chess.getEpPawn(from, to)]=Chess.SQ_EMPTY;
+							move.boardChanges[Chess.getEpPawn(from, to)]=Piece.NONE;
 							label.sign=MoveLabel.SIGN_CAPTURE;
 							move.capturedPiece=Piece.getPiece(Piece.PAWN, oppColour);
 						}
@@ -189,7 +189,7 @@ define(function(require) {
 				}
 
 				if(move.isValid) {
-					move.boardChanges[from]=Chess.SQ_EMPTY;
+					move.boardChanges[from]=Piece.NONE;
 
 					if(!promotion) {
 						move.boardChanges[to]=this.position.board.getSquare(from);
@@ -280,7 +280,7 @@ define(function(require) {
 								sq=squares[i];
 								pc=this.position.board.getSquare(sq);
 
-								if(pc!==Chess.SQ_EMPTY) {
+								if(pc!==Piece.NONE) {
 									if(pc===Piece.getPiece(Piece.ROOK, colour)) {
 										rooks++;
 									}
@@ -317,8 +317,8 @@ define(function(require) {
 									label.piece="";
 									label.to="";
 									label.special=CastlingDetails.signs[side];
-									move.boardChanges[kingSquare]=Chess.SQ_EMPTY;
-									move.boardChanges[rookSquare]=Chess.SQ_EMPTY;
+									move.boardChanges[kingSquare]=Piece.NONE;
+									move.boardChanges[rookSquare]=Piece.NONE;
 									move.boardChanges[kingDestination]=Piece.getPiece(Piece.KING, colour);
 									move.boardChanges[rookDestination]=Piece.getPiece(Piece.ROOK, colour);
 								}
@@ -356,9 +356,9 @@ define(function(require) {
 								label.piece="";
 								label.to="";
 								label.special=castling.sign;
-								move.boardChanges[from]=Chess.SQ_EMPTY;
+								move.boardChanges[from]=Piece.NONE;
 								move.boardChanges[to]=Piece.getPiece(Piece.KING, colour);
-								move.boardChanges[castling.rookStartPos]=Chess.SQ_EMPTY;
+								move.boardChanges[castling.rookStartPos]=Piece.NONE;
 								move.boardChanges[castling.rookEndPos]=Piece.getPiece(Piece.ROOK, colour);
 							}
 						}
@@ -502,7 +502,7 @@ define(function(require) {
 		for(var square=0; square<64; square++) {
 			piece=new Piece(this.position.board.getSquare(square));
 
-			if(piece.type!==Chess.SQ_EMPTY && piece.type!==Piece.KING) {
+			if(piece.type!==Piece.NONE && piece.type!==Piece.KING) {
 				if(piece.colour===colour && (piece.type===Piece.PAWN || piece.type===Piece.ROOK || piece.type===Piece.QUEEN)) {
 					return true;
 				}
