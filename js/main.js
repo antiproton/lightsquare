@@ -8,21 +8,23 @@ define(function(require) {
 	var g=require("lib/dom/byId");
 	var MoveLabel=require("chess/MoveLabel");
 
-	var tableWidget=new Table(g("table"));
+	var table=new Table(g("table"));
 
-	//tableWidget.board.setSquareSize(45);
+	//table.board.setSquareSize(45);
 
 	var game=new Game();
 
-	tableWidget.board.setBoardArray(game.position.board.getBoardArray());
+	table.board.setBoardArray(game.position.board.getBoardArray());
 
-	var history=tableWidget.history;
+	var history=table.history;
 
 	var move=history.createMove();
 	var label=new MoveLabel();
 
 	label.piece="N";
 	move.setLabel(label);
+
+	table.board.setShowSurround(true);
 
 	history.move(move);
 });
