@@ -1,11 +1,11 @@
 define(function(require) {
 	var Event=require("lib/Event");
-
+	var time=require("lib/time");
+	var Piece=require("./Piece");
 	var Position=require("./Position");
 	var History=require("./History");
 	var PiecesTaken=require("./PiecesTaken");
 	var Chess=require("./Chess");
-	var time=require("lib/time");
 
 	function Game() {
 		this.Moved=new Event(this);
