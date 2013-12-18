@@ -26,7 +26,7 @@ define(function(require) {
 		},
 
 		isOnBoard: function(square) {
-			return (square>-1 && sq<64);
+			return (square>-1 && square<64);
 		},
 
 		getSquareColour: function(square) {
