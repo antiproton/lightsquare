@@ -1,78 +1,41 @@
 define(function(require) {
-	var HistoryItem=require("./HistoryItem");
 	var Chess=require("./Chess");
 
-	/*
-	widget Move
-
-	- overrides getPositionAfter to return the position after from the db
-	- calls this class in its constructor using a Position generated from
-	the last move's positionafter or the game's starting fen.
-	*/
-
-	function Class(positionBefore, from, to) {
-		HistoryItem.call(this);
-
+	function Class(positionBefore, from, to, promoteTo) {
 		this._positionBefore=positionBefore;
 		this._from=from;
 		this._to=to;
-		this._hasBeenChecked=false;
-		this._positionAfter=null;
+		this._promoteTo=promoteTo||null;
 
-		this.itemType=HistoryItem.MOVE;
-
-		this._halfmove=null;
-		this._isSelected=false;
-		this._label="";
+		this._isCheck=false;
+		this._isMate=false;
+		this._isCastling=false;
+		this._capturedPiece=null;
 		this._isValid=false;
 		this._isLegal=false;
-		this.mtime=null;
-		this.isCastling=false;
-		this.capturedPiece=null;
-		this.promoteTo=null;
-		this.resultingFen=null;
-		this.boardChanges=[];
-		this.from=null;
-		this.to=null;
-		this.bughouseDropPiece=null;
+		this._boardChanges=[];
+		this._check();
+
 	}
 
-	Class.implement(HistoryItem);
+	Class.prototype._check=function() {
+		
+	}
 
-	Class.prototype.check=function() {
+	Class.prototype.isCheck=function() {
+		return this._isCheck;
+	}
 
+	Class.prototype.isMate=function() {
+		return this._isMate;
+	}
 
-		this._hasBeenChecked=true;
+	Class.prototype.isCastling=function() {
+		return this._isCastling;
 	}
 
 	Class.prototype.isLegal=function() {
-		if(this._hasBeenChecked) {
-			return this._isLegal;
-		}
-	}
-
-	Class.prototype.setPositionBefore=function(position) {
-		this._positionBefore=position;
-		this._hasBeenChecked=false;
-	}
-
-	Class.prototype.setFrom=function(from) {
-		this._from=from;
-		this._hasBeenChecked=false;
-	}
-
-	Class.prototype.setTo=function(to) {
-		this._to=to;
-		this._hasBeenChecked=false;
-	}
-
-	Class.prototype.setPositionAfter=function(position) {
-		this._positionAfter=position;
-		this._hasBeenChecked=false;
-	}
-
-	Class.prototype.setLabel=function(label) {
-		this._label=label;
+		return this._isLegal;
 	}
 
 	Class.prototype.getFullmove=function() {
@@ -90,7 +53,12 @@ define(function(require) {
 	}
 
 	Class.prototype.getDot=function() {
-		return Chess.fullmoveDotFromColour(this.getColour());
+		var dot=[];
+
+		dot[Piece.WHITE]=".";
+		dot[Piece.BLACK]="...";
+
+		return dot[this.getColour()];
 	}
 
 	Class.prototype.getLabel=function() {
@@ -98,19 +66,7 @@ define(function(require) {
 	}
 
 	Class.prototype.getFullLabel=function() {
-		return this.getFullmove()+this.getDot()+" "+this._label;
-	}
-
-	Class.prototype.select=function() {
-		this.isSelected=true;
-	}
-
-	Class.prototype.deselect=function() {
-		this.isSelected=false;
-	}
-
-	Class.prototype.isSelected=function() {
-		return this._isSelected;
+		return this.getFullmove()+this.getDot()+" "+this.getLabel();
 	}
 
 	return Class;
