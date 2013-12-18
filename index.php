@@ -30,10 +30,11 @@ require_once "php/init.php";
 					"file": "lib/require-text/text"
 				}
 			},
-			urlArgs: "timestamp="+(new Date()).valueOf()
+			urlArgs: "timestamp="+(new Date()).valueOf(),
+			pluginSeparator: "@"
 		};
 		</script>
-		<script data-main="main" src="/lib/js/require.js"></script>
+		<script data-main="main" src="/lib/js/requirejs/require.js"></script>
 	</head>
 	<body>
 		<div id="topbar">
