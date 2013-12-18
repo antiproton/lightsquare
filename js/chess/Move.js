@@ -11,56 +11,21 @@ define(function(require) {
 	*/
 
 	function Class(positionBefore, from, to) {
+		HistoryItem.call(this);
+
 		this._positionBefore=positionBefore;
 		this._from=from;
 		this._to=to;
 		this._hasBeenChecked=false;
 		this._positionAfter=null;
-	}
-
-	Class.prototype.check=function() {
-		//...
-
-		this._hasBeenChecked=true;
-	}
-
-	Class.prototype.isLegal=function() {
-		if(this._hasBeenChecked) {
-
-		}
-	}
-
-	Class.prototype.setPositionBefore=function(position) {
-		this._positionBefore=position;
-		this._hasBeenChecked=false;
-	}
-
-	Class.prototype.setPositionAfter=function(position) { //FIXME should this be allowed?  would basically be to avoid having to check it every time for loading moves from the db.
-		this._positionAfter=position;
-		this._hasBeenChecked=false;
-	}
-
-	Class.prototype.setFrom=function(from) {
-		this._from=from;
-		this._hasBeenChecked=false;
-	}
-
-	Class.prototype.setTo=function(to) {
-		this._to=to;
-		this._hasBeenChecked=false;
-	}
-	function Class() {
-		HistoryItem.call(this);
 
 		this.itemType=HistoryItem.MOVE;
 
 		this._halfmove=null;
 		this._isSelected=false;
 		this._label="";
-
-		this.isValid=false;
-		this.isLegal=false;
-		this.success=false;
+		this._isValid=false;
+		this._isLegal=false;
 		this.mtime=null;
 		this.isCastling=false;
 		this.capturedPiece=null;
@@ -74,20 +39,54 @@ define(function(require) {
 
 	Class.implement(HistoryItem);
 
+	Class.prototype.check=function() {
+
+
+		this._hasBeenChecked=true;
+	}
+
+	Class.prototype.isLegal=function() {
+		if(this._hasBeenChecked) {
+			return this._isLegal;
+		}
+	}
+
+	Class.prototype.setPositionBefore=function(position) {
+		this._positionBefore=position;
+		this._hasBeenChecked=false;
+	}
+
+	Class.prototype.setFrom=function(from) {
+		this._from=from;
+		this._hasBeenChecked=false;
+	}
+
+	Class.prototype.setTo=function(to) {
+		this._to=to;
+		this._hasBeenChecked=false;
+	}
+
+	Class.prototype.setPositionAfter=function(position) {
+		this._positionAfter=position;
+		this._hasBeenChecked=false;
+	}
+
 	Class.prototype.setLabel=function(label) {
 		this._label=label;
 	}
 
-	Class.prototype.getHalfmove=function() {
-		return this._halfmove;
-	}
-
 	Class.prototype.getFullmove=function() {
-		return Chess.fullmoveFromHalfmove(this._halfmove);
+		var fullmove=this._positionBefore.fullmove;
+
+		if(this.getColour()===Piece.WHITE) {
+			fullmove++;
+		}
+
+		return fullmove;
 	}
 
 	Class.prototype.getColour=function() {
-		return Chess.colourFromHalfmove(this._halfmove);
+		return this._positionBefore.active;
 	}
 
 	Class.prototype.getDot=function() {

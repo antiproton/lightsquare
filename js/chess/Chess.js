@@ -8,28 +8,12 @@ define(function(require) {
 		KING_HOME_SQUARE_WHITE: 4,
 		KING_HOME_SQUARE_BLACK: 60,
 
-		colourFromHalfmove: function(halfmove) {
-			return (Chess.getHalfmoveIndex(halfmove)===1?Piece.BLACK:Piece.WHITE);
-		},
-
 		getOppColour: function(colour) {
 			return (colour===Piece.BLACK?Piece.WHITE:Piece.BLACK);
 		},
 
 		getOppGame: function(gameId) {
 			return [1, 0][gameId];
-		},
-
-		fullmoveFromHalfmove: function(halfmove) {
-			return Math.floor(halfmove/2)+1;
-		},
-
-		getHalfmove: function(fullmove, colour) {
-			return ((fullmove-1)*2+(colour===Piece.WHITE?0:1));
-		},
-
-		getHalfmoveIndex: function(halfmove) {
-			return halfmove%2;
 		},
 
 		fullmoveDotFromColour: function(colour) {
