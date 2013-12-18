@@ -2,7 +2,7 @@ define(function(require) {
 	require("lib/ready@");
 	require("lib/dbenums/chess");
 	require("lib/dbcodes/chess");
-
+	var time=require("lib/time");
 	var Game=require("chess/Game");
 	var Table=require("./widgets/table/standard/Table");
 	var g=require("lib/dom/byId");
@@ -13,6 +13,11 @@ define(function(require) {
 	//table.board.setSquareSize(45);
 
 	var game=new Game();
+
+	
+	console.log(time());
+	game.move(8, 16);
+	console.log(time());
 
 	table.board.setBoardArray(game.position.board.getBoardArray());
 
