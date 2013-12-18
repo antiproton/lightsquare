@@ -69,21 +69,6 @@ define(function(require) {
 
 		//FIXME make it so that moves can only ever be added at the end of variations (there is never a reason to add one in the middle somewhere - either it is overwriting or it is in a new variation)
 
-		if(item.itemType===HistoryItem.MOVE) {
-			var prevMove=item.getPreviousMove();
-			var halfmove=Chess.getHalfmove(this._startingFullmove, this._startingColour);
-
-			if(prevMove!==null) {
-				halfmove=prevMove.getHalfmove()+1;
-			}
-
-			else if(!this.isMainline()) {
-				halfmove=this.getBranchMove().getHalfmove();
-			}
-
-			item.setHalfmove(halfmove);
-		}
-
 		item.setPreviousItem(prevItem);
 		item.setNextItem(nextItem);
 
