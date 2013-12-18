@@ -458,13 +458,11 @@ define(function(require) {
 					move.setLabel(label);
 
 					if(this.history.move(move)) {
-						move.success=true;
-
 						this.Moved.fire();
 					}
 				}
 
-				if(dryrun || !move.success) {
+				if(dryrun) {
 					this.position=oldPosition;
 				}
 			}
