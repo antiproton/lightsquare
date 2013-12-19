@@ -11,7 +11,6 @@ define(function(require) {
 		this._piece=Piece.NONE;
 		this._size=size||Class.DEFAULT_SIZE;
 		this._setupHtml();
-		console.log(require.toUrl("./"));
 	}
 
 	Class.styles=[
