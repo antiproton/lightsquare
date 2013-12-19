@@ -1,4 +1,4 @@
-define(function(require, exports, module) {
+define(function(require) {
 	var Template=require("lib/dom/Template");
 	var html=require("file@./resources/piece.html");
 	var style=require("lib/dom/style");
@@ -11,6 +11,7 @@ define(function(require, exports, module) {
 		this._piece=Piece.NONE;
 		this._size=size||Class.DEFAULT_SIZE;
 		this._setupHtml();
+		console.log(require.toUrl("./"));
 	}
 
 	Class.styles=[
@@ -44,7 +45,7 @@ define(function(require, exports, module) {
 
 		if(this._piece!==Piece.NONE) {
 			path=[
-				module.path,
+				".",
 				"resources",
 				"pieces",
 				this._style,
@@ -52,7 +53,7 @@ define(function(require, exports, module) {
 				Fen.getPieceChar(this._piece)+".png"
 			];
 
-			backgroundImage="url("+path.join("/")+")";
+			backgroundImage="url("+require.toUrl(path.join("/"))+")";
 		}
 
 		if(this._template.root.style.backgroundImage!==backgroundImage) {
