@@ -1,5 +1,5 @@
 define(function(require) {
-	var HistoryItem=require("./HistoryItem");	HistoryItem.call(this);
+	var HistoryItem=require("chess/history/HistoryItem");	HistoryItem.call(this);
 
 	function Class() {
 		this.itemType=HistoryItem.MOVE;
@@ -28,4 +28,6 @@ define(function(require) {
 	}
 
 	Class.implement(HistoryItem);
+
+	return Class;
 });

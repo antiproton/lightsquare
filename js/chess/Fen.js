@@ -1,5 +1,5 @@
 define(function(require) {
-	var Piece=require("./Piece");
+	var Piece=require("chess/Piece");
 
 	var Fen={
 		STARTING_FEN: "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",

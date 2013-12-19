@@ -1,8 +1,8 @@
 define(function(require) {
-	var Move=require("./Move");
-	var Variation=require("./Variation");
+	var Move=require("chess/history/Move");
+	var Variation=require("chess/history/Variation");
 	var Event=require("lib/Event");
-	var Piece=require("./Piece");
+	var Piece=require("chess/Piece");
 
 	function History() {
 		this._startingColour=Piece.WHITE;

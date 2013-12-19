@@ -1,6 +1,6 @@
 define(function(require) {
-	var Fen=require("./Fen");
-	var Piece=require("./Piece");
+	var Fen=require("chess/Fen");
+	var Piece=require("chess/Piece");
 
 	var Colour={
 		getCode: function(colour) {

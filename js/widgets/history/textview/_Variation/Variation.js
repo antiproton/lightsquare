@@ -1,5 +1,5 @@
 define(function(require) {
-	var Base=require("chess/Variation");
+	var Base=require("chess/history/Variation");
 	var MoveList=require("./_MoveList/MoveList");
 	var html=require("file@./resources/variation.html");
 

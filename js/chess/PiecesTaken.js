@@ -1,5 +1,5 @@
 define(function(require) {
-	var Piece=require("./Piece");
+	var Piece=require("chess/Piece");
 
 	function PiecesTaken() {
 		this._pieces=[];

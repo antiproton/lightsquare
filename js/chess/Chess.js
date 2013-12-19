@@ -1,5 +1,5 @@
 define(function(require) {
-	var Piece=require("./Piece");
+	var Piece=require("chess/Piece");
 
 	var Chess={
 		RANKS: "12345678",

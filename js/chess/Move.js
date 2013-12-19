@@ -1,5 +1,5 @@
 define(function(require) {
-	var Chess=require("./Chess");
+	var Chess=require("chess/Chess");
 
 	function Class(positionBefore, from, to, promoteTo) {
 		this._positionBefore=positionBefore;
@@ -19,7 +19,7 @@ define(function(require) {
 	}
 
 	Class.prototype._check=function() {
-		
+
 	}
 
 	Class.prototype.isCheck=function() {

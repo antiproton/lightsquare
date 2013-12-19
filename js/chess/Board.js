@@ -1,6 +1,6 @@
 define(function(require) {
-	var Chess=require("./Chess");
-	var Piece=require("./Piece");
+	var Chess=require("chess/Chess");
+	var Piece=require("chess/Piece");
 
 	function Board() {
 		this._board=[];

@@ -4,7 +4,7 @@ define(function(require) {
 	require("lib/dbcodes/chess");
 	var time=require("lib/time");
 	var Game=require("chess/Game");
-	var Table=require("./widgets/table/standard/Table");
+	var Table=require("widgets/table/standard/Table");
 	var g=require("lib/dom/byId");
 	var MoveLabel=require("chess/MoveLabel");
 
@@ -14,9 +14,9 @@ define(function(require) {
 
 	var game=new Game();
 
-	
+
 	console.log(time());
-	game.move(8, 16);
+	//game.move(8, 16);
 	console.log(time());
 
 	table.board.setBoardArray(game.position.board.getBoardArray());

@@ -1,8 +1,8 @@
 define(function(require) {
 	var List=require("lib/List");
-	var HistoryItem=require("./HistoryItem");
-	var Chess=require("./Chess");
-	var Piece=require("./Piece");
+	var HistoryItem=require("chess/history/HistoryItem");
+	var Chess=require("chess/Chess");
+	var Piece=require("chess/Piece");
 
 	function Variation() {
 		HistoryItem.call(this);

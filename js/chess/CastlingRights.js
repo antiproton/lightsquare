@@ -1,7 +1,7 @@
 define(function(require) {
-	var Fen=require("./Fen");
-	var Chess=require("./Chess");
-	var Piece=require("./Piece");
+	var Fen=require("chess/Fen");
+	var Chess=require("chess/Chess");
+	var Piece=require("chess/Piece");
 
 	function CastlingRights() {
 		this._rightsByFile=[];
