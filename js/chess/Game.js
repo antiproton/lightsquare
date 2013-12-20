@@ -9,7 +9,7 @@ define(function(require) {
 
 	var MoveLabel=require("chess/MoveLabel");
 
-	function Game() {
+	function Class() {
 		this.Moved=new Event(this);
 
 		this.state=GAME_STATE_IN_PROGRESS;
@@ -49,7 +49,7 @@ define(function(require) {
 		});
 	}
 
-	Game.prototype.setStartingFen=function(fen) {
+	Class.prototype.setStartingFen=function(fen) {
 		this.startingPosition.setFen(fen);
 		this.position.setFen(fen);
 		this.history.clear();
@@ -57,11 +57,11 @@ define(function(require) {
 		this.history.setStartingFullmove(this.position.fullmove);
 	}
 
-	Game.prototype.getStartingFen=function() {
+	Class.prototype.getStartingFen=function() {
 		return this.startingPosition.getFen();
 	}
 
-	Game.prototype.countLegalMoves=function(colour) {
+	Class.prototype.countLegalMoves=function(colour) {
 		var legalMoves=0;
 		var piece;
 
@@ -76,7 +76,7 @@ define(function(require) {
 		return legalMoves;
 	}
 
-	Game.prototype.getLegalMovesFrom=function(square) {
+	Class.prototype.getLegalMovesFrom=function(square) {
 		var legalMoves=[];
 		var piece, reachableSquares;
 
@@ -94,7 +94,7 @@ define(function(require) {
 		return legalMoves;
 	}
 
-	Game.prototype.move=function(from, to, promoteTo, dryrun) {
+	Class.prototype.move=function(from, to, promoteTo, dryrun) {
 		promoteTo=promoteTo||Piece.QUEEN;
 		dryrun=dryrun||false;
 
@@ -473,7 +473,7 @@ define(function(require) {
 		return move;
 	}
 
-	Game.prototype.isInCheck=function(colour) {
+	Class.prototype.isInCheck=function(colour) {
 		return (Chess.getAllAttackers(
 			this.position.board.getBoardArray(),
 			this.position.kingPositions[colour],
@@ -481,11 +481,11 @@ define(function(require) {
 		).length>0);
 	}
 
-	Game.prototype.isMated=function(colour) {
+	Class.prototype.isMated=function(colour) {
 		return (this.isInCheck(colour) && this.countLegalMoves(colour)===0);
 	}
 
-	Game.prototype.canMate=function(colour) {
+	Class.prototype.canMate=function(colour) {
 		var pieces=[];
 		var bishops=[];
 		var knights=[];
@@ -526,11 +526,11 @@ define(function(require) {
 		);
 	}
 
-	Game.prototype.undo=function() {
+	Class.prototype.undo=function() {
 		this.history.undo();
 	}
 
-	Game.prototype._checkTime=function(colour) {
+	Class.prototype._checkTime=function(colour) {
 		if(this.time[colour]<1) {
 			var oppColour=Chess.getOppColour(colour);
 			var result=this.canMate(oppColour)?oppColour:DRAW;
@@ -538,14 +538,11 @@ define(function(require) {
 		}
 	}
 
-	Game.prototype._calculateTime=function() {
-		/*
-		LiveGame implements this with stuff about the server time
-		diff etc.  No point implementing it here yet.
-		*/
+	Class.prototype._calculateTime=function() {
+		
 	}
 
-	Game.prototype._checkThreefold=function() {
+	Class.prototype._checkThreefold=function() {
 		var fen=this.position.getFen();
 		var limit=3;
 		var n=0;
@@ -563,12 +560,12 @@ define(function(require) {
 		this.threefoldClaimable=(n>=limit);
 	}
 
-	Game.prototype._gameOver=function(result, result_details) {
+	Class.prototype._gameOver=function(result, result_details) {
 		this.state=GAME_STATE_FINISHED;
 		this.result=result;
 		this.resultDetails=result_details;
 		this.drawOffered=false;
 	}
 
-	return Game;
+	return Class;
 });

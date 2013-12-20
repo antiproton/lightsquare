@@ -15,7 +15,6 @@ define(function(require) {
 		this._isLegal=false;
 		this._boardChanges=[];
 		this._check();
-
 	}
 
 	Class.prototype._check=function() {

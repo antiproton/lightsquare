@@ -1,61 +1,61 @@
 define(function(require) {
-	function Piece(piece) {
-		this.type=Piece.getType(piece);
-		this.colour=Piece.getColour(piece);
+	function Class(piece) {
+		this.type=Class.getType(piece);
+		this.colour=Class.getColour(piece);
 	}
 
-	Piece.prototype.valueOf=function() {
-		return Piece.getPiece(this.type, this.colour);
+	Class.prototype.valueOf=function() {
+		return Class.getPiece(this.type, this.colour);
 	}
 
-	Piece.getType=function(piece) {
-		return piece&Piece._BITWISE_TYPE;
+	Class.getType=function(piece) {
+		return piece&Class._BITWISE_TYPE;
 	}
 
-	Piece.getColour=function(piece) {
-		return piece>>Piece._BITWISE_COLOUR;
+	Class.getColour=function(piece) {
+		return piece>>Class._BITWISE_COLOUR;
 	}
 
-	Piece.getPiece=function(type, colour) {
-		return (colour<<Piece._BITWISE_COLOUR)|type;
+	Class.getPiece=function(type, colour) {
+		return (colour<<Class._BITWISE_COLOUR)|type;
 	}
 
-	Piece.WHITE=0;
-	Piece.BLACK=1;
+	Class.WHITE=0;
+	Class.BLACK=1;
 
-	Piece.NONE=0x0;
+	Class.NONE=0x0;
 
-	Piece.PAWN=0x1;
-	Piece.KNIGHT=0x2;
-	Piece.BISHOP=0x3;
-	Piece.ROOK=0x4;
-	Piece.QUEEN=0x5;
-	Piece.KING=0x6;
+	Class.PAWN=0x1;
+	Class.KNIGHT=0x2;
+	Class.BISHOP=0x3;
+	Class.ROOK=0x4;
+	Class.QUEEN=0x5;
+	Class.KING=0x6;
 
-	Piece.WHITE_PAWN=0x1;
-	Piece.WHITE_KNIGHT=0x2;
-	Piece.WHITE_BISHOP=0x3;
-	Piece.WHITE_ROOK=0x4;
-	Piece.WHITE_QUEEN=0x5;
-	Piece.WHITE_KING=0x6;
+	Class.WHITE_PAWN=0x1;
+	Class.WHITE_KNIGHT=0x2;
+	Class.WHITE_BISHOP=0x3;
+	Class.WHITE_ROOK=0x4;
+	Class.WHITE_QUEEN=0x5;
+	Class.WHITE_KING=0x6;
 
-	Piece.BLACK_PAWN=0x9;
-	Piece.BLACK_KNIGHT=0xA;
-	Piece.BLACK_BISHOP=0xB;
-	Piece.BLACK_ROOK=0xC;
-	Piece.BLACK_QUEEN=0xD;
-	Piece.BLACK_KING=0xE;
+	Class.BLACK_PAWN=0x9;
+	Class.BLACK_KNIGHT=0xA;
+	Class.BLACK_BISHOP=0xB;
+	Class.BLACK_ROOK=0xC;
+	Class.BLACK_QUEEN=0xD;
+	Class.BLACK_KING=0xE;
 
-	Piece._BITWISE_TYPE=~8;
-	Piece._BITWISE_COLOUR=3;
+	Class._BITWISE_TYPE=~8;
+	Class._BITWISE_COLOUR=3;
 
-	Piece.values=[];
+	Class.values=[];
 
-	Piece.values[Piece.PAWN]=1;
-	Piece.values[Piece.KNIGHT]=3;
-	Piece.values[Piece.BISHOP]=3;
-	Piece.values[Piece.ROOK]=5;
-	Piece.values[Piece.QUEEN]=9;
+	Class.values[Class.PAWN]=1;
+	Class.values[Class.KNIGHT]=3;
+	Class.values[Class.BISHOP]=3;
+	Class.values[Class.ROOK]=5;
+	Class.values[Class.QUEEN]=9;
 
-	return Piece;
+	return Class;
 });

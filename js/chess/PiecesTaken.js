@@ -1,17 +1,17 @@
 define(function(require) {
 	var Piece=require("chess/Piece");
 
-	function PiecesTaken() {
+	function Class() {
 		this._pieces=[];
 		this._pieces[Piece.WHITE]=[];
 		this._pieces[Piece.BLACK]=[];
 	}
 
-	PiecesTaken.prototype.add=function(piece) {
+	Class.prototype.add=function(piece) {
 		this._pieces[Piece.getColour(piece)].push(piece);
 	}
 
-	PiecesTaken.prototype.remove=function(piece) {
+	Class.prototype.remove=function(piece) {
 		var colour=Piece.getColour(piece);
 
 		for(var i=0; i<this._pieces[colour].length; i++) {
@@ -23,7 +23,7 @@ define(function(require) {
 		}
 	}
 
-	PiecesTaken.prototype.contains=function(piece) {
+	Class.prototype.contains=function(piece) {
 		var colour=Piece.getColour(piece);
 
 		for(var i=0; i<this._pieces[colour].length; i++) {
@@ -35,10 +35,10 @@ define(function(require) {
 		return false;
 	}
 
-	PiecesTaken.prototype.clear=function() {
+	Class.prototype.clear=function() {
 		this._pieces[Piece.WHITE]=[];
 		this._pieces[Piece.BLACK]=[];
 	}
 
-	return PiecesTaken;
+	return Class;
 });

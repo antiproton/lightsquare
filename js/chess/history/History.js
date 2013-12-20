@@ -4,11 +4,11 @@ define(function(require) {
 	var Event=require("lib/Event");
 	var Piece=require("chess/Piece");
 
-	function History() {
+	function Class() {
 		this._startingColour=Piece.WHITE;
 		this._startingFullmove=1;
 		this.selectedMove=null;
-		this.editMode=History.EDIT_MODE_BRANCH;
+		this.editMode=Class.EDIT_MODE_BRANCH;
 		this.mainLine=this.createVariation();
 
 		this.SelectedMoveChanged=new Event(this);
@@ -16,30 +16,30 @@ define(function(require) {
 		this.Update=new Event(this);
 	}
 
-	History.EDIT_MODE_FAIL=0;
-	History.EDIT_MODE_OVERWRITE=1;
-	History.EDIT_MODE_BRANCH=2;
-	History.EDIT_MODE_APPEND=3;
+	Class.EDIT_MODE_FAIL=0;
+	Class.EDIT_MODE_OVERWRITE=1;
+	Class.EDIT_MODE_BRANCH=2;
+	Class.EDIT_MODE_APPEND=3;
 
-	History.prototype.getStartingFullmove=function() {
+	Class.prototype.getStartingFullmove=function() {
 		return this._startingFullmove;
 	}
 
-	History.prototype.setStartingFullmove=function(fullmove) {
+	Class.prototype.setStartingFullmove=function(fullmove) {
 		this._startingFullmove=fullmove;
 		this.mainLine.setStartingFullmove(fullmove);
 	}
 
-	History.prototype.getStartingColour=function() {
+	Class.prototype.getStartingColour=function() {
 		return this._startingColour;
 	}
 
-	History.prototype.setStartingColour=function(colour) {
+	Class.prototype.setStartingColour=function(colour) {
 		this._startingColour=colour;
 		this.mainLine.setStartingColour(colour);
 	}
 
-	History.prototype.promoteCurrentVariation=function() {
+	Class.prototype.promoteCurrentVariation=function() {
 		var variation=this.mainLine;
 		var branchMove=null;
 		var parentVariation=null;
@@ -102,7 +102,7 @@ define(function(require) {
 		}
 	}
 
-	History.prototype.deleteCurrentMove=function() {
+	Class.prototype.deleteCurrentMove=function() {
 		var move=this.selectedMove;
 		var variation;
 		var parentVariation=null;
@@ -129,7 +129,7 @@ define(function(require) {
 		}
 	}
 
-	History.prototype.move=function(move) {
+	Class.prototype.move=function(move) {
 		var success=true;
 		var variation=this.mainLine;
 		var currentMove=this.selectedMove;
@@ -149,26 +149,26 @@ define(function(require) {
 
 		else {
 			switch(this.editMode) {
-				case History.EDIT_MODE_APPEND: {
+				case Class.EDIT_MODE_APPEND: {
 					variation.add(move);
 
 					break;
 				}
 
-				case History.EDIT_MODE_FAIL: {
+				case Class.EDIT_MODE_FAIL: {
 					success=false;
 
 					break;
 				}
 
-				case History.EDIT_MODE_OVERWRITE: {
+				case Class.EDIT_MODE_OVERWRITE: {
 					variation.deleteMove(nextMove);
 					variation.add(move);
 
 					break;
 				}
 
-				case History.EDIT_MODE_BRANCH: {
+				case Class.EDIT_MODE_BRANCH: {
 					var newVariation=this.createVariation();
 
 					variation.insertAfter(newVariation, nextMove);
@@ -190,7 +190,7 @@ define(function(require) {
 		return success;
 	}
 
-	History.prototype.clear=function() {
+	Class.prototype.clear=function() {
 		if(this.mainLine.firstMove!==null) {
 			this.mainLine.deleteMove(this.mainLine.firstMove);
 		}
@@ -198,12 +198,12 @@ define(function(require) {
 		this.deselect();
 	}
 
-	History.prototype.undo=function() {
+	Class.prototype.undo=function() {
 		this.mainLine.remove(this.mainLine.lastMove);
 		this.select(this.mainLine.lastMove);
 	}
 
-	History.prototype.select=function(move) {
+	Class.prototype.select=function(move) {
 		if(this.selectedMove!==null) {
 			this.selectedMove.deselect();
 		}
@@ -219,17 +219,17 @@ define(function(require) {
 		});
 	}
 
-	History.prototype.deselect=function() {
+	Class.prototype.deselect=function() {
 		this.select(null);
 	}
 
-	History.prototype.createVariation=function() {
+	Class.prototype.createVariation=function() {
 		return new Variation();
 	}
 
-	History.prototype.createMove=function() {
+	Class.prototype.createMove=function() {
 		return new Move();
 	}
 
-	return History;
+	return Class;
 });

@@ -3,7 +3,7 @@ define(function(require) {
 	var Chess=require("chess/Chess");
 	var Piece=require("chess/Piece");
 
-	function CastlingRights() {
+	function Class() {
 		this._rightsByFile=[];
 		this._rightsByFile[Piece.WHITE]=[];
 		this._rightsByFile[Piece.BLACK]=[];
@@ -11,30 +11,30 @@ define(function(require) {
 		this.reset();
 	}
 
-	CastlingRights.prototype.reset=function() {
+	Class.prototype.reset=function() {
 		for(var file=0; file<8; file++) {
 			this._rightsByFile[Piece.WHITE][file]=false;
 			this._rightsByFile[Piece.BLACK][file]=false;
 		}
 	}
 
-	CastlingRights.prototype.setByFile=function(colour, file, allow) {
+	Class.prototype.setByFile=function(colour, file, allow) {
 		this._rightsByFile[colour][file]=allow;
 	}
 
-	CastlingRights.prototype.setBySide=function(colour, side, allow) {
-		this._rightsByFile[colour][CastlingRights._fileFromSide[side]]=allow;
+	Class.prototype.setBySide=function(colour, side, allow) {
+		this._rightsByFile[colour][Class._fileFromSide[side]]=allow;
 	}
 
-	CastlingRights.prototype.getByFile=function(colour, file) {
+	Class.prototype.getByFile=function(colour, file) {
 		return this._rightsByFile[colour][file];
 	}
 
-	CastlingRights.prototype.getBySide=function(colour, side) {
-		return this._rightsByFile[colour][CastlingRights._fileFromSide[side]];
+	Class.prototype.getBySide=function(colour, side) {
+		return this._rightsByFile[colour][Class._fileFromSide[side]];
 	}
 
-	CastlingRights.prototype.setFenString=function(fenString) {
+	Class.prototype.setFenString=function(fenString) {
 		this.reset();
 
 		if(fenString!==Fen.NONE) {
@@ -43,8 +43,8 @@ define(function(require) {
 			var colour, file, side;
 			var sides={};
 
-			sides[Fen.getPieceChar(Piece.WHITE_KING)]=CastlingRights.KINGSIDE;
-			sides[Fen.getPieceChar(Piece.WHITE_QUEEN)]=CastlingRights.QUEENSIDE;
+			sides[Fen.getPieceChar(Piece.WHITE_KING)]=Class.KINGSIDE;
+			sides[Fen.getPieceChar(Piece.WHITE_QUEEN)]=Class.QUEENSIDE;
 
 			for(var i=0; i<fenChars.length; i++) {
 				fenChar=fenChars[i];
@@ -53,7 +53,7 @@ define(function(require) {
 				colour=(fenChar===fenCharUpper?Piece.WHITE:Piece.BLACK);
 
 				if(fenCharUpper in sides) {
-					file=CastlingRights._fileFromSide[sides[fenCharUpper]];
+					file=Class._fileFromSide[sides[fenCharUpper]];
 				}
 
 				else {
@@ -65,7 +65,7 @@ define(function(require) {
 		}
 	}
 
-	CastlingRights.prototype.getFenStringByFile=function() {
+	Class.prototype.getFenStringByFile=function() {
 		var colours=[Piece.WHITE, Piece.BLACK];
 		var colour;
 		var fenString="";
@@ -75,7 +75,7 @@ define(function(require) {
 
 			for(var file=0; file<8; file++) {
 				if(this.getByFile(colour, file)) {
-					fenString+=CastlingRights._getFileChar(colour, file);
+					fenString+=Class._getFileChar(colour, file);
 				}
 			}
 		}
@@ -87,9 +87,9 @@ define(function(require) {
 		return fenString;
 	}
 
-	CastlingRights.prototype.getFenStringBySide=function() {
+	Class.prototype.getFenStringBySide=function() {
 		var colours=[Piece.WHITE, Piece.BLACK];
-		var sides=[CastlingRights.KINGSIDE, CastlingRights.QUEENSIDE];
+		var sides=[Class.KINGSIDE, Class.QUEENSIDE];
 		var colour, side;
 		var fenString="";
 
@@ -100,7 +100,7 @@ define(function(require) {
 				side=sides[j];
 
 				if(this.getBySide(colour, side)) {
-					fenString+=CastlingRights._getSideChar(colour, side);
+					fenString+=Class._getSideChar(colour, side);
 				}
 			}
 		}
@@ -112,16 +112,16 @@ define(function(require) {
 		return fenString;
 	}
 
-	CastlingRights._getSideChar=function(colour, side) {
+	Class._getSideChar=function(colour, side) {
 		var pieceTypes=[]
 
-		pieceTypes[CastlingRights.KINGSIDE]=Piece.KING;
-		pieceTypes[CastlingRights.QUEENSIDE]=Piece.QUEEN;
+		pieceTypes[Class.KINGSIDE]=Piece.KING;
+		pieceTypes[Class.QUEENSIDE]=Piece.QUEEN;
 
 		return Fen.getPieceChar(Piece.getPiece(pieceTypes[side], colour));
 	}
 
-	CastlingRights._getFileChar=function(colour, file) {
+	Class._getFileChar=function(colour, file) {
 		var fenChar=Chess.FILES.charAt(file);
 
 		if(colour===Piece.WHITE) {
@@ -131,9 +131,9 @@ define(function(require) {
 		return fenChar;
 	}
 
-	CastlingRights._fileFromSide=[];
-	CastlingRights._fileFromSide[CastlingRights.KINGSIDE]=7;
-	CastlingRights._fileFromSide[CastlingRights.QUEENSIDE]=0;
+	Class._fileFromSide=[];
+	Class._fileFromSide[Class.KINGSIDE]=7;
+	Class._fileFromSide[Class.QUEENSIDE]=0;
 
-	return CastlingRights;
+	return Class;
 });

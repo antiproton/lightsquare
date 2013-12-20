@@ -6,7 +6,7 @@ define(function(require) {
 	var Chess=require("chess/Chess");
 	var Piece=require("chess/Piece");
 
-	function Position(fen) {
+	function Class(fen) {
 		this.castlingRights=new CastlingRights();
 		this.board=new Board();
 		this.active=Piece.WHITE;
@@ -23,7 +23,7 @@ define(function(require) {
 		}
 	}
 
-	Position.prototype.setFen=function(str) {
+	Class.prototype.setFen=function(str) {
 		var fen=Fen.fenToArray(str);
 
 		this.active=Colour.getCode(fen[Fen.FIELD_ACTIVE]);
@@ -49,16 +49,12 @@ define(function(require) {
 			this.fullmove=parseInt(fen[Fen.FIELD_FULLMOVE]);
 		}
 
-		var boardArray=Fen.fenPositionToBoardArray(fen[Fen.FIELD_POSITION]);
-
-		for(var square=0; square<64; square++) {
-			this.board.setSquare(square, boardArray[square]);
-		}
+		this.board.setBoardArray(Fen.fenPositionToBoardArray(fen[Fen.FIELD_POSITION]));
 	}
 
-	Position.prototype.getFen=function() {
+	Class.prototype.getFen=function() {
 		return Fen.arrayToFen([
-			Fen.boardArrayToFenPosition(this.board.board),
+			Fen.boardArrayToFenPosition(this.board.getBoardArray()),
 			Colour.getFen(this.active),
 			this.castlingRights.getFenString(),
 			(this.epTarget===null)?Fen.NONE:Chess.algebraicFromSquare(this.epTarget), //FIXME should be Square.getAlgebraic or something.  Number.prototype.toAlgebraic is tempting also.
@@ -67,9 +63,9 @@ define(function(require) {
 		]);
 	}
 
-	Position.prototype.copy=function() {
-		return new Position(this.getFen());
+	Class.prototype.copy=function() {
+		return new Class(this.getFen());
 	}
 
-	return Position;
+	return Class;
 });
