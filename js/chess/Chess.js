@@ -16,19 +16,6 @@ define(function(require) {
 			return [1, 0][gameId];
 		},
 
-		fullmoveDotFromColour: function(colour) {
-			var dots=[];
-
-			dots[Piece.WHITE]=".";
-			dots[Piece.BLACK]="...";
-
-			return dots[colour];
-		},
-
-		isOnBoard: function(square) {
-			return (square>-1 && square<64);
-		},
-
 		getSquareColour: function(square) {
 			var coords=Chess.coordsFromSquare(square);
 
