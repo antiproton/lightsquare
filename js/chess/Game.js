@@ -95,335 +95,42 @@ define(function(require) {
 	}
 
 	Class.prototype.move=function(from, to, promoteTo, dryrun) {
-		promoteTo=promoteTo||Piece.QUEEN;
-		dryrun=dryrun||false;
-
-		var colour=this.position.active;
-		var piece=new Piece(this.position.board.getSquare(from));
-		var move=this.history.createMove();
-
-		move.from=from;
-		move.to=to;
-
-		if(Chess.isOnBoard(from) && Chess.isOnBoard(to) && piece.type!==Piece.NONE && piece.colour===colour) {
-			var targetPiece=null;
-
-			if(this.position.board.getSquare(to)!==Piece.NONE) {
-				targetPiece=new Piece(this.position.board.getSquare(to));
-			}
-
-			var label=new MoveLabel();
-			var oldPosition=this.position.copy();
-			var fromCoords=Chess.coordsFromSquare(from);
-			var toCoords=Chess.coordsFromSquare(to);
-			var relFrom=Chess.getRelativeSquare(from, colour);
-			var relTo=Chess.getRelativeSquare(to, colour);
-			var oppColour=Chess.getOppColour(colour);
-
-			var isUnobstructed=(
-				!Chess.isBlocked(this.position.board.getBoardArray(), from, to)
-				&& (targetPiece===null || targetPiece.colour!==colour)
-			);
-
-			label.piece=Fen.getPieceChar(Piece.getPiece(piece.type, Piece.WHITE));
-			label.to=Chess.getAlgebraicSquare(to);
-
-			if(piece.type!==Piece.PAWN && piece.type!==Piece.KING) {
-				label.disambiguation=Chess.disambiguate(this.position.board.getBoardArray(), piece.type, colour, from, to);
-			}
-
-			if(targetPiece!==null && targetPiece.colour===oppColour) {
-				label.sign=MoveLabel.SIGN_CAPTURE;
-				move.capturedPiece=this.position.board.getSquare(to);
-			}
-
-			if(Chess.isRegularMove(piece.type, fromCoords, toCoords) && isUnobstructed) {
-				move.isValid=true;
-				move.boardChanges[from]=Piece.NONE;
-				move.boardChanges[to]=this.position.board.getSquare(from);
-			}
-
-			else if(piece.type===Piece.PAWN && isUnobstructed) {
-				var capturing=Chess.isPawnCapture(relFrom, relTo);
-				var validPromotion=false;
-				var promotion=false;
-
-				if(capturing) {
-					label.disambiguation=Chess.file_str(from);
-					label.sign=MoveLabel.SIGN_CAPTURE;
-				}
-
-				label.piece="";
-
-				if(Chess.isPawnPromotion(relTo)) {
-					promotion=true;
-
-					if(promoteTo>=Piece.KNIGHT && promoteTo<=Piece.QUEEN) {
-						move.boardChanges[to]=Piece.getPiece(promoteTo, colour);
-						label.special=MoveLabel.SIGN_PROMOTE+Fen.getPieceChar[Piece.getPiece(promoteTo, Piece.WHITE)];
-						move.promoteTo=promoteTo;
-						validPromotion=true;
-					}
-				}
-
-				if(validPromotion || !promotion) {
-					if(targetPiece===null) {
-						if(Chess.isDoublePawnMove(relFrom, relTo)) {
-							move.isValid=true;
-							position.epTarget=Chess.getRelativeSquare(relTo-8, colour);
-						}
-
-						else if(Chess.isPawnMove(relFrom, relTo)) {
-							move.isValid=true;
-						}
-
-						else if(capturing && to===this.position.epTarget) {
-							move.isValid=true;
-							move.boardChanges[Chess.getEpPawn(from, to)]=Piece.NONE;
-							label.sign=MoveLabel.SIGN_CAPTURE;
-							move.capturedPiece=Piece.getPiece(Piece.PAWN, oppColour);
-						}
-					}
-
-					else if(capturing) {
-						move.isValid=true;
-					}
-				}
-
-				if(move.isValid) {
-					move.boardChanges[from]=Piece.NONE;
-
-					if(!promotion) {
-						move.boardChanges[to]=this.position.board.getSquare(from);
-					}
-				}
-			}
-
-			else if((piece.type===Piece.KING || piece.type===Piece.ROOK) && !this.isInCheck(colour)) {
-				move.isCastling=true;
-
-				if(this.variant===VARIANT_960) {
-					var backrank=[0, 7][colour];
-
-					if(Chess.yFromSquare(from)===backrank && Chess.yFromSquare(to)===backrank) {
-						kingSquare=this.position.kingPositions[colour];
-						rookSquare=null;
-
-						//find out whether it's kingside or queenside based on move direction
-
-						var side;
-
-						if(piece.type===Piece.ROOK) {
-							side=(Chess.xFromSquare(from)<Chess.xFromSquare(to))?CastlingRights.QUEENSIDE:CastlingRights.KINGSIDE;
-						}
-
-						else if(piece.type===Piece.KING) {
-							side=(Chess.xFromSquare(from)>Chess.xFromSquare(to))?CastlingRights.QUEENSIDE:CastlingRights.KINGSIDE;
-						}
-
-						var rookDestinationFile=[5, 3][side];
-						var kingDestinationFile=[6, 2][side];
-						var edge=[7, 0][side];
-
-						//if rook move, rook is on from square
-
-						if(piece.type===Piece.ROOK) {
-							rookSquare=from;
-						}
-
-						//if king move, find rook between edge and king
-
-						else {
-							var rookSquares=Chess.getSquaresBetween(Chess.squareFromCoords([edge, backrank]), kingSquare, true);
-							var sq;
-
-							for(var i=0; i<rookSquares.length; i++) {
-								sq=rookSquares[i];
-
-								if(this.position.board.getSquare(sq)===Piece.getPiece(Piece.ROOK, colour)) {
-									rookSquare=sq;
-
-									break;
-								}
-							}
-						}
-
-						/*
-						this bit finds out which squares to check to see that the only 2 pieces
-						on the bit of the back rank used for castling are the king and the rook
-						*/
-
-						if(rookSquare!==null) {
-							var kingDestination=Chess.squareFromCoords([kingDestinationFile, backrank]);
-							var rookDestination=Chess.squareFromCoords([rookDestinationFile, backrank]);
-
-							var outermostSquare=kingSquare;
-							var innermostSquare=rookSquare;
-
-							var kingFile=Chess.xFromSquare(kingSquare);
-							var rookFile=Chess.xFromSquare(rookSquare);
-
-							if(Math.abs(edge-rookDestinationFile)>Math.abs(edge-kingFile)) { //rook dest is further out
-								outermostSquare=rookDestination;
-							}
-
-							if(Math.abs(edge-kingDestinationFile)<Math.abs(edge-rookFile)) { //king dest is further in
-								innermostSquare=kingDestination;
-							}
-
-							var squares=Chess.getSquaresBetween(innermostSquare, outermostSquare, true);
-
-							var kings=0;
-							var rooks=0;
-							var others=0;
-							var pc;
-
-							for(var i=0; i<squares.length; i++) {
-								sq=squares[i];
-								pc=this.position.board.getSquare(sq);
-
-								if(pc!==Piece.NONE) {
-									if(pc===Piece.getPiece(Piece.ROOK, colour)) {
-										rooks++;
-									}
-
-									else if(pc===Piece.getPiece(Piece.KING, colour)) {
-										kings++;
-									}
-
-									else {
-										others++;
-
-										break;
-									}
-								}
-							}
-
-							if(kings===1 && rooks===1 && others===0) {
-								var throughCheck=false;
-								var between=Chess.getSquaresBetween(kingSquare, kingDestination);
-								var n;
-
-								for(var i=0; i<between.length; i++) {
-									n=between[i];
-
-									if(Chess.getAllAttackers(this.position.board.getBoardArray(), n, oppColour).length>0) {
-										throughCheck=true;
-
-										break;
-									}
-								}
-
-								if(!throughCheck) {
-									move.isValid=true;
-									label.piece="";
-									label.to="";
-									label.special=CastlingDetails.signs[side];
-									move.boardChanges[kingSquare]=Piece.NONE;
-									move.boardChanges[rookSquare]=Piece.NONE;
-									move.boardChanges[kingDestination]=Piece.getPiece(Piece.KING, colour);
-									move.boardChanges[rookDestination]=Piece.getPiece(Piece.ROOK, colour);
-								}
-							}
-						}
-					}
-				}
-
-				else {
-					if(piece.type===Piece.KING && isUnobstructed) {
-						var castling=new CastlingDetails(from, to);
-
-						if(castling.isValid && this.position.castlingRights.get(colour, castling.Side)) {
-							var throughCheck=false;
-							var between=Chess.getSquaresBetween(from, to);
-
-							for(var i=0; i<between.length; i++) {
-								if(Chess.getAllAttackers(
-									this.position.board.getBoardArray(),
-									between[i],
-									oppColour
-								).length>0) {
-									throughCheck=true;
-
-									break;
-								}
-							}
-
-							if(!Chess.isBlocked(
-								this.position.board.getBoardArray(),
-								from,
-								castling.rookStartPos
-							) && !throughCheck) {
-								move.isValid=true;
-								label.piece="";
-								label.to="";
-								label.special=castling.sign;
-								move.boardChanges[from]=Piece.NONE;
-								move.boardChanges[to]=Piece.getPiece(Piece.KING, colour);
-								move.boardChanges[castling.rookStartPos]=Piece.NONE;
-								move.boardChanges[castling.rookEndPos]=Piece.getPiece(Piece.ROOK, colour);
-							}
-						}
-					}
-				}
-			}
-
-			if(move.isValid) {
-				var action;
-
-				for(var square in move.boardChanges) {
-					square=parseInt(square);
-					this.position.board.setSquare(square, move.boardChanges[square]);
-				}
-
-				//test whether the player is in check on temporary board
-
-				var playerKingAttackers=Chess.getAllAttackers(
-					this.position.board.getBoardArray(),
-					this.position.board.kingPositions[colour],
-					oppColour
-				);
-
-				if(playerKingAttackers.length===0) {
-					move.isLegal=true;
-				}
-			}
-
-			if(move.isLegal) {
+		/*
+		if(move.isLegal) {
 				if(colour===Piece.BLACK) {
-					this.position.fullmove++;
+					this.positionBefore.fullmove++;
 				}
 
-				this.position.active=oppColour;
+				this.positionBefore.active=oppColour;
 
 				if(move.capturedPiece!==null || piece.type===Piece.PAWN) {
-					this.position.fiftymoveClock=0;
+					this.positionBefore.fiftymoveClock=0;
 				}
 
 				else {
-					this.position.fiftymoveClock++;
+					this.positionBefore.fiftymoveClock++;
 				}
 
 				if(piece.type!==Piece.PAWN || !Chess.isDoublePawnMove(relFrom, relTo)) {
-					this.position.epTarget=null;
+					this.positionBefore.epTarget=null;
 				}
 
 				if(piece.type===Piece.KING || move.isCastling) {
 					for(file=0; file<8; file++) {
-						this.position.castlingRights.setByFile(colour, file, false);
+						this.positionBefore.castlingRights.setByFile(colour, file, false);
 					}
 				}
 
 				else if(piece.type===Piece.ROOK) {
-					this.position.castlingRights.setByFile(colour, Chess.xFromSquare(from), false);
+					this.positionBefore.castlingRights.setByFile(colour, Chess.xFromSquare(this._from), false);
 				}
 
 				if(this.isInCheck(oppColour)) {
-					label.check=MoveLabel.SIGN_CHECK;
+					this._label.check=MoveLabel.SIGN_CHECK;
 				}
 
 				if(this.isMated(oppColour)) {
-					label.check=MoveLabel.SIGN_MATE;
+					this._label.check=MoveLabel.SIGN_MATE;
 				}
 
 				if(!dryrun) {
@@ -438,26 +145,19 @@ define(function(require) {
 							this._gameOver(RESULT_DRAW, RESULT_DETAILS_INSUFFICIENT);
 						}
 
-						/*
-						moves available will sometimes return 0 in bughouse games, e.g.
-						when the player would be mated normally but can wait to put a
-						piece in the way, so stalemate by being unable to move has been
-						left out for bughouse.
-						*/
+					
 
 						if(this.countLegalMoves(oppColour)===0 && this.type!==GAME_TYPE_BUGHOUSE) {
 							this._gameOver(RESULT_DRAW, RESULT_DETAILS_STALEMATE);
 						}
 
-						if(this.position.fiftymoveClock>49) {
+						if(this.positionBefore.fiftymoveClock>49) {
 							this.fiftymoveClaimable=true;
 						}
 
 						this._checkThreefold(); //FIXME move isn't in the history yet so this is 1 move behind
 					}
 
-					move.resultingFen=this.position.getFen();
-					move.setLabel(label);
 
 					if(this.history.move(move)) {
 						this.Moved.fire();
@@ -465,10 +165,9 @@ define(function(require) {
 				}
 
 				if(dryrun) {
-					this.position=oldPosition;
+					this.positionBefore=oldPosition;
 				}
-			}
-		}
+		*/
 
 		return move;
 	}
@@ -539,7 +238,7 @@ define(function(require) {
 	}
 
 	Class.prototype._calculateTime=function() {
-		
+
 	}
 
 	Class.prototype._checkThreefold=function() {
