@@ -31,20 +31,20 @@ define(function(require) {
 		return this._board[square];
 	}
 
-	Class.prototype.setClassArray=function(board) {
+	Class.prototype.setBoardArray=function(board) {
 		for(var square=0; square<64; square++) {
 			this.setSquare(square, board[square]);
 		}
 	}
 
-	Class.prototype.getClassArray=function() {
+	Class.prototype.getBoardArray=function() {
 		return this._board;
 	}
 
 	Class.prototype.copy=function(board) {
 		var board=new this.constructor();
 
-		board.setClassArray(this.getClassArray());
+		board.setBoardArray(this.getBoardArray());
 	}
 
 	return Class;
