@@ -13,118 +13,97 @@ define(function(require) {
 		this._targetPiece=new Piece(this._positionBefore.board.getSquare(this._to));
 		this._colour=this.positionBefore.active;
 		this._oppColour=Chess.getOppColour(this._colour);
+		this._fromCoords=Chess.coordsFromSquare(this._from);
+		this._toCoords=Chess.coordsFromSquare(this._to);
+		this._relFrom=Chess.getRelativeSquare(this._from, this._colour);
+		this._relTo=Chess.getRelativeSquare(this._to, this._colour);
 		this._label=new MoveLabel();
-		this._isCheck=false;
-		this._isMate=false;
 		this._isCastling=false;
 		this._capturedPiece=null;
+		this._isUnobstructed=(
+			!this._positionBefore.pathIsBlocked(this._from, this._to)
+			&& (this._targetPiece.type===Piece.NONE || this._targetPiece.colour!==this._colour)
+		);
 		this._isValid=false;
 		this._isLegal=false;
+
 		this._check();
 	}
 
 	Class.prototype._check=function() {
-
-		var fromCoords=Chess.coordsFromSquare(this._from);
-		var toCoords=Chess.coordsFromSquare(this._to);
-		var relFrom=Chess.getRelativeSquare(this._from, this._colour);
-		var relTo=Chess.getRelativeSquare(this._to, this._colour);
-
-		if(piece.type!==Piece.NONE && piece.colour===this._colour) {
-			var isUnobstructed=(
-				!this._positionBefore.pathIsBlocked(this._from, this._to)
-				&& (targetPiece.type===Piece.NONE || targetPiece.colour!==this._colour)
-			);
-
-			this._label.piece=Fen.getPieceChar(Piece.getPiece(piece.type, Piece.WHITE));
+		if(this._piece.type!==Piece.NONE && this._piece.colour===this._colour) {
+			this._label.piece=Fen.getPieceChar(Piece.getPiece(this._piece.type, Piece.WHITE));
 			this._label.to=Chess.getAlgebraicSquare(this._to);
 
-			if(piece.type!==Piece.PAWN && piece.type!==Piece.KING) {
+			if(this._piece.type!==Piece.PAWN && this._piece.type!==Piece.KING) {
 				this._label.disambiguation=this._getDisambiguationString();
 			}
 
-			if(targetPiece!==null && targetPiece.colour===oppColour) {
+			if(targetPiece!==null && targetPiece.colour===this._oppColour) {
 				this._label.sign=MoveLabel.SIGN_CAPTURE;
 				this._capturedPiece=this._positionBefore.board.getSquare(this._to);
 			}
 
-			if(Chess.isRegularMove(piece.type, fromCoords, toCoords) && isUnobstructed) {
+			if(Chess.isRegularMove(this._piece.type, this._fromCoords, this._toCoords) && this._isUnobstructed) {
 				this._isValid=true;
 				this._positionAfter.board.setSquare(this._from, Piece.NONE);
 				this._positionAfter.board.setSquare(this._to, this._positionBefore.board.getSquare(this._from));
 			}
 
-			else if(piece.type===Piece.PAWN && isUnobstructed) {
+			else if(this._piece.type===Piece.PAWN && this._isUnobstructed) {
 				this._checkPawnMove();
 			}
 
-			else if((piece.type===Piece.KING || piece.type===Piece.ROOK) && !this._positionBefore.playerIsInCheck(this._colour)) {
+			else if((this._piece.type===Piece.KING || this._piece.type===Piece.ROOK) && !this._positionBefore.playerIsInCheck(this._colour)) {
 				this._checkCastlingMove();
 			}
 
 			if(this._isValid) {
-				var action;
-
-				for(var square in this._boardChanges) {
-					square=parseInt(square);
-					this._positionBefore.board.setSquare(square, this._boardChanges[square]);
-				}
-
-				//test whether the player is in check on temporary board
-
-				var playerKingAttackers=Chess.getAllAttackers(
-					this._positionBefore.board.getBoardArray(),
-					this._positionBefore.board.kingPositions[this._colour],
-					oppColour
-				);
-
-				if(playerKingAttackers.length===0) {
-					this._isLegal=true;
-				}
+				this._isLegal=!this._positionAfter.playerIsInCheck(this._colour);
 			}
 
 			if(this._isLegal) {
 				if(this._colour===Piece.BLACK) {
-					this._positionBefore.fullmove++;
+					this._positionAfter.fullmove++;
 				}
 
-				this._positionBefore.active=oppColour;
+				this._positionAfter.active=this._oppColour;
 
-				if(this._capturedPiece!==null || piece.type===Piece.PAWN) {
-					this.positionAfter.fiftymoveClock=0;
+				if(this._capturedPiece!==null || this._piece.type===Piece.PAWN) {
+					this._positionAfter.fiftymoveClock=0;
 				}
 
 				else {
-					this.positionAfter.fiftymoveClock++;
+					this._positionAfter.fiftymoveClock++;
 				}
 
-				if(piece.type!==Piece.PAWN || !Chess.isDoublePawnMove(relFrom, relTo)) {
-					this._positionBefore.epTarget=null;
+				if(this._piece.type!==Piece.PAWN || !Chess.isDoublePawnMove(this._relFrom, this._relTo)) {
+					this._positionAfter.epTarget=null;
 				}
 
-				if(piece.type===Piece.KING || this._isCastling) {
+				if(this._piece.type===Piece.KING || this._isCastling) {
 					for(file=0; file<8; file++) {
-						this._positionBefore.castlingRights.setByFile(this._colour, file, false);
+						this._positionAfter.castlingRights.setByFile(this._colour, file, false);
 					}
 				}
 
-				else if(piece.type===Piece.ROOK) {
-					this._positionBefore.castlingRights.setByFile(this._colour, Chess.xFromSquare(this._from), false);
+				else if(this._piece.type===Piece.ROOK) {
+					this._positionAfter.castlingRights.setByFile(this._colour, Chess.xFromSquare(this._from), false);
 				}
 
-				if(this.isInCheck(oppColour)) {
-					this._label.check=MoveLabel.SIGN_CHECK;
-				}
-
-				if(this.isMated(oppColour)) {
+				if(this.isMate()) {
 					this._label.check=MoveLabel.SIGN_MATE;
+				}
+
+				else if(this.isCheck()) {
+					this._label.check=MoveLabel.SIGN_CHECK;
 				}
 			}
 		}
 	}
 
 	Class.prototype._checkPawnMove=function() {
-		var capturing=Chess.isPawnCapture(relFrom, relTo);
+		var capturing=Chess.isPawnCapture(this._relFrom, this._relTo);
 		var validPromotion=false;
 		var promotion=false;
 
@@ -133,9 +112,9 @@ define(function(require) {
 			this._label.sign=MoveLabel.SIGN_CAPTURE;
 		}
 
-		this._label.piece="";
+		this._label.this._piece="";
 
-		if(Chess.isPawnPromotion(relTo)) {
+		if(Chess.isPawnPromotion(this._relTo)) {
 			promotion=true;
 
 			if([Piece.KNIGHT, Piece.BISHOP, Piece.ROOK, Piece.QUEEN].indexOf(this._promoteTo)!==-1) {
@@ -148,12 +127,12 @@ define(function(require) {
 
 		if(validPromotion || !promotion) {
 			if(targetPiece===null) {
-				if(Chess.isDoublePawnMove(relFrom, relTo)) {
+				if(Chess.isDoublePawnMove(this._relFrom, this._relTo)) {
 					this._isValid=true;
-					this._positionAfter.epTarget=Chess.getRelativeSquare(relTo-8, this._colour);
+					this._positionAfter.epTarget=Chess.getRelativeSquare(this._relTo-8, this._colour);
 				}
 
-				else if(Chess.isPawnMove(relFrom, relTo)) {
+				else if(Chess.isPawnMove(this._relFrom, this._relTo)) {
 					this._isValid=true;
 				}
 
@@ -189,7 +168,7 @@ define(function(require) {
 		players that you have to castle normall if they are on normal squares...
 		*/
 
-		if(false /* something */) {
+		if(false /* FIXME something */) {
 			this._check960CastlingMove();
 		}
 
@@ -209,11 +188,11 @@ define(function(require) {
 
 			var side;
 
-			if(piece.type===Piece.ROOK) {
+			if(this._piece.type===Piece.ROOK) {
 				side=(Chess.xFromSquare(this._from)<Chess.xFromSquare(this._to))?CastlingRights.QUEENSIDE:CastlingRights.KINGSIDE;
 			}
 
-			else if(piece.type===Piece.KING) {
+			else if(this._piece.type===Piece.KING) {
 				side=(Chess.xFromSquare(this._from)>Chess.xFromSquare(this._to))?CastlingRights.QUEENSIDE:CastlingRights.KINGSIDE;
 			}
 
@@ -223,7 +202,7 @@ define(function(require) {
 
 			//if rook move, rook is on this._from square
 
-			if(piece.type===Piece.ROOK) {
+			if(this._piece.type===Piece.ROOK) {
 				rookSquare=this._from;
 			}
 
@@ -303,7 +282,7 @@ define(function(require) {
 					for(var i=0; i<between.length; i++) {
 						n=between[i];
 
-						if(Chess.getAllAttackers(this._positionBefore.board.getBoardArray(), n, oppColour).length>0) {
+						if(Chess.getAllAttackers(this._positionBefore.board.getBoardArray(), n, this._oppColour).length>0) {
 							throughCheck=true;
 
 							break;
@@ -312,7 +291,7 @@ define(function(require) {
 
 					if(!throughCheck) {
 						this._isValid=true;
-						this._label.piece="";
+						this._label.this._piece="";
 						this._label.to="";
 						this._label.special=CastlingDetails.signs[side];
 						this._boardChanges[kingSquare]=Piece.NONE;
@@ -326,7 +305,7 @@ define(function(require) {
 	}
 
 	Class.prototype._checkStandardCastlingMove=function() {
-		if(piece.type===Piece.KING && isUnobstructed) {
+		if(this._piece.type===Piece.KING && this._isUnobstructed) {
 			var castling=new CastlingDetails(this._from, this._to);
 
 			if(castling.isValid && this._positionBefore.castlingRights.get(this._colour, castling.Side)) {
@@ -337,7 +316,7 @@ define(function(require) {
 					if(Chess.getAllAttackers(
 						this._positionBefore.board.getBoardArray(),
 						between[i],
-						oppColour
+						this._oppColour
 					).length>0) {
 						throughCheck=true;
 
@@ -351,7 +330,7 @@ define(function(require) {
 					castling.rookStartPos
 				) && !throughCheck) {
 					this._isValid=true;
-					this._label.piece="";
+					this._label.this._piece="";
 					this._label.to="";
 					this._label.special=castling.sign;
 					this._boardChanges[this._from]=Piece.NONE;
@@ -363,12 +342,50 @@ define(function(require) {
 		}
 	}
 
+	Class.prototype._getDisambiguationString=function() {
+		var disambiguationString="";
+
+		//FIXME these calls could be moved into Position probably (using position.board.getBoardArray and a util func ...)
+		var piecesInRange=Chess.getAttackers(this._positionBefore.board.getBoardArray(), this._piece.type, this._to, this._colour);
+
+		var disambiguation={
+			file: "",
+			rank: ""
+		};
+
+		var square;
+
+		for(var i=0; i<piecesInRange.length; i++) {
+			square=piecesInRange[i];
+
+			if(square!==this._from) {
+				if(Chess.xFromSquare(square)===Chess.xFromSquare(this._from)) {
+					disambiguation.file=Chess.fileFromSquare(this._from);
+				}
+
+				if(Chess.yFromSquare(square)===Chess.yFromSquare(this._from)) {
+					disambiguation.rank=Chess.rankFromSquare(this._from);
+				}
+			}
+		}
+
+		disambiguationString=disambiguation.file+disambiguation.rank;
+
+		//if neither rank nor file is the same, specify file
+
+		if(piecesInRange.length>1 && disambiguationString==="") {
+			disambiguationString=Chess.fileFromSquare(this._from);
+		}
+
+		return disambiguationString;
+	}
+
 	Class.prototype.isCheck=function() {
-		return this._isCheck;
+		return this._positionAfter.playerIsInCheck(this._oppColour);
 	}
 
 	Class.prototype.isMate=function() {
-		return this._isMate;
+		return (this.isCheck() && this._positionAfter.countLegalMoves(this._oppColour)===0);
 	}
 
 	Class.prototype.isCastling=function() {
@@ -380,13 +397,7 @@ define(function(require) {
 	}
 
 	Class.prototype.getFullmove=function() {
-		var fullmove=this._positionBefore.fullmove;
-
-		if(this._colour===Piece.WHITE) {
-			fullmove++;
-		}
-
-		return fullmove;
+		return this._positionAfter.fullmove;
 	}
 
 	Class.prototype.getColour=function() {

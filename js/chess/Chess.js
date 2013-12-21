@@ -442,42 +442,6 @@ define(function(require) {
 			return attackers;
 		},
 
-		disambiguate: function(board, type, colour, from, to) {
-			var disambiguationString="";
-			var piecesInRange=Chess.getAttackers(board, type, to, colour);
-
-			var disambiguation={
-				file: "",
-				rank: ""
-			};
-
-			var square;
-
-			for(var i=0; i<piecesInRange.length; i++) {
-				square=piecesInRange[i];
-
-				if(square!==from) {
-					if(Chess.xFromSquare(square)===Chess.xFromSquare(from)) {
-						disambiguation.file=Chess.fileFromSquare(from);
-					}
-
-					if(Chess.yFromSquare(square)===Chess.yFromSquare(from)) {
-						disambiguation.rank=Chess.rankFromSquare(from);
-					}
-				}
-			}
-
-			disambiguationString=disambiguation.file+disambiguation.rank;
-
-			//if neither rank nor file is the same, specify file
-
-			if(piecesInRange.length>1 && disambiguationString==="") {
-				disambiguationString=Chess.fileFromSquare(from);
-			}
-
-			return disambiguationString;
-		},
-
 		elo: function(p, o, s) {
 			return Math.round((p+(((p>-1 && p<2100)?32:((p>2099 && p<2400)?24:16))*(s-(1/(1+(Math.pow(10, ((o-p)/400)))))))));
 		}
