@@ -6,7 +6,6 @@ define(function(require) {
 	var History=require("chess/history/History");
 	var PiecesTaken=require("chess/PiecesTaken");
 	var Chess=require("chess/Chess");
-
 	var MoveLabel=require("chess/MoveLabel");
 
 	function Class() {
@@ -61,78 +60,9 @@ define(function(require) {
 		return this.startingPosition.getFen();
 	}
 
-	Class.prototype.countLegalMoves=function(colour) {
-		var legalMoves=0;
-		var piece;
-
-		for(var square=0; square<64; square++) {
-			piece=this.position.board.getSquare(square);
-
-			if(piece!==Piece.NONE && Piece.getColour(piece)===colour) {
-				legalMoves+=this.getLegalMovesFrom(square).length;
-			}
-		}
-
-		return legalMoves;
-	}
-
-	Class.prototype.getLegalMovesFrom=function(square) {
-		var legalMoves=[];
-		var piece, reachableSquares;
-
-		if(this.position.board.getSquare(square)!==Piece.NONE) {
-			piece=new Piece(this.position.board.getSquare(square));
-			reachableSquares=Chess.getReachableSquares(piece.type, square, piece.colour);
-
-			for(var i=0; i<reachableSquares.length; i++) {
-				if(this.move(square, reachableSquares[i], Piece.QUEEN, true).isLegal) {
-					legalMoves.push(reachableSquares[i]);
-				}
-			}
-		}
-
-		return legalMoves;
-	}
-
 	Class.prototype.move=function(from, to, promoteTo, dryrun) {
 		/*
 		if(move.isLegal) {
-				if(colour===Piece.BLACK) {
-					this.positionBefore.fullmove++;
-				}
-
-				this.positionBefore.active=oppColour;
-
-				if(move.capturedPiece!==null || piece.type===Piece.PAWN) {
-					this.positionBefore.fiftymoveClock=0;
-				}
-
-				else {
-					this.positionBefore.fiftymoveClock++;
-				}
-
-				if(piece.type!==Piece.PAWN || !Chess.isDoublePawnMove(relFrom, relTo)) {
-					this.positionBefore.epTarget=null;
-				}
-
-				if(piece.type===Piece.KING || move.isCastling) {
-					for(file=0; file<8; file++) {
-						this.positionBefore.castlingRights.setByFile(colour, file, false);
-					}
-				}
-
-				else if(piece.type===Piece.ROOK) {
-					this.positionBefore.castlingRights.setByFile(colour, Chess.xFromSquare(this._from), false);
-				}
-
-				if(this.isInCheck(oppColour)) {
-					this._label.check=MoveLabel.SIGN_CHECK;
-				}
-
-				if(this.isMated(oppColour)) {
-					this._label.check=MoveLabel.SIGN_MATE;
-				}
-
 				if(!dryrun) {
 					this.drawOffered=false;
 
@@ -145,7 +75,7 @@ define(function(require) {
 							this._gameOver(RESULT_DRAW, RESULT_DETAILS_INSUFFICIENT);
 						}
 
-					
+
 
 						if(this.countLegalMoves(oppColour)===0 && this.type!==GAME_TYPE_BUGHOUSE) {
 							this._gameOver(RESULT_DRAW, RESULT_DETAILS_STALEMATE);
@@ -170,59 +100,6 @@ define(function(require) {
 		*/
 
 		return move;
-	}
-
-	Class.prototype.isInCheck=function(colour) {
-		return (Chess.getAllAttackers(
-			this.position.board.getBoardArray(),
-			this.position.kingPositions[colour],
-			Chess.getOppColour(colour)
-		).length>0);
-	}
-
-	Class.prototype.isMated=function(colour) {
-		return (this.isInCheck(colour) && this.countLegalMoves(colour)===0);
-	}
-
-	Class.prototype.canMate=function(colour) {
-		var pieces=[];
-		var bishops=[];
-		var knights=[];
-
-		pieces[Piece.KNIGHT]=0;
-		pieces[Piece.BISHOP]=0;
-		bishops[Piece.WHITE]=0;
-		bishops[Piece.BLACK]=0;
-		knights[Piece.WHITE]=0;
-		knights[Piece.BLACK]=0;
-
-		var piece, pieceColour, pieceType;
-
-		for(var square=0; square<64; square++) {
-			piece=new Piece(this.position.board.getSquare(square));
-
-			if(piece.type!==Piece.NONE && piece.type!==Piece.KING) {
-				if(piece.colour===colour && (piece.type===Piece.PAWN || piece.type===Piece.ROOK || piece.type===Piece.QUEEN)) {
-					return true;
-				}
-
-				if(piece.type===Piece.BISHOP) {
-					bishops[piece.colour]++;
-					pieces[Piece.BISHOP]++;
-				}
-
-				if(piece.type===Piece.KNIGHT) {
-					knights[piece.colour]++;
-					pieces[Piece.KNIGHT]++;
-				}
-			}
-		}
-
-		return (
-			(bishops[Piece.WHITE]>0 && bishops[Piece.BLACK]>0)
-			|| (pieces[Piece.BISHOP]>0 && pieces[Piece.KNIGHT]>0)
-			|| (pieces[Piece.KNIGHT]>2 && knights[colour]>0)
-		);
 	}
 
 	Class.prototype.undo=function() {

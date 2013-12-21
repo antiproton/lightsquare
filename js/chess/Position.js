@@ -67,5 +67,91 @@ define(function(require) {
 		return new Class(this.getFen());
 	}
 
+	Class.prototype.isInCheck=function(colour) {
+		return (Chess.getAllAttackers(
+			this.position.board.getBoardArray(),
+			this.position.kingPositions[colour],
+			Chess.getOppColour(colour)
+		).length>0);
+	}
+
+	Class.prototype.isMated=function(colour) {
+		return (this.isInCheck(colour) && this.countLegalMoves(colour)===0);
+	}
+
+	Class.prototype.canMate=function(colour) {
+		var pieces=[];
+		var bishops=[];
+		var knights=[];
+
+		pieces[Piece.KNIGHT]=0;
+		pieces[Piece.BISHOP]=0;
+		bishops[Piece.WHITE]=0;
+		bishops[Piece.BLACK]=0;
+		knights[Piece.WHITE]=0;
+		knights[Piece.BLACK]=0;
+
+		var piece, pieceColour, pieceType;
+
+		for(var square=0; square<64; square++) {
+			piece=new Piece(this.position.board.getSquare(square));
+
+			if(piece.type!==Piece.NONE && piece.type!==Piece.KING) {
+				if(piece.colour===colour && (piece.type===Piece.PAWN || piece.type===Piece.ROOK || piece.type===Piece.QUEEN)) {
+					return true;
+				}
+
+				if(piece.type===Piece.BISHOP) {
+					bishops[piece.colour]++;
+					pieces[Piece.BISHOP]++;
+				}
+
+				if(piece.type===Piece.KNIGHT) {
+					knights[piece.colour]++;
+					pieces[Piece.KNIGHT]++;
+				}
+			}
+		}
+
+		return (
+			(bishops[Piece.WHITE]>0 && bishops[Piece.BLACK]>0)
+			|| (pieces[Piece.BISHOP]>0 && pieces[Piece.KNIGHT]>0)
+			|| (pieces[Piece.KNIGHT]>2 && knights[colour]>0)
+		);
+	}
+
+	Class.prototype.countLegalMoves=function(colour) {
+		var legalMoves=0;
+		var piece;
+
+		for(var square=0; square<64; square++) {
+			piece=this.position.board.getSquare(square);
+
+			if(piece!==Piece.NONE && Piece.getColour(piece)===colour) {
+				legalMoves+=this.getLegalMovesFrom(square).length;
+			}
+		}
+
+		return legalMoves;
+	}
+
+	Class.prototype.getLegalMovesFrom=function(square) {
+		var legalMoves=[];
+		var piece, reachableSquares;
+
+		if(this.position.board.getSquare(square)!==Piece.NONE) {
+			piece=new Piece(this.position.board.getSquare(square));
+			reachableSquares=Chess.getReachableSquares(piece.type, square, piece.colour);
+
+			for(var i=0; i<reachableSquares.length; i++) {
+				if(this.move(square, reachableSquares[i], Piece.QUEEN, true).isLegal) {
+					legalMoves.push(reachableSquares[i]);
+				}
+			}
+		}
+
+		return legalMoves;
+	}
+
 	return Class;
 });
