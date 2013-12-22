@@ -1,5 +1,5 @@
 define(function(require) {
-	var Base=require("chess/Move");
+	var Base=require("chess/history/Move");
 	var Event=require("lib/Event");
 
 	function Move() {
