@@ -60,44 +60,39 @@ define(function(require) {
 		return this.startingPosition.getFen();
 	}
 
-	Class.prototype.move=function(from, to, promoteTo, dryrun) {
-		/*
-		if(move.isLegal) {
-				if(!dryrun) {
-					this.drawOffered=false;
+	Class.prototype.move=function(from, to, promoteTo) {
+		var move=new Move(this.position, from, to);
+		var colour=move.getColour();
+		var oppColour=Chess.getOppColour(colour);
 
-					if(this.isMated(oppColour)) {
-						this._gameOver(Result.WinResult[colour], RESULT_DETAILS_CHECKMATE);
-					}
+		if(move.isLegal()) {
+			this.position=move.getPositionAfter();
+			this.drawOffered=false;
 
-					else {
-						if(!this.canMate(Piece.WHITE) && !this.canMate(Piece.BLACK)) {
-							this._gameOver(RESULT_DRAW, RESULT_DETAILS_INSUFFICIENT);
-						}
+			if(move.isMate()) {
+				this._gameOver(Result.WinResult[colour], RESULT_DETAILS_CHECKMATE);
+			}
 
-
-
-						if(this.countLegalMoves(oppColour)===0 && this.type!==GAME_TYPE_BUGHOUSE) {
-							this._gameOver(RESULT_DRAW, RESULT_DETAILS_STALEMATE);
-						}
-
-						if(this.positionBefore.fiftymoveClock>49) {
-							this.fiftymoveClaimable=true;
-						}
-
-						this._checkThreefold(); //FIXME move isn't in the history yet so this is 1 move behind
-					}
-
-
-					if(this.history.move(move)) {
-						this.Moved.fire();
-					}
+			else {
+				if(!this.canMate(Piece.WHITE) && !this.canMate(Piece.BLACK)) {
+					this._gameOver(RESULT_DRAW, RESULT_DETAILS_INSUFFICIENT);
 				}
 
-				if(dryrun) {
-					this.positionBefore=oldPosition;
+				if(this.position.countLegalMoves(oppColour)===0 && this.type!==GAME_TYPE_BUGHOUSE) {
+					this._gameOver(RESULT_DRAW, RESULT_DETAILS_STALEMATE);
 				}
-		*/
+
+				if(this.positionBefore.fiftymoveClock>49) {
+					this.fiftymoveClaimable=true;
+				}
+
+			}
+
+			if(this.history.move(move)) {
+				this._checkThreefold();
+				this.Moved.fire();
+			}
+		}
 
 		return move;
 	}
@@ -128,7 +123,7 @@ define(function(require) {
 		}
 
 		this.history.mainLine.moveList.each(function(move) {
-			if(move.fen===fen) {
+			if(move.getPositionAfterfen===fen) {
 				n++;
 			}
 		});
