@@ -3,11 +3,12 @@ define(function(require) {
 	var Piece=require("chess/Piece");
 	var MoveLabel=require("chess/MoveLabel");
 
-	function Class(positionBefore, from, to, promoteTo) {
+	function Class(positionBefore, from, to, promoteTo, justCheckingLegality) {
 		this._positionBefore=positionBefore;
 		this._from=from;
 		this._to=to;
 		this._promoteTo=promoteTo||Piece.QUEEN;
+		this._justCheckingLegality=justCheckingLegality||false;
 		this._positionAfter=this._positionBefore.copy();
 		this._piece=new Piece(this._positionBefore.board.getSquare(this._from));
 		this._targetPiece=new Piece(this._positionBefore.board.getSquare(this._to));
@@ -62,7 +63,11 @@ define(function(require) {
 				this._isLegal=!this._positionAfter.playerIsInCheck(this._colour);
 			}
 
-			if(this._isLegal) {
+			if(this._justCheckingLegality) {
+				this._positionAfter=this._positionBefore.copy();
+			}
+
+			else if(this._isLegal) {
 				if(this._colour===Piece.BLACK) {
 					this._positionAfter.fullmove++;
 				}
