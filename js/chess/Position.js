@@ -5,6 +5,7 @@ define(function(require) {
 	var Colour=require("chess/Colour");
 	var Chess=require("chess/Chess");
 	var Piece=require("chess/Piece");
+	var Move=require("chess/Move");
 
 	function Class(fen) {
 		this.castlingRights=new CastlingRights();
@@ -57,7 +58,7 @@ define(function(require) {
 			Fen.boardArrayToFenPosition(this.board.getBoardArray()),
 			Colour.getFen(this.active),
 			this.castlingRights.getFenString(),
-			(this.epTarget===null)?Fen.NONE:Chess.algebraicFromSquare(this.epTarget), //FIXME should be Square.getAlgebraic or something.  Number.prototype.toAlgebraic is tempting also.
+			(this.epTarget===null)?Fen.NONE:Chess.algebraicFromSquare(this.epTarget),
 			this.fiftymoveClock.toString(),
 			this.fullmove.toString()
 		]);
@@ -67,16 +68,16 @@ define(function(require) {
 		return new Class(this.getFen());
 	}
 
-	Class.prototype.isInCheck=function(colour) {
+	Class.prototype.playerIsInCheck=function(colour) {
 		return (Chess.getAllAttackers(
-			this.position.board.getBoardArray(),
-			this.position.kingPositions[colour],
+			this.board.getBoardArray(),
+			this.board.kingPositions[colour],
 			Chess.getOppColour(colour)
 		).length>0);
 	}
 
-	Class.prototype.isMated=function(colour) {
-		return (this.isInCheck(colour) && this.countLegalMoves(colour)===0);
+	Class.prototype.playerIsMated=function(colour) {
+		return (this.playerIsInCheck(colour) && this.countLegalMoves(colour)===0);
 	}
 
 	Class.prototype.canMate=function(colour) {
@@ -91,13 +92,16 @@ define(function(require) {
 		knights[Piece.WHITE]=0;
 		knights[Piece.BLACK]=0;
 
-		var piece, pieceColour, pieceType;
+		var piece;
 
 		for(var square=0; square<64; square++) {
-			piece=new Piece(this.position.board.getSquare(square));
+			piece=new Piece(this.board.getSquare(square));
 
 			if(piece.type!==Piece.NONE && piece.type!==Piece.KING) {
-				if(piece.colour===colour && (piece.type===Piece.PAWN || piece.type===Piece.ROOK || piece.type===Piece.QUEEN)) {
+				if(
+					piece.colour===colour
+					&& (piece.type===Piece.PAWN || piece.type===Piece.ROOK || piece.type===Piece.QUEEN)
+				) {
 					return true;
 				}
 
@@ -125,7 +129,7 @@ define(function(require) {
 		var piece;
 
 		for(var square=0; square<64; square++) {
-			piece=this.position.board.getSquare(square);
+			piece=this.board.getSquare(square);
 
 			if(piece!==Piece.NONE && Piece.getColour(piece)===colour) {
 				legalMoves+=this.getLegalMovesFrom(square).length;
@@ -139,12 +143,12 @@ define(function(require) {
 		var legalMoves=[];
 		var piece, reachableSquares;
 
-		if(this.position.board.getSquare(square)!==Piece.NONE) {
-			piece=new Piece(this.position.board.getSquare(square));
+		if(this.board.getSquare(square)!==Piece.NONE) {
+			piece=new Piece(this.board.getSquare(square));
 			reachableSquares=Chess.getReachableSquares(piece.type, square, piece.colour);
 
 			for(var i=0; i<reachableSquares.length; i++) {
-				if(this.move(square, reachableSquares[i], Piece.QUEEN, true).isLegal) {
+				if((new Move(this, square, reachableSquares[i], Piece.QUEEN, true)).isLegal()) {
 					legalMoves.push(reachableSquares[i]);
 				}
 			}
