@@ -1,6 +1,7 @@
 define(function(require) {
 	var CastlingRights=require("chess/CastlingRights");
 	var Chess=require("chess/Chess");
+	var MoveLabel=require("chess/MoveLabel");
 
 	function Class(from, to) {
 		this.isValid=false;
