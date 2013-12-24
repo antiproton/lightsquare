@@ -101,7 +101,7 @@ define(function(require) {
 		}
 	}
 
-	Position.prototype.getPawnAttackers=function(board, square, colour) {
+	Position.prototype.getPawnAttackers=function(square, colour) {
 		var attackers=[];
 		var piece=Piece.getPiece(Piece.PAWN, colour);
 		var playerColour=Chess.getOppColour(colour);
@@ -128,7 +128,7 @@ define(function(require) {
 		return attackers;
 	}
 
-	Position.prototype.getKingAttackers=function(board, square, colour) {
+	Position.prototype.getKingAttackers=function(square, colour) {
 		var attackers=[];
 		var piece=Piece.getPiece(Piece.KING, colour);
 		var coords=Chess.coordsFromSquare(square);
@@ -155,12 +155,12 @@ define(function(require) {
 		return attackers;
 	}
 
-	Position.prototype.getAllAttackers=function(board, square, colour) {
+	Position.prototype.getAllAttackers=function(square, colour) {
 		var attackers=[];
 		var pieceTypes=[Piece.PAWN, Piece.KNIGHT, Piece.BISHOP, Piece.ROOK, Piece.QUEEN, Piece.KING];
 
 		for(var i=0; i<pieceTypes.length; i++) {
-			attackers=attackers.concat(this.getAttackers(board, pieceTypes[i], square, colour));
+			attackers=attackers.concat(this.getAttackers(pieceTypes[i], square, colour));
 		}
 
 		return attackers;
