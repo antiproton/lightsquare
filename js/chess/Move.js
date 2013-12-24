@@ -3,7 +3,7 @@ define(function(require) {
 	var Piece=require("chess/Piece");
 	var MoveLabel=require("chess/MoveLabel");
 
-	function _Move(positionBefore, from, to, promoteTo, justCheckingLegality) {
+	function Move(positionBefore, from, to, promoteTo, justCheckingLegality) {
 		this._positionBefore=positionBefore;
 		this._from=from;
 		this._to=to;
@@ -31,7 +31,7 @@ define(function(require) {
 		this._check();
 	}
 
-	_Move.prototype._check=function() {
+	Move.prototype._check=function() {
 		if(this._piece.type!==Piece.NONE && this._piece.colour===this._colour) {
 			this._label.piece=Fen.getPieceChar(Piece.getPiece(this._piece.type, Piece.WHITE));
 			this._label.to=Chess.getAlgebraicSquare(this._to);
@@ -107,7 +107,7 @@ define(function(require) {
 		}
 	}
 
-	_Move.prototype._checkPawnMove=function() {
+	Move.prototype._checkPawnMove=function() {
 		var capturing=Chess.isPawnCapture(this._relFrom, this._relTo);
 		var validPromotion=false;
 		var promotion=false;
@@ -163,7 +163,7 @@ define(function(require) {
 		}
 	}
 
-	_Move.prototype._checkCastlingMove=function() {
+	Move.prototype._checkCastlingMove=function() {
 		if(this._piece.type===Piece.KING && this._isUnobstructed) {
 			var castling=new CastlingDetails(this._from, this._to);
 
@@ -194,7 +194,7 @@ define(function(require) {
 		}
 	}
 
-	_Move.prototype._getDisambiguationString=function() {
+	Move.prototype._getDisambiguationString=function() {
 		var disambiguationString="";
 
 		//FIXME these calls could be moved into Position probably (using position.board.getBoardArray and a util func ...)
@@ -232,31 +232,31 @@ define(function(require) {
 		return disambiguationString;
 	}
 
-	_Move.prototype.isCheck=function() {
+	Move.prototype.isCheck=function() {
 		return this._positionAfter.playerIsInCheck(this._oppColour);
 	}
 
-	_Move.prototype.isMate=function() {
+	Move.prototype.isMate=function() {
 		return (this.isCheck() && this._positionAfter.countLegalMoves(this._oppColour)===0);
 	}
 
-	_Move.prototype.isCastling=function() {
+	Move.prototype.isCastling=function() {
 		return this._isCastling;
 	}
 
-	_Move.prototype.isLegal=function() {
+	Move.prototype.isLegal=function() {
 		return this._isLegal;
 	}
 
-	_Move.prototype.getFullmove=function() {
+	Move.prototype.getFullmove=function() {
 		return this._positionAfter.fullmove;
 	}
 
-	_Move.prototype.getColour=function() {
+	Move.prototype.getColour=function() {
 		return this._colour;
 	}
 
-	_Move.prototype.getDot=function() {
+	Move.prototype.getDot=function() {
 		var dot=[];
 
 		dot[Piece.WHITE]=".";
@@ -265,13 +265,13 @@ define(function(require) {
 		return dot[this._colour];
 	}
 
-	_Move.prototype.getLabel=function() {
+	Move.prototype.getLabel=function() {
 		return this._label;
 	}
 
-	_Move.prototype.getFullLabel=function() {
+	Move.prototype.getFullLabel=function() {
 		return this.getFullmove()+this.getDot()+" "+this.getLabel();
 	}
 
-	return _Move;
+	return Move;
 });
