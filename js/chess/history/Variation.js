@@ -1,10 +1,11 @@
 define(function(require) {
+	require("lib/Function.implement");
 	var List=require("lib/List");
 	var HistoryItem=require("chess/history/HistoryItem");
 	var Chess=require("chess/Chess");
 	var Piece=require("chess/Piece");
 
-	function Class() {
+	function Variation() {
 		HistoryItem.call(this);
 
 		this.itemType=HistoryItem.VARIATION;
@@ -15,35 +16,35 @@ define(function(require) {
 		this.moveList=this._createMoveList();
 	}
 
-	Class.implement(HistoryItem);
+	Variation.implement(HistoryItem);
 
-	Class.prototype.getStartingFullmove=function() {
+	Variation.prototype.getStartingFullmove=function() {
 		return this._startingFullmove;
 	}
 
-	Class.prototype.setStartingFullmove=function(fullmove) {
+	Variation.prototype.setStartingFullmove=function(fullmove) {
 		this._startingFullmove=fullmove;
 		//TODO clear the history
 	}
 
-	Class.prototype.getStartingColour=function() {
+	Variation.prototype.getStartingColour=function() {
 		return this._startingColour;
 	}
 
-	Class.prototype.setStartingColour=function(colour) {
+	Variation.prototype.setStartingColour=function(colour) {
 		this._startingColour=colour;
 		//TODO clear the history
 	}
 
-	Class.prototype.getFirstMove=function() {
+	Variation.prototype.getFirstMove=function() {
 		//...
 	}
 
-	Class.prototype.getLastMove=function() {
+	Variation.prototype.getLastMove=function() {
 		//...
 	}
 
-	Class.prototype.getBranchMove=function() {
+	Variation.prototype.getBranchMove=function() {
 		if(this.isMainline()) {
 			return null;
 		}
@@ -53,7 +54,7 @@ define(function(require) {
 		}
 	}
 
-	Class.prototype.insert=function(item, index) {
+	Variation.prototype.insert=function(item, index) {
 		var prevItem=this.moveList.item(index-1);
 		var nextItem=this.moveList.item(index+1);
 
@@ -75,7 +76,7 @@ define(function(require) {
 		this.moveList.insert(item, index);
 	}
 
-	Class.prototype.remove=function(item) {
+	Variation.prototype.remove=function(item) {
 		var prevItem=item.getPreviousItem();
 		var nextItem=item.getNextItem();
 
@@ -90,7 +91,7 @@ define(function(require) {
 		this.moveList.remove(item);
 	}
 
-	Class.prototype.deleteMove=function(move) {
+	Variation.prototype.deleteMove=function(move) {
 		var item=move;
 
 		while(item!==null) {
@@ -100,11 +101,11 @@ define(function(require) {
 		}
 	}
 
-	Class.prototype.add=function(item) {
+	Variation.prototype.add=function(item) {
 		this.insert(item, this.moveList.length);
 	}
 
-	Class.prototype.insertAfter=function(item, prevItem) {
+	Variation.prototype.insertAfter=function(item, prevItem) {
 		if(prevItem===null) {
 			this.insert(item, 0);
 		}
@@ -118,7 +119,7 @@ define(function(require) {
 	insert an item after a move and all its variations
 	*/
 
-	Class.prototype.insertAfterMove=function(item, previousMove) {
+	Variation.prototype.insertAfterMove=function(item, previousMove) {
 		if(prevMove===null) {
 			this.insert(item, 0);
 		}
@@ -134,13 +135,13 @@ define(function(require) {
 		}
 	}
 
-	Class.prototype.isMainline=function() {
+	Variation.prototype.isMainline=function() {
 		return (this._variation===null);
 	}
 
-	Class.prototype._createMoveList=function() {
+	Variation.prototype._createMoveList=function() {
 		return new List();
 	}
 
-	return Class;
+	return Variation;
 });

@@ -1,33 +1,34 @@
 define(function(require) {
-	var HistoryItem=require("chess/history/HistoryItem");	HistoryItem.call(this);
+	require("lib/Function.implement");
+	var HistoryItem=require("chess/history/HistoryItem");
 
-	function Class() {
+	function Move() {
+		HistoryItem.call(this);
 		this.itemType=HistoryItem.MOVE;
-
 		this._isSelected=false;
 		this._label="";
 
 	}
+	Move.implement(HistoryItem);
 
 
-
-	Class.prototype.select=function() {
+	Move.prototype.select=function() {
 		this.isSelected=true;
 	}
 
-	Class.prototype.deselect=function() {
+	Move.prototype.deselect=function() {
 		this.isSelected=false;
 	}
 
-	Class.prototype.isSelected=function() {
+	Move.prototype.isSelected=function() {
 		return this._isSelected;
 	}
 
-	Class.prototype.setLabel=function(label) {
+	Move.prototype.setLabel=function(label) {
 		this._label=label;
 	}
 
-	Class.implement(HistoryItem);
+	Move.implement(HistoryItem);
 
-	return Class;
+	return Move;
 });

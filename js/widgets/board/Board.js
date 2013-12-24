@@ -1,10 +1,11 @@
 define(function(require) {
+	require("chess/constants");
 	var Template=require("lib/dom/Template");
 	var create=require("lib/dom/create");
 	var style=require("lib/dom/style");
 	var getOffsets=require("lib/dom/getOffsets");
 	var Event=require("lib/Event");
-	var Board=require("chess/Board");
+	var ChessBoard=require("chess/Board");
 	var MoveAction=require("./_MoveAction");
 	var Square=require("./_Square/Square");
 	var Chess=require("chess/Chess");
@@ -12,8 +13,8 @@ define(function(require) {
 	require("css@./resources/board.css");
 	var html=require("file@./resources/board.html");
 
-	function Class(parent) {
-		Board.call(this);
+	function Board(parent) {
+		ChessBoard.call(this);
 
 		this._template=new Template(html, parent);
 
@@ -37,7 +38,7 @@ define(function(require) {
 		this._squareMouseCurrentlyOver=null;
 		this._squareCurrentlyDraggingPieceOver=null;
 
-		this._boardStyle=Class.STYLE_BROWN;
+		this._boardStyle=Board.STYLE_BROWN;
 		this._viewingAs=Piece.WHITE;
 		this._showSurround=false;
 		this._showCoords=true;
@@ -50,21 +51,21 @@ define(function(require) {
 		this._setupHtml();
 	}
 
-	Class.implement(Board);
+	Board.implement(ChessBoard);
 
-	Class.STYLE_BROWN="brown";
-	Class.STYLE_GREEN="green";
-	Class.STYLE_BLUE="blue";
+	Board.STYLE_BROWN="brown";
+	Board.STYLE_GREEN="green";
+	Board.STYLE_BLUE="blue";
 
-	Class.prototype.setSquare=function(square, piece) {
-		Board.prototype.setSquare.call(this, square, piece);
+	Board.prototype.setSquare=function(square, piece) {
+		ChessBoard.prototype.setSquare.call(this, square, piece);
 
 		if(this._htmlUpdatesEnabled) {
 			this._setHtmlSquare(square, piece);
 		}
 	}
 
-	Class.prototype.highlightSquares=function(squares, highlightType) {
+	Board.prototype.highlightSquares=function(squares, highlightType) {
 		if(!is_array(squares)) {
 			squares=[squares];
 		}
@@ -80,19 +81,19 @@ define(function(require) {
 		}
 	}
 
-	Class.prototype.unhighlightSquares=function(highlightType) {
+	Board.prototype.unhighlightSquares=function(highlightType) {
 		for(var i=0; i<this._highlightedSquares[highlightType].length; i++) {
-			this._uiSquares[this._highlightedSquares[highlightType][i]].setHighlight(Class.HIGHLIGHT_NONE);
+			this._uiSquares[this._highlightedSquares[highlightType][i]].setHighlight(Board.HIGHLIGHT_NONE);
 		}
 
 		this._highlightedSquares[highlightType]=[];
 	}
 
-	Class.prototype.getBoardSize=function() {
+	Board.prototype.getChessBoardSize=function() {
 		return this._squareSize*8;
 	}
 
-	Class.prototype.mouseIsOnBoard=function(event, use_offsets, offsets) {
+	Board.prototype.mouseIsOnChessBoard=function(event, use_offsets, offsets) {
 		offsets=offsets||[this._moveAction.mouseOffsets[X], this._moveAction.mouseOffsets[Y]];
 
 		var x=event.pageX;
@@ -108,12 +109,12 @@ define(function(require) {
 		x-=boardOffsets[X];
 		y-=boardOffsets[Y];
 
-		y=this.getBoardSize()-y;
+		y=this.getChessBoardSize()-y;
 
-		return this._isXyOnBoard(x, y);
+		return this._isXyOnChessBoard(x, y);
 	}
 
-	Class.prototype.setHtmlUpdatesEnabled=function(enabled) {
+	Board.prototype.setHtmlUpdatesEnabled=function(enabled) {
 		this._htmlUpdatesEnabled=enabled;
 
 		if(enabled) {
@@ -121,42 +122,42 @@ define(function(require) {
 		}
 	}
 
-	Class.prototype.setPieceStyle=function(pieceStyle) {
+	Board.prototype.setPieceStyle=function(pieceStyle) {
 		for(var square=0; square<64; square++) {
 			this._uiSquares[square].setPieceStyle(pieceStyle);
 		}
 	}
 
-	Class.prototype.setSquareSize=function(squareSize) {
+	Board.prototype.setSquareSize=function(squareSize) {
 		this._squareSize=squareSize;
 		this._updateHtml();
 	}
 
-	Class.prototype.setShowCoords=function(showCoords) {
+	Board.prototype.setShowCoords=function(showCoords) {
 		this._showCoords=showCoords;
 		this._updateHtml();
 	}
 
-	Class.prototype.setShowSurround=function(showSurround) {
+	Board.prototype.setShowSurround=function(showSurround) {
 		this._showSurround=showSurround;
 		this._updateHtml();
 	}
 
-	Class.prototype.setBorderWidth=function(borderWidth) {
+	Board.prototype.setBorderWidth=function(borderWidth) {
 		this._borderWidth=borderWidth;
 		this._updateHtml();
 	}
 
-	Class.prototype.setViewingAs=function(colour) {
+	Board.prototype.setViewingAs=function(colour) {
 		this._viewingAs=colour;
 		this._updateHtml();
 	}
 
-	Class.prototype.setBoardStyle=function(boardStyle) {
-		this._setBoardStyle(boardStyle, this._boardStyle);
+	Board.prototype.setChessBoardStyle=function(boardStyle) {
+		this._setChessBoardStyle(boardStyle, this._boardStyle);
 	}
 
-	Class.prototype._setupHtml=function() {
+	Board.prototype._setupHtml=function() {
 		var self=this;
 
 		this._setupHtmlCoords();
@@ -173,7 +174,7 @@ define(function(require) {
 		this._updateHtml();
 	}
 
-	Class.prototype._setupHtmlCoords=function() {
+	Board.prototype._setupHtmlCoords=function() {
 		this._coordContainers={
 			rank: this._template.rank_coords,
 			file: this._template.file_coords
@@ -195,7 +196,7 @@ define(function(require) {
 		}
 	}
 
-	Class.prototype._setupHtmlSquares=function() {
+	Board.prototype._setupHtmlSquares=function() {
 		this._uiSquares=[];
 
 		var uiSquare;
@@ -219,8 +220,8 @@ define(function(require) {
 		}
 	}
 
-	Class.prototype._updateHtml=function() {
-		var boardSize=this.getBoardSize();
+	Board.prototype._updateHtml=function() {
+		var boardSize=this.getChessBoardSize();
 		var borderSize=this._borderWidth*2;
 		var paddingIfSurround=(this._showSurround?this._coordsPadding:0);
 		var paddingIfCoordsOrSurround=(this._showCoords || this._showSurround?this._coordsPadding:0);
@@ -250,12 +251,12 @@ define(function(require) {
 
 		this._updateHtmlCoords();
 		this._updateHtmlSquares();
-		this._setBoardStyle();
+		this._setChessBoardStyle();
 	}
 
-	Class.prototype._updateHtmlCoords=function() {
+	Board.prototype._updateHtmlCoords=function() {
 		var fileIndex, rankIndex;
-		var boardSize=this.getBoardSize();
+		var boardSize=this.getChessBoardSize();
 		var borderSize=this._borderWidth*2;
 		var paddingIfSurround=(this._showSurround?this._coordsPadding:0);
 
@@ -298,7 +299,7 @@ define(function(require) {
 		}
 	}
 
-	Class.prototype._updateHtmlSquares=function() {
+	Board.prototype._updateHtmlSquares=function() {
 		var uiSquare;
 
 		for(var square=0; square<64; square++) {
@@ -324,30 +325,30 @@ define(function(require) {
 		}
 	}
 
-	Class.prototype._setBoardStyle=function(newStyle, oldStyle) {
+	Board.prototype._setChessBoardStyle=function(newStyle, oldStyle) {
 		newStyle=newStyle||this._boardStyle;
 		oldStyle=oldStyle||this._boardStyle;
 
-		var oldClassName="board_"+oldStyle;
-		var newClassName="board_"+newStyle;
+		var oldBoardName="board_"+oldStyle;
+		var newBoardName="board_"+newStyle;
 
-		this._template.board.classList.remove(oldClassName);
-		this._template.board.classList.add(newClassName);
+		this._template.board.classList.remove(oldBoardName);
+		this._template.board.classList.add(newBoardName);
 
 		this._boardStyle=newStyle;
 	}
 
-	Class.prototype._setHtmlSquare=function(square, piece) {
+	Board.prototype._setHtmlSquare=function(square, piece) {
 		this._uiSquares[square].setPiece(piece);
 	}
 
-	Class.prototype._updateSquares=function() {
+	Board.prototype._updateSquares=function() {
 		for(var square=0; square<64; square++) {
 			this._setHtmlSquare(square, this._board[square]);
 		}
 	}
 
-	Class.prototype._squareFromMouseEvent=function(e, use_moveinfo_offsets) {
+	Board.prototype._squareFromMouseEvent=function(e, use_moveinfo_offsets) {
 		var x=e.pageX;
 		var y=e.pageY;
 
@@ -358,10 +359,10 @@ define(function(require) {
 
 		var os=getOffsets(this._template.board);
 
-		return this._squareFromOffsets(x-os[X], this.getBoardSize()-(y-os[Y]));
+		return this._squareFromOffsets(x-os[X], this.getChessBoardSize()-(y-os[Y]));
 	}
 
-	Class.prototype._squareFromOffsets=function(x, y) {
+	Board.prototype._squareFromOffsets=function(x, y) {
 		var boardX=(x-(x%this._squareSize))/this._squareSize;
 		var boardY=(y-(y%this._squareSize))/this._squareSize;
 
@@ -373,7 +374,7 @@ define(function(require) {
 		return Chess.squareFromCoords([boardX, boardY]);
 	}
 
-	Class.prototype._squareMouseOffsetsFromEvent=function(e) {
+	Board.prototype._squareMouseOffsetsFromEvent=function(e) {
 		var boardOffsets=getOffsets(this._template.board);
 
 		var mouseOffsets=[
@@ -384,10 +385,10 @@ define(function(require) {
 		return mouseOffsets
 	}
 
-	Class.prototype._boardMouseDown=function(event, targetUiSquare) {
+	Board.prototype._boardMouseDown=function(event, targetUiSquare) {
 		event.preventDefault();
 
-		if(this.mouseIsOnBoard(event)) {
+		if(this.mouseIsOnChessBoard(event)) {
 			var square=targetUiSquare.getSquare();
 
 			if(!this._moveAction.selected && !this._moveAction.isInProgress && this._board[square]!==Piece.NONE) {
@@ -400,7 +401,7 @@ define(function(require) {
 		}
 	}
 
-	Class.prototype._boardMouseMove=function(event) {
+	Board.prototype._boardMouseMove=function(event) {
 		event.preventDefault();
 
 		var square=this._squareFromMouseEvent(event);
@@ -455,7 +456,7 @@ define(function(require) {
 		}
 	}
 
-	Class.prototype._boardMouseUp=function(event) {
+	Board.prototype._boardMouseUp=function(event) {
 		event.preventDefault();
 
 		var args;
@@ -490,7 +491,7 @@ define(function(require) {
 
 				this.Deselected.fire();
 
-				if(this.mouseIsOnBoard(event, true)) {
+				if(this.mouseIsOnChessBoard(event, true)) {
 					if(square!==this._moveAction.from) {
 						this.UserMove.fire({
 							from: this._moveAction.from,
@@ -553,16 +554,16 @@ define(function(require) {
 		this._updatePieceDragInfo(event);
 	}
 
-	Class.prototype._isXyOnBoard=function(x, y) {
-		var boardSize=this.getBoardSize();
+	Board.prototype._isXyOnChessBoard=function(x, y) {
+		var boardSize=this.getChessBoardSize();
 
 		return !(x<0 || x>boardSize || y<0 || y>boardSize);
 	}
 
-	Class.prototype._updateMouseOverInfo=function(event) {
+	Board.prototype._updateMouseOverInfo=function(event) {
 		var square=this._squareFromMouseEvent(event);
 
-		if(this.mouseIsOnBoard(event) && square>-1 && square<64) { //mouseIsOnBoard doesn't appear to be enough
+		if(this.mouseIsOnChessBoard(event) && square>-1 && square<64) { //mouseIsOnChessBoard doesn't appear to be enough
 			if(this._squareMouseCurrentlyOver!=square) {
 				if(this._squareMouseCurrentlyOver!==null) {
 					this.MouseLeavingSquare.fire({
@@ -589,11 +590,11 @@ define(function(require) {
 		}
 	}
 
-	Class.prototype._updatePieceDragInfo=function(event) {
+	Board.prototype._updatePieceDragInfo=function(event) {
 		var square=this._squareFromMouseEvent(event, true);
 
 		if(this._moveAction.isInProgress && this._moveAction.mode===MoveAction.DRAG) {
-			if(this.mouseIsOnBoard(event)) {
+			if(this.mouseIsOnChessBoard(event)) {
 				if(this._squareCurrentlyDraggingPieceOver!=square) {
 					if(this._squareCurrentlyDraggingPieceOver!==null) {
 						this.PieceLeavingSquare.fire({
@@ -631,5 +632,5 @@ define(function(require) {
 		}
 	}
 
-	return Class;
+	return Board;
 });

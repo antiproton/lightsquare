@@ -1,4 +1,5 @@
 define(function(require) {
+	require("chess/constants");
 	var Piece=require("chess/Piece");
 
 	var Chess={
@@ -10,10 +11,6 @@ define(function(require) {
 
 		getOppColour: function(colour) {
 			return (colour===Piece.BLACK?Piece.WHITE:Piece.BLACK);
-		},
-
-		getOppGame: function(gameId) {
-			return [1, 0][gameId];
 		},
 
 		getSquareColour: function(square) {
@@ -44,8 +41,8 @@ define(function(require) {
 
 		squareFromAlgebraic: function(algebraicSquare) {
 			return Chess.squareFromCoords([
-				Chess.FILES.indexOf(algebraicSquare.charAt(X)),
-				Chess.RANKS.indexOf(algebraicSquare.charAt(Y))
+				Chess.FILES.indexOf(algebraicSquare.charAt(0)),
+				Chess.RANKS.indexOf(algebraicSquare.charAt(1))
 			]);
 		},
 
@@ -71,6 +68,13 @@ define(function(require) {
 		squaresAreOnSameRank: function(squareA, squareB) {
 			return Chess.yFromSquare(squareA)===Chess.yFromSquare(squareB);
 		},
+
+		/*
+		"regular" moves are all geometrically valid moves except pawn moves and castling.
+
+		(all the moves that don't depend on colour or other circumstances, and can be checked
+		by simply checking the relationship between the to square and the from square)
+		*/
 
 		isRegularMove: function(type, fromCoords, toCoords) {
 			var diff=[
@@ -187,20 +191,8 @@ define(function(require) {
 			return squares;
 		},
 
-		isBlocked: function(board, from, to) {
-			var squares=Chess.getSquaresBetween(from, to);
-
-			for(var i=0; i<squares.length; i++) {
-				if(board[squares[i]]!==Piece.NONE) {
-					return true;
-				}
-			}
-
-			return false;
-		},
-
 		/*
-		get a list of squares reachable from "from" by a piece of type "type", including
+		get a list of squares reachable by a piece of the given type and colour, including
 		all pawn moves and castling, without taking into account any other information or
 		rules such as not moving through other pieces, moving into check, capturing own
 		pieces or any castling rules other than "moving the king two squares to the left
@@ -339,111 +331,6 @@ define(function(require) {
 			}
 
 			return squares;
-		},
-
-		getAttackers: function(board, type, square, colour) {
-			/*
-			king and pawn attacks are different to their normal moves (kings
-			aren't attacking the squares they can castle to)
-			*/
-
-			if(type===Piece.PAWN) {
-				return Chess.getPawnAttackers(board, square, colour);
-			}
-
-			else if(type===Piece.KING) {
-				return Chess.getKingAttackers(board, square, colour);
-			}
-
-			/*
-			the rest can all use getReachableSquares
-			*/
-
-			else {
-				var attackers=[];
-				var piece=Piece.getPiece(type, colour);
-				var candidateSquares=Chess.getReachableSquares(type, square, colour);
-				var candidateSquare;
-
-				for(var i=0; i<candidateSquares.length; i++) {
-					candidateSquare=candidateSquares[i];
-
-					if(board[candidateSquare]===piece && !Chess.isBlocked(board, square, candidateSquare)) {
-						attackers.push(candidateSquare);
-					}
-				}
-
-				return attackers;
-			}
-		},
-
-		getPawnAttackers: function(board, square, colour) {
-			var attackers=[];
-			var piece=Piece.getPiece(Piece.PAWN, colour);
-			var playerColour=Chess.getOppColour(colour);
-			var relSquare=Chess.getRelativeSquare(square, playerColour);
-			var relCoords=Chess.coordsFromSquare(relSquare);
-			var xDiffs=[-1, 1];
-			var xDiff;
-			var x, y, candidateSquare;
-
-			for(var i=0; i<xDiffs.length; i++) {
-				xDiff=xDiffs[i];
-				x=relCoords[X]+xDiff;
-				y=relCoords[Y]+1;
-
-				if(x>-1 && x<8 && y>-1 && y<8) {
-					candidateSquare=Chess.getRelativeSquare(Chess.squareFromCoords([x, y]), playerColour);
-
-					if(board[candidateSquare]===piece) {
-						attackers.push(candidateSquare);
-					}
-				}
-			}
-
-			return attackers;
-		},
-
-		getKingAttackers: function(board, square, colour) {
-			var attackers=[];
-			var piece=Piece.getPiece(Piece.KING, colour);
-			var coords=Chess.coordsFromSquare(square);
-			var x, y, candidateSquare;
-
-			for(var xDiff=-1; xDiff<2; xDiff++) {
-				x=coords[X]+xDiff;
-
-				if(x>-1 && x<8) {
-					for(var yDiff=-1; yDiff<2; yDiff++) {
-						y=coords[Y]+yDiff;
-
-						if(y>-1 && y<8) {
-							candidateSquare=Chess.squareFromCoords([x, y]);
-
-							if(board[candidateSquare]===piece) {
-								attackers.push(candidateSquare);
-							}
-						}
-					}
-				}
-			}
-
-			return attackers;
-		},
-
-		getAllAttackers: function(board, square, colour) {
-			var attackers=[];
-			var pieceTypes=[Piece.PAWN, Piece.KNIGHT, Piece.BISHOP, Piece.ROOK, Piece.QUEEN, Piece.KING];
-
-			for(var i=0; i<pieceTypes.length; i++) {
-				attackers=attackers.concat(Chess.getAttackers(board, pieceTypes[i], square, colour));
-			}
-
-			return attackers;
-		},
-
-		elo: function(p, o, s) {
-			return Math.round((p+(((p>-1 && p<2100)?32:((p>2099 && p<2400)?24:16))*(s-(1/(1+(Math.pow(10, ((o-p)/400)))))))));
 		}
 	};
 

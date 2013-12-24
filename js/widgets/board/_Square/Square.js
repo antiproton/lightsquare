@@ -1,4 +1,5 @@
 define(function(require) {
+	require("chess/constants");
 	var Template=require("lib/dom/Template");
 	var Event=require("lib/Event");
 	var Colour=require("chess/Colour");

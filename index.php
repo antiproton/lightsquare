@@ -5,18 +5,10 @@ require_once "include_utils.php";
 <html>
 	<head>
 		<title>Chess</title>
-		<?php
-		style_tags_w("/css/main.css");
-		style_tags_s("/lib/css/reset.css");
-		style_tags_s("/lib/css/common.css");
-		?>
+		<link rel="stylesheet" href="/css/main.css">
 		<script>
 		var global=window;
-		</script>
-		<script src="/lib/js/Function.js"></script>
-		<script src="/lib/js/constants.js"></script>
-		<!-- use regular php (or js version of) loadw/loads here -->
-		<script>
+
 		var require={
 			baseUrl: "js",
 			paths: {
@@ -43,7 +35,6 @@ require_once "include_utils.php";
 				<div id="user">
 					asd
 				</div>
-				<div class="cb i"></div>
 			</div>
 		</div>
 		<div class="main">

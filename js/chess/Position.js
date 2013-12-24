@@ -1,4 +1,5 @@
 define(function(require) {
+	require("chess/constants");
 	var Fen=require("chess/Fen");
 	var CastlingRights=require("chess/CastlingRights");
 	var Board=require("chess/Board");
@@ -7,7 +8,7 @@ define(function(require) {
 	var Piece=require("chess/Piece");
 	var Move=require("chess/Move");
 
-	function Class(fen) {
+	function Position(fen) {
 		this.castlingRights=new CastlingRights();
 		this.board=new Board();
 		this.active=Piece.WHITE;
@@ -24,7 +25,7 @@ define(function(require) {
 		}
 	}
 
-	Class.prototype.setFen=function(str) {
+	Position.prototype.setFen=function(str) {
 		var fen=Fen.fenToArray(str);
 
 		this.active=Colour.getCode(fen[Fen.FIELD_ACTIVE]);
@@ -53,7 +54,7 @@ define(function(require) {
 		this.board.setBoardArray(Fen.fenPositionToBoardArray(fen[Fen.FIELD_POSITION]));
 	}
 
-	Class.prototype.getFen=function() {
+	Position.prototype.getFen=function() {
 		return Fen.arrayToFen([
 			Fen.boardArrayToFenPosition(this.board.getBoardArray()),
 			Colour.getFen(this.active),
@@ -64,11 +65,112 @@ define(function(require) {
 		]);
 	}
 
-	Class.prototype.copy=function() {
-		return new Class(this.getFen());
+	Position.prototype.getAttackers=function(type, square, colour) {
+		/*
+		king and pawn attacks are different to their normal moves (kings
+		aren't attacking the squares they can castle to)
+		*/
+
+		if(type===Piece.PAWN) {
+			return this.getPawnAttackers(square, colour);
+		}
+
+		else if(type===Piece.KING) {
+			return this.getKingAttackers(square, colour);
+		}
+
+		/*
+		the rest can all use getReachableSquares
+		*/
+
+		else {
+			var attackers=[];
+			var piece=Piece.getPiece(type, colour);
+			var candidateSquares=Chess.getReachableSquares(type, square, colour);
+			var candidateSquare;
+
+			for(var i=0; i<candidateSquares.length; i++) {
+				candidateSquare=candidateSquares[i];
+
+				if(this.board.getSquare(candidateSquare)===piece && !this.moveIsBlocked(square, candidateSquare)) {
+					attackers.push(candidateSquare);
+				}
+			}
+
+			return attackers;
+		}
 	}
 
-	Class.prototype.playerIsInCheck=function(colour) {
+	Position.prototype.getPawnAttackers=function(board, square, colour) {
+		var attackers=[];
+		var piece=Piece.getPiece(Piece.PAWN, colour);
+		var playerColour=Chess.getOppColour(colour);
+		var relSquare=Chess.getRelativeSquare(square, playerColour);
+		var relCoords=Chess.coordsFromSquare(relSquare);
+		var xDiffs=[-1, 1];
+		var xDiff;
+		var x, y, candidateSquare;
+
+		for(var i=0; i<xDiffs.length; i++) {
+			xDiff=xDiffs[i];
+			x=relCoords[X]+xDiff;
+			y=relCoords[Y]+1;
+
+			if(x>-1 && x<8 && y>-1 && y<8) {
+				candidateSquare=Chess.getRelativeSquare(Chess.squareFromCoords([x, y]), playerColour);
+
+				if(this.board.getSquare(candidateSquare)===piece) {
+					attackers.push(candidateSquare);
+				}
+			}
+		}
+
+		return attackers;
+	}
+
+	Position.prototype.getKingAttackers=function(board, square, colour) {
+		var attackers=[];
+		var piece=Piece.getPiece(Piece.KING, colour);
+		var coords=Chess.coordsFromSquare(square);
+		var x, y, candidateSquare;
+
+		for(var xDiff=-1; xDiff<2; xDiff++) {
+			x=coords[X]+xDiff;
+
+			if(x>-1 && x<8) {
+				for(var yDiff=-1; yDiff<2; yDiff++) {
+					y=coords[Y]+yDiff;
+
+					if(y>-1 && y<8) {
+						candidateSquare=Chess.squareFromCoords([x, y]);
+
+						if(board[candidateSquare]===piece) {
+							attackers.push(candidateSquare);
+						}
+					}
+				}
+			}
+		}
+
+		return attackers;
+	}
+
+	Position.prototype.getAllAttackers=function(board, square, colour) {
+		var attackers=[];
+		var pieceTypes=[Piece.PAWN, Piece.KNIGHT, Piece.BISHOP, Piece.ROOK, Piece.QUEEN, Piece.KING];
+
+		for(var i=0; i<pieceTypes.length; i++) {
+			attackers=attackers.concat(this.getAttackers(board, pieceTypes[i], square, colour));
+		}
+
+		return attackers;
+	}
+
+	Position.prototype.copy=function() {
+		return new Position(this.getFen());
+	}
+
+	Position.prototype.playerIsInCheck=function(colour) {
 		return (Chess.getAllAttackers(
 			this.board.getBoardArray(),
 			this.board.kingPositions[colour],
@@ -76,11 +178,11 @@ define(function(require) {
 		).length>0);
 	}
 
-	Class.prototype.playerIsMated=function(colour) {
+	Position.prototype.playerIsMated=function(colour) {
 		return (this.playerIsInCheck(colour) && this.countLegalMoves(colour)===0);
 	}
 
-	Class.prototype.canMate=function(colour) {
+	Position.prototype.canMate=function(colour) {
 		var pieces=[];
 		var bishops=[];
 		var knights=[];
@@ -124,7 +226,7 @@ define(function(require) {
 		);
 	}
 
-	Class.prototype.countLegalMoves=function(colour) {
+	Position.prototype.countLegalMoves=function(colour) {
 		var legalMoves=0;
 		var piece;
 
@@ -139,7 +241,7 @@ define(function(require) {
 		return legalMoves;
 	}
 
-	Class.prototype.getLegalMovesFrom=function(square) {
+	Position.prototype.getLegalMovesFrom=function(square) {
 		var legalMoves=[];
 		var piece, reachableSquares;
 
@@ -157,5 +259,17 @@ define(function(require) {
 		return legalMoves;
 	}
 
-	return Class;
+	Position.prototype.moveIsBlocked=function(from, to) {
+		var squares=Chess.getSquaresBetween(from, to);
+
+		for(var i=0; i<squares.length; i++) {
+			if(this.board.getSquare(squares[i])!==Piece.NONE) {
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+	return Position;
 });

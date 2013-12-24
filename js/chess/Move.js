@@ -3,7 +3,7 @@ define(function(require) {
 	var Piece=require("chess/Piece");
 	var MoveLabel=require("chess/MoveLabel");
 
-	function Class(positionBefore, from, to, promoteTo, justCheckingLegality) {
+	function _Move(positionBefore, from, to, promoteTo, justCheckingLegality) {
 		this._positionBefore=positionBefore;
 		this._from=from;
 		this._to=to;
@@ -31,7 +31,7 @@ define(function(require) {
 		this._check();
 	}
 
-	Class.prototype._check=function() {
+	_Move.prototype._check=function() {
 		if(this._piece.type!==Piece.NONE && this._piece.colour===this._colour) {
 			this._label.piece=Fen.getPieceChar(Piece.getPiece(this._piece.type, Piece.WHITE));
 			this._label.to=Chess.getAlgebraicSquare(this._to);
@@ -107,13 +107,13 @@ define(function(require) {
 		}
 	}
 
-	Class.prototype._checkPawnMove=function() {
+	_Move.prototype._checkPawnMove=function() {
 		var capturing=Chess.isPawnCapture(this._relFrom, this._relTo);
 		var validPromotion=false;
 		var promotion=false;
 
 		if(capturing) {
-			this._label.disambiguation=Chess.file_str(this._from);
+			this._label.disambiguation=Chess.fileFromSquare(this._from);
 			this._label.sign=MoveLabel.SIGN_CAPTURE;
 		}
 
@@ -163,7 +163,7 @@ define(function(require) {
 		}
 	}
 
-	Class.prototype._checkCastlingMove=function() {
+	_Move.prototype._checkCastlingMove=function() {
 		this._isCastling=true;
 
 		/*
@@ -182,7 +182,7 @@ define(function(require) {
 		}
 	}
 
-	Class.prototype._check960CastlingMove=function() {
+	_Move.prototype._check960CastlingMove=function() {
 		var backrank=[0, 7][this._colour];
 
 		if(Chess.yFromSquare(this._from)===backrank && Chess.yFromSquare(this._to)===backrank) {
@@ -309,7 +309,7 @@ define(function(require) {
 		}
 	}
 
-	Class.prototype._checkStandardCastlingMove=function() {
+	_Move.prototype._checkStandardCastlingMove=function() {
 		if(this._piece.type===Piece.KING && this._isUnobstructed) {
 			var castling=new CastlingDetails(this._from, this._to);
 
@@ -347,7 +347,7 @@ define(function(require) {
 		}
 	}
 
-	Class.prototype._getDisambiguationString=function() {
+	_Move.prototype._getDisambiguationString=function() {
 		var disambiguationString="";
 
 		//FIXME these calls could be moved into Position probably (using position.board.getBoardArray and a util func ...)
@@ -385,31 +385,31 @@ define(function(require) {
 		return disambiguationString;
 	}
 
-	Class.prototype.isCheck=function() {
+	_Move.prototype.isCheck=function() {
 		return this._positionAfter.playerIsInCheck(this._oppColour);
 	}
 
-	Class.prototype.isMate=function() {
+	_Move.prototype.isMate=function() {
 		return (this.isCheck() && this._positionAfter.countLegalMoves(this._oppColour)===0);
 	}
 
-	Class.prototype.isCastling=function() {
+	_Move.prototype.isCastling=function() {
 		return this._isCastling;
 	}
 
-	Class.prototype.isLegal=function() {
+	_Move.prototype.isLegal=function() {
 		return this._isLegal;
 	}
 
-	Class.prototype.getFullmove=function() {
+	_Move.prototype.getFullmove=function() {
 		return this._positionAfter.fullmove;
 	}
 
-	Class.prototype.getColour=function() {
+	_Move.prototype.getColour=function() {
 		return this._colour;
 	}
 
-	Class.prototype.getDot=function() {
+	_Move.prototype.getDot=function() {
 		var dot=[];
 
 		dot[Piece.WHITE]=".";
@@ -418,13 +418,13 @@ define(function(require) {
 		return dot[this._colour];
 	}
 
-	Class.prototype.getLabel=function() {
+	_Move.prototype.getLabel=function() {
 		return this._label;
 	}
 
-	Class.prototype.getFullLabel=function() {
+	_Move.prototype.getFullLabel=function() {
 		return this.getFullmove()+this.getDot()+" "+this.getLabel();
 	}
 
-	return Class;
+	return _Move;
 });
