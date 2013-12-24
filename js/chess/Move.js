@@ -164,178 +164,25 @@ define(function(require) {
 	}
 
 	_Move.prototype._checkCastlingMove=function() {
-		this._isCastling=true;
-
-		/*
-		FIXME can this be done without Move knowing the variant?  yes; if castling rights and the
-		rook/king aren't on standard home squares, then it's 960.  if they are it might also be
-		960 but might not, so this would allow king captures rook to castle etc. or could tell
-		players that you have to castle normall if they are on normal squares...
-		*/
-
-		if(false /* FIXME something */) {
-			this._check960CastlingMove();
-		}
-
-		else {
-			this._checkStandardCastlingMove();
-		}
-	}
-
-	_Move.prototype._check960CastlingMove=function() {
-		var backrank=[0, 7][this._colour];
-
-		if(Chess.yFromSquare(this._from)===backrank && Chess.yFromSquare(this._to)===backrank) {
-			kingSquare=this._positionBefore.kingPositions[this._colour];
-			rookSquare=null;
-
-			//find out whether it's kingside or queenside based on move direction
-
-			var side;
-
-			if(this._piece.type===Piece.ROOK) {
-				side=(Chess.xFromSquare(this._from)<Chess.xFromSquare(this._to))?CastlingRights.QUEENSIDE:CastlingRights.KINGSIDE;
-			}
-
-			else if(this._piece.type===Piece.KING) {
-				side=(Chess.xFromSquare(this._from)>Chess.xFromSquare(this._to))?CastlingRights.QUEENSIDE:CastlingRights.KINGSIDE;
-			}
-
-			var rookDestinationFile=[5, 3][side];
-			var kingDestinationFile=[6, 2][side];
-			var edge=[7, 0][side];
-
-			//if rook move, rook is on this._from square
-
-			if(this._piece.type===Piece.ROOK) {
-				rookSquare=this._from;
-			}
-
-			//if king move, find rook between edge and king
-
-			else {
-				var rookSquares=Chess.getSquaresBetween(Chess.squareFromCoords([edge, backrank]), kingSquare, true);
-				var sq;
-
-				for(var i=0; i<rookSquares.length; i++) {
-					sq=rookSquares[i];
-
-					if(this._positionBefore.board.getSquare(sq)===Piece.getPiece(Piece.ROOK, this._colour)) {
-						rookSquare=sq;
-
-						break;
-					}
-				}
-			}
-
-			/*
-			this bit finds out which squares to check to see that the only 2 pieces
-			on the bit of the back rank used for castling are the king and the rook
-			*/
-
-			if(rookSquare!==null) {
-				var kingDestination=Chess.squareFromCoords([kingDestinationFile, backrank]);
-				var rookDestination=Chess.squareFromCoords([rookDestinationFile, backrank]);
-
-				var outermostSquare=kingSquare;
-				var innermostSquare=rookSquare;
-
-				var kingFile=Chess.xFromSquare(kingSquare);
-				var rookFile=Chess.xFromSquare(rookSquare);
-
-				if(Math.abs(edge-rookDestinationFile)>Math.abs(edge-kingFile)) { //rook dest is further out
-					outermostSquare=rookDestination;
-				}
-
-				if(Math.abs(edge-kingDestinationFile)<Math.abs(edge-rookFile)) { //king dest is further in
-					innermostSquare=kingDestination;
-				}
-
-				var squares=Chess.getSquaresBetween(innermostSquare, outermostSquare, true);
-
-				var kings=0;
-				var rooks=0;
-				var others=0;
-				var pc;
-
-				for(var i=0; i<squares.length; i++) {
-					sq=squares[i];
-					pc=this._positionBefore.board.getSquare(sq);
-
-					if(pc!==Piece.NONE) {
-						if(pc===Piece.getPiece(Piece.ROOK, this._colour)) {
-							rooks++;
-						}
-
-						else if(pc===Piece.getPiece(Piece.KING, this._colour)) {
-							kings++;
-						}
-
-						else {
-							others++;
-
-							break;
-						}
-					}
-				}
-
-				if(kings===1 && rooks===1 && others===0) {
-					var throughCheck=false;
-					var between=Chess.getSquaresBetween(kingSquare, kingDestination);
-					var n;
-
-					for(var i=0; i<between.length; i++) {
-						n=between[i];
-
-						if(Chess.getAllAttackers(this._positionBefore.board.getBoardArray(), n, this._oppColour).length>0) {
-							throughCheck=true;
-
-							break;
-						}
-					}
-
-					if(!throughCheck) {
-						this._isValid=true;
-						this._label.this._piece="";
-						this._label.to="";
-						this._label.special=CastlingDetails.signs[side];
-						this._boardChanges[kingSquare]=Piece.NONE;
-						this._boardChanges[rookSquare]=Piece.NONE;
-						this._boardChanges[kingDestination]=Piece.getPiece(Piece.KING, this._colour);
-						this._boardChanges[rookDestination]=Piece.getPiece(Piece.ROOK, this._colour);
-					}
-				}
-			}
-		}
-	}
-
-	_Move.prototype._checkStandardCastlingMove=function() {
 		if(this._piece.type===Piece.KING && this._isUnobstructed) {
 			var castling=new CastlingDetails(this._from, this._to);
 
-			if(castling.isValid && this._positionBefore.castlingRights.get(this._colour, castling.Side)) {
+			if(castling.isValid && this._positionBefore.castlingRights.get(this._colour, castling.side)) {
 				var throughCheck=false;
 				var between=Chess.getSquaresBetween(this._from, this._to);
 
 				for(var i=0; i<between.length; i++) {
-					if(Chess.getAllAttackers(
-						this._positionBefore.board.getBoardArray(),
-						between[i],
-						this._oppColour
-					).length>0) {
+					if(this._positionBefore.getAllAttackers(between[i], this._oppColour).length>0) {
 						throughCheck=true;
 
 						break;
 					}
 				}
 
-				if(!Chess.isBlocked(
-					this._positionBefore.board.getBoardArray(),
-					this._from,
-					castling.rookStartPos
-				) && !throughCheck) {
+				if(!this._positionBefore.moveIsBlocked(this._from, castling.rookStartPos) && !throughCheck) {
 					this._isValid=true;
-					this._label.this._piece="";
+					this._isCastling=true;
+					this._label.piece="";
 					this._label.to="";
 					this._label.special=castling.sign;
 					this._boardChanges[this._from]=Piece.NONE;
