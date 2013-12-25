@@ -116,8 +116,8 @@ define(function(require) {
 		if(this._piece.type===Piece.PAWN && this._isUnobstructed) {
 			var capturing=Chess.isPawnCapture(this._relFrom, this._relTo);
 			var enPassant=false;
-			var validPromotion=false;
 			var promotion=false;
+			var validPromotion=false;
 
 			if(Chess.isPawnPromotion(this._relTo)) {
 				promotion=true;
