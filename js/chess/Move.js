@@ -205,7 +205,6 @@ define(function(require) {
 				if(!this._positionBefore.moveIsBlocked(this._from, castling.rookStartPos) && !throughCheck) {
 					this._isValid=true;
 					this._isCastling=true;
-					this._label.to="";
 					this._label.special=castling.sign;
 					this._positionAfter.board.setSquare(this._from, Piece.NONE);
 					this._positionAfter.board.setSquare(this._to, Piece.getPiece(Piece.KING, this._colour));
