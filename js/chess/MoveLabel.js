@@ -1,5 +1,5 @@
 define(function(require) {
-	function Class() {
+	function MoveLabel() {
 		this.piece="";
 		this.disambiguation="";
 		this.sign="";
@@ -9,17 +9,17 @@ define(function(require) {
 		this.notes="";
 	}
 
-	Class.prototype.toString=function() {
+	MoveLabel.prototype.toString=function() {
 		return this.piece+this.disambiguation+this.sign+this.to+this.special+this.check+this.notes;
 	}
 
-	Class.SIGN_CASTLE_KS="O-O";
-	Class.SIGN_CASTLE_QS="O-O-O";
-	Class.SIGN_CAPTURE="x";
-	Class.SIGN_CHECK="+";
-	Class.SIGN_MATE="#";
-	Class.SIGN_PROMOTE="=";
-	Class.SIGN_BUGHOUSE_DROP="@";
+	MoveLabel.SIGN_CASTLE_KS="O-O";
+	MoveLabel.SIGN_CASTLE_QS="O-O-O";
+	MoveLabel.SIGN_CAPTURE="x";
+	MoveLabel.SIGN_CHECK="+";
+	MoveLabel.SIGN_MATE="#";
+	MoveLabel.SIGN_PROMOTE="=";
+	MoveLabel.SIGN_BUGHOUSE_DROP="@";
 
-	return Class;
+	return MoveLabel;
 });

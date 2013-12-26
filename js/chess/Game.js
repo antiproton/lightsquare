@@ -8,7 +8,7 @@ define(function(require) {
 	var Chess=require("chess/Chess");
 	var MoveLabel=require("chess/MoveLabel");
 
-	function Class() {
+	function Game() {
 		this.Moved=new Event(this);
 
 		this.state=GAME_STATE_IN_PROGRESS;
@@ -48,7 +48,7 @@ define(function(require) {
 		});
 	}
 
-	Class.prototype.setStartingFen=function(fen) {
+	Game.prototype.setStartingFen=function(fen) {
 		this.startingPosition.setFen(fen);
 		this.position.setFen(fen);
 		this.history.clear();
@@ -56,11 +56,11 @@ define(function(require) {
 		this.history.setStartingFullmove(this.position.fullmove);
 	}
 
-	Class.prototype.getStartingFen=function() {
+	Game.prototype.getStartingFen=function() {
 		return this.startingPosition.getFen();
 	}
 
-	Class.prototype.move=function(from, to, promoteTo) {
+	Game.prototype.move=function(from, to, promoteTo) {
 		var move=new Move(this.position, from, to);
 		var colour=move.getColour();
 		var oppColour=Chess.getOppColour(colour);
@@ -97,11 +97,11 @@ define(function(require) {
 		return move;
 	}
 
-	Class.prototype.undo=function() {
+	Game.prototype.undo=function() {
 		this.history.undo();
 	}
 
-	Class.prototype._checkTime=function(colour) {
+	Game.prototype._checkTime=function(colour) {
 		if(this.time[colour]<1) {
 			var oppColour=Chess.getOppColour(colour);
 			var result=this.canMate(oppColour)?oppColour:DRAW;
@@ -109,11 +109,11 @@ define(function(require) {
 		}
 	}
 
-	Class.prototype._calculateTime=function() {
+	Game.prototype._calculateTime=function() {
 
 	}
 
-	Class.prototype._checkThreefold=function() {
+	Game.prototype._checkThreefold=function() {
 		var fen=this.position.getFen();
 		var limit=3;
 		var n=0;
@@ -131,12 +131,12 @@ define(function(require) {
 		this.threefoldClaimable=(n>=limit);
 	}
 
-	Class.prototype._gameOver=function(result, result_details) {
+	Game.prototype._gameOver=function(result, result_details) {
 		this.state=GAME_STATE_FINISHED;
 		this.result=result;
 		this.resultDetails=result_details;
 		this.drawOffered=false;
 	}
 
-	return Class;
+	return Game;
 });

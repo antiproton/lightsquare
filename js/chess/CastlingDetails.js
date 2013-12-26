@@ -3,7 +3,7 @@ define(function(require) {
 	var Chess=require("chess/Chess");
 	var MoveLabel=require("chess/MoveLabel");
 
-	function Class(from, to) {
+	function CastlingDetails(from, to) {
 		this.isValid=false;
 		this.side;
 		this.rookStartPos;
@@ -38,13 +38,13 @@ define(function(require) {
 			this.side=side;
 			this.rookStartPos=rookPos[side].start;
 			this.rookEndPos=rookPos[side].end;
-			this.sign=Class.signs[side];
+			this.sign=CastlingDetails.signs[side];
 		}
 	}
 
-	Class.signs=[];
-	Class.signs[CastlingRights.KINGSIDE]=MoveLabel.SIGN_CASTLE_KS;
-	Class.signs[CastlingRights.QUEENSIDE]=MoveLabel.SIGN_CASTLE_QS;
+	CastlingDetails.signs=[];
+	CastlingDetails.signs[CastlingRights.KINGSIDE]=MoveLabel.SIGN_CASTLE_KS;
+	CastlingDetails.signs[CastlingRights.QUEENSIDE]=MoveLabel.SIGN_CASTLE_QS;
 
-	return Class;
+	return CastlingDetails;
 });

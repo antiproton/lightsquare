@@ -2,7 +2,7 @@ define(function(require) {
 	var Chess=require("chess/Chess");
 	var Piece=require("chess/Piece");
 
-	function Class() {
+	function Board() {
 		this._board=[];
 
 		for(var i=0; i<64; i++) {
@@ -14,12 +14,12 @@ define(function(require) {
 		this.kingPositions[Piece.BLACK]=null;
 	}
 
-	Class.prototype.move=function(from, to) {
+	Board.prototype.move=function(from, to) {
 		this.setSquare(to, this.getSquare(from));
 		this.setSquare(from, Piece.NONE);
 	}
 
-	Class.prototype.setSquare=function(square, piece) {
+	Board.prototype.setSquare=function(square, piece) {
 		this._board[square]=piece;
 
 		if(Piece.getType(piece)===Piece.KING) {
@@ -27,25 +27,25 @@ define(function(require) {
 		}
 	}
 
-	Class.prototype.getSquare=function(square) {
+	Board.prototype.getSquare=function(square) {
 		return this._board[square];
 	}
 
-	Class.prototype.setBoardArray=function(board) {
+	Board.prototype.setBoardArray=function(board) {
 		for(var square=0; square<64; square++) {
 			this.setSquare(square, board[square]);
 		}
 	}
 
-	Class.prototype.getBoardArray=function() {
+	Board.prototype.getBoardArray=function() {
 		return this._board;
 	}
 
-	Class.prototype.copy=function(board) {
+	Board.prototype.copy=function(board) {
 		var board=new this.constructor();
 
 		board.setBoardArray(this.getBoardArray());
 	}
 
-	return Class;
+	return Board;
 });
