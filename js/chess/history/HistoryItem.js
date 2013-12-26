@@ -29,16 +29,24 @@ define(function(require) {
 		return item;
 	}
 
-	HistoryItem.prototype._getItemOfType=function(item, type) {
-		return (item!==null && item.itemType===type)?item:null;
-	}
-
 	HistoryItem.prototype.getPreviousVariation=function() {
-		return this._getItemOfType(this._previousItem, HistoryItem.VARIATION);
+		if(this._previousItem!==null && this._previousItem.itemType===HistoryItem.VARIATION) {
+			return this._previousItem;
+		}
+
+		else {
+			return null;
+		}
 	}
 
 	HistoryItem.prototype.getNextVariation=function() {
-		return this._getItemOfType(this._nextItem, HistoryItem.VARIATION);
+		if(this._nextItem!==null && this._nextItem.itemType===HistoryItem.VARIATION) {
+			return this._nextItem;
+		}
+
+		else {
+			return null;
+		}
 	}
 
 	HistoryItem.prototype.getPreviousItem=function() {
