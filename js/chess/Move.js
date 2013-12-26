@@ -23,7 +23,7 @@ define(function(require) {
 		this._capturedPiece=null;
 		this._isUnobstructed=(
 			!this._positionBefore.moveIsBlocked(this._from, this._to)
-			&& (this._targetPiece.type===Piece.NONE || this._targetPiece.colour!==this._colour)
+			&& (this._targetPiece.type===Piece.NONE || this._targetPiece.colour===this._oppColour)
 		);
 		this._isValid=false;
 		this._isLegal=false;
