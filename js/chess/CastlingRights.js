@@ -11,6 +11,13 @@ define(function(require) {
 		this.reset();
 	}
 
+	CastlingRights.KINGSIDE=0;
+	CastlingRights.QUEENSIDE=1;
+
+	CastlingRights._fileFromSide=[];
+	CastlingRights._fileFromSide[CastlingRights.KINGSIDE]=7;
+	CastlingRights._fileFromSide[CastlingRights.QUEENSIDE]=0;
+
 	CastlingRights.prototype.reset=function() {
 		for(var file=0; file<8; file++) {
 			this._rightsByFile[Piece.WHITE][file]=false;
@@ -130,10 +137,6 @@ define(function(require) {
 
 		return fenChar;
 	}
-
-	CastlingRights._fileFromSide=[];
-	CastlingRights._fileFromSide[CastlingRights.KINGSIDE]=7;
-	CastlingRights._fileFromSide[CastlingRights.QUEENSIDE]=0;
 
 	return CastlingRights;
 });
