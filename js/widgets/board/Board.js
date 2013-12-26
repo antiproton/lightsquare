@@ -1,4 +1,5 @@
 define(function(require) {
+	require("lib/Function.implement");
 	require("chess/constants");
 	var Template=require("lib/dom/Template");
 	var create=require("lib/dom/create");
@@ -89,11 +90,11 @@ define(function(require) {
 		this._highlightedSquares[highlightType]=[];
 	}
 
-	Board.prototype.getChessBoardSize=function() {
+	Board.prototype.getBoardSize=function() {
 		return this._squareSize*8;
 	}
 
-	Board.prototype.mouseIsOnChessBoard=function(event, use_offsets, offsets) {
+	Board.prototype.mouseIsOnBoard=function(event, use_offsets, offsets) {
 		offsets=offsets||[this._moveAction.mouseOffsets[X], this._moveAction.mouseOffsets[Y]];
 
 		var x=event.pageX;
@@ -109,9 +110,9 @@ define(function(require) {
 		x-=boardOffsets[X];
 		y-=boardOffsets[Y];
 
-		y=this.getChessBoardSize()-y;
+		y=this.getBoardSize()-y;
 
-		return this._isXyOnChessBoard(x, y);
+		return this._isXyOnBoard(x, y);
 	}
 
 	Board.prototype.setHtmlUpdatesEnabled=function(enabled) {
@@ -153,8 +154,8 @@ define(function(require) {
 		this._updateHtml();
 	}
 
-	Board.prototype.setChessBoardStyle=function(boardStyle) {
-		this._setChessBoardStyle(boardStyle, this._boardStyle);
+	Board.prototype.setBoardStyle=function(boardStyle) {
+		this._setBoardStyle(boardStyle, this._boardStyle);
 	}
 
 	Board.prototype._setupHtml=function() {
@@ -221,7 +222,7 @@ define(function(require) {
 	}
 
 	Board.prototype._updateHtml=function() {
-		var boardSize=this.getChessBoardSize();
+		var boardSize=this.getBoardSize();
 		var borderSize=this._borderWidth*2;
 		var paddingIfSurround=(this._showSurround?this._coordsPadding:0);
 		var paddingIfCoordsOrSurround=(this._showCoords || this._showSurround?this._coordsPadding:0);
@@ -251,12 +252,12 @@ define(function(require) {
 
 		this._updateHtmlCoords();
 		this._updateHtmlSquares();
-		this._setChessBoardStyle();
+		this._setBoardStyle();
 	}
 
 	Board.prototype._updateHtmlCoords=function() {
 		var fileIndex, rankIndex;
-		var boardSize=this.getChessBoardSize();
+		var boardSize=this.getBoardSize();
 		var borderSize=this._borderWidth*2;
 		var paddingIfSurround=(this._showSurround?this._coordsPadding:0);
 
@@ -325,15 +326,15 @@ define(function(require) {
 		}
 	}
 
-	Board.prototype._setChessBoardStyle=function(newStyle, oldStyle) {
+	Board.prototype._setBoardStyle=function(newStyle, oldStyle) {
 		newStyle=newStyle||this._boardStyle;
 		oldStyle=oldStyle||this._boardStyle;
 
-		var oldBoardName="board_"+oldStyle;
-		var newBoardName="board_"+newStyle;
+		var oldBoardClassName="board_"+oldStyle;
+		var newBoardClassName="board_"+newStyle;
 
-		this._template.board.classList.remove(oldBoardName);
-		this._template.board.classList.add(newBoardName);
+		this._template.board.classList.remove(oldBoardClassName);
+		this._template.board.classList.add(newBoardClassName);
 
 		this._boardStyle=newStyle;
 	}
@@ -359,7 +360,7 @@ define(function(require) {
 
 		var os=getOffsets(this._template.board);
 
-		return this._squareFromOffsets(x-os[X], this.getChessBoardSize()-(y-os[Y]));
+		return this._squareFromOffsets(x-os[X], this.getBoardSize()-(y-os[Y]));
 	}
 
 	Board.prototype._squareFromOffsets=function(x, y) {
@@ -388,7 +389,7 @@ define(function(require) {
 	Board.prototype._boardMouseDown=function(event, targetUiSquare) {
 		event.preventDefault();
 
-		if(this.mouseIsOnChessBoard(event)) {
+		if(this.mouseIsOnBoard(event)) {
 			var square=targetUiSquare.getSquare();
 
 			if(!this._moveAction.selected && !this._moveAction.isInProgress && this._board[square]!==Piece.NONE) {
@@ -491,7 +492,7 @@ define(function(require) {
 
 				this.Deselected.fire();
 
-				if(this.mouseIsOnChessBoard(event, true)) {
+				if(this.mouseIsOnBoard(event, true)) {
 					if(square!==this._moveAction.from) {
 						this.UserMove.fire({
 							from: this._moveAction.from,
@@ -554,8 +555,8 @@ define(function(require) {
 		this._updatePieceDragInfo(event);
 	}
 
-	Board.prototype._isXyOnChessBoard=function(x, y) {
-		var boardSize=this.getChessBoardSize();
+	Board.prototype._isXyOnBoard=function(x, y) {
+		var boardSize=this.getBoardSize();
 
 		return !(x<0 || x>boardSize || y<0 || y>boardSize);
 	}
@@ -563,7 +564,7 @@ define(function(require) {
 	Board.prototype._updateMouseOverInfo=function(event) {
 		var square=this._squareFromMouseEvent(event);
 
-		if(this.mouseIsOnChessBoard(event) && square>-1 && square<64) { //mouseIsOnChessBoard doesn't appear to be enough
+		if(this.mouseIsOnBoard(event) && square>-1 && square<64) { //mouseIsOnBoard doesn't appear to be enough
 			if(this._squareMouseCurrentlyOver!=square) {
 				if(this._squareMouseCurrentlyOver!==null) {
 					this.MouseLeavingSquare.fire({
@@ -594,7 +595,7 @@ define(function(require) {
 		var square=this._squareFromMouseEvent(event, true);
 
 		if(this._moveAction.isInProgress && this._moveAction.mode===MoveAction.DRAG) {
-			if(this.mouseIsOnChessBoard(event)) {
+			if(this.mouseIsOnBoard(event)) {
 				if(this._squareCurrentlyDraggingPieceOver!=square) {
 					if(this._squareCurrentlyDraggingPieceOver!==null) {
 						this.PieceLeavingSquare.fire({
