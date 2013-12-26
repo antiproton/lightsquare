@@ -12,7 +12,7 @@ define(function(require) {
 	HistoryItem.prototype.getPreviousMove=function() {
 		var item=this.getPreviousItem();
 
-		while(item && item.itemType!==HistoryItem.MOVE) {
+		while(item!==null && item.itemType!==HistoryItem.MOVE) {
 			item=item.getPreviousItem();
 		}
 
@@ -22,7 +22,7 @@ define(function(require) {
 	HistoryItem.prototype.getNextMove=function() {
 		var item=this.getNextItem();
 
-		while(item && item.itemType!==HistoryItem.MOVE) {
+		while(item!==null && item.itemType!==HistoryItem.MOVE) {
 			item=item.getNextItem();
 		}
 
