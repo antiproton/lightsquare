@@ -13,11 +13,11 @@ define(function(require) {
 
 
 	Move.prototype.select=function() {
-		this.isSelected=true;
+		this._isSelected=true;
 	}
 
 	Move.prototype.deselect=function() {
-		this.isSelected=false;
+		this._isSelected=false;
 	}
 
 	Move.prototype.isSelected=function() {
