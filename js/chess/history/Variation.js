@@ -5,54 +5,55 @@ define(function(require) {
 	var Chess=require("chess/Chess");
 	var Piece=require("chess/Piece");
 
+	/*
+	FIXME make the moveList a MoveList.  fuck indexes.  moveList.each should use
+	the linked-list pointers internally.  then moveList.eachMove can be used to
+	get only the moves as well.
+
+	then .. fuck movelist altogether - it was only there to contain the moves.
+
+	variation can act as the linked list.
+	*/
+
 	function Variation() {
 		HistoryItem.call(this);
 
 		this.itemType=HistoryItem.VARIATION;
-
-		this._startingFullmove=1;
-		this._startingColour=Piece.WHITE;
-
 		this.moveList=this._createMoveList();
 	}
 
 	Variation.implement(HistoryItem);
 
-	Variation.prototype.getStartingFullmove=function() {
-		return this._startingFullmove;
-	}
-
-	Variation.prototype.setStartingFullmove=function(fullmove) {
-		this._startingFullmove=fullmove;
-		//TODO clear the history
-	}
-
-	Variation.prototype.getStartingColour=function() {
-		return this._startingColour;
-	}
-
-	Variation.prototype.setStartingColour=function(colour) {
-		this._startingColour=colour;
-		//TODO clear the history
-	}
-
 	Variation.prototype.getFirstMove=function() {
-		//...
+		return this.moveList.firstItem();
 	}
 
 	Variation.prototype.getLastMove=function() {
-		//...
+		var lastItem=this.moveList.lastItem();
+		var move=null;
+
+		if(lastItem!==null) {
+			if(lastItem.itemType===HistoryItem.VARIATION) {
+				move=lastItem.getBranchMove();
+			}
+
+			else {
+				move=lastItem;
+			}
+		}
+
+		return move;
 	}
 
 	Variation.prototype.getBranchMove=function() {
-		if(this.isMainline()) {
-			return null;
-		}
-
-		else {
-			//...
-		}
+		return this.getPreviousMove();
 	}
+
+	/*
+	NOTE variations are chop-up able by the history.  they can be put in invalid states,
+	e.g. adding a move somewhere that puts the fullmoves in the wrong sequence or makes
+	it go two black moves consecutively.
+	*/
 
 	Variation.prototype.insert=function(item, index) {
 		var prevItem=this.moveList.item(index-1);
@@ -67,8 +68,6 @@ define(function(require) {
 		}
 
 		item.setVariation(this);
-
-		//FIXME make it so that moves can only ever be added at the end of variations (there is never a reason to add one in the middle somewhere - either it is overwriting or it is in a new variation)
 
 		item.setPreviousItem(prevItem);
 		item.setNextItem(nextItem);

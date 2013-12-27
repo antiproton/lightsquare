@@ -5,8 +5,6 @@ define(function(require) {
 	var Piece=require("chess/Piece");
 
 	function History() {
-		this._startingColour=Piece.WHITE;
-		this._startingFullmove=1;
 		this.selectedMove=null;
 		this.editMode=History.EDIT_MODE_BRANCH;
 		this.mainLine=this.createVariation();
@@ -20,24 +18,6 @@ define(function(require) {
 	History.EDIT_MODE_OVERWRITE=1;
 	History.EDIT_MODE_BRANCH=2;
 	History.EDIT_MODE_APPEND=3;
-
-	History.prototype.getStartingFullmove=function() {
-		return this._startingFullmove;
-	}
-
-	History.prototype.setStartingFullmove=function(fullmove) {
-		this._startingFullmove=fullmove;
-		this.mainLine.setStartingFullmove(fullmove);
-	}
-
-	History.prototype.getStartingColour=function() {
-		return this._startingColour;
-	}
-
-	History.prototype.setStartingColour=function(colour) {
-		this._startingColour=colour;
-		this.mainLine.setStartingColour(colour);
-	}
 
 	History.prototype.promoteCurrentVariation=function() {
 		var variation=this.mainLine;
