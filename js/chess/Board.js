@@ -42,7 +42,7 @@ define(function(require) {
 	}
 
 	Board.prototype.copy=function(board) {
-		var board=new this.constructor();
+		var board=new Board();
 
 		board.setBoardArray(this.getBoardArray());
 	}
