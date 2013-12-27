@@ -65,39 +65,17 @@ define(function(require) {
 		]);
 	}
 
-	Position.prototype.getAttackers=function(type, square, colour) {
-		/*
-		king and pawn attacks are different to their normal moves (kings
-		aren't attacking the squares they can castle to)
-		*/
-
-		if(type===Piece.PAWN) {
+	Position.prototype.getAttackers=function(pieceType, square, colour) {
+		if(pieceType===Piece.PAWN) {
 			return this.getPawnAttackers(square, colour);
 		}
 
-		else if(type===Piece.KING) {
+		else if(pieceType===Piece.KING) {
 			return this.getKingAttackers(square, colour);
 		}
 
-		/*
-		the rest can all use getReachableSquares
-		*/
-
 		else {
-			var attackers=[];
-			var piece=Piece.getPiece(type, colour);
-			var candidateSquares=Chess.getReachableSquares(type, square, colour);
-			var candidateSquare;
-
-			for(var i=0; i<candidateSquares.length; i++) {
-				candidateSquare=candidateSquares[i];
-
-				if(this.board.getSquare(candidateSquare)===piece && !this.moveIsBlocked(square, candidateSquare)) {
-					attackers.push(candidateSquare);
-				}
-			}
-
-			return attackers;
+			return this.getRegularAttackers(pieceType, square, colour);
 		}
 	}
 
@@ -149,6 +127,23 @@ define(function(require) {
 						}
 					}
 				}
+			}
+		}
+
+		return attackers;
+	}
+
+	Position.prototype.getRegularAttackers=function(pieceType, square, colour) {
+		var attackers=[];
+		var piece=Piece.getPiece(pieceType, colour);
+		var candidateSquares=Chess.getReachableSquares(pieceType, square, colour);
+		var candidateSquare;
+
+		for(var i=0; i<candidateSquares.length; i++) {
+			candidateSquare=candidateSquares[i];
+
+			if(this.board.getSquare(candidateSquare)===piece && !this.moveIsBlocked(square, candidateSquare)) {
+				attackers.push(candidateSquare);
 			}
 		}
 
