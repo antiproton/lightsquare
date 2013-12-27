@@ -50,8 +50,6 @@ define(function(require) {
 		this.startingPosition.setFen(fen);
 		this.position.setFen(fen);
 		this.history.clear();
-		this.history.setStartingColour(this.position.active);
-		this.history.setStartingFullmove(this.position.fullmove);
 	}
 
 	Game.prototype.getStartingFen=function() {
