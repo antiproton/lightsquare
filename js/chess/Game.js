@@ -9,8 +9,6 @@ define(function(require) {
 	var MoveLabel=require("chess/MoveLabel");
 
 	function Game() {
-		this.Moved=new Event(this);
-
 		this.state=GAME_STATE_IN_PROGRESS;
 		this.timeStart=time();
 		this.timeFinish=null;
@@ -85,12 +83,10 @@ define(function(require) {
 				if(this.positionBefore.fiftymoveClock>49) {
 					this.fiftymoveClaimable=true;
 				}
-
 			}
 
 			if(this.history.move(move)) {
 				this._checkThreefold();
-				this.Moved.fire();
 			}
 		}
 
