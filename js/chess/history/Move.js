@@ -2,15 +2,15 @@ define(function(require) {
 	require("lib/Function.implement");
 	var HistoryItem=require("chess/history/HistoryItem");
 
-	function Move() {
+	function Move(move) {
 		HistoryItem.call(this);
+
 		this.itemType=HistoryItem.MOVE;
+		this._move=move;
 		this._isSelected=false;
-		this._label="";
-
 	}
-	Move.implement(HistoryItem);
 
+	Move.implement(HistoryItem);
 
 	Move.prototype.select=function() {
 		this._isSelected=true;
@@ -24,11 +24,25 @@ define(function(require) {
 		return this._isSelected;
 	}
 
-	Move.prototype.setLabel=function(label) {
-		this._label=label;
+	Move.prototype.getFullmove=function() {
+		return this._move.getFullmove();
 	}
 
-	Move.implement(HistoryItem);
+	Move.prototype.getColour=function() {
+		return this._move.getColour();
+	}
+
+	Move.prototype.getDot=function() {
+		return this._move.getDot();
+	}
+
+	Move.prototype.getLabel=function() {
+		return this._move.getLabel();
+	}
+
+	Move.prototype.getFullLabel=function() {
+		return this._move.getFullLabel();
+	}
 
 	return Move;
 });
