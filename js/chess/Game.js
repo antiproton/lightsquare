@@ -36,7 +36,7 @@ define(function(require) {
 
 		this.history.SelectedMoveChanged.addHandler(this, function(data) {
 			if(data.move!==null) {
-				this.position.setFen(data.move.resultingFen);
+				this.position.setFen(data.move.getResultingFen());
 			}
 
 			else {
