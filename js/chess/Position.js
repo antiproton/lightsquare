@@ -58,7 +58,7 @@ define(function(require) {
 		return Fen.arrayToFen([
 			Fen.boardArrayToFenPosition(this.board.getBoardArray()),
 			Colour.getFen(this.active),
-			this.castlingRights.getFenString(),
+			this.castlingRights.getFenStringBySide(),
 			(this.epTarget===null)?Fen.NONE:Chess.algebraicFromSquare(this.epTarget),
 			this.fiftymoveClock.toString(),
 			this.fullmove.toString()
