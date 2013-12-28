@@ -8,6 +8,7 @@ define(function(require) {
 
 		this._parentFullmove=null;
 		this._template=new Template(html);
+		this._template.root.innerHTML=this.getLabel();
 		this.node=this._template.root;
 	}
 
