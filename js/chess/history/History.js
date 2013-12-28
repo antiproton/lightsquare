@@ -172,15 +172,15 @@ define(function(require) {
 
 	History.prototype.clear=function() {
 		if(this.mainLine.firstMove!==null) {
-			this.mainLine.deleteMove(this.mainLine.firstMove);
+			this.mainLine.deleteMove(this.mainLine.getFirstMove());
 		}
 
 		this.deselect();
 	}
 
 	History.prototype.undo=function() {
-		this.mainLine.remove(this.mainLine.lastMove);
-		this.select(this.mainLine.lastMove);
+		this.mainLine.remove(this.mainLine.getLastMove());
+		this.select(this.mainLine.getLastMove());
 	}
 
 	History.prototype.select=function(move) {
@@ -207,8 +207,8 @@ define(function(require) {
 		return new Variation();
 	}
 
-	History.prototype.createMove=function() {
-		return new Move();
+	History.prototype.createMove=function(move) {
+		return new Move(move);
 	}
 
 	return History;
