@@ -1,31 +1,31 @@
 define(function(require) {
-	var History=require("../_History");
+	var Base=require("../_History");
 	var Variation=require("./_Variation/Variation");
 	var Move=require("./_Move/Move");
 	var Template=require("lib/dom/Template");
 	require("css@./resources/history.css");
 	var html=require("file@./resources/history.html");
 
-	function Class(parent) {
-		History.call(this);
+	function History(parent) {
+		Base.call(this);
 
 		this._template=new Template(html, parent);
 		this._template.root.appendChild(this.mainLine.node);
 	}
 
-	Class.implement(Base);
+	History.implement(Base);
 
-	Class.prototype.createMove=function() {
-		var move=new Move();
+	History.prototype.createMove=function(move) {
+		var move=new Move(move);
 
 		this._setupMove(move);
 
 		return move;
 	}
 
-	Class.prototype.createVariation=function() {
+	History.prototype.createVariation=function() {
 		return new Variation();
 	}
 
-	return Class;
+	return History;
 });
