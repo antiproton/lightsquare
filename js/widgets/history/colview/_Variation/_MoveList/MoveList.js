@@ -14,11 +14,6 @@ define(function(require, exports, module) {
 
 	MoveList.implement(List);
 
-	MoveList.prototype.setStartingFullmove=function(fullmove) {
-		this._startingFullmove=fullmove;
-		this._updateFullmoves();
-	}
-
 	MoveList.prototype.insert=function(move) {
 		this.add(move);
 	}
