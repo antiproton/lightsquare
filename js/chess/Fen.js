@@ -3,7 +3,7 @@ define(function(require) {
 
 	function Fen(fenString) {
 		fenString=fenString||Fen.STARTING_FEN;
-		
+
 		var array=fenString.split(/\s+/);
 
 		this.position=array[0];
@@ -50,7 +50,7 @@ define(function(require) {
 		return Fen._pieceChars[piece];
 	}
 
-	Fen.fenPositionToBoardArray=function(fenPosition) {
+	Fen.boardArrayFromFenPosition=function(fenPosition) {
 		var board=[];
 		var ranks=fenPosition.split("/").reverse();
 		var rank, ch;
@@ -76,7 +76,7 @@ define(function(require) {
 		return board;
 	}
 
-	Fen.boardArrayToFenPosition=function(board) {
+	Fen.fenPositionFromBoardArray=function(board) {
 		var fenRanks=[];
 		var ranks=[];
 

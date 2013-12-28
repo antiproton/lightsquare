@@ -42,13 +42,13 @@ define(function(require) {
 		this.fiftymoveClock=parseInt(fen.fiftymoveClock);
 		this.fullmove=parseInt(fen.fullmove);
 
-		this.board.setBoardArray(Fen.fenPositionToBoardArray(fen.position));
+		this.board.setBoardArray(Fen.boardArrayFromFenPosition(fen.position));
 	}
 
 	Position.prototype.getFen=function() {
 		var fen=new Fen();
 
-		fen.position=Fen.boardArrayToFenPosition(this.board.getBoardArray());
+		fen.position=Fen.fenPositionFromBoardArray(this.board.getBoardArray());
 		fen.active=Colour.getFen(this.active);
 		fen.castlingRights=this.castlingRights.getFenStringBySide();
 
