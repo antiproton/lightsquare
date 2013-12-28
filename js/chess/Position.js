@@ -176,7 +176,7 @@ define(function(require) {
 		return (this.playerIsInCheck(colour) && this.countLegalMoves(colour)===0);
 	}
 
-	Position.prototype.canMate=function(colour) {
+	Position.prototype.playerCanMate=function(colour) {
 		var pieces=[];
 		var bishops=[];
 		var knights=[];
