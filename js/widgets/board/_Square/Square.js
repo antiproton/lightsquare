@@ -15,6 +15,7 @@ define(function(require) {
 		this._template=new Template(html, parent);
 		this._square=square;
 		this._size=size||Square.DEFAULT_SIZE;
+		this._squareStyle=Square.styles.blue;
 		this._highlightType=Square.HIGHLIGHT_NONE;
 
 		this.MouseDown=new Event(this);
@@ -22,6 +23,12 @@ define(function(require) {
 
 		this._setupHtml();
 	}
+
+	Square.styles={
+		brown: "brown",
+		green: "green",
+		blue: "blue"
+	};
 
 	Square.DEFAULT_SIZE=Piece.DEFAULT_SIZE;
 
@@ -62,6 +69,12 @@ define(function(require) {
 		this._piece.setStyle(pieceStyle);
 	}
 
+	Square.prototype.setSquareStyle=function(squareStyle) {
+		this._template.root.classList.remove("board_square_"+this._squareStyle);
+		this._squareStyle=squareStyle;
+		this._template.root.classList.add("board_square_"+this._squareStyle);
+	}
+
 	Square.prototype.setZIndexAbove=function() {
 		this._template.root.style.zIndex=2;
 	}
@@ -95,9 +108,10 @@ define(function(require) {
 
 	Square.prototype._setupHtml=function() {
 		var self=this;
-		var colourName=Colour.getName(Chess.getSquareColour(this._square)); //FIXME should be Square.getColour or something.  no need for Chess.getSquareColour and it needn't be WHITE or BLACK either
+		var colourName=Colour.getName(Chess.getSquareColour(this._square));
 
 		this._template.root.classList.add("board_square_"+colourName);
+		this._template.root.classList.add("board_square_"+this._squareStyle);
 
 		this._template.piece.addEventListener("mousedown", function(event) {
 			self.MouseDown.fire({

@@ -7,6 +7,7 @@ define(function(require) {
 	var Table=require("widgets/table/standard/Table");
 	var g=require("lib/dom/byId");
 	var MoveLabel=require("chess/MoveLabel");
+	var Board=require("widgets/board/Board");
 
 	var table=new Table(g("table"));
 
@@ -23,7 +24,9 @@ define(function(require) {
 
 	var move=history.createMove();
 
-	table.board.setShowSurround(true);
+	table.board.setShowSurround(false);
+
+	table.board.setSquareStyle(Board.squareStyles.green);
 
 	history.move(move);
 });

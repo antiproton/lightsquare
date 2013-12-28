@@ -52,11 +52,3 @@
 .board_coord.board_rank{
 	margin-top: 1px;
 }
-
-.board_board.board_brown .board_square_white{
-	background-color: #f0d9b5;
-}
-
-.board_board.board_brown .board_square_black{
-	background-color: #b58863;
-}

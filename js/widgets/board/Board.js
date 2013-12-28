@@ -22,11 +22,10 @@ define(function(require) {
 		this.UserMove=new Event(this);
 		this.DragDrop=new Event(this);
 		this.DragPiece=new Event(this);
-		this.MouseOver=new Event(this);
 		this.PieceDraggedOff=new Event(this);
 		this.SquareClicked=new Event(this);
 		this.SelectPiece=new Event(this);
-		this.PieceSelected=new Event(this); //fires after SelectPiece if no one cancels it
+		this.PieceSelected=new Event(this);
 		this.Deselected=new Event(this);
 		this.MouseOverSquare=new Event(this);
 		this.MouseLeavingSquare=new Event(this);
@@ -39,7 +38,6 @@ define(function(require) {
 		this._squareMouseCurrentlyOver=null;
 		this._squareCurrentlyDraggingPieceOver=null;
 
-		this._boardStyle=Board.STYLE_BROWN;
 		this._viewingAs=Piece.WHITE;
 		this._showSurround=false;
 		this._showCoords=true;
@@ -54,9 +52,7 @@ define(function(require) {
 
 	Board.implement(ChessBoard);
 
-	Board.STYLE_BROWN="brown";
-	Board.STYLE_GREEN="green";
-	Board.STYLE_BLUE="blue";
+	Board.squareStyles=Square.styles;
 
 	Board.prototype.setSquare=function(square, piece) {
 		ChessBoard.prototype.setSquare.call(this, square, piece);
@@ -67,7 +63,7 @@ define(function(require) {
 	}
 
 	Board.prototype.highlightSquares=function(squares, highlightType) {
-		if(!is_array(squares)) {
+		if(!(squares instanceof Array)) {
 			squares=[squares];
 		}
 
@@ -84,7 +80,7 @@ define(function(require) {
 
 	Board.prototype.unhighlightSquares=function(highlightType) {
 		for(var i=0; i<this._highlightedSquares[highlightType].length; i++) {
-			this._uiSquares[this._highlightedSquares[highlightType][i]].setHighlight(Board.HIGHLIGHT_NONE);
+			this._uiSquares[this._highlightedSquares[highlightType][i]].setHighlight(Square.HIGHLIGHT_NONE);
 		}
 
 		this._highlightedSquares[highlightType]=[];
@@ -94,13 +90,13 @@ define(function(require) {
 		return this._squareSize*8;
 	}
 
-	Board.prototype.mouseIsOnBoard=function(event, use_offsets, offsets) {
+	Board.prototype.mouseIsOnBoard=function(event, useOffsets, offsets) {
 		offsets=offsets||[this._moveAction.mouseOffsets[X], this._moveAction.mouseOffsets[Y]];
 
 		var x=event.pageX;
 		var y=event.pageY;
 
-		if(use_offsets) {
+		if(useOffsets) {
 			x+=(Math.round(this._squareSize/2)-offsets[X]);
 			y+=(Math.round(this._squareSize/2)-offsets[Y]);
 		}
@@ -129,6 +125,12 @@ define(function(require) {
 		}
 	}
 
+	Board.prototype.setSquareStyle=function(squareStyle) {
+		for(var square=0; square<64; square++) {
+			this._uiSquares[square].setSquareStyle(squareStyle);
+		}
+	}
+
 	Board.prototype.setSquareSize=function(squareSize) {
 		this._squareSize=squareSize;
 		this._updateHtml();
@@ -152,10 +154,6 @@ define(function(require) {
 	Board.prototype.setViewingAs=function(colour) {
 		this._viewingAs=colour;
 		this._updateHtml();
-	}
-
-	Board.prototype.setBoardStyle=function(boardStyle) {
-		this._setBoardStyle(boardStyle, this._boardStyle);
 	}
 
 	Board.prototype._setupHtml=function() {
@@ -252,7 +250,6 @@ define(function(require) {
 
 		this._updateHtmlCoords();
 		this._updateHtmlSquares();
-		this._setBoardStyle();
 	}
 
 	Board.prototype._updateHtmlCoords=function() {
@@ -326,19 +323,6 @@ define(function(require) {
 		}
 	}
 
-	Board.prototype._setBoardStyle=function(newStyle, oldStyle) {
-		newStyle=newStyle||this._boardStyle;
-		oldStyle=oldStyle||this._boardStyle;
-
-		var oldBoardClassName="board_"+oldStyle;
-		var newBoardClassName="board_"+newStyle;
-
-		this._template.board.classList.remove(oldBoardClassName);
-		this._template.board.classList.add(newBoardClassName);
-
-		this._boardStyle=newStyle;
-	}
-
 	Board.prototype._setHtmlSquare=function(square, piece) {
 		this._uiSquares[square].setPiece(piece);
 	}
@@ -349,11 +333,11 @@ define(function(require) {
 		}
 	}
 
-	Board.prototype._squareFromMouseEvent=function(e, use_moveinfo_offsets) {
+	Board.prototype._squareFromMouseEvent=function(e, useMoveActionOffsets) {
 		var x=e.pageX;
 		var y=e.pageY;
 
-		if(use_moveinfo_offsets) { //get the square that the middle of the piece is over
+		if(useMoveActionOffsets) { //get the square that the middle of the piece is over
 			x+=(Math.round(this._squareSize/2)-this._moveAction.mouseOffsets[X]);
 			y+=(Math.round(this._squareSize/2)-this._moveAction.mouseOffsets[Y]);
 		}
