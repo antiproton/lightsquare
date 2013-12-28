@@ -4,7 +4,7 @@ define(function(require) {
 	function Fen(fenString) {
 		fenString=fenString||Fen.STARTING_FEN;
 
-		var array=fenString.split(/\s+/);
+		var array=fenString.split(" ");
 
 		this.position=array[0];
 		this.active=array[1];
