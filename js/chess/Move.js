@@ -251,6 +251,10 @@ define(function(require) {
 		return disambiguationString;
 	}
 
+	Move.prototype.getPositionAfter=function() {
+		return this._positionAfter;
+	}
+
 	Move.prototype.isCheck=function() {
 		return this._positionAfter.playerIsInCheck(this._oppColour);
 	}
