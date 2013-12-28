@@ -41,10 +41,12 @@ define(function(require) {
 		return this._board;
 	}
 
-	Board.prototype.copy=function(board) {
+	Board.prototype.getCopy=function(board) {
 		var board=new Board();
 
 		board.setBoardArray(this.getBoardArray());
+
+		return board;
 	}
 
 	return Board;
