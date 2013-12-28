@@ -20,9 +20,9 @@ define(function(require) {
 
 	var history=table.history;
 
-	game.move(8, 16);
+	var move=game.move(8, 16);
 
-	var move=history.createMove();
+	var historyMove=history.createMove(move);
 
 	table.board.setShowSurround(false);
 
