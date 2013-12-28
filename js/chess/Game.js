@@ -56,7 +56,7 @@ define(function(require) {
 	}
 
 	Game.prototype.move=function(from, to, promoteTo) {
-		var move=new Move(this.position, from, to);
+		var move=new Move(this.position, from, to, promoteTo);
 		var colour=move.getColour();
 		var oppColour=Chess.getOppColour(colour);
 
