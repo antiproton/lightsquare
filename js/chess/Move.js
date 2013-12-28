@@ -10,7 +10,7 @@ define(function(require) {
 		this._to=to;
 		this._promoteTo=promoteTo||Piece.QUEEN;
 		this._justCheckingLegality=justCheckingLegality||false;
-		this._positionAfter=this._positionBefore.copy();
+		this._positionAfter=this._positionBefore.getCopy();
 		this._piece=new Piece(this._positionBefore.board.getSquare(this._from));
 		this._targetPiece=new Piece(this._positionBefore.board.getSquare(this._to));
 		this._colour=this._positionBefore.active;
