@@ -26,7 +26,6 @@ define(function(require) {
 		this.timingOvertimeCutoff=40;
 		this.timingOvertimeIncrement=600;
 		this.threefoldClaimable=false;
-		this.fiftymoveClaimable=false;
 		this.drawOffered=false;
 		this.rated=true;
 
@@ -76,10 +75,6 @@ define(function(require) {
 
 				if(this.position.countLegalMoves(oppColour)===0 && this.type!==GAME_TYPE_BUGHOUSE) {
 					this._gameOver(RESULT_DRAW, RESULT_DETAILS_STALEMATE);
-				}
-
-				if(this.positionBefore.fiftymoveClock>49) {
-					this.fiftymoveClaimable=true;
 				}
 			}
 
@@ -132,6 +127,10 @@ define(function(require) {
 		this.result=result;
 		this.resultDetails=result_details;
 		this.drawOffered=false;
+	}
+
+	Game.prototype.fiftymoveIsClaimable=function() {
+		return (this.position.fiftymoveClock>49);
 	}
 
 	return Game;
