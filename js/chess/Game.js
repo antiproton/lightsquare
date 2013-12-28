@@ -6,7 +6,7 @@ define(function(require) {
 	var History=require("chess/history/History");
 	var PiecesTaken=require("chess/PiecesTaken");
 	var Chess=require("chess/Chess");
-	var MoveLabel=require("chess/MoveLabel");
+	var Move=require("chess/Move");
 
 	function Game() {
 		this.state=GAME_STATE_IN_PROGRESS;
