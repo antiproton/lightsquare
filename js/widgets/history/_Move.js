@@ -2,8 +2,8 @@ define(function(require) {
 	var Base=require("chess/history/Move");
 	var Event=require("lib/Event");
 
-	function Move() {
-		Base.call(this);
+	function Move(move) {
+		Base.call(this, move);
 
 		this.UserSelect=new Event(this);
 	}

@@ -3,8 +3,8 @@ define(function(require) {
 	var Base=require("../../_Move");
 	var html=require("file@./resources/move.html");
 
-	function Move() {
-		Base.call(this);
+	function Move(move) {
+		Base.call(this, move);
 
 		this._parentFullmove=null;
 		this._template=new Template(html);
@@ -12,12 +12,6 @@ define(function(require) {
 	}
 
 	Move.implement(Base);
-
-	Move.prototype.setLabel=function(label) {
-		Base.prototype.setLabel.call(this, label);
-
-		this.node.innerHTML=label;
-	}
 
 	Move.prototype.isFullmoveDisplayed=function() {
 		return false;
