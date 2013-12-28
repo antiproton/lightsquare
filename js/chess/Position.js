@@ -160,7 +160,7 @@ define(function(require) {
 		return attackers;
 	}
 
-	Position.prototype.copy=function() {
+	Position.prototype.getCopy=function() {
 		return new Position(this.getFen());
 	}
 

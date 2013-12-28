@@ -51,7 +51,7 @@ define(function(require) {
 			}
 
 			if(this._justCheckingLegality) {
-				this._positionAfter=this._positionBefore.copy();
+				this._positionAfter=this._positionBefore.getCopy();
 			}
 
 			else if(this._isLegal) {
