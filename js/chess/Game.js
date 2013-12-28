@@ -70,7 +70,7 @@ define(function(require) {
 			}
 
 			else {
-				if(!this.canMate(Piece.WHITE) && !this.canMate(Piece.BLACK)) {
+				if(!this.position.playerCanMate(Piece.WHITE) && !this.position.playerCanMate(Piece.BLACK)) {
 					this._gameOver(RESULT_DRAW, RESULT_DETAILS_INSUFFICIENT);
 				}
 
@@ -83,7 +83,9 @@ define(function(require) {
 				}
 			}
 
-			if(this.history.move(move)) {
+			var historyMove=this.history.createMove(move);
+
+			if(this.history.move(historyMove)) {
 				this._checkThreefold();
 			}
 		}
