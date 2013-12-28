@@ -166,8 +166,7 @@ define(function(require) {
 	}
 
 	Position.prototype.playerIsInCheck=function(colour) {
-		return (Chess.getAllAttackers(
-			this.board.getBoardArray(),
+		return (this.getAllAttackers(
 			this.board.kingPositions[colour],
 			Chess.getOppColour(colour)
 		).length>0);
