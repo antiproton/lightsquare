@@ -12,21 +12,14 @@ define(function(require) {
 	var table=new Table(g("table"));
 
 	table.board.setSquareSize(60);
-
-	var game=new Game();
-
-
+	table.board.setShowSurround(false);
+	table.board.setSquareStyle(Board.squareStyles.green);
 	table.board.setBoardArray(game.position.board.getBoardArray());
 
+	var game=new Game();
 	var history=table.history;
-
 	var move=game.move(8, 16);
-
 	var historyMove=history.createMove(move);
-
-	table.board.setShowSurround(false);
-
-	table.board.setSquareStyle(Board.squareStyles.green);
-
+	
 	history.move(move);
 });
