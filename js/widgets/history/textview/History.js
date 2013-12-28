@@ -16,11 +16,11 @@ define(function(require) {
 	History.implement(Base);
 
 	History.prototype.createMove=function(move) {
-		var move=new Move(move);
+		var historyMove=new Move(move);
 
-		this._setupMove(move);
+		this._setupMove(historyMove);
 
-		return move;
+		return historyMove;
 	}
 
 	History.prototype.createVariation=function() {
