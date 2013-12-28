@@ -2,6 +2,7 @@ define(function(require) {
 	var Chess=require("chess/Chess");
 	var Piece=require("chess/Piece");
 	var MoveLabel=require("chess/MoveLabel");
+	var Fen=require("chess/Fen");
 
 	function Move(positionBefore, from, to, promoteTo, justCheckingLegality) {
 		this._positionBefore=positionBefore;
