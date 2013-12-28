@@ -122,7 +122,7 @@ define(function(require) {
 					if(y>-1 && y<8) {
 						candidateSquare=Chess.squareFromCoords([x, y]);
 
-						if(board[candidateSquare]===piece) {
+						if(this.board.getSquare(candidateSquare)===piece) {
 							attackers.push(candidateSquare);
 						}
 					}
