@@ -10,24 +10,18 @@ define(function(require) {
 
 	var table=new Table(g("table"));
 
-	//table.board.setSquareSize(45);
+	table.board.setSquareSize(60);
 
 	var game=new Game();
 
-
-	console.log(time());
-	//game.move(8, 16);
-	console.log(time());
 
 	table.board.setBoardArray(game.position.board.getBoardArray());
 
 	var history=table.history;
 
-	var move=history.createMove();
-	var label=new MoveLabel();
+	game.move(8, 16);
 
-	label.piece="N";
-	move.setLabel(label);
+	var move=history.createMove();
 
 	table.board.setShowSurround(true);
 
