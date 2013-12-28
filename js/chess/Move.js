@@ -99,7 +99,7 @@ define(function(require) {
 			this._positionAfter.board.setSquare(this._from, Piece.NONE);
 			this._positionAfter.board.setSquare(this._to, this._positionBefore.board.getSquare(this._from));
 			this._label.piece=Fen.getPieceChar(Piece.getPiece(this._piece.type, Piece.WHITE));
-			this._label.to=Chess.getAlgebraicSquare(this._to);
+			this._label.to=Chess.algebraicFromSquare(this._to);
 
 			if(this._piece.type!==Piece.KING) {
 				this._label.disambiguation=this._getDisambiguationString();
@@ -168,7 +168,7 @@ define(function(require) {
 					}
 				}
 
-				this._label.to=Chess.getAlgebraicSquare(this._to);
+				this._label.to=Chess.algebraicFromSquare(this._to);
 				this._positionAfter.board.setSquare(this._from, Piece.NONE);
 
 				if(!promotion) {
