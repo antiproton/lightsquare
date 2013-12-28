@@ -12,9 +12,7 @@ define(function(require) {
 				return this._codeFromName[colour];
 			}
 
-			else {
-				return colour;
-			}
+			return colour;
 		},
 
 		getFen: function(colour) {
