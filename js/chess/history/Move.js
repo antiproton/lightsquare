@@ -44,5 +44,9 @@ define(function(require) {
 		return this._move.getFullLabel();
 	}
 
+	Move.prototype.getResultingFen=function() {
+		return this._move.getResultingFen();
+	}
+
 	return Move;
 });

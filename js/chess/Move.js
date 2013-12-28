@@ -256,6 +256,10 @@ define(function(require) {
 		return this._positionAfter;
 	}
 
+	Move.prototype.getResultingFen=function() {
+		return this._positionAfter.getFen();
+	}
+
 	Move.prototype.isCheck=function() {
 		return this._positionAfter.playerIsInCheck(this._oppColour);
 	}
