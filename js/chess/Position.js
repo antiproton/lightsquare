@@ -9,8 +9,8 @@ define(function(require) {
 	var Move=require("chess/Move");
 
 	function Position(fen) {
-		this.castlingRights=new CastlingRights();
 		this.board=new Board();
+		this.castlingRights=new CastlingRights();
 		this.active=Piece.WHITE;
 		this.epTarget=null;
 		this.fiftymoveClock=0;
@@ -25,44 +25,43 @@ define(function(require) {
 		}
 	}
 
-	Position.prototype.setFen=function(str) {
-		var fen=Fen.fenToArray(str);
+	Position.prototype.setFen=function(fenString) {
+		var fen=new Fen(fenString);
 
-		this.active=Colour.getCode(fen[Fen.FIELD_ACTIVE]);
-		this.castlingRights.setFenString(fen[Fen.FIELD_CASTLING]);
+		this.active=Colour.getCode(fen.active);
+		this.castlingRights.setFenString(fen.castlingRights);
 
-		if(fen[Fen.FIELD_EP]===Fen.NONE) {
+		if(fen.epTarget===Fen.NONE) {
 			this.epTarget=null;
 		}
 
 		else {
-			this.epTarget=Chess.squareFromAlgebraic(fen[Fen.FIELD_EP]);
+			this.epTarget=Chess.squareFromAlgebraic(fen.epTarget);
 		}
 
-		this.fiftymoveClock=0;
+		this.fiftymoveClock=parseInt(fen.fiftymoveClock);
+		this.fullmove=parseInt(fen.fullmove);
 
-		if(fen[Fen.FIELD_CLOCK]) {
-			this.fiftymoveClock=parseInt(fen[Fen.FIELD_CLOCK]);
-		}
-
-		this.fullmove=1;
-
-		if(fen[Fen.FIELD_FULLMOVE]) {
-			this.fullmove=parseInt(fen[Fen.FIELD_FULLMOVE]);
-		}
-
-		this.board.setBoardArray(Fen.fenPositionToBoardArray(fen[Fen.FIELD_POSITION]));
+		this.board.setBoardArray(Fen.fenPositionToBoardArray(fen.position));
 	}
 
 	Position.prototype.getFen=function() {
-		return Fen.arrayToFen([
-			Fen.boardArrayToFenPosition(this.board.getBoardArray()),
-			Colour.getFen(this.active),
-			this.castlingRights.getFenStringBySide(),
-			(this.epTarget===null)?Fen.NONE:Chess.algebraicFromSquare(this.epTarget),
-			this.fiftymoveClock.toString(),
-			this.fullmove.toString()
-		]);
+		var fen=new Fen();
+
+		fen.position=Fen.boardArrayToFenPosition(this.board.getBoardArray());
+		fen.active=Colour.getFen(this.active);
+		fen.castlingRights=this.castlingRights.getFenStringBySide();
+
+		fen.epTarget=Fen.NONE;
+
+		if(this.epTarget!==null) {
+			fen.epTarget=Chess.algebraicFromSquare(this.epTarget);
+		}
+
+		fen.fiftymoveClock=this.fiftymoveClock.toString();
+		fen.fullmove=this.fullmove.toString();
+
+		return fen.toString();
 	}
 
 	Position.prototype.getAttackers=function(pieceType, square, colour) {
