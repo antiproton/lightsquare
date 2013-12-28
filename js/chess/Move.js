@@ -12,7 +12,7 @@ define(function(require) {
 		this._positionAfter=this._positionBefore.copy();
 		this._piece=new Piece(this._positionBefore.board.getSquare(this._from));
 		this._targetPiece=new Piece(this._positionBefore.board.getSquare(this._to));
-		this._colour=this.positionBefore.active;
+		this._colour=this._positionBefore.active;
 		this._oppColour=Chess.getOppColour(this._colour);
 		this._fromCoords=Chess.coordsFromSquare(this._from);
 		this._toCoords=Chess.coordsFromSquare(this._to);
