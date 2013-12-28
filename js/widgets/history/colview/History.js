@@ -31,8 +31,8 @@ define(function(require) {
 		return new Variation();
 	}
 
-	History.prototype.createMove=function() {
-		var move=new Move();
+	History.prototype.createMove=function(move) {
+		var move=new Move(move);
 
 		this._setupMove(move);
 
