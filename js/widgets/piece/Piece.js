@@ -5,26 +5,26 @@ define(function(require) {
 	var Fen=require("chess/Fen");
 	var Piece=require("chess/Piece");
 
-	function Class(parent, size) {
+	function Piece(parent, size) {
 		this._template=new Template(html, parent);
 		this._style="Merida";
 		this._piece=Piece.NONE;
-		this._size=size||Class.DEFAULT_SIZE;
+		this._size=size||Piece.DEFAULT_SIZE;
 		this._setupHtml();
 	}
 
-	Class.styles=[
+	Piece.styles=[
 		"Alpha",
 		"Merida"
 	];
 
-	Class.DEFAULT_SIZE=60;
+	Piece.DEFAULT_SIZE=60;
 
-	Class.prototype._setupHtml=function() {
+	Piece.prototype._setupHtml=function() {
 		this._updateHtml();
 	}
 
-	Class.prototype._updateHtml=function() {
+	Piece.prototype._updateHtml=function() {
 		style(this._template.root, {
 			width: this._size,
 			height: this._size
@@ -33,12 +33,12 @@ define(function(require) {
 		this._updatePiece();
 	}
 
-	Class.prototype.setPiece=function(piece) {
+	Piece.prototype.setPiece=function(piece) {
 		this._piece=piece;
 		this._updatePiece();
 	}
 
-	Class.prototype._updatePiece=function() {
+	Piece.prototype._updatePiece=function() {
 		var backgroundImage="none";
 		var path;
 
@@ -52,7 +52,7 @@ define(function(require) {
 				Fen.getPieceChar(this._piece)+".png"
 			];
 
-			backgroundImage="url("+require.toUrl(path.join("/"))+")";
+			backgroundImage="url('"+require.toUrl(path.join("/"))+"')";
 		}
 
 		if(this._template.root.style.backgroundImage!==backgroundImage) {
@@ -60,15 +60,15 @@ define(function(require) {
 		}
 	}
 
-	Class.prototype.setStlye=function(style) {
+	Piece.prototype.setStyle=function(style) {
 		this._style=style;
 		this._updatePiece();
 	}
 
-	Class.prototype.setSize=function(size) {
+	Piece.prototype.setSize=function(size) {
 		this._size=size;
 		this._updateHtml();
 	}
 
-	return Class;
+	return Piece;
 });
