@@ -11,16 +11,14 @@ define(function(require) {
 	var Position=require("chess/Position");
 	var Piece=require("chess/Piece");
 
-	var game=new Game();
-	var table=new Table(g("table"));
+	game=new Game();
+	table=new Table(g("table"));
 
-	var position=new Position();
-	position.active=Piece.BLACK;
-	position.fullmove=30;
+	var fen="r3kbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR b KQkq - 0 30";
 
-	game.setStartingFen(position.getFen())
+	game.setStartingFen(fen)
 
-	var move=game.move(48, 40);
+	var move=game.move(60, 58);
 	var historyMove=table.history.createMove(move);
 
 	table.history.move(historyMove);
