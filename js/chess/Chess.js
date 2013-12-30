@@ -255,11 +255,17 @@ define(function(require) {
 						for(var iy=0; iy<diffs.length; iy++) {
 							coords=[fromCoords[X], fromCoords[Y]];
 
-							while(coords[X]>0 && coords[X]<7 && coords[Y]>0 && coords[Y]<7) {
+							while(true) {
 								coords[X]+=diffs[ix];
 								coords[Y]+=diffs[iy];
 
-								squares.push(Chess.squareFromCoords([coords[X], coords[Y]]));
+								if(coords[X]>-1 && coords[X]<8 && coords[Y]>-1 && coords[Y]<8) {
+									squares.push(Chess.squareFromCoords(coords));
+								}
+
+								else {
+									break;
+								}
 							}
 						}
 					}
