@@ -3,7 +3,7 @@ define(function(require) {
 	var html=require("file@./resources/piece.html");
 	var style=require("lib/dom/style");
 	var Fen=require("chess/Fen");
-	var Piece=require("chess/Piece");
+	var ChessPiece=require("chess/Piece");
 
 	function Piece(parent, size) {
 		this._template=new Template(html, parent);
@@ -42,7 +42,7 @@ define(function(require) {
 		var backgroundImage="none";
 		var path;
 
-		if(this._piece!==Piece.NONE) {
+		if(this._piece!==ChessPiece.NONE) {
 			path=[
 				".",
 				"resources",
