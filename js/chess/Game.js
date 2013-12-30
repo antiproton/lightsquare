@@ -65,7 +65,7 @@ define(function(require) {
 			this.drawOffered=false;
 
 			if(move.isMate()) {
-				this._gameOver(Result.WinResult[colour], RESULT_DETAILS_CHECKMATE);
+				//this._gameOver(Result.WinResult[colour], RESULT_DETAILS_CHECKMATE);
 			}
 
 			else {
