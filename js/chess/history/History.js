@@ -184,15 +184,7 @@ define(function(require) {
 	}
 
 	History.prototype.select=function(move) {
-		if(this.selectedMove!==null) {
-			this.selectedMove.deselect();
-		}
-
 		this.selectedMove=move;
-
-		if(move!==null) {
-			move.select();
-		}
 
 		this.SelectedMoveChanged.fire({
 			move: this.selectedMove
