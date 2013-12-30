@@ -6,9 +6,10 @@ define(function(require) {
 
 	function Fullmove(parent, fullmove) {
 		this._fullmove=fullmove;
-		this._hasMove=[];
-		this._hasMove[Piece.WHITE]=false;
-		this._hasMove[Piece.BLACK]=false;
+
+		this._moves=[];
+		this._moves[Piece.WHITE]=null;
+		this._moves[Piece.BLACK]=null;
 
 		this._template=new Template(html, parent);
 		this._setupTemplate();
@@ -26,7 +27,7 @@ define(function(require) {
 		var colour=move.getColour();
 
 		this._colourCols[colour].appendChild(move.node);
-		this._hasMove[colour]=true;
+		this._moves[colour]=move;
 
 		move.setParentFullmove(this);
 	}
@@ -35,11 +36,11 @@ define(function(require) {
 		var colour=move.getColour();
 
 		this._colourCols[colour].removeNode(move.node);
-		this._hasMove[colour]=false;
+		this._moves[colour]=null;
 	}
 
 	Fullmove.prototype.isEmpty=function() {
-		return (!this._hasMove[Piece.WHITE] && !this._hasMove[Piece.BLACK]);
+		return (this._moves[Piece.WHITE]===null && !this._moves[Piece.BLACK]===null);
 	}
 
 	return Fullmove;

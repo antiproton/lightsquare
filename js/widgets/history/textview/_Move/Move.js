@@ -1,10 +1,11 @@
 define(function(require) {
-	var Base=require("../../_Move");
+	require("lib/Function.implement");
+	var Base=require("chess/history/Move");
 	var Template=require("lib/dom/Template");
 	var html=require("file@./resources/move.html");
 
-	function Move() {
-		Base.call(this);
+	function Move(move) {
+		Base.call(this, move);
 
 		this._template=new Template(html);
 		this.node=this._template.root;
@@ -18,12 +19,15 @@ define(function(require) {
 		this._updateFullmove();
 	}
 
-	Move.prototype.setHalfmove=function(halfmove) {
-		this._halfmove=halfmove;
-		this._updateFullmove();
-	}
-
 	Move.prototype._updateFullmove=function() {
+
+		/*
+		return (
+				this.getColour()===WHITE
+				|| this===this._variation.getFirstMove()
+				|| this.getPreviousVariation()!==null
+			);
+		*/
 		this._template.fullmove.style.visibility=(this.isFullmoveDisplayed()?"":"hidden");
 		this._template.fullmove.innerHTML=this.getFullmove()+this.getDot();
 	}
