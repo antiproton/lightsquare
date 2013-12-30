@@ -14,14 +14,16 @@ define(function(require) {
 	game=new Game();
 	table=new Table(g("table"));
 
-	var fen="r3kbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR b KQkq - 0 30";
+	var fen="r3kbnr/4pppp/8/8/8/2b5/PPPnPPPP/RNBQKNNR b KQkq - 0 30";
 
 	game.setStartingFen(fen)
 
-	var move=game.move(60, 58);
+	var move=game.move(11, 21);
 	var historyMove=table.history.createMove(move);
 
 	table.history.move(historyMove);
+
+	game.move(4, 5);
 
 	table.board.setSquareSize(60);
 	table.board.setShowSurround(false);
