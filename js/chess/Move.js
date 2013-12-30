@@ -277,7 +277,7 @@ define(function(require) {
 	}
 
 	Move.prototype.getFullmove=function() {
-		return this._positionAfter.fullmove;
+		return this._positionBefore.fullmove;
 	}
 
 	Move.prototype.getColour=function() {
