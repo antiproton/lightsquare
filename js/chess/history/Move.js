@@ -7,22 +7,9 @@ define(function(require) {
 
 		this.itemType=HistoryItem.MOVE;
 		this._move=move;
-		this._isSelected=false;
 	}
 
 	Move.implement(HistoryItem);
-
-	Move.prototype.select=function() {
-		this._isSelected=true;
-	}
-
-	Move.prototype.deselect=function() {
-		this._isSelected=false;
-	}
-
-	Move.prototype.isSelected=function() {
-		return this._isSelected;
-	}
 
 	Move.prototype.getFullmove=function() {
 		return this._move.getFullmove();
