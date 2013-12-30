@@ -3,6 +3,7 @@ define(function(require) {
 	var Piece=require("chess/Piece");
 	var MoveLabel=require("chess/MoveLabel");
 	var Fen=require("chess/Fen");
+	var CastlingDetails=require("chess/CastlingDetails");
 
 	function Move(positionBefore, from, to, promoteTo, justCheckingLegality) {
 		this._positionBefore=positionBefore;
@@ -191,7 +192,7 @@ define(function(require) {
 		if(this._piece.type===Piece.KING && this._isUnobstructed && !this._positionBefore.playerIsInCheck(this._colour)) {
 			var castling=new CastlingDetails(this._from, this._to);
 
-			if(castling.isValid && this._positionBefore.castlingRights.get(this._colour, castling.side)) {
+			if(castling.isValid && this._positionBefore.castlingRights.getBySide(this._colour, castling.side)) {
 				var throughCheck=false;
 				var between=Chess.getSquaresBetween(this._from, this._to);
 
