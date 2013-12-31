@@ -381,7 +381,11 @@ define(function(require) {
 				this._moveAction.selected=true;
 				this._moveAction.from=square;
 				this._moveAction.piece=this._board[square];
-				this._moveAction.mouseOffsets=[event.offsetX, event.offsetY];
+
+				var squareOffsets=getOffsets(event.target);
+				var squareMouseOffsets=[event.pageX-squareOffsets[X], event.pageY-squareOffsets[Y]];
+
+				this._moveAction.mouseOffsets=squareMouseOffsets;
 			}
 		}
 	}
