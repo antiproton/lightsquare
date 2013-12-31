@@ -1,14 +1,12 @@
 .fullmove_root{
-	padding: 4px;
-	clear: both;
+	display: -webkit-flex;
+	flex-direction: row;
 }
 
 .fullmove_fullmove_col{
-	float: left;
 	width: 20%;
 }
 
 .fullmove_white_col, .fullmove_black_col{
-	float: left;
 	width: 40%;
 }
