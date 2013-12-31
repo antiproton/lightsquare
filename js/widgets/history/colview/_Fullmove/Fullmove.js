@@ -43,5 +43,9 @@ define(function(require) {
 		return (this._moves[Piece.WHITE]===null && !this._moves[Piece.BLACK]===null);
 	}
 
+	Fullmove.prototype.getLastMove=function() {
+		return (this._moves[Piece.WHITE] || this._moves[Piece.BLACK]);
+	}
+
 	return Fullmove;
 });
