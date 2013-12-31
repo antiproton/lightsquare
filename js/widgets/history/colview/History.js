@@ -5,6 +5,7 @@ define(function(require) {
 	var Fullmove=require("./_Fullmove/Fullmove");
 	var Template=require("lib/dom/Template");
 	var html=require("file@./resources/history.html");
+	var Piece=require("chess/Piece");
 	require("css@./resources/history.css");
 
 	function History(parent) {
@@ -19,7 +20,7 @@ define(function(require) {
 		var historyMove=new Move(move);
 		var lastFullmove=this._fullmoves.lastItem();
 
-		if(lastFullmove===null || move.getColour()===WHITE) {
+		if(lastFullmove===null || move.getColour()===Piece.WHITE) {
 			lastFullmove=this._fullmoves.add(new Fullmove(this._template.root, move.getFullmove()));
 		}
 
@@ -34,7 +35,7 @@ define(function(require) {
 		if(this._lastMove!==null) {
 			this._lastMove.setNextItem(historyMove);
 		}
-		
+
 		this._lastMove=historyMove;
 
 		this.select(historyMove);
