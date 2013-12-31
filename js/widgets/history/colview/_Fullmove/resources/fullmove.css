@@ -3,6 +3,10 @@
 	flex-direction: row;
 }
 
+.fullmove_root:nth-child(even){
+	background: #efefef;
+}
+
 .fullmove_fullmove_col{
 	width: 20%;
 }
