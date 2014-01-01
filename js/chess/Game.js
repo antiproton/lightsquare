@@ -55,6 +55,10 @@ define(function(require) {
 		return this.startingPosition.getFen();
 	}
 
+	Game.prototype.setPosition=function(position) {
+		this.position=position.getCopy(); //FIXME this is allowed for now instead of working out how to select the move in the history based on the move selected in the history widget.  getFullLabel seems like an OK candidate.
+	}
+
 	Game.prototype.move=function(from, to, promoteTo) {
 		var move=new Move(this.position, from, to, promoteTo);
 		var colour=move.getColour();
@@ -107,19 +111,19 @@ define(function(require) {
 	Game.prototype._checkThreefold=function() {
 		var fen=this.position.getFen();
 		var limit=3;
-		var n=0;
+		var positionOccurrences=0;
 
 		if(fen===this.startingPosition.getFen()) {
-			limit--;
+			limit=2;
 		}
 
-		this.history.mainLine.moveList.each(function(move) {
-			if(move.getPositionAfterfen===fen) {
-				n++;
+		this.history.eachMove(function(move) {
+			if(move.getResultingFen()===fen) {
+				positionOccurrences++;
 			}
 		});
 
-		this.threefoldClaimable=(n>=limit);
+		this.threefoldClaimable=(positionOccurrences>=limit);
 	}
 
 	Game.prototype._gameOver=function(result, result_details) {

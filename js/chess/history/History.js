@@ -109,6 +109,10 @@ define(function(require) {
 		}
 	}
 
+	History.prototype.eachMove=function(callback) {
+		//TODO
+	}
+
 	History.prototype.move=function(move) {
 		var success=true;
 		var variation=this.mainLine;
