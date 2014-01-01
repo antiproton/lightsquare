@@ -280,7 +280,7 @@ define(function(require) {
 	}
 
 	Move.prototype.getPositionAfter=function() {
-		return this._positionAfter;
+		return this._positionAfter.getCopy();
 	}
 
 	Move.prototype.getResultingFen=function() {
