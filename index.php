@@ -10,14 +10,15 @@ require_once "session.php";
 		var global=window;
 
 		var require={
-			baseUrl: "js",
+			baseUrl: "js/client",
 			paths: {
 				"lib": "/lib/js"
 			},
 			map: {
 				"*": {
 					"css": "lib/require-css/css",
-					"file": "lib/require-text/text"
+					"file": "lib/require-text/text",
+					"chess": "../chess"
 				}
 			},
 			urlArgs: "timestamp="+(new Date()).valueOf(),
