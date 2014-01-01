@@ -16,14 +16,33 @@ define(function(require) {
 
 	var fen="r3kbnr/4pppp/8/8/8/2b5/PPPnPPPP/RNBQKNNR b KQkq - 0 30";
 
-	game.setStartingFen(fen)
+	game.setStartingFen(fen);
 
-	var move=game.move(11, 21);
-	var historyMove=table.history.createMove(move);
+	move=game.move(11, 28);
+	table.history.move(move);
 
-	table.history.move(historyMove);
+	move=game.move(5, 11);
+	table.history.move(move);
 
-	game.move(4, 5);
+	move=game.move(18, 11);
+	table.history.move(move);
+
+	move=game.move(1, 11);
+	table.history.move(move);
+
+	move=game.move(52, 44);
+	table.history.move(move);
+
+	move=game.move(11, 28);
+	table.history.move(move);
+
+	table.history.UserSelect.addHandler(this, function(data) {
+		var position=new Position(data.move.getResultingFen());
+
+		game.setPosition(position);
+		table.board.setBoardArray(position.board.getBoardArray());
+	});
+
 
 	table.board.setSquareSize(60);
 	table.board.setShowSurround(false);
