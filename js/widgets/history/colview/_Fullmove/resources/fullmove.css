@@ -1,6 +1,7 @@
 .fullmove_root{
 	display: -webkit-flex;
 	flex-direction: row;
+	padding: 3px;
 }
 
 .fullmove_root:nth-child(even){
