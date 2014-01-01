@@ -28,6 +28,10 @@ define(function(require) {
 
 		historyMove.UserSelect.addHandler(this, function() {
 			this.select(historyMove);
+			
+			this.UserSelect.fire({
+				move: historyMove
+			});
 		});
 
 		historyMove.setPreviousItem(this._lastMove);
