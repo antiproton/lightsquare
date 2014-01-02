@@ -53,6 +53,7 @@ define(function(require) {
 	Board.implement(ChessBoard);
 
 	Board.squareStyles=Square.styles;
+	Board.squareHighlightTypes=Square.highlightTypes;
 
 	Board.prototype.setSquare=function(square, piece) {
 		ChessBoard.prototype.setSquare.call(this, square, piece);
@@ -71,7 +72,7 @@ define(function(require) {
 			this._highlightedSquares[highlightType]=[];
 		}
 
-		this._highlightedSquares[highlightType]=this._highlightedSquares.concat(squares);
+		this._highlightedSquares[highlightType]=this._highlightedSquares[highlightType].concat(squares);
 
 		for(var i=0; i<squares.length; i++) {
 			this._uiSquares[squares[i]].setHighlight(highlightType);
