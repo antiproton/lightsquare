@@ -43,7 +43,9 @@ define(function(require) {
 		table.board.setBoardArray(position.board.getBoardArray());
 	});
 
-
+	table.board.highlightSquares(23, Board.squareHighlightTypes.lastMoveFrom);
+	table.board.highlightSquares(45, Board.squareHighlightTypes.lastMoveFrom);
+	table.board.unhighlightSquares(Board.squareHighlightTypes.lastMoveFrom);
 	table.board.setSquareSize(60);
 	table.board.setShowSurround(false);
 	table.board.setSquareStyle(Board.squareStyles.green);
