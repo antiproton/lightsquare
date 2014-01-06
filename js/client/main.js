@@ -11,12 +11,16 @@ define(function(require) {
 	var Position=require("chess/Position");
 	var Piece=require("chess/Piece");
 	
+	document.body.appendChild(document.createElement("div"));
 	var button=document.createElement("button");
 	button.innerHTML="connect";
 	document.body.appendChild(button);
 	
+	var ws;
+	
 	button.addEventListener("click", function() {
-		ws=new WebSocket("ws://chess");
+		console.log("connect");
+		ws=new WebSocket("ws://chess:8080");
 	});
 	
 	button=document.createElement("button");
@@ -24,6 +28,7 @@ define(function(require) {
 	document.body.appendChild(button);
 	
 	button.addEventListener("click", function() {
+		console.log("disconnect");
 		ws.close();
 	});
 	
