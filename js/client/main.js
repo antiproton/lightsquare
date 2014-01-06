@@ -10,6 +10,34 @@ define(function(require) {
 	var Board=require("widgets/board/Board");
 	var Position=require("chess/Position");
 	var Piece=require("chess/Piece");
+	
+	var button=document.createElement("button");
+	button.innerHTML="connect";
+	document.body.appendChild(button);
+	
+	button.addEventListener("click", function() {
+		ws=new WebSocket("ws://chess");
+	});
+	
+	button=document.createElement("button");
+	button.innerHTML="disconnect";
+	document.body.appendChild(button);
+	
+	button.addEventListener("click", function() {
+		ws.close();
+	});
+	
+	button=document.createElement("button");
+	button.innerHTML="send test message";
+	document.body.appendChild(button);
+	
+	button.addEventListener("click", function() {
+		ws.send(JSON.stringify({
+			"/test": {
+				blah: 123
+			}
+		}));
+	});
 
 	game=new Game();
 	table=new Table(g("table"));

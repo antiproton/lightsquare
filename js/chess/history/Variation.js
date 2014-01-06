@@ -25,11 +25,11 @@ define(function(require) {
 	Variation.implement(HistoryItem);
 
 	Variation.prototype.getFirstMove=function() {
-		return this.moveList.firstItem();
+		return this.moveList.getFirstItem();
 	}
 
 	Variation.prototype.getLastMove=function() {
-		var lastItem=this.moveList.lastItem();
+		var lastItem=this.moveList.getLastItem();
 		var move=null;
 
 		if(lastItem!==null) {
@@ -56,8 +56,8 @@ define(function(require) {
 	*/
 
 	Variation.prototype.insert=function(item, index) {
-		var prevItem=this.moveList.item(index-1);
-		var nextItem=this.moveList.item(index+1);
+		var prevItem=this.moveList.getItem(index-1);
+		var nextItem=this.moveList.getItem(index+1);
 
 		if(prevItem!==null) {
 			prevItem.setNextItem(item);
@@ -110,7 +110,8 @@ define(function(require) {
 		}
 
 		else {
-			this.insert(item, this.moveList.indexOf(item)+1);
+			//FIXME commenting stuff out to make it work.  this code will be removed anyway when there is no more MoveList
+			//this.insert(item, this.moveList.indexOf(item)+1);
 		}
 	}
 

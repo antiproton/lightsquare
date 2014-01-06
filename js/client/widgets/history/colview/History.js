@@ -18,10 +18,10 @@ define(function(require) {
 
 	History.prototype.move=function(move) {
 		var historyMove=new Move(move);
-		var lastFullmove=this._fullmoves.lastItem();
+		var lastFullmove=this._fullmoves.getLastItem();
 
 		if(lastFullmove===null || move.getColour()===Piece.WHITE) {
-			lastFullmove=this._fullmoves.add(new Fullmove(this._template.root, move.getFullmove()));
+			lastFullmove=this._fullmoves.push(new Fullmove(this._template.root, move.getFullmove()));
 		}
 
 		lastFullmove.add(historyMove);
@@ -73,7 +73,7 @@ define(function(require) {
 	}
 
 	History.prototype.getLastMove=function() {
-		var fullmove=this._fullmoves.lastItem();
+		var fullmove=this._fullmoves.getLastItem();
 
 		if(fullmove!==null) {
 			return fullmove.getLastMove();
