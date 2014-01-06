@@ -175,7 +175,7 @@ define(function(require) {
 	}
 
 	History.prototype.clear=function() {
-		if(this.mainLine.firstMove!==null) {
+		if(this.mainLine.firstMove!==null) { //FIXME no more firstMove - getFirstMove
 			this.mainLine.deleteMove(this.mainLine.getFirstMove());
 		}
 
