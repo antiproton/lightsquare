@@ -15,7 +15,7 @@
 PATH=/sbin:/usr/sbin:/bin:/usr/bin
 DESC="Chess server daemon"
 NAME=chessd
-DAEMON=/var/www/chess/js/server/main.js
+DAEMON=/var/www/chess/js/server/chessd.js
 DAEMON_ARGS="--options args"
 PIDFILE=/var/run/$NAME.pid
 SCRIPTNAME=/etc/init.d/$NAME
