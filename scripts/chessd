@@ -1,6 +1,6 @@
 #!/bin/sh
 ### BEGIN INIT INFO
-# Provides:          wsd-chess
+# Provides:          chessd
 # Required-Start:    $remote_fs $syslog
 # Required-Stop:     $remote_fs $syslog
 # Default-Start:     2 3 4 5
@@ -13,9 +13,9 @@
 # Do NOT "set -e"
 
 PATH=/sbin:/usr/sbin:/bin:/usr/bin
-DESC="Websocket server"
-NAME=wsd-chess
-DAEMON=/var/www/chess/js/server/$NAME
+DESC="Chess server daemon"
+NAME=chessd
+DAEMON=/var/www/chess/js/server/main.js
 DAEMON_ARGS="--options args"
 PIDFILE=/var/run/$NAME.pid
 SCRIPTNAME=/etc/init.d/$NAME
