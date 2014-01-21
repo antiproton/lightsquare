@@ -37,8 +37,8 @@ define(function(require) {
 
 		this._isCheck=false;
 		this._isMate=false;
-		this._haveCheckedForCheck=false;
-		this._haveCheckedForMate=false;
+		this._hasCheckedForCheck=false;
+		this._hasCheckedForMate=false;
 
 		this._check();
 	}
@@ -220,26 +220,26 @@ define(function(require) {
 	}
 
 	Move.prototype._checkForCheck=function() {
-		if(!this._haveCheckedForCheck) {
+		if(!this._hasCheckedForCheck) {
 			this._isCheck=this._positionAfter.playerIsInCheck(this._oppColour);
 
 			if(this._isCheck) {
 				this._label.check=MoveLabel.SIGN_CHECK;
 			}
 
-			this._haveCheckedForCheck=true;
+			this._hasCheckedForCheck=true;
 		}
 	}
 
 	Move.prototype._checkForMate=function() {
-		if(!this._haveCheckedForMate) {
+		if(!this._hasCheckedForMate) {
 			this._isMate=(this.isCheck() && this._positionAfter.countLegalMoves(this._oppColour)===0);
 
 			if(this._isMate) {
 				this._label.check=MoveLabel.SIGN_MATE;
 			}
 
-			this._haveCheckedForMate=true;
+			this._hasCheckedForMate=true;
 		}
 	}
 
