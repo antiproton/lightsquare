@@ -195,7 +195,7 @@ define(function(require) {
 		get a list of squares reachable by a piece of the given type and colour, including
 		all pawn moves and castling, without taking into account any other information or
 		rules such as not moving through other pieces, moving into check, capturing own
-		pieces or any castling rules other than "moving the king two squares to the left
+		pieces, or any castling rules other than "moving the king two squares to the left
 		or right".
 		*/
 
