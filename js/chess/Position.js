@@ -9,12 +9,12 @@ define(function(require) {
 	var Move=require("chess/Move");
 
 	function Position(fen) {
-		this.board=new Board();
-		this.castlingRights=new CastlingRights();
-		this.active=Piece.WHITE;
-		this.epTarget=null;
-		this.fiftymoveClock=0;
-		this.fullmove=1;
+		this._board=new Board();
+		this._castlingRights=new CastlingRights();
+		this._activeColour=Piece.WHITE;
+		this._epTarget=null;
+		this._fiftymoveClock=0;
+		this._fullmove=1;
 
 		if(fen) {
 			this.setFen(fen);
@@ -24,42 +24,90 @@ define(function(require) {
 			this.setFen(Fen.STARTING_FEN);
 		}
 	}
+	
+	Position.prototype.getBoard=function() {
+		return this._board.getCopy();
+	}
+	
+	Position.prototype.getActiveColour=function() {
+		return this._activeColour;
+	}
+	
+	Position.prototype.getCastlingRightsBySide=function(colour, side) {
+		return this._castlingRights.getBySide(colour, side);
+	}
+	
+	Position.prototype.getCastlingRightsByFile=function(colour, file) {
+		return this._castlingRights.getByFile(colour, file);
+	}
+	
+	Position.prototype.getEpTarget=function() {
+		return this._epTarget;
+	}
+	
+	Position.prototype.getFiftymoveClock=function() {
+		return this._fiftymoveClock;
+	}
+	
+	Position.prototype.getFullmove=function() {
+		return this._fullmove;
+	}
+	
+	Position.prototype.setCastlingRightsBySide=function(colour, side, allow) {
+		this._castlingRights.setBySide(colour, side, allow);
+	}
+	
+	Position.prototype.setCastlingRightsByFile=function(colour, file, allow) {
+		this._castlingRights.setByFile(colour, file, allow);
+	}
+	
+	Position.prototype.setActiveColour=function(colour) {
+		this._activeColour=colour;
+	}
+	
+	Position.prototype.setEpTarget=function(square) {
+		this._epTarget=square;
+	}
+	
+	Position.prototype.setFullmove=function(fullmove) {
+		this._fullmove=fullmove;
+	}
 
 	Position.prototype.setFen=function(fenString) {
 		var fen=new Fen(fenString);
 
-		this.active=Colour.getCode(fen.active);
-		this.castlingRights.setFenString(fen.castlingRights);
+		this._activeColour=Colour.getCode(fen.active);
+		this._castlingRights.setFenString(fen.castlingRights);
 
 		if(fen.epTarget===Fen.NONE) {
-			this.epTarget=null;
+			this._epTarget=null;
 		}
 
 		else {
-			this.epTarget=Chess.squareFromAlgebraic(fen.epTarget);
+			this._epTarget=Chess.squareFromAlgebraic(fen.epTarget);
 		}
 
-		this.fiftymoveClock=parseInt(fen.fiftymoveClock);
-		this.fullmove=parseInt(fen.fullmove);
+		this._fiftymoveClock=parseInt(fen.fiftymoveClock);
+		this._fullmove=parseInt(fen.fullmove);
 
-		this.board.setBoardArray(Fen.boardArrayFromFenPosition(fen.position));
+		this._board.setBoardArray(Fen.boardArrayFromFenPosition(fen.position));
 	}
 
 	Position.prototype.getFen=function() {
 		var fen=new Fen();
 
-		fen.position=Fen.fenPositionFromBoardArray(this.board.getBoardArray());
-		fen.active=Colour.getFen(this.active);
-		fen.castlingRights=this.castlingRights.getFenStringBySide();
+		fen.position=Fen.fenPositionFromBoardArray(this._board.getBoardArray());
+		fen.active=Colour.getFen(this._activeColour);
+		fen.castlingRights=this._castlingRights.getFenStringBySide();
 
 		fen.epTarget=Fen.NONE;
 
-		if(this.epTarget!==null) {
-			fen.epTarget=Chess.algebraicFromSquare(this.epTarget);
+		if(this._epTarget!==null) {
+			fen.epTarget=Chess.algebraicFromSquare(this._epTarget);
 		}
 
-		fen.fiftymoveClock=this.fiftymoveClock.toString();
-		fen.fullmove=this.fullmove.toString();
+		fen.fiftymoveClock=this._fiftymoveClock.toString();
+		fen.fullmove=this._fullmove.toString();
 
 		return fen.toString();
 	}
@@ -96,7 +144,7 @@ define(function(require) {
 			if(x>-1 && x<8 && y>-1 && y<8) {
 				candidateSquare=Chess.getRelativeSquare(Chess.squareFromCoords([x, y]), playerColour);
 
-				if(this.board.getSquare(candidateSquare)===piece) {
+				if(this._board.getSquare(candidateSquare)===piece) {
 					attackers.push(candidateSquare);
 				}
 			}
@@ -121,7 +169,7 @@ define(function(require) {
 					if(y>-1 && y<8) {
 						candidateSquare=Chess.squareFromCoords([x, y]);
 
-						if(this.board.getSquare(candidateSquare)===piece) {
+						if(this._board.getSquare(candidateSquare)===piece) {
 							attackers.push(candidateSquare);
 						}
 					}
@@ -141,7 +189,7 @@ define(function(require) {
 		for(var i=0; i<candidateSquares.length; i++) {
 			candidateSquare=candidateSquares[i];
 
-			if(this.board.getSquare(candidateSquare)===piece && !this.moveIsBlocked(square, candidateSquare)) {
+			if(this._board.getSquare(candidateSquare)===piece && !this.moveIsBlocked(square, candidateSquare)) {
 				attackers.push(candidateSquare);
 			}
 		}
@@ -166,7 +214,7 @@ define(function(require) {
 
 	Position.prototype.playerIsInCheck=function(colour) {
 		return (this.getAllAttackers(
-			this.board.kingPositions[colour],
+			this._board.getKingPosition(colour),
 			Chess.getOppColour(colour)
 		).length>0);
 	}
@@ -190,7 +238,7 @@ define(function(require) {
 		var piece;
 
 		for(var square=0; square<64; square++) {
-			piece=new Piece(this.board.getSquare(square));
+			piece=new Piece(this._board.getSquare(square));
 
 			if(piece.type!==Piece.NONE && piece.type!==Piece.KING) {
 				if(
@@ -224,22 +272,22 @@ define(function(require) {
 		var piece;
 
 		for(var square=0; square<64; square++) {
-			piece=this.board.getSquare(square);
+			piece=this._board.getSquare(square);
 
 			if(piece!==Piece.NONE && Piece.getColour(piece)===colour) {
-				legalMoves+=this.getLegalMovesFrom(square).length;
+				legalMoves+=this.getLegalMovesFromSquare(square).length;
 			}
 		}
 
 		return legalMoves;
 	}
 
-	Position.prototype.getLegalMovesFrom=function(square) {
+	Position.prototype.getLegalMovesFromSquare=function(square) {
 		var legalMoves=[];
 		var piece, reachableSquares;
 
-		if(this.board.getSquare(square)!==Piece.NONE) {
-			piece=new Piece(this.board.getSquare(square));
+		if(this._board.getSquare(square)!==Piece.NONE) {
+			piece=new Piece(this._board.getSquare(square));
 			reachableSquares=Chess.getReachableSquares(piece.type, square, piece.colour);
 
 			for(var i=0; i<reachableSquares.length; i++) {
@@ -256,7 +304,7 @@ define(function(require) {
 		var squares=Chess.getSquaresBetween(from, to);
 
 		for(var i=0; i<squares.length; i++) {
-			if(this.board.getSquare(squares[i])!==Piece.NONE) {
+			if(this._board.getSquare(squares[i])!==Piece.NONE) {
 				return true;
 			}
 		}

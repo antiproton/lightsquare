@@ -12,11 +12,11 @@ define(function(require) {
 		this._promoteTo=promoteTo||Piece.QUEEN;
 		this._positionAfter=this._positionBefore.getCopy();
 
-		this._piece=new Piece(this._positionBefore.board.getSquare(this._from));
-		this._targetPiece=new Piece(this._positionBefore.board.getSquare(this._to));
+		this._piece=new Piece(this._positionBefore.getSquare(this._from));
+		this._targetPiece=new Piece(this._positionBefore.getSquare(this._to));
 		this._capturedPiece=null;
 
-		this._colour=this._positionBefore.active;
+		this._colour=this._positionBefore.getActiveColour();
 		this._oppColour=Chess.getOppColour(this._colour);
 
 		this._fromCoords=Chess.coordsFromSquare(this._from);
@@ -80,12 +80,12 @@ define(function(require) {
 
 				if(this._piece.type===Piece.KING || this._isCastling) {
 					for(file=0; file<8; file++) {
-						this._positionAfter.castlingRights.setByFile(this._colour, file, false);
+						this._positionAfter.setCastlingRightsByFile(this._colour, file, false);
 					}
 				}
 
 				else if(this._piece.type===Piece.ROOK) {
-					this._positionAfter.castlingRights.setByFile(this._colour, Chess.xFromSquare(this._from), false);
+					this._positionAfter.setCastlingRightsByFile(this._colour, Chess.xFromSquare(this._from), false);
 				}
 			}
 		}
@@ -94,8 +94,8 @@ define(function(require) {
 	Move.prototype._checkRegularMove=function() {
 		if(Chess.isRegularMove(this._piece.type, this._fromCoords, this._toCoords) && this._isUnobstructed) {
 			this._isValid=true;
-			this._positionAfter.board.setSquare(this._from, Piece.NONE);
-			this._positionAfter.board.setSquare(this._to, this._positionBefore.board.getSquare(this._from));
+			this._positionAfter.setSquare(this._from, Piece.NONE);
+			this._positionAfter.setSquare(this._to, this._positionBefore.getSquare(this._from));
 			this._label.piece=Fen.getPieceChar(Piece.getPiece(this._piece.type, Piece.WHITE));
 			this._label.to=Chess.algebraicFromSquare(this._to);
 
@@ -105,7 +105,7 @@ define(function(require) {
 
 			if(this._targetPiece.type!==Piece.NONE && this._targetPiece.colour===this._oppColour) {
 				this._label.sign=MoveLabel.SIGN_CAPTURE;
-				this._capturedPiece=this._positionBefore.board.getSquare(this._to);
+				this._capturedPiece=this._positionBefore.getSquare(this._to);
 			}
 		}
 	}
@@ -154,29 +154,29 @@ define(function(require) {
 					this._label.sign=MoveLabel.SIGN_CAPTURE;
 
 					if(isEnPassant) {
-						this._positionAfter.board.setSquare(Chess.getEpPawn(this._from, this._to), Piece.NONE);
+						this._positionAfter.setSquare(Chess.getEpPawn(this._from, this._to), Piece.NONE);
 						this._capturedPiece=Piece.getPiece(Piece.PAWN, this._oppColour);
 					}
 
 					else {
-						this._capturedPiece=this._positionBefore.board.getSquare(this._to);
+						this._capturedPiece=this._positionBefore.getSquare(this._to);
 					}
 				}
 
 				if(isDouble) {
-					this._positionAfter.epTarget=Chess.getRelativeSquare(this._relTo-8, this._colour);
+					this._positionAfter.setEpTarget(Chess.getRelativeSquare(this._relTo-8, this._colour));
 				}
 
 				this._label.to=Chess.algebraicFromSquare(this._to);
-				this._positionAfter.board.setSquare(this._from, Piece.NONE);
+				this._positionAfter.setSquare(this._from, Piece.NONE);
 
 				if(isPromotion) {
-					this._positionAfter.board.setSquare(this._to, Piece.getPiece(promoteTo, this._colour));
+					this._positionAfter.setSquare(this._to, Piece.getPiece(promoteTo, this._colour));
 					this._label.special=MoveLabel.SIGN_PROMOTE+Fen.getPieceChar[Piece.getPiece(promoteTo, Piece.WHITE)];
 				}
 
 				else {
-					this._positionAfter.board.setSquare(this._to, this._positionBefore.board.getSquare(this._from));
+					this._positionAfter.setSquare(this._to, this._positionBefore.getSquare(this._from));
 				}
 			}
 		}
@@ -194,7 +194,7 @@ define(function(require) {
 		if(this._piece.type===Piece.KING && this._isUnobstructed && !this._positionBefore.playerIsInCheck(this._colour)) {
 			var castling=new CastlingDetails(this._from, this._to);
 
-			if(castling.isValid && this._positionBefore.castlingRights.getBySide(this._colour, castling.side)) {
+			if(castling.isValid && this._positionBefore.getCastlingRightsBySide(this._colour, castling.side)) {
 				var throughCheck=false;
 				var between=Chess.getSquaresBetween(this._from, this._to);
 
@@ -210,10 +210,10 @@ define(function(require) {
 					this._isValid=true;
 					this._isCastling=true;
 					this._label.special=castling.sign;
-					this._positionAfter.board.setSquare(this._from, Piece.NONE);
-					this._positionAfter.board.setSquare(this._to, Piece.getPiece(Piece.KING, this._colour));
-					this._positionAfter.board.setSquare(castling.rookStartPos, Piece.NONE);
-					this._positionAfter.board.setSquare(castling.rookEndPos, Piece.getPiece(Piece.ROOK, this._colour));
+					this._positionAfter.setSquare(this._from, Piece.NONE);
+					this._positionAfter.setSquare(this._to, Piece.getPiece(Piece.KING, this._colour));
+					this._positionAfter.setSquare(castling.rookStartPos, Piece.NONE);
+					this._positionAfter.setSquare(castling.rookEndPos, Piece.getPiece(Piece.ROOK, this._colour));
 				}
 			}
 		}
@@ -308,7 +308,7 @@ define(function(require) {
 	}
 
 	Move.prototype.getFullmove=function() {
-		return this._positionBefore.fullmove;
+		return this._positionBefore.getFfullmove();
 	}
 
 	Move.prototype.getColour=function() {

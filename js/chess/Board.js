@@ -9,9 +9,9 @@ define(function(require) {
 			this._board.push(Piece.NONE);
 		}
 
-		this.kingPositions=[]
-		this.kingPositions[Piece.WHITE]=null;
-		this.kingPositions[Piece.BLACK]=null;
+		this._kingPositions=[]
+		this._kingPositions[Piece.WHITE]=null;
+		this._kingPositions[Piece.BLACK]=null;
 	}
 
 	Board.prototype.move=function(from, to) {
@@ -23,12 +23,16 @@ define(function(require) {
 		this._board[square]=piece;
 
 		if(Piece.getType(piece)===Piece.KING) {
-			this.kingPositions[Piece.getColour(piece)]=square;
+			this._kingPositions[Piece.getColour(piece)]=square;
 		}
 	}
 
 	Board.prototype.getSquare=function(square) {
 		return this._board[square];
+	}
+	
+	Board.prototype.getKingPosition=function(colour) {
+		return this._kingPositions[colour];
 	}
 
 	Board.prototype.setBoardArray=function(board) {

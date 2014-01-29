@@ -8,64 +8,59 @@ define(function(require) {
 	var Chess=require("chess/Chess");
 	var Move=require("chess/Move");
 
-	function Game() {
-		this.state=GAME_STATE_IN_PROGRESS;
-		this.timeStart=time();
-		this.timeFinish=null;
-		this.type=GAME_TYPE_STANDARD;
-		this.variant=VARIANT_STANDARD;
-		this.subvariant=SUBVARIANT_NONE;
-		this.result=null;
-		this.resultDetails=null;
-		this.clockStartIndex=1;
-		this.clockStartDelay=0;
-		this.timingInitial=600;
-		this.timingIncrement=0;
-		this.timingStyle=TIMING_SUDDEN_DEATH;
-		this.timingOvertime=false;
-		this.timingOvertimeCutoff=40;
-		this.timingOvertimeIncrement=600;
-		this.threefoldClaimable=false;
-		this.drawOffered=false;
-		this.rated=true;
+	function Game(options) {
+		this._state=Game.state.IN_PROGRESS;
+		this._startTime=time();
+		this._endTime=null;
+		this._result=null;
+		this._resultDetails=null;
+		
+		this._options={
+			clockStartHalfmove: 1,
+			clockStartDelay: 0,
+			initialTime: 600,
+			timeIncrement: 0,
+			timingStyle: Timing.style.SUDDEN_DEATH,
+			overtime: false,
+			overtimeCutoff: 40,
+			overtimeIncrement: 600,
+			rated: true
+		};
+		
+		this._isThreefoldClaimable=false;
+		this._isFiftymoveClaimable=false;
+		this._isDrawOffered=false;
 
-		this.position=new Position();
-		this.startingPosition=new Position();
-		this.history=new History();
-		this.piecesTaken=new PiecesTaken();
-
-		this.history.SelectedMoveChanged.addHandler(this, function(data) {
-			if(data.move!==null) {
-				this.position.setFen(data.move.getResultingFen());
-			}
-
-			else {
-				this.position.setFen(this.startingPosition.getFen());
-			}
-		});
+		this._position=new Position();
+		this._startingPosition=new Position();
+		this._history=new History();
+		this._piecesTaken=new PiecesTaken();
 	}
+	
+	Game.state={
+		IN_PROGRESS: 0,
+		CANCELED: 1,
+		ABANDONED: 2,
+		FINISHED: 3
+	};
 
 	Game.prototype.setStartingFen=function(fen) {
-		this.startingPosition.setFen(fen);
-		this.position.setFen(fen);
-		this.history.clear();
+		this._startingPosition.setFen(fen);
+		this._position.setFen(fen);
+		this._history.clear();
 	}
 
 	Game.prototype.getStartingFen=function() {
-		return this.startingPosition.getFen();
-	}
-
-	Game.prototype.setPosition=function(position) {
-		this.position=position.getCopy(); //FIXME this is allowed for now instead of working out how to select the move in the history based on the move selected in the history widget.  getFullLabel seems like an OK candidate.
+		return this._startingPosition.getFen();
 	}
 
 	Game.prototype.move=function(from, to, promoteTo) {
-		var move=new Move(this.position, from, to, promoteTo);
+		var move=new Move(this._position, from, to, promoteTo);
 		var colour=move.getColour();
 		var oppColour=Chess.getOppColour(colour);
 
 		if(move.isLegal()) {
-			this.position=move.getPositionAfter();
+			this._position=move.getPositionAfter();
 			this.drawOffered=false;
 
 			if(move.isMate()) {
@@ -73,18 +68,18 @@ define(function(require) {
 			}
 
 			else {
-				if(!this.position.playerCanMate(Piece.WHITE) && !this.position.playerCanMate(Piece.BLACK)) {
+				if(!this._position.playerCanMate(Piece.WHITE) && !this._position.playerCanMate(Piece.BLACK)) {
 					this._gameOver(RESULT_DRAW, RESULT_DETAILS_INSUFFICIENT);
 				}
 
-				if(this.position.countLegalMoves(oppColour)===0 && this.type!==GAME_TYPE_BUGHOUSE) {
+				if(this._position.countLegalMoves(oppColour)===0 && this.type!==GAME_TYPE_BUGHOUSE) {
 					this._gameOver(RESULT_DRAW, RESULT_DETAILS_STALEMATE);
 				}
 			}
 
-			var historyMove=this.history.createMove(move);
+			var historyMove=this._history.createMove(move);
 
-			if(this.history.move(historyMove)) {
+			if(this._history.move(historyMove)) {
 				this._checkThreefold();
 			}
 		}
@@ -93,15 +88,18 @@ define(function(require) {
 	}
 
 	Game.prototype.undo=function() {
-		this.history.undo();
+		this._history.undo();
 	}
 
 	Game.prototype._checkTime=function(colour) {
-		if(this.time[colour]<1) {
-			var oppColour=Chess.getOppColour(colour);
-			var result=this.canMate(oppColour)?oppColour:DRAW;
-			this._gameOver(result, RESULT_DETAILS_TIMEOUT);
-		}
+		/*
+		FIXME uses old constants
+		*/
+		//if(this.time[colour]<1) {
+		//	var oppColour=Chess.getOppColour(colour);
+		//	var result=this._position.playerCanMate(oppColour)?oppColour:DRAW;
+		//	this._gameOver(result, RESULT_DETAILS_TIMEOUT);
+		//}
 	}
 
 	Game.prototype._calculateTime=function() {
@@ -109,32 +107,39 @@ define(function(require) {
 	}
 
 	Game.prototype._checkThreefold=function() {
-		var fen=this.position.getFen();
+		var fen=this._position.getFen();
 		var limit=3;
 		var positionOccurrences=0;
 
-		if(fen===this.startingPosition.getFen()) {
+		if(fen===this._startingPosition.getFen()) {
 			limit=2;
 		}
 
-		this.history.eachMove(function(move) {
+		this._history.eachMove(function(move) {
 			if(move.getResultingFen()===fen) {
 				positionOccurrences++;
 			}
 		});
 
-		this.threefoldClaimable=(positionOccurrences>=limit);
+		this._threefoldIsClaimable=(positionOccurrences>=limit);
 	}
 
 	Game.prototype._gameOver=function(result, result_details) {
-		this.state=GAME_STATE_FINISHED;
-		this.result=result;
-		this.resultDetails=result_details;
-		this.drawOffered=false;
+		/*
+		FIXME uses old constants
+		*/
+		//this.state=GAME_STATE_FINISHED;
+		//this.result=result;
+		//this.resultDetails=result_details;
+		//this.drawOffered=false;
 	}
 
 	Game.prototype.fiftymoveIsClaimable=function() {
-		return (this.position.fiftymoveClock>49);
+		return (this._position.getFiftymoveClock()>49);
+	}
+	
+	Game.prototype.threefoldIsClaimable=function() {
+		return this._threefoldIsClaimable;
 	}
 
 	return Game;
