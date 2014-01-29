@@ -1,5 +1,6 @@
 define(function(require) {
 	require("lib/Function.implement");
+	var time=require("lib/time");
 	var HistoryItem=require("chess/history/HistoryItem");
 
 	function Move(move) {
@@ -7,6 +8,7 @@ define(function(require) {
 
 		this.itemType=HistoryItem.MOVE;
 		this._move=move;
+		this._time=time();
 	}
 
 	Move.implement(HistoryItem);
@@ -33,6 +35,10 @@ define(function(require) {
 
 	Move.prototype.getResultingFen=function() {
 		return this._move.getResultingFen();
+	}
+	
+	Move.prototype.getTime=function() {
+		return this._time;
 	}
 
 	return Move;
