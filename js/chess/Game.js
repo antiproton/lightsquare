@@ -20,7 +20,7 @@ define(function(require) {
 			clockStartDelay: 0,
 			initialTime: 600,
 			timeIncrement: 0,
-			timingStyle: Timing.style.SUDDEN_DEATH,
+			timingStyle: Game.timingStyles.SUDDEN_DEATH,
 			overtime: false,
 			overtimeCutoff: 40,
 			overtimeIncrement: 600,
@@ -38,10 +38,21 @@ define(function(require) {
 	}
 	
 	Game.state={
-		IN_PROGRESS: 0,
-		CANCELED: 1,
-		ABANDONED: 2,
-		FINISHED: 3
+		IN_PROGRESS: "In progress",
+		CANCELED: "Canceled",
+		ABANDONED: "Abandoned",
+		FINISHED: "Finished"
+	};
+	
+	Game.timingStyles={
+		SUDDEN_DEATH: "Sudden death",
+		FISCHER: "Fischer",
+		FISCHER_AFTER: "Fischer After",
+		BRONSTEIN_DELAY: "Bronstein delay",
+		SIMPLE_DELAY: "Simple delay",
+		HOURGLASS: "Hourglass",
+		PER_MOVE: "Per move",
+		NONE: "None"
 	};
 
 	Game.prototype.setStartingFen=function(fen) {
