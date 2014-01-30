@@ -15,8 +15,8 @@ define(function(require) {
 		this._template=new Template(html, parent);
 		this._square=square;
 		this._size=size||Square.DEFAULT_SIZE;
-		this._squareStyle=Square.styles.blue;
-		this._highlightType=Square.highlightTypes.none;
+		this._squareStyle=Square.styles.BLUE;
+		this._highlightType=Square.highlightTypes.NONE;
 
 		this.MouseDown=new Event(this);
 		this.MouseUp=new Event(this);
@@ -25,23 +25,23 @@ define(function(require) {
 	}
 
 	Square.styles={
-		brown: "brown",
-		green: "green",
-		blue: "blue"
+		BROWN: "brown",
+		GREEN: "green",
+		BLUE: "blue"
 	};
 
 	Square.DEFAULT_SIZE=Piece.DEFAULT_SIZE;
 
 	Square.highlightTypes={
-		none: "none",
-		possibility: "possibility",
-		lastMoveTo: "last_move_to",
-		lastMoveFrom: "last_move_from",
-		premoveTo: "premove_to",
-		premoveFrom: "premove_from",
-		canSelect: "can_select",
-		canDrop: "can_drop",
-		selected: "selected"
+		NONE: "none",
+		POSSIBILITY: "possibility",
+		LAST_MOVE_TO: "last_move_to",
+		LAST_MOVE_FROM: "last_move_from",
+		PREMOVE_TO: "premove_to",
+		PREMOVE_FROM: "premove_from",
+		CAN_SELECT: "can_select",
+		CAN_DROP: "can_drop",
+		SELECTED: "selected"
 	};
 
 	Square.prototype.setHighlight=function(highlightType) {

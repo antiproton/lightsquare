@@ -80,6 +80,6 @@ define(function(require) {
 	table.board.unhighlightSquares(Board.squareHighlightTypes.lastMoveFrom);
 	table.board.setSquareSize(60);
 	table.board.setShowSurround(false);
-	table.board.setSquareStyle(Board.squareStyles.green);
+	table.board.setSquareStyle(Board.squareStyles.GREEN);
 	table.board.setBoardArray(game.getPosition().getBoard().getBoardArray());
 });
