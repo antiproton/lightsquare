@@ -55,24 +55,24 @@ define(function(require) {
 
 	move=game.move(5, 11);
 	table.history.move(move);
-
+	
 	move=game.move(18, 11);
 	table.history.move(move);
-
+	
 	move=game.move(1, 11);
 	table.history.move(move);
-
+	
 	move=game.move(52, 44);
 	table.history.move(move);
-
+	
 	move=game.move(11, 28);
 	table.history.move(move);
 
 	table.history.UserSelect.addHandler(this, function(data) {
 		var position=new Position(data.move.getResultingFen());
 
-		game.setPosition(position);
-		table.board.setBoardArray(position.board.getBoardArray());
+		//game.setPosition(position);
+		table.board.setBoardArray(position.getBoard().getBoardArray());
 	});
 
 	table.board.highlightSquares(23, Board.squareHighlightTypes.lastMoveFrom);
@@ -81,5 +81,5 @@ define(function(require) {
 	table.board.setSquareSize(60);
 	table.board.setShowSurround(false);
 	table.board.setSquareStyle(Board.squareStyles.green);
-	table.board.setBoardArray(game.position.board.getBoardArray());
+	table.board.setBoardArray(game.getPosition().getBoard().getBoardArray());
 });

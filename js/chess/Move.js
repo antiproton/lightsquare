@@ -61,21 +61,21 @@ define(function(require) {
 
 			if(this._isLegal) {
 				if(this._colour===Piece.BLACK) {
-					this._positionAfter.fullmove++;
+					this._positionAfter.incrementFullmove();
 				}
 
-				this._positionAfter.active=this._oppColour;
+				this._positionAfter.setActiveColour(this._oppColour);
 
 				if(this._capturedPiece!==null || this._piece.type===Piece.PAWN) {
-					this._positionAfter.fiftymoveClock=0;
+					this._positionAfter.resetFiftymoveClock();
 				}
 
 				else {
-					this._positionAfter.fiftymoveClock++;
+					this._positionAfter.incrementFiftymoveClock();
 				}
 
 				if(this._piece.type!==Piece.PAWN || !Chess.isDoublePawnMove(this._relFrom, this._relTo)) {
-					this._positionAfter.epTarget=null;
+					this._positionAfter.setEpTarget(null);
 				}
 
 				if(this._piece.type===Piece.KING || this._isCastling) {
@@ -92,6 +92,9 @@ define(function(require) {
 	}
 
 	Move.prototype._checkRegularMove=function() {
+			if(this._debug) {
+				console.log("regular")
+			}
 		if(Chess.isRegularMove(this._piece.type, this._fromCoords, this._toCoords) && this._isUnobstructed) {
 			this._isValid=true;
 			this._positionAfter.setSquare(this._from, Piece.NONE);
@@ -221,7 +224,7 @@ define(function(require) {
 
 	Move.prototype._checkForCheck=function() {
 		if(!this._hasCheckedForCheck) {
-			this._isCheck=this._positionAfter.playerIsInCheck(this._oppColour);
+			this._isCheck=(this.isLegal() && this._positionAfter.playerIsInCheck(this._oppColour));
 
 			if(this._isCheck) {
 				this._label.check=MoveLabel.SIGN_CHECK;
@@ -233,7 +236,7 @@ define(function(require) {
 
 	Move.prototype._checkForMate=function() {
 		if(!this._hasCheckedForMate) {
-			this._isMate=(this.isCheck() && this._positionAfter.countLegalMoves(this._oppColour)===0);
+			this._isMate=(this.isLegal() && this.isCheck() && this._positionAfter.countLegalMoves(this._oppColour)===0);
 
 			if(this._isMate) {
 				this._label.check=MoveLabel.SIGN_MATE;
@@ -308,7 +311,7 @@ define(function(require) {
 	}
 
 	Move.prototype.getFullmove=function() {
-		return this._positionBefore.getFfullmove();
+		return this._positionBefore.getFullmove();
 	}
 
 	Move.prototype.getColour=function() {

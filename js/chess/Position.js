@@ -29,6 +29,14 @@ define(function(require) {
 		return this._board.getCopy();
 	}
 	
+	Position.prototype.getSquare=function(square) {
+		return this._board.getSquare(square);
+	}
+	
+	Position.prototype.setSquare=function(square, piece) {
+		this._board.setSquare(square, piece);
+	}
+	
 	Position.prototype.getActiveColour=function() {
 		return this._activeColour;
 	}
@@ -71,6 +79,18 @@ define(function(require) {
 	
 	Position.prototype.setFullmove=function(fullmove) {
 		this._fullmove=fullmove;
+	}
+	
+	Position.prototype.incrementFullmove=function() {
+		this._fullmove++;
+	}
+	
+	Position.prototype.incrementFiftymoveClock=function() {
+		this._fiftymoveClock++;
+	}
+	
+	Position.prototype.resetFiftymoveClock=function() {
+		this._fiftymoveClock=0;
 	}
 
 	Position.prototype.setFen=function(fenString) {
@@ -291,7 +311,7 @@ define(function(require) {
 			reachableSquares=Chess.getReachableSquares(piece.type, square, piece.colour);
 
 			for(var i=0; i<reachableSquares.length; i++) {
-				if((new Move(this, square, reachableSquares[i], Piece.QUEEN, true)).isLegal()) {
+				if((new Move(this, square, reachableSquares[i], Piece.QUEEN)).isLegal()) {
 					legalMoves.push(reachableSquares[i]);
 				}
 			}

@@ -54,6 +54,10 @@ define(function(require) {
 		PER_MOVE: "Per move",
 		NONE: "None"
 	};
+	
+	Game.prototype.getPosition=function() {
+		return this._position.getCopy();
+	}
 
 	Game.prototype.setStartingFen=function(fen) {
 		this._startingPosition.setFen(fen);
