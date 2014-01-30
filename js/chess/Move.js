@@ -92,9 +92,6 @@ define(function(require) {
 	}
 
 	Move.prototype._checkRegularMove=function() {
-			if(this._debug) {
-				console.log("regular")
-			}
 		if(Chess.isRegularMove(this._piece.type, this._fromCoords, this._toCoords) && this._isUnobstructed) {
 			this._isValid=true;
 			this._positionAfter.setSquare(this._from, Piece.NONE);
