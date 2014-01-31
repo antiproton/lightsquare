@@ -33,9 +33,27 @@ define(function(require) {
 
 		this._position=new Position();
 		this._startingPosition=new Position();
-		this._history=new History();
+		this._history=[];
 		this._piecesTaken=new PiecesTaken();
 	}
+	
+	Game.state={
+		IN_PROGRESS: "In progress",
+		CANCELED: "Canceled",
+		ABANDONED: "Abandoned",
+		FINISHED: "Finished"
+	};
+	
+	Game.timingStyles={
+		SUDDEN_DEATH: "Sudden death",
+		FISCHER: "Fischer",
+		FISCHER_AFTER: "Fischer After",
+		BRONSTEIN_DELAY: "Bronstein delay",
+		SIMPLE_DELAY: "Simple delay",
+		HOURGLASS: "Hourglass",
+		PER_MOVE: "Per move",
+		NONE: "None"
+	};
 	
 	Game.prototype.getState=function() {
 		return this._state;
@@ -68,24 +86,6 @@ define(function(require) {
 	Game.prototype.isDrawOffered=function() {
 		return this._isDrawOffered;
 	}
-	
-	Game.state={
-		IN_PROGRESS: "In progress",
-		CANCELED: "Canceled",
-		ABANDONED: "Abandoned",
-		FINISHED: "Finished"
-	};
-	
-	Game.timingStyles={
-		SUDDEN_DEATH: "Sudden death",
-		FISCHER: "Fischer",
-		FISCHER_AFTER: "Fischer After",
-		BRONSTEIN_DELAY: "Bronstein delay",
-		SIMPLE_DELAY: "Simple delay",
-		HOURGLASS: "Hourglass",
-		PER_MOVE: "Per move",
-		NONE: "None"
-	};
 	
 	Game.prototype.getPosition=function() {
 		return this._position.getCopy();
