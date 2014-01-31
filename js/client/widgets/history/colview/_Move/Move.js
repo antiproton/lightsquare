@@ -1,12 +1,11 @@
 define(function(require) {
 	var Event=require("lib/Event");
-	var Base=require("chess/history/Move");
 	var Template=require("lib/dom/Template");
 	var html=require("file@./resources/move.html");
 	require("css@./resources/move.css");
 
 	function Move(move) {
-		Base.call(this, move);
+		this._move=move;
 
 		this.UserSelect=new Event(this);
 
@@ -17,8 +16,6 @@ define(function(require) {
 
 		this._setupHtml();
 	}
-
-	Move.implement(Base);
 
 	Move.prototype._setupHtml=function() {
 		var self=this;
@@ -42,6 +39,34 @@ define(function(require) {
 
 	Move.prototype.deselect=function() {
 		this.node.classList.remove("move_colview_selected");
+	}
+	
+	Move.prototype.getFullmove=function() {
+		return this._move.getFullmove();
+	}
+
+	Move.prototype.getColour=function() {
+		return this._move.getColour();
+	}
+
+	Move.prototype.getDot=function() {
+		return this._move.getDot();
+	}
+
+	Move.prototype.getLabel=function() {
+		return this._move.getLabel();
+	}
+
+	Move.prototype.getFullLabel=function() {
+		return this._move.getFullLabel();
+	}
+
+	Move.prototype.getResultingFen=function() {
+		return this._move.getResultingFen();
+	}
+	
+	Move.prototype.getTime=function() {
+		return this._move.getTime();
 	}
 
 	return Move;

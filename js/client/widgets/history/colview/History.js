@@ -34,10 +34,10 @@ define(function(require) {
 			});
 		});
 
-		historyMove.setPreviousItem(this._lastMove);
+		//historyMove.setPreviousItem(this._lastMove); //FIXME commented out, probably not necessary
 
 		if(this._lastMove!==null) {
-			this._lastMove.setNextItem(historyMove);
+			//this._lastMove.setNextItem(historyMove);
 		}
 
 		this._lastMove=historyMove;
