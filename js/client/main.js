@@ -43,12 +43,13 @@ define(function(require) {
 		}));
 	});
 
-	game=new Game();
 	table=new Table(g("table"));
 
 	var fen="r3kbnr/4pppp/8/8/8/2b5/PPPnPPPP/RNBQKNNR b KQkq - 0 30";
 
-	game.setStartingFen(fen);
+	game=new Game({
+		startingFen: fen
+	});
 
 	move=game.move(11, 28);
 	table.history.move(move);
