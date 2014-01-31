@@ -3,7 +3,6 @@ define(function(require) {
 	var time=require("lib/time");
 	var Piece=require("chess/Piece");
 	var Position=require("chess/Position");
-	var History=require("chess/history/History");
 	var PiecesTaken=require("chess/PiecesTaken");
 	var Chess=require("chess/Chess");
 	var Move=require("chess/Move");
