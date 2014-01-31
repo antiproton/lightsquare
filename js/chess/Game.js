@@ -37,6 +37,38 @@ define(function(require) {
 		this._piecesTaken=new PiecesTaken();
 	}
 	
+	Game.prototype.getState=function() {
+		return this._state;
+	}
+	
+	Game.prototype.getStartTime=function() {
+		return this._startTime;
+	}
+	
+	Game.prototype.getEndTime=function() {
+		return this._endTime;
+	}
+	
+	Game.prototype.getResult=function() {
+		return this._result;
+	}
+	
+	Game.prototype.getResultDetails=function() {
+		return this._resultDetails;
+	}
+
+	Game.prototype.isFiftymoveClaimable=function() {
+		return (this._position.getFiftymoveClock()>49);
+	}
+	
+	Game.prototype.isThreefoldClaimable=function() {
+		return this._isThreefoldClaimable;
+	}
+	
+	Game.prototype.isDrawOffered=function() {
+		return this._isDrawOffered;
+	}
+	
 	Game.state={
 		IN_PROGRESS: "In progress",
 		CANCELED: "Canceled",
@@ -104,6 +136,14 @@ define(function(require) {
 
 	Game.prototype.undo=function() {
 		this._history.undo();
+		
+		var move=this._history.getLastMove();
+		
+		if(move!==null) {
+			this._position.setFen(move.getResultingFen());
+		}
+		
+		this._checkThreefold();
 	}
 
 	Game.prototype._checkTime=function(colour) {
@@ -147,14 +187,6 @@ define(function(require) {
 		//this.result=result;
 		//this.resultDetails=result_details;
 		//this.drawOffered=false;
-	}
-
-	Game.prototype.fiftymoveIsClaimable=function() {
-		return (this._position.getFiftymoveClock()>49);
-	}
-	
-	Game.prototype.threefoldIsClaimable=function() {
-		return this._threefoldIsClaimable;
 	}
 
 	return Game;
