@@ -60,9 +60,9 @@ define(function(require) {
 	Move.prototype.getFullLabel=function() {
 		return this._move.getFullLabel();
 	}
-
-	Move.prototype.getResultingFen=function() {
-		return this._move.getResultingFen();
+	
+	Move.prototype.getPositionAfter=function() {
+		return this._move.getPositionAfter();
 	}
 	
 	Move.prototype.getTime=function() {
