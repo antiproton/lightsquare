@@ -206,6 +206,10 @@ define(function(require) {
 	History.prototype.createMove=function(move) {
 		return new Move(move);
 	}
+	
+	History.prototype.getLastMove=function() {
+		return this.mainLine.getLastMove();
+	}
 
 	return History;
 });
