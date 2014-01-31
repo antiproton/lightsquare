@@ -70,7 +70,7 @@ define(function(require) {
 	table.history.move(move);
 
 	table.history.UserSelect.addHandler(this, function(data) {
-		var position=new Position(data.move.getResultingFen());
+		var position=data.move.getPositionAfter();
 
 		//game.setPosition(position);
 		table.board.setBoardArray(position.getBoard().getBoardArray());
