@@ -23,10 +23,10 @@ define(function(require) {
 			initialTime: 600,
 			timeIncrement: 0,
 			timingStyle: Game.timingStyles.SUDDEN_DEATH,
-			overtime: false,
-			overtimeCutoff: 40,
-			overtimeIncrement: 600,
-			rated: true
+			isOvertime: false,
+			overtimeFullmove: 40,
+			overtimeBonus: 600,
+			isRated: true
 		};
 		
 		for(var p in options) {
@@ -95,6 +95,10 @@ define(function(require) {
 	Game.prototype.getHistory=function() {
 		return this._history.getShallowCopy();
 	}
+	
+	Game.prototype.getOptions=function() {
+		return this._options;
+	}
 
 	Game.prototype.move=function(from, to, promoteTo) {
 		var move=new Move(this._position, from, to, promoteTo);
@@ -132,11 +136,11 @@ define(function(require) {
 		var move=this.getLastMove();
 		
 		if(move!==null) {
-			this._position.setFen(move.getResultingFen());
+			this._position=move.getPositionAfter();
 		}
 		
 		else {
-			this._position.setFen(this._startingPosition.getFen());
+			this._position=this._startingPosition.getCopy();
 		}
 		
 		this._checkThreefold();
