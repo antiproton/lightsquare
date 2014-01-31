@@ -317,15 +317,6 @@ define(function(require) {
 		return this._colour;
 	}
 
-	Move.prototype.getDot=function() {
-		var dot=[];
-
-		dot[Piece.WHITE]=".";
-		dot[Piece.BLACK]="...";
-
-		return dot[this._colour];
-	}
-
 	Move.prototype.getLabel=function() {
 		this._checkForCheck();
 		this._checkForMate();
@@ -334,7 +325,13 @@ define(function(require) {
 	}
 
 	Move.prototype.getFullLabel=function() {
-		return this.getFullmove()+this.getDot()+" "+this.getLabel();
+		var dots=(this._colour===Piece.WHITE?".":"...");
+		
+		return this.getFullmove()+dots+" "+this.getLabel();
+	}
+	
+	Move.prototype.getCapturedPiece=function() {
+		return this._capturedPiece;
 	}
 
 	return Move;
