@@ -7,6 +7,7 @@ define(function(require) {
 	var PiecesTaken=require("chess/PiecesTaken");
 	var Chess=require("chess/Chess");
 	var Move=require("chess/Move");
+	var Fen=require("chess/Fen");
 	require("lib/Array.getShallowCopy");
 
 	function Game(options) {
@@ -17,6 +18,7 @@ define(function(require) {
 		this._resultDetails=null;
 		
 		this._options={
+			startingFen: Fen.STARTING_FEN,
 			clockStartHalfmove: 1,
 			clockStartDelay: 0,
 			initialTime: 600,
@@ -30,10 +32,9 @@ define(function(require) {
 		
 		this._isThreefoldClaimable=false;
 		this._isFiftymoveClaimable=false;
-		this._isDrawOffered=false;
 
-		this._position=new Position();
-		this._startingPosition=new Position();
+		this._position=new Position(this._options.startingFen);
+		this._startingPosition=new Position(this._options.startingFen);
 		this._history=[];
 		this._piecesTaken=new PiecesTaken();
 	}
@@ -84,26 +85,12 @@ define(function(require) {
 		return this._isThreefoldClaimable;
 	}
 	
-	Game.prototype.isDrawOffered=function() {
-		return this._isDrawOffered;
-	}
-	
 	Game.prototype.getPosition=function() {
 		return this._position.getCopy();
 	}
 	
 	Game.prototype.getHistory=function() {
 		return this._history.getShallowCopy();
-	}
-
-	Game.prototype.setStartingFen=function(fen) {
-		this._startingPosition.setFen(fen);
-		this._position.setFen(fen);
-		this._history=[];
-	}
-
-	Game.prototype.getStartingFen=function() {
-		return this._startingPosition.getFen();
 	}
 
 	Game.prototype.move=function(from, to, promoteTo) {
@@ -121,11 +108,11 @@ define(function(require) {
 
 			else {
 				if(!this._position.playerCanMate(Piece.WHITE) && !this._position.playerCanMate(Piece.BLACK)) {
-					this._gameOver(RESULT_DRAW, RESULT_DETAILS_INSUFFICIENT);
+					//this._gameOver(RESULT_DRAW, RESULT_DETAILS_INSUFFICIENT);
 				}
 
 				if(this._position.countLegalMoves(oppColour)===0 && this.type!==GAME_TYPE_BUGHOUSE) {
-					this._gameOver(RESULT_DRAW, RESULT_DETAILS_STALEMATE);
+					//this._gameOver(RESULT_DRAW, RESULT_DETAILS_STALEMATE);
 				}
 			}
 
@@ -136,13 +123,17 @@ define(function(require) {
 		return move;
 	}
 
-	Game.prototype.undo=function() {
+	Game.prototype.undoLastMove=function() {
 		this._history.pop();
 		
 		var move=this.getLastMove();
 		
 		if(move!==null) {
 			this._position.setFen(move.getResultingFen());
+		}
+		
+		else {
+			this._position.setFen(this._startingPosition.getFen());
 		}
 		
 		this._checkThreefold();
@@ -156,6 +147,14 @@ define(function(require) {
 		else {
 			return null;
 		}
+	}
+	
+	Game.prototype.resign=function(colour) {
+		//this._gameOver(etc)
+	}
+	
+	Game.prototype.drawByAgreement=function() {
+		//...
 	}
 
 	Game.prototype._checkTime=function(colour) {
