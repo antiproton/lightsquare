@@ -192,7 +192,7 @@ define(function(require) {
 		var fen;
 
 		this._history.forEach(function(move) {
-			fen=new Fen(move.getResultingFen());
+			fen=new Fen(move.getPositionAfter().getFen());
 			
 			if(
 				fen.position===currentFen.position
