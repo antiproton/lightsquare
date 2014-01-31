@@ -29,6 +29,10 @@ define(function(require) {
 			rated: true
 		};
 		
+		for(var p in options) {
+			this._options[p]=options[p];
+		}
+		
 		this._isThreefoldClaimable=false;
 		this._isFiftymoveClaimable=false;
 
