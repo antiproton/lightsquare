@@ -4,6 +4,7 @@ define(function(require) {
 	var MoveLabel=require("chess/MoveLabel");
 	var Fen=require("chess/Fen");
 	var CastlingDetails=require("chess/CastlingDetails");
+	var time=require("lib/time");
 
 	function Move(positionBefore, from, to, promoteTo) {
 		this._positionBefore=positionBefore;
@@ -11,6 +12,7 @@ define(function(require) {
 		this._to=to;
 		this._promoteTo=promoteTo||Piece.QUEEN;
 		this._positionAfter=this._positionBefore.getCopy();
+		this._time=time();
 
 		this._piece=new Piece(this._positionBefore.getSquare(this._from));
 		this._targetPiece=new Piece(this._positionBefore.getSquare(this._to));
@@ -285,6 +287,10 @@ define(function(require) {
 
 	Move.prototype.getResultingFen=function() {
 		return this._positionAfter.getFen();
+	}
+	
+	Move.prototype.getTime=function() {
+		return this._time;
 	}
 
 	Move.prototype.isCheck=function() {
