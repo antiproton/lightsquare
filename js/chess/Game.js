@@ -7,6 +7,7 @@ define(function(require) {
 	var PiecesTaken=require("chess/PiecesTaken");
 	var Chess=require("chess/Chess");
 	var Move=require("chess/Move");
+	require("lib/Array.getShallowCopy");
 
 	function Game(options) {
 		this._state=Game.state.IN_PROGRESS;
@@ -90,11 +91,15 @@ define(function(require) {
 	Game.prototype.getPosition=function() {
 		return this._position.getCopy();
 	}
+	
+	Game.prototype.getHistory=function() {
+		return this._history.getShallowCopy();
+	}
 
 	Game.prototype.setStartingFen=function(fen) {
 		this._startingPosition.setFen(fen);
 		this._position.setFen(fen);
-		this._history.clear();
+		this._history=[];
 	}
 
 	Game.prototype.getStartingFen=function() {
@@ -124,26 +129,33 @@ define(function(require) {
 				}
 			}
 
-			var historyMove=this._history.createMove(move);
-
-			if(this._history.move(historyMove)) {
-				this._checkThreefold();
-			}
+			this._history.push(move);
+			this._checkThreefold();
 		}
 
 		return move;
 	}
 
 	Game.prototype.undo=function() {
-		this._history.undo();
+		this._history.pop();
 		
-		var move=this._history.getLastMove();
+		var move=this.getLastMove();
 		
 		if(move!==null) {
 			this._position.setFen(move.getResultingFen());
 		}
 		
 		this._checkThreefold();
+	}
+	
+	Game.prototype.getLastMove=function() {
+		if(this._history.length>0) {
+			return this._history[this._history.length-1];
+		}
+		
+		else {
+			return null;
+		}
 	}
 
 	Game.prototype._checkTime=function(colour) {
@@ -162,21 +174,31 @@ define(function(require) {
 	}
 
 	Game.prototype._checkThreefold=function() {
-		var fen=this._position.getFen();
+		var currentFenString=this._position.getFen();
+		var currentFen=new Fen(currentFenString);
 		var limit=3;
-		var positionOccurrences=0;
+		var occurrences=0;
 
-		if(fen===this._startingPosition.getFen()) {
+		if(currentFenString===this._startingPosition.getFen()) {
 			limit=2;
 		}
+		
+		var fen;
 
-		this._history.eachMove(function(move) {
-			if(move.getResultingFen()===fen) {
-				positionOccurrences++;
+		this._history.forEach(function(move) {
+			fen=new Fen(move.getResultingFen());
+			
+			if(
+				fen.position===currentFen.position
+				&& fen.active===currentFen.active
+				&& fen.castling===currentFen.castling
+				&& fen.epTarget===currentFen.epTarget
+			) {
+				occurrences++;
 			}
 		});
 
-		this._threefoldIsClaimable=(positionOccurrences>=limit);
+		this._isThreefoldClaimable=(occurrences>=limit);
 	}
 
 	Game.prototype._gameOver=function(result, result_details) {
