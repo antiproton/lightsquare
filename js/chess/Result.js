@@ -1,61 +1,87 @@
-var Result={
-	SCORE_WIN: 1,
-	SCORE_DRAW: .5,
-	SCORE_LOSS: 0,
-
-	getDetailsString: function(white, black, result, resultDetails) {
-		var str;
-		var winner=[white, black][Result.winningColour[result]];
-
-		if(result===RESULT_DRAW) {
-			str="Drawn by ";
+define(function(require) {
+	var resultString={};
+	
+	resultString[Result.WHITE]="1-0";
+	resultString[Result.BLACK]="0-1";
+	resultString[Result.DRAW]="\u00bd-\u00bd";
+	
+	var winResult=[];
+	
+	winResult[Piece.WHITE]=Result.WHITE;
+	winResult[Piece.BLACK]=Result.BLACK;
+	
+	var winningColour={};
+	
+	winningColour[Result.WHITE]=Piece.WHITE;
+	winningColour[Result.BLACK]=Piece.BLACK;
+	
+	var Result={
+		SCORE_WIN: 1,
+		SCORE_DRAW: .5,
+		SCORE_LOSS: 0,
+		
+		WHITE: "white",
+		BLACK: "black",
+		DRAW: "draw",
+		
+		details: {
+			CHECKMATE: "checkmate",
+			RESIGNATION: "resignation",
+			FIFTYMOVE: "stalemate (fifty move rule)",
+			THREEFOLD: "stalemate (threefold repetition)",
+			TIMEOUT: "timeout",
+			INSUFFICIENT: "stalemate (insufficient mating material)",
+			AGREEMENT: "agreement"
+		},
+	
+		getDetailsString: function(white, black, result, resultDetails) {
+			var summary;
+			var details=Result.details[resultDetails];
+			
+			if(result===Result.DRAW) {
+				summary="Draw";
+			}
+			
+			else {
+				var players=[];
+				
+				players[Piece.WHITE]=white;
+				players[Piece.BLACK]=black;
+				
+				var winner=players[Result.getWinningColour(result)];
+				
+				summary=winner+" won";
+			}
+			
+			return summary+" ("+details+")";
+		},
+	
+		getString: function(result) {
+			return resultString[result];
+		},
+	
+		getWinningColour: function(result) {
+			return winningColour[result];
+		},
+	
+		getWinResult: function(colour) {
+			return winResult[colour];
+		},
+	
+		getScore: function(result, colour) {
+			if(result===Result.DRAW) {
+				return Result.SCORE_DRAW;
+			}
+	
+			if(colour===WHITE) {
+				return (result===Result.WHITE?Result.SCORE_WIN:Result.SCORE_LOSS);
+			}
+	
+			if(colour===BLACK) {
+				return (result===Result.BLACK?Result.SCORE_WIN:Result.SCORE_LOSS);
+			}
 		}
-
-		else {
-			str=winner+" won by ";
-		}
-
-		str+=DbEnums[RESULT_DETAILS][resultDetails].description.toLowerCase();
-
-		return str;
-	},
-
-	getString: function(result) {
-		return Result._string[result];
-	},
-
-	getWinningColour: function(result) {
-		return Result._winningColour[result];
-	},
-
-	getWinResult: function(colour) {
-		return Result._winResult[colour];
-	},
-
-	getScore: function(result, colour) {
-		if(result===RESULT_DRAW) {
-			return Result.SCORE_DRAW;
-		}
-
-		if(colour===WHITE) {
-			return (result===RESULT_WHITE?Result.SCORE_WIN:Result.SCORE_LOSS);
-		}
-
-		if(colour===BLACK) {
-			return (result===RESULT_BLACK?Result.SCORE_WIN:Result.SCORE_LOSS);
-		}
-	}
-};
-
-Result._string={};
-Result._string[RESULT_WHITE]="1-0";
-Result._string[RESULT_BLACK]="0-1";
-Result._string[RESULT_DRAW]="\u00bd-\u00bd";
-
-Result._winResult=[];
-Result._winResult[WHITE]=RESULT_WHITE;
-Result._winResult[BLACK]=RESULT_BLACK;
-
-Result._winningColour={};
-Result._winningColour[RESULT_WHITE]=WHITE;
-Result._winningColour[RESULT_BLACK]=BLACK;
+	};
+	
+	return Result;
+});
