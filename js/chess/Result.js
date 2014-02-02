@@ -1,37 +1,44 @@
 define(function(require) {
 	var Piece=require("chess/Piece");
+	var Chess=require("chess/Chess");
 	
-	function Result(white, black, result, resultDetails) {
+	function Result(white, black, result, type) {
 		this._players=[];
 		this._players[Piece.WHITE]=white;
 		this._players[Piece.BLACK]=black;
 		this._result=result;
-		this._resultDetails=resultDetails;
+		this._type=type;
 	}
 	
-	Result.prototype.getSummary=function() {
-		var summary;
-		
-		if(result===Result.DRAW) {
-			summary="Draw";
-		}
-		
-		else {
-			var players=[];
-			
-			players[Piece.WHITE]=white;
-			players[Piece.BLACK]=black;
-			
-			var winner=players[Result.getWinningColour(result)];
-			
-			summary=this._players[Result.getWinningColour(this._result)]+" won";
-		}
-		
-		return summary;
+	Result.prototype.toString=function() {
+		return this.getTally();
 	}
 	
 	Result.prototype.getTally=function() {
 		return Result.getTally(this._result);
+	}
+	
+	Result.prototype.getDescription=function() {
+		var description=Result._descriptions[this._type];
+		
+		if(this._result!==Result.DRAW) {
+			var winningColour=Result.getWinningColour(this._result);
+			var losingColour=Chess.getOppColour(winningColour);
+			
+			var replacements={
+				"winner": this._players[winningColour],
+				"loser": this._players[losingColour]
+			};
+			
+			var regex;
+			
+			for(var placeholder in replacements) {
+				regex=new RegExp("\\["+placeholder+"\\]", "g");
+				description=description.replace(regex, replacements[placeholder]);
+			}
+		}
+		
+		return description;
 	}
 
 	Result.getWinningColour=function(result) {
@@ -62,15 +69,25 @@ define(function(require) {
 		LOSS: 0
 	};
 	
-	Result.details={ //FIXME
+	Result.types={
 		CHECKMATE: "checkmate",
 		RESIGNATION: "resignation",
 		FIFTYMOVE: "fifty move rule",
-		THREEFOLD: "threefold repetition",
+		THREEFOLD: "threefold",
 		TIMEOUT: "timeout",
-		INSUFFICIENT: "insufficient mating material",
-		AGREEMENT: "agreement"
+		INSUFFICIENT: "insufficient material",
+		DRAW_AGREED: "draw agreed"
 	};
+	
+	Result._descriptions={};
+	
+	Result._descriptions[Result.types.CHECKMATE]="[winner] won by checkmate";
+	Result._descriptions[Result.types.RESIGNATION]="[loser] resigned";
+	Result._descriptions[Result.types.FIFTYMOVE]="Fifty move rule";
+	Result._descriptions[Result.types.THREEFOLD]="Threefold repetition";
+	Result._descriptions[Result.types.TIMEOUT]="[loser] forfeit on time";
+	Result._descriptions[Result.types.INSUFFICIENT]="Insufficient mating material";
+	Result._descriptions[Result.types.DRAW_AGREED]="Draw agreed";
 	
 	Result.WHITE="white";
 	Result.BLACK="black";

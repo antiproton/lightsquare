@@ -11,6 +11,7 @@ define(function(require) {
 	var Position=require("chess/Position");
 	var Piece=require("chess/Piece");
 	var Server=require("lib/Server");
+	var Result=require("chess/Result");
 	
 	document.body.appendChild(document.createElement("div"));
 	var button=document.createElement("button");
@@ -68,6 +69,10 @@ define(function(require) {
 	
 	move=game.move(11, 28);
 	table.history.move(move);
+	
+	var res=new Result("gus", "opp", Result.WHITE, Result.types.CHECKMATE);
+	
+	console.log(res.getDescription());
 
 	table.history.UserSelect.addHandler(this, function(data) {
 		var position=data.move.getPositionAfter();
