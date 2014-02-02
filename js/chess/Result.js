@@ -1,87 +1,93 @@
 define(function(require) {
-	var resultString={};
+	var Piece=require("chess/Piece");
 	
-	resultString[Result.WHITE]="1-0";
-	resultString[Result.BLACK]="0-1";
-	resultString[Result.DRAW]="\u00bd-\u00bd";
+	function Result(white, black, result, resultDetails) {
+		this._players=[];
+		this._players[Piece.WHITE]=white;
+		this._players[Piece.BLACK]=black;
+		this._result=result;
+		this._resultDetails=resultDetails;
+	}
 	
-	var winResult=[];
-	
-	winResult[Piece.WHITE]=Result.WHITE;
-	winResult[Piece.BLACK]=Result.BLACK;
-	
-	var winningColour={};
-	
-	winningColour[Result.WHITE]=Piece.WHITE;
-	winningColour[Result.BLACK]=Piece.BLACK;
-	
-	var Result={
-		SCORE_WIN: 1,
-		SCORE_DRAW: .5,
-		SCORE_LOSS: 0,
+	Result.prototype.getSummary=function() {
+		var summary;
 		
-		WHITE: "white",
-		BLACK: "black",
-		DRAW: "draw",
+		if(result===Result.DRAW) {
+			summary="Draw";
+		}
 		
-		details: {
-			CHECKMATE: "checkmate",
-			RESIGNATION: "resignation",
-			FIFTYMOVE: "stalemate (fifty move rule)",
-			THREEFOLD: "stalemate (threefold repetition)",
-			TIMEOUT: "timeout",
-			INSUFFICIENT: "stalemate (insufficient mating material)",
-			AGREEMENT: "agreement"
-		},
-	
-		getDetailsString: function(white, black, result, resultDetails) {
-			var summary;
-			var details=Result.details[resultDetails];
+		else {
+			var players=[];
 			
-			if(result===Result.DRAW) {
-				summary="Draw";
-			}
+			players[Piece.WHITE]=white;
+			players[Piece.BLACK]=black;
 			
-			else {
-				var players=[];
-				
-				players[Piece.WHITE]=white;
-				players[Piece.BLACK]=black;
-				
-				var winner=players[Result.getWinningColour(result)];
-				
-				summary=winner+" won";
-			}
+			var winner=players[Result.getWinningColour(result)];
 			
-			return summary+" ("+details+")";
-		},
+			summary=this._players[Result.getWinningColour(this._result)]+" won";
+		}
+		
+		return summary;
+	}
 	
-		getString: function(result) {
-			return resultString[result];
-		},
-	
-		getWinningColour: function(result) {
-			return winningColour[result];
-		},
-	
-		getWinResult: function(colour) {
-			return winResult[colour];
-		},
-	
-		getScore: function(result, colour) {
-			if(result===Result.DRAW) {
-				return Result.SCORE_DRAW;
-			}
-	
-			if(colour===WHITE) {
-				return (result===Result.WHITE?Result.SCORE_WIN:Result.SCORE_LOSS);
-			}
-	
-			if(colour===BLACK) {
-				return (result===Result.BLACK?Result.SCORE_WIN:Result.SCORE_LOSS);
-			}
+	Result.prototype.getTally=function() {
+		return Result.getTally(this._result);
+	}
+
+	Result.getWinningColour=function(result) {
+		return Result._winningColours[result];
+	};
+
+	Result.getWinResult=function(colour) {
+		return Result._winResults[colour];
+	};
+
+	Result.getScore=function(result, colour) {
+		if(result===Result.DRAW) {
+			return Result.score.DRAW;
+		}
+
+		else {
+			return (colour===Result.getWinningColour(result)?Result.score.WIN:Result.score.LOSS);
 		}
 	};
+	
+	Result.getTally=function(result) {
+		return Result._tallies[result];
+	};
+	
+	Result.score={
+		WIN: 1,
+		DRAW: 0.5,
+		LOSS: 0
+	};
+	
+	Result.details={ //FIXME
+		CHECKMATE: "checkmate",
+		RESIGNATION: "resignation",
+		FIFTYMOVE: "fifty move rule",
+		THREEFOLD: "threefold repetition",
+		TIMEOUT: "timeout",
+		INSUFFICIENT: "insufficient mating material",
+		AGREEMENT: "agreement"
+	};
+	
+	Result.WHITE="white";
+	Result.BLACK="black";
+	Result.DRAW="draw";
+	
+	Result._tallies={};
+	Result._tallies[Result.WHITE]="1-0";
+	Result._tallies[Result.BLACK]="0-1";
+	Result._tallies[Result.DRAW]="\u00bd-\u00bd";
+	
+	Result._winResults=[];
+	Result._winResults[Piece.WHITE]=Result.WHITE;
+	Result._winResults[Piece.BLACK]=Result.BLACK;
+	
+	Result._winningColours={};
+	Result._winningColours[Result.WHITE]=Piece.WHITE;
+	Result._winningColours[Result.BLACK]=Piece.BLACK;
 	
 	return Result;
 });
