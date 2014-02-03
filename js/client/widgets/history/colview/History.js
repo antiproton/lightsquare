@@ -13,7 +13,6 @@ define(function(require) {
 		this._template=new Template(html, parent);
 		this._fullmoves=new List();
 		this._selectedMove=null;
-		this._lastMove=null;
 	}
 
 	History.prototype.move=function(move) {
@@ -34,30 +33,20 @@ define(function(require) {
 			});
 		});
 
-		//historyMove.setPreviousItem(this._lastMove); //FIXME commented out, probably not necessary
-
-		if(this._lastMove!==null) {
-			//this._lastMove.setNextItem(historyMove);
-		}
-
-		this._lastMove=historyMove;
-
 		this.select(historyMove);
 	}
 
 	History.prototype.undo=function() {
-		var move=this._lastMove;
+		var move=this.getLastMove();
 		var fullmove;
-		var previousMove;
 
 		if(move!==null) {
-			previousMove=move.getPreviousMove();
 			fullmove=move.getParentFullmove();
 			fullmove.remove(move);
 
 			if(fullmove.isEmpty()) {
 				this._fullmoves.remove(fullmove);
-				this._template.root.removeChild(fullmove.node);
+				this._template.root.removeChild(fullmove.getNode());
 			}
 
 			if(previousMove!==null) {
@@ -66,10 +55,15 @@ define(function(require) {
 
 			this._lastMove=previousMove;
 		}
+		
+		if(this._selectedMove===move) {
+			this.select(this.getLastMove());
+		}
 	}
 
 	History.prototype.clear=function() {
 		this._template.root.innerHTML="";
+		this._fullmoves=[];
 	}
 
 	History.prototype.getLastMove=function() {
