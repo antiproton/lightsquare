@@ -10,7 +10,7 @@ define(function(require) {
 	require("lib/Array.getShallowCopy");
 
 	function Game(options) {
-		this._state=Game.state.IN_PROGRESS;
+		this._state=Game.states.IN_PROGRESS;
 		this._startTime=time();
 		this._endTime=null;
 		this._result=null;
@@ -42,7 +42,7 @@ define(function(require) {
 		this._piecesTaken=new PiecesTaken();
 	}
 	
-	Game.state={
+	Game.states={
 		IN_PROGRESS: "In progress",
 		CANCELED: "Canceled",
 		ABANDONED: "Abandoned",
@@ -107,19 +107,18 @@ define(function(require) {
 
 		if(move.isLegal()) {
 			this._position=move.getPositionAfter();
-			this.drawOffered=false;
 
 			if(move.isMate()) {
-				//this._gameOver(Result.WinResult[colour], RESULT_DETAILS_CHECKMATE); //FIXME
+				this._gameOver(Result.getWinResult(colour), Result.types.CHECKMATE);
 			}
 
 			else {
 				if(!this._position.playerCanMate(Piece.WHITE) && !this._position.playerCanMate(Piece.BLACK)) {
-					//this._gameOver(RESULT_DRAW, RESULT_DETAILS_INSUFFICIENT);
+					this._gameOver(Result.DRAW, Result.types.STALEMATE_INSUFFICIENT_MATERIAL);
 				}
 
-				if(this._position.countLegalMoves(oppColour)===0 && this.type!==GAME_TYPE_BUGHOUSE) {
-					//this._gameOver(RESULT_DRAW, RESULT_DETAILS_STALEMATE);
+				if(this._position.countLegalMoves(oppColour)===0) {
+					this._gameOver(Result.DRAW, Result.types.STALEMATE_NO_MOVES);
 				}
 			}
 
