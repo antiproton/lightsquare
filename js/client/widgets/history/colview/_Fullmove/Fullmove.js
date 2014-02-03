@@ -14,6 +14,10 @@ define(function(require) {
 		this._template=new Template(html, parent);
 		this._setupTemplate();
 	}
+	
+	Fullmove.prototype.getNode=function() {
+		return this._template.root;
+	}
 
 	Fullmove.prototype._setupTemplate=function() {
 		this._fullmoveCol=this._template.fullmove_col;
