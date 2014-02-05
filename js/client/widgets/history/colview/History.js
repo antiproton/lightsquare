@@ -46,7 +46,7 @@ define(function(require) {
 
 			if(fullmove.isEmpty()) {
 				this._fullmoves.remove(fullmove);
-				this._template.root.removeChild(fullmove.getNode());
+				fullmove.removeNode();
 			}
 
 			if(previousMove!==null) {

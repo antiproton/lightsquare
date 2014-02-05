@@ -15,8 +15,8 @@ define(function(require) {
 		this._setupTemplate();
 	}
 	
-	Fullmove.prototype.getNode=function() {
-		return this._template.root;
+	Fullmove.prototype.removeNode=function() {
+		this._template.root.parentNode.removeChild(this._template.root);
 	}
 
 	Fullmove.prototype._setupTemplate=function() {
