@@ -21,6 +21,13 @@ define(function(require) {
 	button.addEventListener("click", function() {
 		console.log("connect");
 		server=new Server("ws://chess:8080");
+		
+		server.subscribe("*", function(url, data) {
+			if(url!=="/keepalive") {
+				console.log(url);
+				console.log(data);
+			}
+		});
 	});
 	
 	button=document.createElement("button");
