@@ -10,8 +10,7 @@ define(function(require) {
 			template: html,
 			data: {
 				"challenges": {}
-			},
-			modifyArrays: false
+			}
 		});
 		
 		this._server=server;
@@ -31,8 +30,6 @@ define(function(require) {
 		this._template.on("accept", (function(event) {
 			this._server.send("/challenge/accept", event.context.id);
 		}).bind(this));
-		
-		template=this._template;
 	}
 	
 	return ChallengeList;
