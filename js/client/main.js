@@ -12,16 +12,17 @@ define(function(require) {
 	var Piece=require("chess/Piece");
 	var Server=require("lib/Server");
 	var Result=require("chess/Result");
+	var ChallengeList=require("widgets/ChallengeList/ChallengeList");
 	
 	document.body.appendChild(document.createElement("div"));
 	var button=document.createElement("button");
 	button.innerHTML="connect";
 	document.body.appendChild(button);
 	
+	server=new Server("ws://chess:8080");
 	button.addEventListener("click", function() {
 		console.log("connect");
-		server=new Server("ws://chess:8080");
-		
+		server.connect();
 		server.subscribe("*", function(url, data) {
 			if(url!=="/keepalive") {
 				console.log(url);
@@ -36,7 +37,7 @@ define(function(require) {
 	
 	button.addEventListener("click", function() {
 		console.log("disconnect");
-		server.close();
+		server.disconnect();
 	});
 	
 	button=document.createElement("button");
@@ -58,6 +59,8 @@ define(function(require) {
 	game=new Game({
 		startingFen: fen
 	});
+	
+	var challengeList=new ChallengeList(document.body, server);
 
 	move=game.move(11, 28);
 	table.history.move(move);
