@@ -1,10 +1,10 @@
-div.challenge_list{
+div.challenge_list {
 	display: inline-block;
 	border: 1px solid #bfbfbf;
 	background: #efefef;
 }
 
-div.challenge{
+div.challenge {
 	border-bottom: 1px solid #bfbfbf;
 	padding: 5px;
 }
