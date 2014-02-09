@@ -29,21 +29,15 @@ require_once "session.php";
 	</head>
 	<body>
 		<div id="topbar">
-			<div class="layout_main">
-				<div id="title">
-					Chess
-				</div>
-				<div id="user">
-					asd
-				</div>
+			<div id="nav">
+				Chess
+			</div>
+			<div id="user">
+				asd
 			</div>
 		</div>
-		<div class="main">
-			<div id="page">
-				<h1 class="pagetitle">Opening explorer</h1>
-				<div id="table">
-				</div>
-			</div>
+		<div id="tabs">
+			
 		</div>
 	</body>
 </html>
