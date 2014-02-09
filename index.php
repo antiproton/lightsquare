@@ -28,15 +28,18 @@ require_once "session.php";
 		<script data-main="main" src="/lib/js/requirejs/require.js"></script>
 	</head>
 	<body>
-		<div id="topbar">
+		<div id="top-bar">
 			<div id="nav">
-				Chess
+				NodeChess
 			</div>
 			<div id="user">
-				asd
+				
 			</div>
 		</div>
-		<div id="tabs">
+		<div id="tab-bar">
+			
+		</div>
+		<div id="tab-body">
 			
 		</div>
 	</body>
