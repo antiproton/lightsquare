@@ -28,7 +28,7 @@ require_once "session.php";
 		<script data-main="main" src="/lib/js/requirejs/require.js"></script>
 	</head>
 	<body>
-		<div id="top-bar">
+		<div id="top_bar">
 			<div id="nav">
 				NodeChess
 			</div>
@@ -36,10 +36,10 @@ require_once "session.php";
 				
 			</div>
 		</div>
-		<div id="tab-bar">
+		<div id="tab_bar">
 			
 		</div>
-		<div id="tab-body">
+		<div id="tab_body">
 			
 		</div>
 	</body>

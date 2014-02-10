@@ -12,7 +12,7 @@ body {
 	cursor: default;
 }
 
-#top-bar {
+#top_bar {
 	color: white;
 	display: flex;
 	padding: .5em;
@@ -24,6 +24,6 @@ body {
 	margin-left: auto;
 }
 
-#tab-bar {
+#tab_bar {
 	background: #CECECE;
 }
