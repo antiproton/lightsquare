@@ -1,7 +1,11 @@
 define(function(require) {
 	require("lib/ready@");
 	var Server=require("lib/Server");
+	var $=require("lib/dom/byId");
+	var TabControl=require("lib/widgets/TabControl/TabControl");
 	
-	server=new Server("ws://chess:8080");
+	var server=new Server("ws://chess:8080");
 	server.connect();
+	
+	
 });
