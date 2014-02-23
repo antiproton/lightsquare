@@ -9,7 +9,7 @@ define(function(require) {
 			this._board.push(Piece.NONE);
 		}
 
-		this._kingPositions = []
+		this._kingPositions = [];
 		this._kingPositions[Piece.WHITE] = null;
 		this._kingPositions[Piece.BLACK] = null;
 	}
