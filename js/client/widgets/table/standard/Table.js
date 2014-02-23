@@ -1,25 +1,25 @@
 define(function(require) {
-	var Template=require("lib/dom/Template");
-	var Board=require("widgets/board/Board");
-	var History=require("widgets/history/colview/History");
-	var html=require("file@./resources/table.html");
+	var Template = require("lib/dom/Template");
+	var Board = require("widgets/board/Board");
+	var History = require("widgets/history/colview/History");
+	var html = require("file@./resources/table.html");
 	require("css@./resources/table.css");
 
 	function Table(parent) {
-		this._template=new Template(html, parent);
+		this._template = new Template(html, parent);
 
-		//this.playerInfo={
+		//this.playerInfo = {
 		//	player: new PlayerInfo(this._template.player_info_player),
 		//	opponent: new PlayerInfo(this._template.player_info_opponent)
 		//};
 		//
-		//this.playerClock={
+		//this.playerClock = {
 		//	player: new PlayerClock(this._template.player_clock_player),
 		//	opponent: new PlayerClock(this._template.player_clock_opponent)
 		//};
 
-		this.board=new Board(this._template.board);
-		this.history=new History(this._template.history);
+		this.board = new Board(this._template.board);
+		this.history = new History(this._template.history);
 	}
 
 	return Table;

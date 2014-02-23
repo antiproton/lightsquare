@@ -1,4 +1,4 @@
 define(function(require) {
-	global.X=0;
-	global.Y=1;
+	global.X = 0;
+	global.Y = 1;
 });

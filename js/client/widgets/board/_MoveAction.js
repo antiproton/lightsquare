@@ -3,17 +3,17 @@ define(function(require) {
 		this.reset();
 	}
 
-	MoveAction.prototype.reset=function() {
-		this.mode=MoveAction.CLICK;
-		this.selected=false;
-		this.isInProgress=false;
-		this.piece=null;
-		this.from=null;
-		this.mouseOffsets=[0, 0]
+	MoveAction.prototype.reset = function() {
+		this.mode = MoveAction.CLICK;
+		this.selected = false;
+		this.isInProgress = false;
+		this.piece = null;
+		this.from = null;
+		this.mouseOffsets = [0, 0]
 	}
 
-	MoveAction.CLICK=0;
-	MoveAction.DRAG=1;
+	MoveAction.CLICK = 0;
+	MoveAction.DRAG = 1;
 
 	return MoveAction;
 });

@@ -1,8 +1,8 @@
 define(function(require) {
-	var Fen=require("chess/Fen");
-	var Piece=require("chess/Piece");
+	var Fen = require("chess/Fen");
+	var Piece = require("chess/Piece");
 
-	var Colour={
+	var Colour = {
 		getCode: function(colour) {
 			if(colour in this._codeFromFen) {
 				return this._codeFromFen[colour];
@@ -24,22 +24,22 @@ define(function(require) {
 		}
 	};
 
-	Colour._codeFromFen={};
-	Colour._codeFromFen[Fen.ACTIVE_WHITE]=Piece.WHITE;
-	Colour._codeFromFen[Fen.ACTIVE_BLACK]=Piece.BLACK;
+	Colour._codeFromFen = {};
+	Colour._codeFromFen[Fen.ACTIVE_WHITE] = Piece.WHITE;
+	Colour._codeFromFen[Fen.ACTIVE_BLACK] = Piece.BLACK;
 
-	Colour._fenFromCode=[];
-	Colour._fenFromCode[Piece.WHITE]=Fen.ACTIVE_WHITE;
-	Colour._fenFromCode[Piece.BLACK]=Fen.ACTIVE_BLACK;
+	Colour._fenFromCode = [];
+	Colour._fenFromCode[Piece.WHITE] = Fen.ACTIVE_WHITE;
+	Colour._fenFromCode[Piece.BLACK] = Fen.ACTIVE_BLACK;
 
-	Colour._codeFromName={
+	Colour._codeFromName = {
 		"white": Piece.WHITE,
 		"black": Piece.BLACK
 	};
 
-	Colour._nameFromCode=[];
-	Colour._nameFromCode[Piece.WHITE]="white";
-	Colour._nameFromCode[Piece.BLACK]="black";
+	Colour._nameFromCode = [];
+	Colour._nameFromCode[Piece.WHITE] = "white";
+	Colour._nameFromCode[Piece.BLACK] = "black";
 
 	return Colour;
 });

@@ -7,9 +7,9 @@ require_once "session.php";
 		<title>Chess</title>
 		<link rel="stylesheet" href="/css/main.css">
 		<script>
-		var global=window;
+		var global = window;
 
-		var require={
+		var require = {
 			baseUrl: "js/client",
 			paths: {
 				"lib": "/lib/js"
@@ -21,7 +21,7 @@ require_once "session.php";
 					"chess": "../chess"
 				}
 			},
-			urlArgs: "timestamp="+(new Date()).valueOf(),
+			urlArgs: "timestamp=" + (new Date()).valueOf(),
 			pluginSeparator: "@"
 		};
 		</script>
