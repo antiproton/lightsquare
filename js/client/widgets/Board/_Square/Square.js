@@ -6,7 +6,7 @@ define(function(require) {
 	var Chess = require("chess/Chess");
 	var style = require("lib/dom/style");
 	var Fen = require("chess/Fen");
-	var Piece = require("widgets/piece/Piece");
+	var Piece = require("widgets/Piece/Piece");
 	var getOffsets = require("lib/dom/getOffsets");
 	var html = require("file@./resources/square.html");
 	require("css@./resources/square.css");

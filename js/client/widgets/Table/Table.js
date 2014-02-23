@@ -1,7 +1,7 @@
 define(function(require) {
 	var Template = require("lib/dom/Template");
-	var Board = require("widgets/board/Board");
-	var History = require("widgets/history/colview/History");
+	var Board = require("widgets/Board/Board");
+	var History = require("widgets/History/History");
 	var html = require("file@./resources/table.html");
 	require("css@./resources/table.css");
 
