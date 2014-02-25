@@ -16,7 +16,7 @@ define(function(require) {
 		getSquareColour: function(square) {
 			var coords = Chess.coordsFromSquare(square);
 
-			return (coords[X] % 2 === coords[Y] % 2 ? Piece.BLACK:Piece.WHITE);
+			return (coords[X] % 2 === coords[Y] % 2 ? Piece.BLACK : Piece.WHITE);
 		},
 
 		getRelativeSquare: function(square, colour) {
@@ -28,7 +28,7 @@ define(function(require) {
 		},
 
 		yFromSquare: function(square) {
-			return ((square - Chess.xFromSquare(square))/8);
+			return ((square - Chess.xFromSquare(square)) / 8);
 		},
 
 		fileFromSquare: function(square) {
@@ -52,7 +52,7 @@ define(function(require) {
 
 		coordsFromSquare: function(square) {
 			var x = square % 8;
-			var y = (square - x)/8;
+			var y = (square - x) / 8;
 
 			return [x, y];
 		},
