@@ -1,4 +1,5 @@
 define(function(require) {
+	require("chess/constants");
 	var Piece = require("chess/Piece");
 
 	var Chess = {
@@ -167,7 +168,7 @@ define(function(require) {
 				var distance = Chess.getDiagonalDistance(fromCoords, toCoords);
 
 				if(distance > 0) {
-					increment = difference / distance;
+					increment = difference/distance;
 
 					for(var square = from + increment; square < to; square += increment) {
 						squares.push(square);
