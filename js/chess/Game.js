@@ -151,6 +151,16 @@ define(function(require) {
 		this._checkThreefold();
 		this._checkTime();
 	}
+	
+	Game.prototype.getLastMove = function() {
+		if(this._history.length > 0) {
+			return this._history[this._history.length - 1];
+		}
+		
+		else {
+			return null;
+		}
+	}
 
 	Game.prototype._checkTime = function() {
 		this._calculateTime();
