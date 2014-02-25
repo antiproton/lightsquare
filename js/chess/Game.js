@@ -138,7 +138,7 @@ define(function(require) {
 	Game.prototype.undoLastMove = function() {
 		this._history.pop();
 		
-		var move = this.getLastMove();
+		var move = this._getLastMove();
 		
 		if(move !== null) {
 			this._position = move.getPositionAfter();
@@ -152,7 +152,7 @@ define(function(require) {
 		this._checkTime();
 	}
 	
-	Game.prototype.getLastMove = function() {
+	Game.prototype._getLastMove = function() {
 		if(this._history.length > 0) {
 			return this._history[this._history.length - 1];
 		}
