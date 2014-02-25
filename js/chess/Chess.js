@@ -114,7 +114,7 @@ define(function(require) {
 		},
 
 		isPawnMove: function(relFrom, relTo) {
-			return (relTo-relFrom === 8);
+			return (relTo - relFrom === 8);
 		},
 
 		isDoublePawnMove: function(relFrom, relTo) {
