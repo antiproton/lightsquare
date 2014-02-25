@@ -1,5 +1,4 @@
 define(function(require) {
-	require("chess/constants");
 	var Piece = require("chess/Piece");
 
 	var Chess = {
