@@ -14,7 +14,7 @@ define(function(require) {
 		this._startTime = time();
 		this._endTime = null;
 		this._result = null;
-		this._resultDetails = null;
+		this._resultType = null;
 		
 		this._options = {
 			startingFen: Fen.STARTING_FEN,
@@ -40,6 +40,11 @@ define(function(require) {
 		this._startingPosition = new Position(this._options.startingFen);
 		this._history = [];
 		this._piecesTaken = new PiecesTaken();
+		
+		this._checkTimeTimeout = null;
+		this._clocks = [];
+		this._clocks[Piece.WHITE] = this._options.initialTime;
+		this._clocks[Piece.BLACK] = this._options.initialTime;
 	}
 	
 	Game.states = {
@@ -76,8 +81,8 @@ define(function(require) {
 		return this._result;
 	}
 	
-	Game.prototype.getResultDetails = function() {
-		return this._resultDetails;
+	Game.prototype.getResultType = function() {
+		return this._resultType;
 	}
 
 	Game.prototype.isFiftymoveClaimable = function() {
@@ -109,7 +114,7 @@ define(function(require) {
 			this._position = move.getPositionAfter();
 
 			if(move.isMate()) {
-				this._gameOver(Result.getWinResult(colour), Result.types.CHECKMATE);
+				this._gameOver(Result.win(colour), Result.types.CHECKMATE);
 			}
 
 			else {
@@ -124,6 +129,7 @@ define(function(require) {
 
 			this._history.push(move);
 			this._checkThreefold();
+			this._checkTime();
 		}
 
 		return move;
@@ -143,35 +149,37 @@ define(function(require) {
 		}
 		
 		this._checkThreefold();
-	}
-	
-	Game.prototype.getLastMove = function() {
-		if(this._history.length>0) {
-			return this._history[this._history.length - 1];
-		}
-		
-		else {
-			return null;
-		}
-	}
-	
-	Game.prototype.resign = function(colour) {
-		//this._gameOver(etc)
-	}
-	
-	Game.prototype.drawByAgreement = function() {
-		//...
+		this._checkTime();
 	}
 
-	Game.prototype._checkTime = function(colour) {
-		/*
-		FIXME uses old constants
-		*/
-		//if(this.time[colour]<1) {
-		//	var oppColour = Chess.getOppColour(colour);
-		//	var result = this._position.playerCanMate(oppColour) ? oppColour:DRAW;
-		//	this._gameOver(result, RESULT_DETAILS_TIMEOUT);
-		//}
+	Game.prototype._checkTime = function() {
+		this._calculateTime();
+		
+		var colours = [Piece.WHITE, Piece.BLACK];
+		var colour, oppColour;
+		
+		for(var i = 0; i < colours.length; i++) {
+			colour = colours[i];
+			oppColour = Chess.getOppColour(colour);
+			
+			if(this._clocks[colour] <= 0) {
+				var result = (this._position.playerCanMate(oppColour) ? Result.win(oppColour) : Result.DRAW);
+				this._gameOver(result, Result.types.TIMEOUT);
+			}
+		}
+		
+		if(this._state !== Game.states.FINISHED) {
+			var active = this._position.getActiveColour();
+			var timeLeft = this._clocks[active];
+			
+			if(this._checkTimeTimeout !== null) {
+				clearTimeout(this._checkTimeTimeout);
+			}
+			
+			this._checkTimeTimeout = setTimeout((function() {
+				this._checkTime();
+			}).bind(this), timeLeft);
+		}
 	}
 
 	Game.prototype._calculateTime = function() {
@@ -206,14 +214,11 @@ define(function(require) {
 		this._isThreefoldClaimable = (occurrences >= limit);
 	}
 
-	Game.prototype._gameOver = function(result, result_details) {
-		/*
-		FIXME uses old constants
-		*/
-		//this.state = GAME_STATE_FINISHED;
-		//this.result = result;
-		//this.resultDetails = result_details;
-		//this.drawOffered = false;
+	Game.prototype._gameOver = function(result, resultType) {
+		this._state = Game.states.FINISHED;
+		this._result = result;
+		this._resultType = resultType;
+		this._endTime = time();
 	}
 
 	return Game;
