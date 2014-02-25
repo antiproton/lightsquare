@@ -10,8 +10,8 @@ define(function(require) {
 	var Square = require("./_Square/Square");
 	var Chess = require("chess/Chess");
 	var Piece = require("chess/Piece");
-	require("css@./resources/board.css");
-	var html = require("file@./resources/board.html");
+	require("css!./resources/board.css");
+	var html = require("file!./resources/board.html");
 
 	function Board(parent) {
 		ChessBoard.call(this);

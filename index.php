@@ -19,8 +19,7 @@ require_once "session.php";
 					"chess": "../chess"
 				}
 			},
-			urlArgs: "timestamp=" + (new Date()).valueOf(),
-			pluginSeparator: "@"
+			urlArgs: "timestamp=" + (new Date()).valueOf()
 		};
 		</script>
 		<script data-main="main" src="/lib/js/requirejs/require.js"></script>

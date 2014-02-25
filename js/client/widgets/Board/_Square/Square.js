@@ -7,8 +7,8 @@ define(function(require) {
 	var Fen = require("chess/Fen");
 	var Piece = require("widgets/Piece/Piece");
 	var getOffsets = require("lib/dom/getOffsets");
-	var html = require("file@./resources/square.html");
-	require("css@./resources/square.css");
+	var html = require("file!./resources/square.html");
+	require("css!./resources/square.css");
 
 	function Square(parent, square, size) {
 		this._template = new Template(html, parent);

@@ -4,9 +4,9 @@ define(function(require) {
 	var Move = require("./_Move/Move");
 	var Fullmove = require("./_Fullmove/Fullmove");
 	var Template = require("lib/dom/Template");
-	var html = require("file@./resources/history.html");
+	var html = require("file!./resources/history.html");
 	var Piece = require("chess/Piece");
-	require("css@./resources/history.css");
+	require("css!./resources/history.css");
 
 	function History(parent) {
 		this.UserSelect = new Event(this);

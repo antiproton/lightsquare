@@ -1,8 +1,8 @@
 define(function(require) {
 	var Template = require("lib/dom/Template");
-	var html = require("file@./resources/fullmove.html");
+	var html = require("file!./resources/fullmove.html");
 	var Piece = require("chess/Piece");
-	require("css@./resources/fullmove.css");
+	require("css!./resources/fullmove.css");
 
 	function Fullmove(parent, fullmove) {
 		this._fullmove = fullmove;

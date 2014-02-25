@@ -1,8 +1,8 @@
 define(function(require) {
 	var Event = require("lib/Event");
 	var Template = require("lib/dom/Template");
-	var html = require("file@./resources/move.html");
-	require("css@./resources/move.css");
+	var html = require("file!./resources/move.html");
+	require("css!./resources/move.css");
 
 	function Move(move) {
 		this._move = move;

@@ -2,8 +2,8 @@ define(function(require) {
 	var Template = require("lib/dom/Template");
 	var Board = require("widgets/Board/Board");
 	var History = require("widgets/History/History");
-	var html = require("file@./resources/table.html");
-	require("css@./resources/table.css");
+	var html = require("file!./resources/table.html");
+	require("css!./resources/table.css");
 
 	function Table(parent) {
 		this._template = new Template(html, parent);

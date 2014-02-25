@@ -1,6 +1,6 @@
 define(function(require) {
-	require("css@./resources/challenge_list.css");
-	var html = require("file@./resources/challenge_list.html");
+	require("css!./resources/challenge_list.css");
+	var html = require("file!./resources/challenge_list.html");
 	var Ractive = require("lib/Ractive");
 	var create = require("lib/dom/create");
 	
