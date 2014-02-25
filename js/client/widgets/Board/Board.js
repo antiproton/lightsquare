@@ -1,6 +1,5 @@
 define(function(require) {
 	require("lib/Function.implement");
-	require("chess/constants");
 	var Template = require("lib/dom/Template");
 	var create = require("lib/dom/create");
 	var style = require("lib/dom/style");
@@ -92,20 +91,20 @@ define(function(require) {
 	}
 
 	Board.prototype.mouseIsOnBoard = function(event, useOffsets, offsets) {
-		offsets = offsets || [this._moveAction.mouseOffsets[X], this._moveAction.mouseOffsets[Y]];
+		offsets = offsets || this._moveAction.mouseOffsets;
 
 		var x = event.pageX;
 		var y = event.pageY;
 
 		if(useOffsets) {
-			x += (Math.round(this._squareSize/2) - offsets[X]);
-			y += (Math.round(this._squareSize/2) - offsets[Y]);
+			x += (Math.round(this._squareSize/2) - offsets.x);
+			y += (Math.round(this._squareSize/2) - offsets.y);
 		}
 
 		var boardOffsets = getOffsets(this._template.board);
 
-		x -= boardOffsets[X];
-		y -= boardOffsets[Y];
+		x -= boardOffsets.x;
+		y -= boardOffsets.y;
 
 		y = this.getBoardSize() - y;
 
@@ -334,18 +333,18 @@ define(function(require) {
 		}
 	}
 
-	Board.prototype._squareFromMouseEvent = function(e, useMoveActionOffsets) {
-		var x = e.pageX;
-		var y = e.pageY;
+	Board.prototype._squareFromMouseEvent = function(event, useMoveActionOffsets) {
+		var x = event.pageX;
+		var y = event.pageY;
 
 		if(useMoveActionOffsets) { //get the square that the middle of the piece is over
-			x += (Math.round(this._squareSize / 2) - this._moveAction.mouseOffsets[X]);
-			y += (Math.round(this._squareSize / 2) - this._moveAction.mouseOffsets[Y]);
+			x += (Math.round(this._squareSize / 2) - this._moveAction.mouseOffsets.x);
+			y += (Math.round(this._squareSize / 2) - this._moveAction.mouseOffsets.y);
 		}
 
-		var os = getOffsets(this._template.board);
+		var offsets = getOffsets(this._template.board);
 
-		return this._squareFromOffsets(x - os[X], this.getBoardSize() - (y - os[Y]));
+		return this._squareFromOffsets(x - offsets.x, this.getBoardSize() - (y - offsets.y));
 	}
 
 	Board.prototype._squareFromOffsets = function(x, y) {
@@ -357,18 +356,21 @@ define(function(require) {
 			boardY = 7 - boardY;
 		}
 
-		return Chess.squareFromCoords([boardX, boardY]);
+		return Chess.squareFromCoords({
+			x: boardX,
+			y: boardY
+		});
 	}
 
-	Board.prototype._squareMouseOffsetsFromEvent = function(e) {
+	Board.prototype._squareMouseOffsetsFromEvent = function(event) {
 		var boardOffsets = getOffsets(this._template.board);
 
-		var mouseOffsets = [
-			((e.pageX - boardOffsets[X])%this._squareSize || this._squareSize),
-			((e.pageY - boardOffsets[Y])%this._squareSize || this._squareSize)
-		];
+		var mouseOffsets = {
+			x: ((event.pageX - boardOffsets.x) % this._squareSize || this._squareSize),
+			y: ((event.pageY - boardOffsets.y) % this._squareSize || this._squareSize)
+		};
 
-		return mouseOffsets
+		return mouseOffsets;
 	}
 
 	Board.prototype._boardMouseDown = function(event, targetUiSquare) {
@@ -379,12 +381,17 @@ define(function(require) {
 
 			if(!this._moveAction.selected && !this._moveAction.isInProgress && this._board[square] !== Piece.NONE) {
 				targetUiSquare.setZIndexAbove();
+				
 				this._moveAction.selected = true;
 				this._moveAction.from = square;
 				this._moveAction.piece = this._board[square];
 
 				var squareOffsets = getOffsets(event.target);
-				var squareMouseOffsets = [event.pageX - squareOffsets[X], event.pageY - squareOffsets[Y]];
+				
+				var squareMouseOffsets = {
+					x: event.pageX - squareOffsets.x,
+					y: event.pageY - squareOffsets.y
+				};
 
 				this._moveAction.mouseOffsets = squareMouseOffsets;
 			}
@@ -439,8 +446,8 @@ define(function(require) {
 
 			if(!args.cancel) {
 				this._uiSquares[this._moveAction.from].setPiecePosition(
-					event.pageX - this._moveAction.mouseOffsets[X],
-					event.pageY - this._moveAction.mouseOffsets[Y]
+					event.pageX - this._moveAction.mouseOffsets.x,
+					event.pageY - this._moveAction.mouseOffsets.y
 				);
 			}
 		}
@@ -553,7 +560,7 @@ define(function(require) {
 	Board.prototype._updateMouseOverInfo = function(event) {
 		var square = this._squareFromMouseEvent(event);
 
-		if(this.mouseIsOnBoard(event) && square > -1 && square < 64) { //mouseIsOnBoard doesn't appear to be enough
+		if(this.mouseIsOnBoard(event) && square > -1 && square < 64) {
 			if(this._squareMouseCurrentlyOver !== square) {
 				if(this._squareMouseCurrentlyOver !== null) {
 					this.MouseLeavingSquare.fire({

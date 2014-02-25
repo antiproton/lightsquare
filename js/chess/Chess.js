@@ -1,5 +1,4 @@
 define(function(require) {
-	require("chess/constants");
 	var Piece = require("chess/Piece");
 
 	var Chess = {
@@ -16,7 +15,7 @@ define(function(require) {
 		getSquareColour: function(square) {
 			var coords = Chess.coordsFromSquare(square);
 
-			return (coords[X] % 2 === coords[Y] % 2 ? Piece.BLACK:Piece.WHITE);
+			return (coords.x % 2 === coords.y % 2 ? Piece.BLACK : Piece.WHITE);
 		},
 
 		getRelativeSquare: function(square, colour) {
@@ -28,7 +27,7 @@ define(function(require) {
 		},
 
 		yFromSquare: function(square) {
-			return ((square - Chess.xFromSquare(square))/8);
+			return ((square - Chess.xFromSquare(square)) / 8);
 		},
 
 		fileFromSquare: function(square) {
@@ -40,10 +39,10 @@ define(function(require) {
 		},
 
 		squareFromAlgebraic: function(algebraicSquare) {
-			return Chess.squareFromCoords([
-				Chess.FILES.indexOf(algebraicSquare.charAt(0)),
-				Chess.RANKS.indexOf(algebraicSquare.charAt(1))
-			]);
+			return Chess.squareFromCoords({
+				x: Chess.FILES.indexOf(algebraicSquare.charAt(0)),
+				y: Chess.RANKS.indexOf(algebraicSquare.charAt(1))
+			});
 		},
 
 		algebraicFromSquare: function(square) {
@@ -52,13 +51,16 @@ define(function(require) {
 
 		coordsFromSquare: function(square) {
 			var x = square % 8;
-			var y = (square - x)/8;
+			var y = (square - x) / 8;
 
-			return [x, y];
+			return {
+				x: x,
+				y: y
+			};
 		},
 
 		squareFromCoords: function(coords) {
-			return (coords[Y] * 8) + coords[X];
+			return (coords.y * 8) + coords.x;
 		},
 
 		squaresAreOnSameFile: function(squareA, squareB) {
@@ -77,12 +79,12 @@ define(function(require) {
 		*/
 
 		isRegularMove: function(type, fromCoords, toCoords) {
-			var diff = [
-				Math.abs(fromCoords[X] - toCoords[X]),
-				Math.abs(fromCoords[Y] - toCoords[Y])
-			];
+			var diff = {
+				x: Math.abs(fromCoords.x - toCoords.x),
+				y: Math.abs(fromCoords.y - toCoords.y)
+			};
 
-			if(diff[X] === 0 && diff[Y] === 0) {
+			if(diff.x === 0 && diff.y === 0) {
 				return false;
 			}
 
@@ -92,23 +94,23 @@ define(function(require) {
 				}
 
 				case Piece.KNIGHT: {
-					return ((diff[X] === 2 && diff[Y] === 1) || (diff[X] === 1 && diff[Y] === 2));
+					return ((diff.x === 2 && diff.y === 1) || (diff.x === 1 && diff.y === 2));
 				}
 
 				case Piece.BISHOP: {
-					return (diff[X] === diff[Y]);
+					return (diff.x === diff.y);
 				}
 
 				case Piece.ROOK: {
-					return (diff[X] === 0 || diff[Y] === 0);
+					return (diff.x === 0 || diff.y === 0);
 				}
 
 				case Piece.QUEEN: {
-					return (diff[X] === diff[Y] || (diff[X] === 0 || diff[Y] === 0));
+					return (diff.x === diff.y || (diff.x === 0 || diff.y === 0));
 				}
 
 				case Piece.KING: {
-					return ((diff[X] === 1 || diff[X] === 0) && (diff[Y] === 1 || diff[Y] === 0));
+					return ((diff.x === 1 || diff.x === 0) && (diff.y === 1 || diff.y === 0));
 				}
 			}
 		},
@@ -125,7 +127,7 @@ define(function(require) {
 			var fromCoords = Chess.coordsFromSquare(relFrom);
 			var toCoords = Chess.coordsFromSquare(relTo);
 
-			return (toCoords[Y] - fromCoords[Y] === 1 && Math.abs(toCoords[X] - fromCoords[X]) === 1);
+			return (toCoords.y - fromCoords.y === 1 && Math.abs(toCoords.x - fromCoords.x) === 1);
 		},
 
 		isPawnPromotion: function(relTo) {
@@ -133,11 +135,14 @@ define(function(require) {
 		},
 
 		getEpPawn: function(capturerFrom, capturerTo) {
-			return Chess.squareFromCoords([Chess.xFromSquare(capturerTo), Chess.yFromSquare(capturerFrom)]);
+			return Chess.squareFromCoords({
+				x: Chess.xFromSquare(capturerTo),
+				y: Chess.yFromSquare(capturerFrom)
+			});
 		},
 
 		getDiagonalDistance: function(fromCoords, toCoords) {
-			return Math.abs(fromCoords[X] - toCoords[X]);
+			return Math.abs(fromCoords.x - toCoords.x);
 		},
 
 		getSquaresBetween: function(from, to, inclusive) {
@@ -162,7 +167,7 @@ define(function(require) {
 				var distance = Chess.getDiagonalDistance(fromCoords, toCoords);
 
 				if(distance > 0) {
-					increment = difference/distance;
+					increment = difference / distance;
 
 					for(var square = from + increment; square < to; square += increment) {
 						squares.push(square);
@@ -219,11 +224,14 @@ define(function(require) {
 					var x, y;
 
 					for(var xDiff = -1; xDiff < 2; xDiff++) {
-						x = relCoords[X] + xDiff;
-						y = relCoords[Y] + 1;
+						x = relCoords.x + xDiff;
+						y = relCoords.y + 1;
 
 						if(x > -1 && x < 8 && y > -1 && y < 8) {
-							squares.push(Chess.getRelativeSquare(Chess.squareFromCoords([x, y]), colour));
+							squares.push(Chess.getRelativeSquare(Chess.squareFromCoords({
+								x: x,
+								y: y
+							}), colour));
 						}
 					}
 
@@ -236,11 +244,14 @@ define(function(require) {
 					var x, y;
 
 					for(var i = 0; i < 8; i++) {
-						x = fromCoords[X] + xDiffs[i];
-						y = fromCoords[Y] + yDiffs[i];
+						x = fromCoords.x + xDiffs[i];
+						y = fromCoords.y + yDiffs[i];
 
 						if(x > -1 && x < 8 && y > -1 && y < 8) {
-							squares.push(Chess.squareFromCoords([x, y]));
+							squares.push(Chess.squareFromCoords({
+								x: x,
+								y: y
+							}));
 						}
 					}
 
@@ -253,13 +264,16 @@ define(function(require) {
 
 					for(var ix = 0; ix < diffs.length; ix++) {
 						for(var iy = 0; iy < diffs.length; iy++) {
-							coords = [fromCoords[X], fromCoords[Y]];
+							coords = {
+								x: fromCoords.x,
+								y: fromCoords.y
+							};
 
 							while(true) {
-								coords[X] += diffs[ix];
-								coords[Y] += diffs[iy];
+								coords.x += diffs[ix];
+								coords.y += diffs[iy];
 
-								if(coords[X] > -1 && coords[X] < 8 && coords[Y] > -1 && coords[Y] < 8) {
+								if(coords.x > -1 && coords.x < 8 && coords.y > -1 && coords.y < 8) {
 									squares.push(Chess.squareFromCoords(coords));
 								}
 
@@ -277,8 +291,8 @@ define(function(require) {
 					var squareOnSameRank, squareOnSameFile;
 
 					for(var n = 0; n < 8; n++) {
-						squareOnSameRank = (fromCoords[Y] * 8) + n;
-						squareOnSameFile = fromCoords[X] + (n * 8);
+						squareOnSameRank = (fromCoords.y * 8) + n;
+						squareOnSameFile = fromCoords.x + (n * 8);
 
 						if(squareOnSameRank !== from) {
 							squares.push(squareOnSameRank);
@@ -307,14 +321,17 @@ define(function(require) {
 					var x, y;
 
 					for(var xDiff = -1; xDiff < 2; xDiff++) {
-						x = fromCoords[X] + xDiff;
+						x = fromCoords.x + xDiff;
 
 						if(x > -1 && x < 8) {
 							for(var yDiff = -1; yDiff < 2; yDiff++) {
-								y = fromCoords[Y] + yDiff;
+								y = fromCoords.y + yDiff;
 
 								if(y > -1 && y < 8) {
-									squares.push(Chess.squareFromCoords([x, y]));
+									squares.push(Chess.squareFromCoords({
+										x: x,
+										y: y
+									}));
 								}
 							}
 						}
@@ -325,10 +342,13 @@ define(function(require) {
 					var xDiffs = [-2, 2];
 
 					for(var i = 0; i < xDiffs.length; i++) {
-						x = fromCoords[X] + xDiffs[i];
+						x = fromCoords.x + xDiffs[i];
 
 						if(x > -1 && x < 8) {
-							squares.push(Chess.squareFromCoords([x, fromCoords[Y]]));
+							squares.push(Chess.squareFromCoords({
+								x: x,
+								y: fromCoords.y
+							}));
 						}
 					}
 

@@ -166,7 +166,7 @@ define(function(require) {
 				}
 
 				if(isDouble) {
-					this._positionAfter.setEpTarget(Chess.getRelativeSquare(this._relTo-8, this._colour));
+					this._positionAfter.setEpTarget(Chess.getRelativeSquare(this._relTo - 8, this._colour));
 				}
 
 				this._label.to = Chess.algebraicFromSquare(this._to);
@@ -174,7 +174,7 @@ define(function(require) {
 
 				if(isPromotion) {
 					this._positionAfter.setSquare(this._to, Piece.getPiece(promoteTo, this._colour));
-					this._label.special = MoveLabel.SIGN_PROMOTE + Fen.getPieceChar[Piece.getPiece(promoteTo, Piece.WHITE)];
+					this._label.special = MoveLabel.SIGN_PROMOTE + Fen.getPieceChar(Piece.getPiece(promoteTo, Piece.WHITE));
 				}
 
 				else {

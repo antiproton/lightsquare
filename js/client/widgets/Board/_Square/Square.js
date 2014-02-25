@@ -1,5 +1,4 @@
 define(function(require) {
-	require("chess/constants");
 	var Template = require("lib/dom/Template");
 	var Event = require("lib/Event");
 	var Colour = require("chess/Colour");
@@ -96,8 +95,8 @@ define(function(require) {
 		var offsets = getOffsets(this._template.root);
 
 		style(this._template.piece, {
-			top: y - offsets[Y],
-			left: x - offsets[X]
+			top: y - offsets.y,
+			left: x - offsets.x
 		});
 	}
 

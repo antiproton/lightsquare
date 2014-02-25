@@ -1,5 +1,4 @@
 define(function(require) {
-	require("chess/constants");
 	var Fen = require("chess/Fen");
 	var CastlingRights = require("chess/CastlingRights");
 	var Board = require("chess/Board");
@@ -158,11 +157,14 @@ define(function(require) {
 
 		for(var i = 0; i < xDiffs.length; i++) {
 			xDiff = xDiffs[i];
-			x = relCoords[X] + xDiff;
-			y = relCoords[Y] + 1;
+			x = relCoords.x + xDiff;
+			y = relCoords.y + 1;
 
 			if(x > -1 && x < 8 && y > -1 && y < 8) {
-				candidateSquare = Chess.getRelativeSquare(Chess.squareFromCoords([x, y]), playerColour);
+				candidateSquare = Chess.getRelativeSquare(Chess.squareFromCoords({
+					x: x,
+					y: y
+				}), playerColour);
 
 				if(this._board.getSquare(candidateSquare) === piece) {
 					attackers.push(candidateSquare);
@@ -180,14 +182,17 @@ define(function(require) {
 		var x, y, candidateSquare;
 
 		for(var xDiff = -1; xDiff<2; xDiff++) {
-			x = coords[X] + xDiff;
+			x = coords.x + xDiff;
 
 			if(x>-1 && x<8) {
 				for(var yDiff = -1; yDiff < 2; yDiff++) {
-					y = coords[Y] + yDiff;
+					y = coords.y + yDiff;
 
 					if(y > -1 && y < 8) {
-						candidateSquare = Chess.squareFromCoords([x, y]);
+						candidateSquare = Chess.squareFromCoords({
+							x: x,
+							y: y
+						});
 
 						if(this._board.getSquare(candidateSquare) === piece) {
 							attackers.push(candidateSquare);
@@ -311,7 +316,7 @@ define(function(require) {
 			reachableSquares = Chess.getReachableSquares(piece.type, square, piece.colour);
 
 			for(var i = 0; i < reachableSquares.length; i++) {
-				if((new Move(this, square, reachableSquares[i], Piece.QUEEN)).isLegal()) {
+				if((new Move(this, square, reachableSquares[i])).isLegal()) {
 					legalMoves.push(reachableSquares[i]);
 				}
 			}

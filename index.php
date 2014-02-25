@@ -7,8 +7,6 @@ require_once "session.php";
 		<title>Chess</title>
 		<link rel="stylesheet" href="/css/main.css">
 		<script>
-		var global = window;
-
 		var require = {
 			baseUrl: "js/client",
 			paths: {
