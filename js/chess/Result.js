@@ -45,7 +45,7 @@ define(function(require) {
 		return Result._winningColours[result];
 	};
 
-	Result.getWinResult = function(colour) {
+	Result.win = function(colour) {
 		return Result._winResults[colour];
 	};
 
