@@ -49,8 +49,6 @@ define(function(require) {
 	
 	Game.states = {
 		IN_PROGRESS: "In progress",
-		CANCELED: "Canceled",
-		ABANDONED: "Abandoned",
 		FINISHED: "Finished"
 	};
 	
@@ -106,33 +104,35 @@ define(function(require) {
 	}
 
 	Game.prototype.move = function(from, to, promoteTo) {
-		var move = new Move(this._position, from, to, promoteTo);
-		var colour = move.getColour();
-		var oppColour = Chess.getOppColour(colour);
-
-		if(move.isLegal()) {
-			this._position = move.getPositionAfter();
-
-			if(move.isMate()) {
-				this._gameOver(Result.win(colour), Result.types.CHECKMATE);
-			}
-
-			else {
-				if(!this._position.playerCanMate(Piece.WHITE) && !this._position.playerCanMate(Piece.BLACK)) {
-					this._gameOver(Result.DRAW, Result.types.STALEMATE_INSUFFICIENT_MATERIAL);
+		if(this._state === Game.states.IN_PROGRESS) {
+			var move = new Move(this._position, from, to, promoteTo);
+			var colour = move.getColour();
+			var oppColour = Chess.getOppColour(colour);
+	
+			if(move.isLegal()) {
+				this._position = move.getPositionAfter();
+	
+				if(move.isMate()) {
+					this._gameOver(Result.win(colour), Result.types.CHECKMATE);
 				}
-
-				if(this._position.countLegalMoves(oppColour) === 0) {
-					this._gameOver(Result.DRAW, Result.types.STALEMATE_NO_MOVES);
+	
+				else {
+					if(!this._position.playerCanMate(Piece.WHITE) && !this._position.playerCanMate(Piece.BLACK)) {
+						this._gameOver(Result.DRAW, Result.types.STALEMATE_INSUFFICIENT_MATERIAL);
+					}
+	
+					if(this._position.countLegalMoves(oppColour) === 0) {
+						this._gameOver(Result.DRAW, Result.types.STALEMATE_NO_MOVES);
+					}
 				}
+	
+				this._history.push(move);
+				this._checkThreefold();
+				this._checkTime();
 			}
-
-			this._history.push(move);
-			this._checkThreefold();
-			this._checkTime();
+	
+			return move;
 		}
-
-		return move;
 	}
 
 	Game.prototype.undoLastMove = function() {
@@ -153,13 +153,7 @@ define(function(require) {
 	}
 	
 	Game.prototype._getLastMove = function() {
-		if(this._history.length > 0) {
-			return this._history[this._history.length - 1];
-		}
-		
-		else {
-			return null;
-		}
+		return this._history[this._history.length - 1] || null;
 	}
 
 	Game.prototype._checkTime = function() {
@@ -193,7 +187,7 @@ define(function(require) {
 	}
 
 	Game.prototype._calculateTime = function() {
-
+		//TODO
 	}
 
 	Game.prototype._checkThreefold = function() {
