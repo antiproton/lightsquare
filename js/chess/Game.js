@@ -158,7 +158,27 @@ define(function(require) {
 
 	Game.prototype._checkTime = function() {
 		this._calculateTime();
+		this._checkForTimeouts();
 		
+		if(this._state !== Game.states.FINISHED) {
+			this._scheduleNextTimeCheck();
+		}
+	}
+	
+	Game.prototype._scheduleNextTimeCheck = function() {
+		var active = this._position.getActiveColour();
+		var timeLeft = this._clocks[active];
+		
+		if(this._checkTimeTimeout !== null) {
+			clearTimeout(this._checkTimeTimeout);
+		}
+		
+		this._checkTimeTimeout = setTimeout((function() {
+			this._checkTime();
+		}).bind(this), timeLeft);
+	}
+	
+	Game.prototype._checkForTimeouts = function() {
 		var colours = [Piece.WHITE, Piece.BLACK];
 		var colour, oppColour;
 		
@@ -168,21 +188,9 @@ define(function(require) {
 			
 			if(this._clocks[colour] <= 0) {
 				var result = (this._position.playerCanMate(oppColour) ? Result.win(oppColour) : Result.DRAW);
+				
 				this._gameOver(result, Result.types.TIMEOUT);
 			}
-		}
-		
-		if(this._state !== Game.states.FINISHED) {
-			var active = this._position.getActiveColour();
-			var timeLeft = this._clocks[active];
-			
-			if(this._checkTimeTimeout !== null) {
-				clearTimeout(this._checkTimeTimeout);
-			}
-			
-			this._checkTimeTimeout = setTimeout((function() {
-				this._checkTime();
-			}).bind(this), timeLeft);
 		}
 	}
 
