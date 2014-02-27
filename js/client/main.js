@@ -35,7 +35,7 @@ define(function(require) {
 	console.log(game.getPosition().countLegalMoves(Piece.BLACK));
 	
 	server.subscribe("*", function(url, data) {
-		if(url !== "/keepalive") {
+		if(url !== "/heartbeat") {
 			console.log(url, data);
 		}
 	});
