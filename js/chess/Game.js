@@ -166,8 +166,7 @@ define(function(require) {
 	}
 	
 	Game.prototype._scheduleNextTimeCheck = function() {
-		var active = this._position.getActiveColour();
-		var timeLeft = this._clocks[active];
+		var timeLeft = this._clocks[this._position.getActiveColour()];
 		
 		if(this._checkTimeTimeout !== null) {
 			clearTimeout(this._checkTimeTimeout);
