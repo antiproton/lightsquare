@@ -2,7 +2,6 @@ html, body {
 	display: flex;
 	width: 100%;
 	height: 100%;
-	background: red;
 }
 
 body {
@@ -10,23 +9,4 @@ body {
 	font-family: sans-serif;
 	font-size: 13px;
 	margin: 0;
-	cursor: default;
-}
-
-#logo {
-	width: 100px;
-	height: 100px;
-	background: #42C2ED;
-}
-
-#nav {
-	background: #3F3F3F;
-}
-
-#games {
-	width: 100px;
-}
-
-#table {
-	background: white;
 }
