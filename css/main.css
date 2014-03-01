@@ -5,7 +5,6 @@ html, body {
 }
 
 body {
-	flex-direction: column;
 	font-family: sans-serif;
 	font-size: 13px;
 	margin: 0;
