@@ -1,42 +1,28 @@
-#bar {
+.lightsquare_ui_root {
+	display: flex;
+	flex-direction: column;
+	flex-grow: 1;
+}
+
+.lightsquare_ui_header {
 	display: flex;
 	flex-direction: row;
 	align-content: stretch;
+	background: #223344;
 }
 
-#logo {
+.lightsquare_ui_logo {
 	width: 48px;
 	height: 48px;
 	background: #42C2ED;
 }
 
-#games {
+.lightsquare_ui_nav {
 	display: flex;
 }
 
-#main {
-	/*
-	flex fill
-	*/
+.lightsquare_ui_main {
 	display: flex;
 	flex-grow: 1;
-	height: 100%;
-	background: white;
+	background: #E8E8E8;
 }
-
-#nav {
-	flex-grow: 1;
-	background: #E0E0E0;
-	height: 2em;
-	border-bottom: 1px solid #B5B5B5;
-	box-shadow: 0 0px 6px rgba(0, 0, 0, .2);
-}
-
-#table {
-	box-shadow: 0 0px 6px rgba(0, 0, 0, .2);
-	background: white;
-}
-
-/*
-FIXME these should be classes (namespaced) instead of ids
-*/
