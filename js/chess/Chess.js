@@ -71,13 +71,6 @@ define(function(require) {
 			return Chess.yFromSquare(squareA) === Chess.yFromSquare(squareB);
 		},
 
-		/*
-		"regular" moves are all geometrically valid moves except pawn moves and castling.
-
-		(all the moves that don't depend on colour or other circumstances, and can be checked
-		by simply checking the relationship between the to square and the from square)
-		*/
-
 		isRegularMove: function(type, fromCoords, toCoords) {
 			var diff = {
 				x: Math.abs(fromCoords.x - toCoords.x),
@@ -196,14 +189,6 @@ define(function(require) {
 			return squares;
 		},
 
-		/*
-		get a list of squares reachable by a piece of the given type and colour, including
-		all pawn moves and castling, without taking into account any other information or
-		rules such as not moving through other pieces, moving into check, capturing own
-		pieces, or any castling rules other than "moving the king two squares to the left
-		or right".
-		*/
-
 		getReachableSquares: function(type, from, colour) {
 			var fromCoords = Chess.coordsFromSquare(from);
 			var squares = [];
@@ -212,13 +197,9 @@ define(function(require) {
 				case Piece.PAWN: {
 					var relFrom = Chess.getRelativeSquare(from, colour);
 
-					//double
-
 					if(relFrom < 16) {
 						squares.push(Chess.getRelativeSquare(relFrom + 16, colour));
 					}
-
-					//single and captures
 
 					var relCoords = Chess.coordsFromSquare(relFrom);
 					var x, y;
@@ -316,8 +297,6 @@ define(function(require) {
 				}
 
 				case Piece.KING: {
-					//regular king moves
-
 					var x, y;
 
 					for(var xDiff = -1; xDiff < 2; xDiff++) {
@@ -336,20 +315,12 @@ define(function(require) {
 							}
 						}
 					}
+					
+					var kingHomeSquare = (colour === Piece.BLACK ? 60 : 4);
+					var castlingSquares = (colour === Piece.BLACK ? [58, 62] : [2, 6]);
 
-					//castling moves
-
-					var xDiffs = [-2, 2];
-
-					for(var i = 0; i < xDiffs.length; i++) {
-						x = fromCoords.x + xDiffs[i];
-
-						if(x > -1 && x < 8) {
-							squares.push(Chess.squareFromCoords({
-								x: x,
-								y: fromCoords.y
-							}));
-						}
+					if(from === kingHomeSquare) {
+						squares = squares.concat(castlingSquares);
 					}
 
 					break;
