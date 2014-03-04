@@ -2,7 +2,7 @@ define(function(require) {
 	var ChessGame = require("chess/Game");
 	var Piece = require("chess/Piece");
 	var ChessMove = require("chess/Move");
-	var Move = require("./Move");
+	var Move = require("common/Move");
 
 	function Game(server, game) {
 		this.PromotionPieceNeeded = new Event(this);
