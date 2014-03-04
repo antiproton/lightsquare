@@ -6,8 +6,6 @@ define(function(require) {
 	function LightSquareUi(parent, app) {
 		this._app = app;
 		this._template = new Template(html, parent);
-		
-		var tabControl = new TabControl(this._template.tab_bar, this._template.main);
 	}
 	
 	return LightSquareUi;
