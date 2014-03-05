@@ -1,6 +1,7 @@
 define(function(require) {
 	var Challenge = require("./Challenge");
 	var Game = require("./Game");
+	var Event = require("lib/Event");
 	
 	function Application(server) {
 		this._server = server;
