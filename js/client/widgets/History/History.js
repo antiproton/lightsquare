@@ -1,23 +1,23 @@
 define(function(require) {
-	var List = require("lib/List");
 	var Event = require("lib/Event");
 	var Move = require("./_Move/Move");
 	var Fullmove = require("./_Fullmove/Fullmove");
 	var Template = require("lib/dom/Template");
 	var html = require("file!./resources/history.html");
 	var Piece = require("chess/Piece");
+	require("lib/Array.remove");
 	require("css!./resources/history.css");
 
 	function History(parent) {
 		this.UserSelect = new Event(this);
 		this._template = new Template(html, parent);
-		this._fullmoves = new List();
+		this._fullmoves = [];
 		this._selectedMove = null;
 	}
 
 	History.prototype.move = function(move) {
 		var historyMove = new Move(move);
-		var lastFullmove = this._fullmoves.getLastItem();
+		var lastFullmove = this._fullmoves[this._fullmoves.length - 1] || null;
 
 		if(lastFullmove === null || move.getColour() === Piece.WHITE) {
 			lastFullmove = this._fullmoves.push(new Fullmove(this._template.root, move.getFullmove()));
@@ -67,7 +67,7 @@ define(function(require) {
 	}
 
 	History.prototype.getLastMove = function() {
-		var fullmove = this._fullmoves.getLastItem();
+		var fullmove = this._fullmoves[this._fullmoves.length - 1] || null;
 
 		if(fullmove !== null) {
 			return fullmove.getLastMove();
