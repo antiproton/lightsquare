@@ -86,7 +86,7 @@ define(function(require) {
 		this._highlightedSquares[highlightType] = [];
 	}
 
-	Board.prototype.getBoardSize = function() {
+	Board.prototype._getBoardSize = function() {
 		return this._squareSize * 8;
 	}
 
@@ -106,7 +106,7 @@ define(function(require) {
 		x -= boardOffsets.x;
 		y -= boardOffsets.y;
 
-		y = this.getBoardSize() - y;
+		y = this._getBoardSize() - y;
 
 		return this._isXyOnBoard(x, y);
 	}
@@ -220,8 +220,8 @@ define(function(require) {
 	}
 
 	Board.prototype._updateHtml = function() {
-		var boardSize = this.getBoardSize();
-		var borderSize = this._borderWidth*2;
+		var boardSize = this._getBoardSize();
+		var borderSize = this._borderWidth * 2;
 		var paddingIfSurround = (this._showSurround ? this._coordsPadding : 0);
 		var paddingIfCoordsOrSurround = (this._showCoords || this._showSurround ? this._coordsPadding : 0);
 		var totalSize = paddingIfCoordsOrSurround + boardSize + borderSize + paddingIfSurround;
@@ -254,7 +254,7 @@ define(function(require) {
 
 	Board.prototype._updateHtmlCoords = function() {
 		var fileIndex, rankIndex;
-		var boardSize = this.getBoardSize();
+		var boardSize = this._getBoardSize();
 		var borderSize = this._borderWidth * 2;
 		var paddingIfSurround = (this._showSurround ? this._coordsPadding : 0);
 
@@ -344,7 +344,7 @@ define(function(require) {
 
 		var offsets = getOffsets(this._template.board);
 
-		return this._squareFromOffsets(x - offsets.x, this.getBoardSize() - (y - offsets.y));
+		return this._squareFromOffsets(x - offsets.x, this._getBoardSize() - (y - offsets.y));
 	}
 
 	Board.prototype._squareFromOffsets = function(x, y) {
@@ -552,7 +552,7 @@ define(function(require) {
 	}
 
 	Board.prototype._isXyOnBoard = function(x, y) {
-		var boardSize = this.getBoardSize();
+		var boardSize = this._getBoardSize();
 
 		return !(x < 0 || x > boardSize || y < 0 || y > boardSize);
 	}
