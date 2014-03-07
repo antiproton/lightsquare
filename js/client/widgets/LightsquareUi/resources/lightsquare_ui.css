@@ -6,6 +6,7 @@
 
 .lightsquare_ui_header {
 	display: flex;
+	flex-shrink: 0;
 	flex-direction: row;
 	align-content: stretch;
 	background: #223344;
