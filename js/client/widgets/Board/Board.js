@@ -201,11 +201,7 @@ define(function(require) {
 		var uiSquare;
 
 		for(var i = 0; i < 64; i++) {
-			uiSquare = new Square(
-				this._template.board,
-				i,
-				this._squareSize
-			);
+			uiSquare = new Square(this._template.board, i, this._squareSize);
 
 			uiSquare.MouseDown.addHandler(this, function(data, sender) {
 				this._boardMouseDown(data.event, sender);
