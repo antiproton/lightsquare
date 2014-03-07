@@ -8,7 +8,7 @@ define(function(require) {
 	function Piece(parent, size) {
 		this._template = new Template(html, parent);
 		this._style = "Merida";
-		this._piece = Piece.NONE;
+		this._piece = ChessPiece.NONE;
 		this._size = size || Piece.DEFAULT_SIZE;
 		this._setupHtml();
 	}
