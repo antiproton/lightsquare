@@ -53,6 +53,10 @@ define(function(require) {
 		return move;
 	}
 	
+	Game.prototype.getPosition = function() {
+		return this._game.getPosition();
+	}
+	
 	Game.prototype._serverMove = function(move) {
 		if(move.index > this._history.length) {
 			this._moveQueue[move.index] = move;
