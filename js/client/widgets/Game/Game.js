@@ -10,7 +10,11 @@ define(function(require) {
 		this._template = new Template(html, parent);
 
 		this._board = new Board(this._template.board);
-		this._history = new History(this._template.history);
+		this._board.setBoardArray(this._game.getPosition().getBoard().getBoardArray());
+		
+		this._board.UserMove.addHandler(this, function(data) {
+			this._game.move(data.from, data.to);
+		});
 	}
 
 	return Game;
