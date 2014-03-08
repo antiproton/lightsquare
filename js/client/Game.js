@@ -10,11 +10,14 @@ define(function(require) {
 		
 		this._server = server;
 		this._id = game.id;
+		
 		this._players = [];
 		this._players[Piece.WHITE] = game.white;
 		this._players[Piece.BLACK] = game.black;
+		
 		this._options = game.options;
 		this._game = new ChessGame(this._options);
+		
 		this._history = [];
 		this._moveQueue = [];
 		
