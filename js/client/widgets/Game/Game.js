@@ -13,7 +13,15 @@ define(function(require) {
 		this._board.setBoardArray(this._game.getPosition().getBoardArray());
 		
 		this._board.UserMove.addHandler(this, function(data) {
-			this._game.move(data.from, data.to);
+			var move = this._game.move(data.from, data.to);
+			
+			if(move.isLegal()) {
+				this._board.setBoardArray(move.getPositionAfter().getBoardArray());
+			}
+		});
+		
+		this._game.MoveReceived.addHandler(this, function(data) {
+			this._board.setBoardArray(data.move.getPositionAfter().getBoardArray());
 		});
 	}
 

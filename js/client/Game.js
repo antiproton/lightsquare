@@ -3,6 +3,7 @@ define(function(require) {
 	var Piece = require("chess/Piece");
 	var ChessMove = require("chess/Move");
 	var Move = require("common/Move");
+	var Event = require("lib/Event");
 
 	function Game(server, game) {
 		this.PromotionPieceNeeded = new Event(this);
@@ -74,8 +75,9 @@ define(function(require) {
 		}
 	}
 	
-	Game.prototype._applyServerMove = function(move) {
-		this._game.move(move.from, move.to, move.promoteTo);
+	Game.prototype._applyServerMove = function(serverMove) {
+		var move = this._game.move(serverMove.from, serverMove.to, serverMove.promoteTo);
+		
 		this._history.push(move);
 		
 		this.MoveReceived.fire({
