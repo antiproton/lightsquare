@@ -1,7 +1,6 @@
 define(function(require) {
 	var Template = require("lib/dom/Template");
 	var Event = require("lib/Event");
-	var Colour = require("chess/Colour");
 	var Chess = require("chess/Chess");
 	var style = require("lib/dom/style");
 	var Fen = require("chess/Fen");
@@ -16,6 +15,10 @@ define(function(require) {
 		this._size = size || Square.DEFAULT_SIZE;
 		this._squareStyle = Square.styles.BLUE;
 		this._highlightType = Square.highlightTypes.NONE;
+		
+		var coords = Chess.coordsFromSquare(this._square);
+
+		this._colour = (coords.x % 2 === coords.y % 2 ? "black" : "white");
 
 		this.MouseDown = new Event(this);
 		this.MouseUp = new Event(this);
@@ -109,9 +112,8 @@ define(function(require) {
 
 	Square.prototype._setupHtml = function() {
 		var self = this;
-		var colourName = Colour.getName(Chess.getSquareColour(this._square));
 
-		this._template.root.classList.add("board_square_" + colourName);
+		this._template.root.classList.add("board_square_" + this._colour);
 		this._template.root.classList.add("board_square_" + this._squareStyle);
 
 		this._template.piece.addEventListener("mousedown", function(event) {
