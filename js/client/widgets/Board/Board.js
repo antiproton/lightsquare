@@ -97,8 +97,8 @@ define(function(require) {
 		var y = event.pageY;
 
 		if(useOffsets) {
-			x += (Math.round(this._squareSize/2) - offsets.x);
-			y += (Math.round(this._squareSize/2) - offsets.y);
+			x += (Math.round(this._squareSize / 2) - offsets.x);
+			y += (Math.round(this._squareSize / 2) - offsets.y);
 		}
 
 		var boardOffsets = getOffsets(this._template.board);
