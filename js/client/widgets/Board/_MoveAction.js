@@ -9,7 +9,7 @@ define(function(require) {
 		this.isInProgress = false;
 		this.piece = null;
 		this.from = null;
-		this.mouseOffsets = [0, 0]
+		this.mouseOffsets = [0, 0];
 	}
 
 	MoveAction.CLICK = 0;
