@@ -44,8 +44,8 @@ define(function(require) {
 				this._history.push(move);
 				
 				this._server.send("/game/" + this._id + "/move", {
-					from: from,
-					to: to,
+					from: from.squareNo,
+					to: to.squareNo,
 					promoteTo: promoteTo
 				});
 			}
@@ -76,7 +76,11 @@ define(function(require) {
 	}
 	
 	Game.prototype._applyServerMove = function(serverMove) {
-		var move = this._game.move(serverMove.from, serverMove.to, serverMove.promoteTo);
+		var move = this._game.move(
+			Square.fromSquareNo(serverMove.from),
+			Square.fromSquareNo(serverMove.to),
+			serverMove.promoteTo
+		);
 		
 		this._history.push(move);
 		
