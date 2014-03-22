@@ -1,9 +1,7 @@
 define(function(require) {
 	var Template = require("lib/dom/Template");
 	var Event = require("lib/Event");
-	var Chess = require("chess/Chess");
 	var style = require("lib/dom/style");
-	var Fen = require("chess/Fen");
 	var Piece = require("widgets/Piece/Piece");
 	var getOffsets = require("lib/dom/getOffsets");
 	var html = require("file!./resources/square.html");
@@ -15,10 +13,7 @@ define(function(require) {
 		this._size = size || Square.DEFAULT_SIZE;
 		this._squareStyle = Square.styles.BLUE;
 		this._highlightType = Square.highlightTypes.NONE;
-		
-		var coords = Chess.coordsFromSquare(this._square);
-
-		this._colour = (coords.x % 2 === coords.y % 2 ? "black" : "white");
+		this._colour = (this._square.coords.x % 2 === this._square.coords.y % 2 ? "black" : "white");
 
 		this.MouseDown = new Event(this);
 		this.MouseUp = new Event(this);
