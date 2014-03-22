@@ -7,11 +7,22 @@ define(function(require) {
 	var Event = require("lib/Event");
 	var ChessBoard = require("chess/Board");
 	var MoveAction = require("./_MoveAction");
+	var Squares = require("chess/Squares");
 	var Square = require("./_Square/Square");
 	var Chess = require("chess/Chess");
 	var Piece = require("chess/Piece");
 	require("css!./resources/board.css");
 	var html = require("file!./resources/board.html");
+	
+	/*
+	FIXME
+	
+	this will be broken due to part done switch to new Square module
+	
+	- switch to new Square module
+	- have a Board, don't be a Board
+	- sort out MoveInfo, possibly by getting rid of it
+	*/
 
 	function Board(parent) {
 		ChessBoard.call(this);
@@ -200,8 +211,8 @@ define(function(require) {
 
 		var uiSquare;
 
-		for(var i = 0; i < 64; i++) {
-			uiSquare = new Square(this._template.board, i, this._squareSize);
+		Squares.forEach((function(square) {
+			uiSquare = new Square(this._template.board, square, this._squareSize);
 
 			uiSquare.MouseDown.addHandler(this, function(data, sender) {
 				this._boardMouseDown(data.event, sender);
@@ -212,7 +223,7 @@ define(function(require) {
 			});
 
 			this._uiSquares.push(uiSquare);
-		}
+		}).bind(this));
 	}
 
 	Board.prototype._updateHtml = function() {
@@ -294,9 +305,7 @@ define(function(require) {
 	}
 
 	Board.prototype._updateHtmlSquares = function() {
-		var uiSquare;
-
-		for(var square = 0; square < 64; square++) {
+		this._uiSquares.forEach((function(uiSquare) {
 			uiSquare = this._uiSquares[square];
 
 			uiSquare.setSize(this._squareSize);
@@ -316,17 +325,17 @@ define(function(require) {
 			}
 
 			uiSquare.setSquarePosition(posX, posY);
-		}
+		}).bind(this));
 	}
 
 	Board.prototype._setHtmlSquare = function(square, piece) {
-		this._uiSquares[square].setPiece(piece);
+		this._uiSquares[square.squareNo].setPiece(piece);
 	}
 
 	Board.prototype._updateSquares = function() {
-		for(var square = 0; square < 64; square++) {
-			this._setHtmlSquare(square, this._board[square]);
-		}
+		Squares.forEach((function(square) {
+			this._setHtmlSquare(square, this._board[square.squareNo]);
+		}).bind(this));
 	}
 
 	Board.prototype._squareFromMouseEvent = function(event, useMoveActionOffsets) {
@@ -352,7 +361,7 @@ define(function(require) {
 			boardY = 7 - boardY;
 		}
 
-		return Chess.squareFromCoords({
+		return Squares.fromCoords({
 			x: boardX,
 			y: boardY
 		});
@@ -375,12 +384,12 @@ define(function(require) {
 		if(this.mouseIsOnBoard(event)) {
 			var square = targetUiSquare.getSquare();
 
-			if(!this._moveAction.selected && !this._moveAction.isInProgress && this._board[square] !== Piece.NONE) {
+			if(!this._moveAction.selected && !this._moveAction.isInProgress && this._board[square.squareNo] !== Piece.NONE) {
 				targetUiSquare.setZIndexAbove();
 				
 				this._moveAction.selected = true;
 				this._moveAction.from = square;
-				this._moveAction.piece = this._board[square];
+				this._moveAction.piece = this._board[square.squareNo];
 
 				var squareOffsets = getOffsets(event.target);
 				
@@ -409,7 +418,7 @@ define(function(require) {
 		if(this._moveAction.selected && !this._moveAction.isInProgress) { //down and not already up on same square
 			args = {
 				square: square,
-				piece: this._board[square],
+				piece: this._board[square.squareNo],
 				dragging: true,
 				cancel: false
 			};
@@ -418,7 +427,7 @@ define(function(require) {
 
 			if(args.cancel) {
 				this._moveAction.reset();
-				this._uiSquares[square].setZIndexNormal();
+				this._uiSquares[square.squareNo].setZIndexNormal();
 			}
 
 			else {
@@ -441,7 +450,7 @@ define(function(require) {
 			this.DragPiece.fire(args);
 
 			if(!args.cancel) {
-				this._uiSquares[this._moveAction.from].setPiecePosition(
+				this._uiSquares[this._moveAction.from.squareNo].setPiecePosition(
 					event.pageX - this._moveAction.mouseOffsets.x,
 					event.pageY - this._moveAction.mouseOffsets.y
 				);
@@ -462,7 +471,7 @@ define(function(require) {
 		var fromUiSquare = null;
 
 		if(this._moveAction.from !== null) {
-			fromUiSquare = this._uiSquares[this._moveAction.from];
+			fromUiSquare = this._uiSquares[this._moveAction.from.squareNo];
 		}
 
 		args = {
@@ -489,7 +498,7 @@ define(function(require) {
 						this.UserMove.fire({
 							from: this._moveAction.from,
 							to: square,
-							piece: this.getSquare(this._moveAction.from),
+							piece: this.getPiece(this._moveAction.from),
 							event: event
 						});
 					}
