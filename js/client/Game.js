@@ -1,6 +1,6 @@
 define(function(require) {
 	var ChessGame = require("chess/Game");
-	var Piece = require("chess/Piece");
+	var Colour = require("./Colour");
 	var ChessMove = require("chess/Move");
 	var Move = require("common/Move");
 	var Event = require("lib/Event");
@@ -12,9 +12,9 @@ define(function(require) {
 		this._server = server;
 		this._id = game.id;
 		
-		this._players = [];
-		this._players[Piece.WHITE] = game.white;
-		this._players[Piece.BLACK] = game.black;
+		this._players = {};
+		this._players[Colour.white] = game.white;
+		this._players[Colour.black] = game.black;
 		
 		this._options = game.options;
 		this._game = new ChessGame(this._options);

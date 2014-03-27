@@ -4,7 +4,7 @@ define(function(require) {
 	var Fullmove = require("./_Fullmove/Fullmove");
 	var Template = require("lib/dom/Template");
 	var html = require("file!./resources/history.html");
-	var Piece = require("chess/Piece");
+	var Colour = require("./Colour");
 	require("lib/Array.remove");
 	require("css!./resources/history.css");
 
@@ -19,7 +19,7 @@ define(function(require) {
 		var historyMove = new Move(move);
 		var lastFullmove = this._fullmoves[this._fullmoves.length - 1] || null;
 
-		if(lastFullmove === null || move.getColour() === Piece.WHITE) {
+		if(lastFullmove === null || move.getColour() === Colour.white) {
 			lastFullmove = this._fullmoves.push(new Fullmove(this._template.root, move.getFullmove()));
 		}
 

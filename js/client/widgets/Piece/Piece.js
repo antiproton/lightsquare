@@ -3,12 +3,11 @@ define(function(require) {
 	var html = require("file!./resources/piece.html");
 	var style = require("lib/dom/style");
 	var Fen = require("chess/Fen");
-	var ChessPiece = require("chess/Piece");
 
 	function Piece(parent, size) {
 		this._template = new Template(html, parent);
 		this._style = "Merida";
-		this._piece = ChessPiece.NONE;
+		this._piece = null;
 		this._size = size || Piece.DEFAULT_SIZE;
 		this._setupHtml();
 	}
@@ -42,14 +41,14 @@ define(function(require) {
 		var backgroundImage = "none";
 		var path;
 
-		if(this._piece !== ChessPiece.NONE) {
+		if(this._piece !== null) {
 			path = [
 				".",
 				"resources",
 				"pieces",
 				this._style,
 				this._size,
-				Fen.getPieceChar(this._piece) + ".png"
+				this._piece.fenString + ".png"
 			];
 
 			backgroundImage = "url('" + require.toUrl(path.join("/")) + "')";

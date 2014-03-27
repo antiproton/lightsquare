@@ -11,6 +11,7 @@ define(function(require) {
 	var Square = require("./_Square/Square");
 	var Chess = require("chess/Chess");
 	var Piece = require("chess/Piece");
+	var Colour = require("./Colour");
 	require("css!./resources/board.css");
 	var html = require("file!./resources/board.html");
 	
@@ -48,7 +49,7 @@ define(function(require) {
 		this._squareMouseCurrentlyOver = null;
 		this._squareCurrentlyDraggingPieceOver = null;
 
-		this._viewingAs = Piece.WHITE;
+		this._viewingAs = Colour.white;
 		this._showSurround = false;
 		this._showCoords = true;
 		this._coordsPadding = 18;
@@ -288,7 +289,7 @@ define(function(require) {
 					width: this._squareSize
 				});
 
-				if(this._viewingAs === Piece.WHITE) {
+				if(this._viewingAs === Colour.white) {
 					rankIndex = 7 - i;
 					fileIndex = i;
 				}
@@ -314,7 +315,7 @@ define(function(require) {
 			var boardX = Chess.xFromSquare(square);
 			var boardY = Chess.yFromSquare(square);
 
-			if(this._viewingAs === Piece.WHITE) {
+			if(this._viewingAs === Colour.white) {
 				posX = this._squareSize * boardX;
 				posY = this._squareSize * (7 - boardY);
 			}
@@ -356,7 +357,7 @@ define(function(require) {
 		var boardX = (x - (x % this._squareSize)) / this._squareSize;
 		var boardY = (y - (y % this._squareSize)) / this._squareSize;
 
-		if(this._viewingAs === Piece.BLACK) {
+		if(this._viewingAs === Colour.black) {
 			boardX = 7 - boardX;
 			boardY = 7 - boardY;
 		}
