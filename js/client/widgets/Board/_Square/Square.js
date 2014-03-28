@@ -59,6 +59,10 @@ define(function(require) {
 		this._size = size;
 		this._updateSize();
 	}
+	
+	Square.prototype.getPiece = function() {
+		return this._piece.getPiece();
+	}
 
 	Square.prototype.setPiece = function(piece) {
 		this._piece.setPiece(piece);
