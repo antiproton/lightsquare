@@ -11,7 +11,7 @@ define(function(require) {
 	var Square = require("./_Square/Square");
 	var Chess = require("chess/Chess");
 	var Piece = require("chess/Piece");
-	var Colour = require("./Colour");
+	var Colour = require("chess/Colour");
 	require("css!./resources/board.css");
 	var html = require("file!./resources/board.html");
 	

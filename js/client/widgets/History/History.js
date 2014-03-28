@@ -4,7 +4,7 @@ define(function(require) {
 	var Fullmove = require("./_Fullmove/Fullmove");
 	var Template = require("lib/dom/Template");
 	var html = require("file!./resources/history.html");
-	var Colour = require("./Colour");
+	var Colour = require("chess/Colour");
 	require("lib/Array.remove");
 	require("css!./resources/history.css");
 
