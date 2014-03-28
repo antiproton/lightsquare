@@ -1,6 +1,6 @@
 define(function(require) {
 	var ChessGame = require("chess/Game");
-	var Colour = require("./Colour");
+	var Colour = require("chess/Colour");
 	var ChessMove = require("chess/Move");
 	var Move = require("common/Move");
 	var Event = require("lib/Event");
