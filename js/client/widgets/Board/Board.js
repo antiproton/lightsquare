@@ -5,9 +5,9 @@ define(function(require) {
 	var style = require("lib/dom/style");
 	var getOffsets = require("lib/dom/getOffsets");
 	var Event = require("lib/Event");
-	var ChessBoard = require("chess/Board");
 	var MoveAction = require("./_MoveAction");
-	var Squares = require("chess/Squares");
+	var ChessSquare = require("chess/Square");
+	var Coords = require("chess/Coords");
 	var Square = require("./_Square/Square");
 	var Chess = require("chess/Chess");
 	var Piece = require("chess/Piece");
@@ -18,16 +18,10 @@ define(function(require) {
 	/*
 	FIXME
 	
-	this will be broken due to part done switch to new Square module
-	
-	- switch to new Square module
-	- have a Board, don't be a Board
 	- sort out MoveInfo, possibly by getting rid of it
 	*/
 
 	function Board(parent) {
-		ChessBoard.call(this);
-
 		this._template = new Template(html, parent);
 
 		this.UserMove = new Event(this);
@@ -45,7 +39,15 @@ define(function(require) {
 
 		this._highlightedSquares = {};
 
-		this._moveAction = new MoveAction();
+		this._move = {
+			isDragging: false,
+			selected: false,
+			isInProgress: false,
+			piece: null,
+			from: null,
+			mouseOffsets: [0, 0]
+		};
+		
 		this._squareMouseCurrentlyOver = null;
 		this._squareCurrentlyDraggingPieceOver = null;
 
@@ -57,20 +59,24 @@ define(function(require) {
 		this._borderWidth = 1;
 
 		this._htmlUpdatesEnabled = true;
+		this._pendingUpdates = [];
 
 		this._setupHtml();
 	}
-
-	Board.implement(ChessBoard);
 
 	Board.squareStyles = Square.styles;
 	Board.squareHighlightTypes = Square.highlightTypes;
 
 	Board.prototype.setSquare = function(square, piece) {
-		ChessBoard.prototype.setSquare.call(this, square, piece);
-
 		if(this._htmlUpdatesEnabled) {
-			this._setHtmlSquare(square, piece);
+			this._squares[square.squareNo].setPiece(piece);
+		}
+		
+		else {
+			this._pendingUpdates.push({
+				square: square,
+				piece: piece
+			});
 		}
 	}
 
@@ -86,13 +92,13 @@ define(function(require) {
 		this._highlightedSquares[highlightType] = this._highlightedSquares[highlightType].concat(squares);
 
 		for(var i = 0; i < squares.length; i++) {
-			this._uiSquares[squares[i]].setHighlight(highlightType);
+			this._squares[squares[i]].setHighlight(highlightType);
 		}
 	}
 
 	Board.prototype.unhighlightSquares = function(highlightType) {
 		for(var i = 0; i < this._highlightedSquares[highlightType].length; i++) {
-			this._uiSquares[this._highlightedSquares[highlightType][i]].setHighlight(Square.HIGHLIGHT_NONE);
+			this._squares[this._highlightedSquares[highlightType][i]].setHighlight(Square.HIGHLIGHT_NONE);
 		}
 
 		this._highlightedSquares[highlightType] = [];
@@ -102,45 +108,28 @@ define(function(require) {
 		return this._squareSize * 8;
 	}
 
-	Board.prototype.mouseIsOnBoard = function(event, useOffsets, offsets) {
-		offsets = offsets || this._moveAction.mouseOffsets;
+	Board.prototype.enableHtmlUpdates = function() {
+		this._htmlUpdatesEnabled = true;
 
-		var x = event.pageX;
-		var y = event.pageY;
-
-		if(useOffsets) {
-			x += (Math.round(this._squareSize / 2) - offsets.x);
-			y += (Math.round(this._squareSize / 2) - offsets.y);
+		while(update = this._pendingUpdates.pop()) {
+			this.setSquare(update.square, update.piece);
 		}
-
-		var boardOffsets = getOffsets(this._template.board);
-
-		x -= boardOffsets.x;
-		y -= boardOffsets.y;
-
-		y = this._getBoardSize() - y;
-
-		return this._isXyOnBoard(x, y);
 	}
-
-	Board.prototype.setHtmlUpdatesEnabled = function(enabled) {
-		this._htmlUpdatesEnabled = enabled;
-
-		if(enabled) {
-			this._updateSquares();
-		}
+	
+	Board.prototype.disableHtmlUpdates = function() {
+		this._htmlUpdatesEnabled = false;
 	}
 
 	Board.prototype.setPieceStyle = function(pieceStyle) {
-		for(var square = 0; square < 64; square++) {
-			this._uiSquares[square].setPieceStyle(pieceStyle);
-		}
+		this._squares.forEach(function(square) {
+			square.setPieceStyle(pieceStyle);
+		});
 	}
 
 	Board.prototype.setSquareStyle = function(squareStyle) {
-		for(var square = 0; square < 64; square++) {
-			this._uiSquares[square].setSquareStyle(squareStyle);
-		}
+		this._squares.forEach(function(square) {
+			square.setSquareStyle(squareStyle);
+		});
 	}
 
 	Board.prototype.setSquareSize = function(squareSize) {
@@ -169,18 +158,16 @@ define(function(require) {
 	}
 
 	Board.prototype._setupHtml = function() {
-		var self = this;
-
 		this._setupHtmlCoords();
 		this._setupHtmlSquares();
 
-		window.addEventListener("mousemove", function(e) {
-			self._boardMouseMove(e);
-		});
+		window.addEventListener("mousemove", (function(event) {
+			this._boardMouseMove(event);
+		}).bind(this));
 
-		this._template.board.addEventListener("mouseout", function(e) {
-			self._updateMouseOverInfo(e);
-		});
+		this._template.board.addEventListener("mouseout", (function(event) {
+			this._updateMouseOverInfo(event);
+		}).bind(this));
 
 		this._updateHtml();
 	}
@@ -208,22 +195,22 @@ define(function(require) {
 	}
 
 	Board.prototype._setupHtmlSquares = function() {
-		this._uiSquares = [];
+		var square;
+		
+		this._squares = [];
 
-		var uiSquare;
+		ChessSquare.forEach((function(chessSquare) {
+			square = new Square(this._template.board, chessSquare, this._squareSize);
 
-		Squares.forEach((function(square) {
-			uiSquare = new Square(this._template.board, square, this._squareSize);
-
-			uiSquare.MouseDown.addHandler(this, function(data, sender) {
+			square.MouseDown.addHandler(this, function(data, sender) {
 				this._boardMouseDown(data.event, sender);
 			});
 
-			uiSquare.MouseUp.addHandler(this, function(data, sender) {
+			square.MouseUp.addHandler(this, function(data, sender) {
 				this._boardMouseUp(data.event, sender);
 			});
 
-			this._uiSquares.push(uiSquare);
+			this._squares[chessSquare.squareNo] = square;
 		}).bind(this));
 	}
 
@@ -306,46 +293,33 @@ define(function(require) {
 	}
 
 	Board.prototype._updateHtmlSquares = function() {
-		this._uiSquares.forEach((function(uiSquare) {
-			uiSquare = this._uiSquares[square];
-
-			uiSquare.setSize(this._squareSize);
+		this._squares.forEach((function(square) {
+			square.setSize(this._squareSize);
 
 			var posX, posY;
-			var boardX = Chess.xFromSquare(square);
-			var boardY = Chess.yFromSquare(square);
+			var coords = square.getSquare().coords;
 
 			if(this._viewingAs === Colour.white) {
-				posX = this._squareSize * boardX;
-				posY = this._squareSize * (7 - boardY);
+				posX = this._squareSize * coords.x;
+				posY = this._squareSize * (7 - coords.y);
 			}
 
 			else {
-				posX = this._squareSize * (7 - boardX);
-				posY = this._squareSize * boardY;
+				posX = this._squareSize * (7 - coords.x);
+				posY = this._squareSize * coords.y;
 			}
 
-			uiSquare.setSquarePosition(posX, posY);
+			square.setSquarePosition(posX, posY);
 		}).bind(this));
 	}
 
-	Board.prototype._setHtmlSquare = function(square, piece) {
-		this._uiSquares[square.squareNo].setPiece(piece);
-	}
-
-	Board.prototype._updateSquares = function() {
-		Squares.forEach((function(square) {
-			this._setHtmlSquare(square, this._board[square.squareNo]);
-		}).bind(this));
-	}
-
-	Board.prototype._squareFromMouseEvent = function(event, useMoveActionOffsets) {
+	Board.prototype._squareFromMouseEvent = function(event, useMoveOffsets) {
 		var x = event.pageX;
 		var y = event.pageY;
 
-		if(useMoveActionOffsets) { //get the square that the middle of the piece is over
-			x += (Math.round(this._squareSize / 2) - this._moveAction.mouseOffsets.x);
-			y += (Math.round(this._squareSize / 2) - this._moveAction.mouseOffsets.y);
+		if(useMoveOffsets) { //get the square that the middle of the piece is over
+			x += (Math.round(this._squareSize / 2) - this._move.mouseOffsets.x);
+			y += (Math.round(this._squareSize / 2) - this._move.mouseOffsets.y);
 		}
 
 		var offsets = getOffsets(this._template.board);
@@ -354,18 +328,21 @@ define(function(require) {
 	}
 
 	Board.prototype._squareFromOffsets = function(x, y) {
-		var boardX = (x - (x % this._squareSize)) / this._squareSize;
-		var boardY = (y - (y % this._squareSize)) / this._squareSize;
-
-		if(this._viewingAs === Colour.black) {
-			boardX = 7 - boardX;
-			boardY = 7 - boardY;
+		var square = null;
+		
+		if(this._isXyOnBoard(x, y)) {
+			var boardX = (x - (x % this._squareSize)) / this._squareSize;
+			var boardY = (y - (y % this._squareSize)) / this._squareSize;
+	
+			if(this._viewingAs === Colour.black) {
+				boardX = 7 - boardX;
+				boardY = 7 - boardY;
+			}
+	
+			square = ChessSquare.fromCoords(new Coords(boardX, boardY));
 		}
-
-		return Squares.fromCoords({
-			x: boardX,
-			y: boardY
-		});
+		
+		return square;
 	}
 
 	Board.prototype._squareMouseOffsetsFromEvent = function(event) {
@@ -379,28 +356,26 @@ define(function(require) {
 		return mouseOffsets;
 	}
 
-	Board.prototype._boardMouseDown = function(event, targetUiSquare) {
+	Board.prototype._boardMouseDown = function(event, targetSquare) {
 		event.preventDefault();
 
-		if(this.mouseIsOnBoard(event)) {
-			var square = targetUiSquare.getSquare();
+		var piece = targetSquare.getPiece();
+		
+		if(!this._move.pieceSelected && !this._move.isInProgress && piece !== null) {
+			targetSquare.setZIndexAbove();
+			
+			this._move.pieceSelected = true;
+			this._move.from = square;
+			this._move.piece = piece;
 
-			if(!this._moveAction.selected && !this._moveAction.isInProgress && this._board[square.squareNo] !== Piece.NONE) {
-				targetUiSquare.setZIndexAbove();
-				
-				this._moveAction.selected = true;
-				this._moveAction.from = square;
-				this._moveAction.piece = this._board[square.squareNo];
+			var squareOffsets = getOffsets(event.target);
+			
+			var squareMouseOffsets = {
+				x: event.pageX - squareOffsets.x,
+				y: event.pageY - squareOffsets.y
+			};
 
-				var squareOffsets = getOffsets(event.target);
-				
-				var squareMouseOffsets = {
-					x: event.pageX - squareOffsets.x,
-					y: event.pageY - squareOffsets.y
-				};
-
-				this._moveAction.mouseOffsets = squareMouseOffsets;
-			}
+			this._move.mouseOffsets = squareMouseOffsets;
 		}
 	}
 
@@ -409,14 +384,12 @@ define(function(require) {
 
 		var square = this._squareFromMouseEvent(event);
 
-		//update mouseover sq and fire events
-
 		this._updateMouseOverInfo(event);
 		this._updatePieceDragInfo(event);
 
 		var args;
 
-		if(this._moveAction.selected && !this._moveAction.isInProgress) { //down and not already up on same square
+		if(this._move.pieceSelected && !this._move.isInProgress) {
 			args = {
 				square: square,
 				piece: this._board[square.squareNo],
@@ -427,13 +400,13 @@ define(function(require) {
 			this.SelectPiece.fire(args);
 
 			if(args.cancel) {
-				this._moveAction.reset();
-				this._uiSquares[square.squareNo].setZIndexNormal();
+				this._resetMove();
+				this._squares[square.squareNo].setZIndexNormal();
 			}
 
 			else {
-				this._moveAction.mode = MoveAction.DRAG;
-				this._moveAction.isInProgress = true;
+				this._move.isDragging = true;
+				this._move.isInProgress = true;
 
 				this.PieceSelected.fire({
 					square: square
@@ -441,19 +414,19 @@ define(function(require) {
 			}
 		}
 
-		if(this._moveAction.selected && this._moveAction.mode === MoveAction.DRAG) {
+		if(this._move.pieceSelected && this._move.isDragging) {
 			args = {
 				square: square,
-				piece: this._moveAction.piece,
+				piece: this._move.piece,
 				cancel: false
 			};
 
 			this.DragPiece.fire(args);
 
 			if(!args.cancel) {
-				this._uiSquares[this._moveAction.from.squareNo].setPiecePosition(
-					event.pageX - this._moveAction.mouseOffsets.x,
-					event.pageY - this._moveAction.mouseOffsets.y
+				this._squares[this._move.from.squareNo].setPiecePosition(
+					event.pageX - this._move.mouseOffsets.x,
+					event.pageY - this._move.mouseOffsets.y
 				);
 			}
 		}
@@ -465,14 +438,14 @@ define(function(require) {
 		var args;
 		var square = this._squareFromMouseEvent(event);
 
-		if(this._moveAction.isInProgress && this._moveAction.mode === MoveAction.DRAG) {
+		if(this._move.isInProgress && this._move.isDragging) {
 			square = this._squareFromMouseEvent(event, true);
 		}
 
-		var fromUiSquare = null;
+		var fromSquare = null;
 
-		if(this._moveAction.from !== null) {
-			fromUiSquare = this._uiSquares[this._moveAction.from.squareNo];
+		if(this._move.from !== null) {
+			fromSquare = this._squares[this._move.from.squareNo];
 		}
 
 		args = {
@@ -480,26 +453,24 @@ define(function(require) {
 			cancel: false
 		};
 
-		if(this._moveAction.mode === MoveAction.CLICK) {
+		if(!this._move.isDragging) {
 			this.SquareClicked.fire(args);
 		}
 
-		else if(this._moveAction.mode === MoveAction.DRAG && this._moveAction.isInProgress) {
+		else if(this._move.isInProgress) {
 			this.DragDrop.fire(args);
 		}
 
 		if(!args.cancel) {
-			if(this._moveAction.isInProgress) {
-				//either dragged and dropped, or clicking on second square to complete click-click move
-
+			if(this._move.isInProgress) {
 				this.Deselected.fire();
 
-				if(this.mouseIsOnBoard(event, true)) {
-					if(square !== this._moveAction.from) {
+				if(square !== null) {
+					if(square !== this._move.from) {
 						this.UserMove.fire({
-							from: this._moveAction.from,
+							from: this._move.from,
 							to: square,
-							piece: this.getPiece(this._moveAction.from),
+							piece: this.getPiece(this._move.from),
 							event: event
 						});
 					}
@@ -507,17 +478,18 @@ define(function(require) {
 
 				else {
 					this.PieceDraggedOff.fire({
-						from: this._moveAction.from
+						from: this._move.from,
+						piece: this.getPiece(this._move.from),
+						event: event
 					});
 				}
 
-				fromUiSquare.resetPiecePosition();
-				this._moveAction.reset();
+				fromSquare.resetPiecePosition();
+				
+				this._resetMove();
 			}
 
-			else if(this._moveAction.selected && square === this._moveAction.from && !this._moveAction.isInProgress) {
-				//clicking on first square to select a piece
-
+			else if(this._move.pieceSelected && square === this._move.from) {
 				args = {
 					square: square,
 					piece: this._board[square],
@@ -528,8 +500,8 @@ define(function(require) {
 				this.SelectPiece.fire(args);
 
 				if(!args.cancel) {
-					this._moveAction.isInProgress = true;
-					this._moveAction.mode = MoveAction.CLICK;
+					this._move.isInProgress = true;
+					this._move.isDragging = false;
 
 					this.PieceSelected.fire({
 						square: square
@@ -537,24 +509,32 @@ define(function(require) {
 				}
 
 				else {
-					this._moveAction.reset();
+					this._resetMove();
 				}
 			}
 		}
 
 		else {
-			if(fromUiSquare !== null) {
-				fromUiSquare.resetPiecePosition();
+			if(fromSquare !== null) {
+				fromSquare.resetPiecePosition();
 			}
 
-			this._moveAction.reset();
+			this._resetMove();
 		}
 
-		if(fromUiSquare !== null) {
-			fromUiSquare.setZIndexNormal();
+		if(fromSquare !== null) {
+			fromSquare.setZIndexNormal();
 		}
 
 		this._updatePieceDragInfo(event);
+	}
+	
+	Board.prototype._resetMove = function() {
+		this._move.isDragging = false;
+		this._move.from = null;
+		this._move.isInProgress = false;
+		this._move.piece = null;
+		this._move.pieceSelected = false;
 	}
 
 	Board.prototype._isXyOnBoard = function(x, y) {
@@ -566,7 +546,7 @@ define(function(require) {
 	Board.prototype._updateMouseOverInfo = function(event) {
 		var square = this._squareFromMouseEvent(event);
 
-		if(this.mouseIsOnBoard(event) && square > -1 && square < 64) {
+		if(square !== null) {
 			if(this._squareMouseCurrentlyOver !== square) {
 				if(this._squareMouseCurrentlyOver !== null) {
 					this.MouseLeavingSquare.fire({
@@ -596,8 +576,8 @@ define(function(require) {
 	Board.prototype._updatePieceDragInfo = function(event) {
 		var square = this._squareFromMouseEvent(event, true);
 
-		if(this._moveAction.isInProgress && this._moveAction.mode === MoveAction.DRAG) {
-			if(this.mouseIsOnBoard(event)) {
+		if(this._move.isInProgress && this._move.isDragging) {
+			if(square !== null) {
 				if(this._squareCurrentlyDraggingPieceOver !== square) {
 					if(this._squareCurrentlyDraggingPieceOver !== null) {
 						this.PieceLeavingSquare.fire({
