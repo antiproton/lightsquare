@@ -13,12 +13,6 @@ define(function(require) {
 	var Colour = require("chess/Colour");
 	require("css!./resources/board.css");
 	var html = require("file!./resources/board.html");
-	
-	/*
-	FIXME
-	
-	- sort out MoveInfo, possibly by getting rid of it
-	*/
 
 	function Board(parent) {
 		this._template = new Template(html, parent);
