@@ -5,7 +5,6 @@ define(function(require) {
 	var style = require("lib/dom/style");
 	var getOffsets = require("lib/dom/getOffsets");
 	var Event = require("lib/Event");
-	var MoveAction = require("./_MoveAction");
 	var ChessSquare = require("chess/Square");
 	var Coords = require("chess/Coords");
 	var Square = require("./_Square/Square");
