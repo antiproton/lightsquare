@@ -1,7 +1,7 @@
 define(function(require) {
 	var Template = require("lib/dom/Template");
 	var html = require("file!./resources/fullmove.html");
-	var Colour = require("./Colour");
+	var Colour = require("chess/Colour");
 	require("css!./resources/fullmove.css");
 
 	function Fullmove(parent, fullmove) {
