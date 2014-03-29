@@ -8,7 +8,6 @@ define(function(require) {
 	var ChessSquare = require("chess/Square");
 	var Coords = require("chess/Coords");
 	var Square = require("./_Square/Square");
-	var Chess = require("chess/Chess");
 	var Piece = require("chess/Piece");
 	var Colour = require("chess/Colour");
 	require("css!./resources/board.css");
