@@ -1,5 +1,8 @@
 define(function(require) {
 	var Position = require("chess/Position");
+	var PieceType = require("chess/PieceType");
+	var Piece = require("chess/Piece");
+	var Colour = require("chess/Colour");
 	
 	function Move(details) {
 		this._details = details;
@@ -14,7 +17,7 @@ define(function(require) {
 	}
 	
 	Move.prototype.getColour = function() {
-		return this._details.colour;
+		return Colour.fromFenString(this._details.colour);
 	}
 	
 	Move.prototype.getFullmove = function() {
@@ -22,7 +25,7 @@ define(function(require) {
 	}
 	
 	Move.prototype.getCapturedPiece = function() {
-		return this._details.capturedPiece;
+		return (this._details.capturedPiece ? Piece.fromFenString(this._details.capturedPiece) : null);
 	}
 	
 	Move.prototype.isCheck = function() {
@@ -41,8 +44,8 @@ define(function(require) {
 		return this._details.isPromotion;
 	}
 	
-	Move.prototype.getPromotionPiece = function() {
-		return this._details.promotionPiece;
+	Move.prototype.getPromoteTo = function() {
+		return (this._details.promoteTo ? PieceType.fromSanString(this._details.promoteTo) : null);
 	}
 	
 	Move.prototype.getPositionAfter = function() {
@@ -67,6 +70,9 @@ define(function(require) {
 		},
 		
 		fromMove: function(move) {
+			var capturedPiece = move.getCapturedPiece();
+			var promoteTo = move.getPromoteTo();
+			
 			if(move.isLegal()) {
 				return new Move({
 					label: move.getLabel(),
@@ -77,9 +83,9 @@ define(function(require) {
 					isMate: move.isMate(),
 					isCastling: move.isCastling(),
 					isPromotion: move.isPromotion(),
-					promotionPiece: move.getPromotionPiece(),
+					promoteTo: (promoteTo ? promoteTo.sanString : null),
 					resultingFen: move.getPositionAfter().getFen(),
-					capturedPiece: move.getCapturedPiece(),
+					capturedPiece: (capturedPiece ? capturedPiece.fenString : null),
 					time: move.getTime()
 				});
 			}
