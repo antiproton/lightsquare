@@ -37,7 +37,10 @@ define(function(require) {
 			isInProgress: false,
 			piece: null,
 			from: null,
-			mouseOffsets: [0, 0]
+			mouseOffsets: {
+				x: 0,
+				y: 0
+			}
 		};
 		
 		this._squareMouseCurrentlyOver = null;
@@ -58,8 +61,18 @@ define(function(require) {
 
 	Board.squareStyles = Square.styles;
 	Board.squareHighlightTypes = Square.highlightTypes;
+	
+	Board.prototype.setBoardArray = function(board) {
+		ChessSquare.forEach((function(square) {
+			this.setPiece(square, board[square.squareNo]);
+		}).bind(this));
+	}
+	
+	Board.prototype.getPiece = function(square) {
+		return this._squares[square.squareNo].getPiece();
+	}
 
-	Board.prototype.setSquare = function(square, piece) {
+	Board.prototype.setPiece = function(square, piece) {
 		if(this._htmlUpdatesEnabled) {
 			this._squares[square.squareNo].setPiece(piece);
 		}
@@ -104,7 +117,7 @@ define(function(require) {
 		this._htmlUpdatesEnabled = true;
 
 		while(update = this._pendingUpdates.pop()) {
-			this.setSquare(update.square, update.piece);
+			this.setPiece(update.square, update.piece);
 		}
 	}
 	
@@ -278,8 +291,8 @@ define(function(require) {
 					fileIndex = 7 - i;
 				}
 
-				this._coords.rank[i].innerHTML = Chess.RANKS.charAt(rankIndex);
-				this._coords.file[i].innerHTML = Chess.FILES.charAt(fileIndex);
+				this._coords.rank[i].innerHTML = "12345678".charAt(rankIndex);
+				this._coords.file[i].innerHTML = "abcdefgh".charAt(fileIndex);
 			}
 		}
 	}
@@ -309,7 +322,7 @@ define(function(require) {
 		var x = event.pageX;
 		var y = event.pageY;
 
-		if(useMoveOffsets) { //get the square that the middle of the piece is over
+		if(useMoveOffsets && this._move.isDragging) { //get the square that the middle of the piece is over
 			x += (Math.round(this._squareSize / 2) - this._move.mouseOffsets.x);
 			y += (Math.round(this._squareSize / 2) - this._move.mouseOffsets.y);
 		}
@@ -357,7 +370,7 @@ define(function(require) {
 			targetSquare.setZIndexAbove();
 			
 			this._move.pieceSelected = true;
-			this._move.from = square;
+			this._move.from = targetSquare.getSquare();
 			this._move.piece = piece;
 
 			var squareOffsets = getOffsets(event.target);
@@ -384,7 +397,7 @@ define(function(require) {
 		if(this._move.pieceSelected && !this._move.isInProgress) {
 			args = {
 				square: square,
-				piece: this._board[square.squareNo],
+				piece: this.getPiece(square),
 				dragging: true,
 				cancel: false
 			};
@@ -531,7 +544,7 @@ define(function(require) {
 
 	Board.prototype._isXyOnBoard = function(x, y) {
 		var boardSize = this._getBoardSize();
-
+		
 		return !(x < 0 || x > boardSize || y < 0 || y > boardSize);
 	}
 
@@ -567,8 +580,8 @@ define(function(require) {
 
 	Board.prototype._updatePieceDragInfo = function(event) {
 		var square = this._squareFromMouseEvent(event, true);
-
-		if(this._move.isInProgress && this._move.isDragging) {
+		
+		if(square !== null && this._move.isInProgress && this._move.isDragging) {
 			if(square !== null) {
 				if(this._squareCurrentlyDraggingPieceOver !== square) {
 					if(this._squareCurrentlyDraggingPieceOver !== null) {
