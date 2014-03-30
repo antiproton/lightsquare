@@ -4,6 +4,8 @@ define(function(require) {
 	var ChessMove = require("chess/Move");
 	var Move = require("common/Move");
 	var Event = require("lib/Event");
+	var Square = require("chess/Square");
+	var PieceType = require("chess/PieceType");
 
 	function Game(server, game) {
 		this.PromotionPieceNeeded = new Event(this);
@@ -46,7 +48,7 @@ define(function(require) {
 				this._server.send("/game/" + this._id + "/move", {
 					from: from.squareNo,
 					to: to.squareNo,
-					promoteTo: promoteTo
+					promoteTo: (promoteTo ? promoteTo.sanString : undefined)
 				});
 			}
 		}
@@ -76,10 +78,16 @@ define(function(require) {
 	}
 	
 	Game.prototype._applyServerMove = function(serverMove) {
+		var promoteTo = PieceType.queen;
+		
+		if(serverMove.promoteTo !== undefined) {
+			promoteTo = PieceType.fromSanString(serverMove.promoteTo)
+		}
+		
 		var move = this._game.move(
 			Square.fromSquareNo(serverMove.from),
 			Square.fromSquareNo(serverMove.to),
-			serverMove.promoteTo
+			promoteTo
 		);
 		
 		this._history.push(move);
