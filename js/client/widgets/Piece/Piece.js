@@ -36,6 +36,10 @@ define(function(require) {
 		this._piece = piece;
 		this._updatePiece();
 	}
+	
+	Piece.prototype.getPiece = function() {
+		return this._piece;
+	}
 
 	Piece.prototype._updatePiece = function() {
 		var backgroundImage = "none";
