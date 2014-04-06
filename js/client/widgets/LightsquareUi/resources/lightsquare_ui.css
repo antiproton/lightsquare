@@ -6,13 +6,7 @@
 }
 
 .lightsquare_ui_header {
-	display: flex;
-	flex-shrink: 0;
-	flex-direction: row;
-	align-content: stretch;
-}
-
-.lightsquare_ui_nav {
+	font-size: 1.1em;
 	display: flex;
 }
 
@@ -25,20 +19,30 @@
 	text-decoration: none;
 	display: block;
 	border-bottom: 2px solid #dfdfdf;
-	padding: .5em;
+	padding: .5em .7em;
 }
 
-.lightsquare_ui_links a.on {
+.lightsquare_ui_links a.on, .lightsquare_ui_links a.on:hover {
 	border-bottom: 2px solid #1A5EAD;
 }
 
+.lightsquare_ui_links a:first-child {
+	padding-left: .3em;
+}
+
+.lightsquare_ui_links a:hover {
+	border-color: #c0c0c0;
+}
+
 .lightsquare_ui_nav_right {
+	display: flex;
+	justify-content: flex-end;
 	flex-grow: 1;
 	border-bottom: 2px solid #dfdfdf;
+	padding: .5em .3em;
 }
 
 .lightsquare_ui_user {
-	
 }
 
 .lightsquare_ui_main {

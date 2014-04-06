@@ -52,7 +52,7 @@ define(function(require) {
 		router.addRoute("/game/:id", function(params) {
 			require(["./pages/Game/Game"], function(GamePage) {
 				template.main.innerHTML = "";
-				new PlayPage(app, parseInt(params["id"]), template.main);
+				new GamePage(app, parseInt(params["id"]), template.main);
 			});
 		});
 		
