@@ -1,7 +1,8 @@
 .lightsquare_ui_root {
 	display: flex;
 	flex-direction: column;
-	flex-grow: 1;
+	margin: 0 auto;
+	width: 80%;
 }
 
 .lightsquare_ui_header {
@@ -9,21 +10,38 @@
 	flex-shrink: 0;
 	flex-direction: row;
 	align-content: stretch;
-	background: #223344;
-}
-
-.lightsquare_ui_logo {
-	width: 48px;
-	height: 48px;
-	background: #42C2ED;
 }
 
 .lightsquare_ui_nav {
 	display: flex;
 }
 
+.lightsquare_ui_links {
+	display: flex;
+}
+
+.lightsquare_ui_links a {
+	color: #2f2f2f;
+	text-decoration: none;
+	display: block;
+	border-bottom: 2px solid #dfdfdf;
+	padding: .5em;
+}
+
+.lightsquare_ui_links a.on {
+	border-bottom: 2px solid #1A5EAD;
+}
+
+.lightsquare_ui_nav_right {
+	flex-grow: 1;
+	border-bottom: 2px solid #dfdfdf;
+}
+
+.lightsquare_ui_user {
+	
+}
+
 .lightsquare_ui_main {
 	display: flex;
 	flex-grow: 1;
-	background: #E8E8E8;
 }
