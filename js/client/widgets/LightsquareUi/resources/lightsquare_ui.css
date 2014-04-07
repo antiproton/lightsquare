@@ -1,20 +1,20 @@
-.lightsquare_ui_root {
+.root {
 	display: flex;
 	flex-direction: column;
 	margin: 0 auto;
 	width: 80%;
 }
 
-.lightsquare_ui_header {
+.header {
 	font-size: 1.0em;
 	display: flex;
 }
 
-.lightsquare_ui_links {
+.links {
 	display: flex;
 }
 
-.lightsquare_ui_links a {
+.links a {
 	color: #2f2f2f;
 	text-decoration: none;
 	display: block;
@@ -22,19 +22,19 @@
 	padding: .5em .7em;
 }
 
-.lightsquare_ui_links a.on, .lightsquare_ui_links a.on:hover {
+.links a.on, .links a.on:hover {
 	border-bottom: 2px solid #1A5EAD;
 }
 
-.lightsquare_ui_links a:first-child {
+.links a:first-child {
 	padding-left: .3em;
 }
 
-.lightsquare_ui_links a:hover {
+.links a:hover {
 	border-color: #c0c0c0;
 }
 
-.lightsquare_ui_nav_right {
+.nav_right {
 	display: flex;
 	justify-content: flex-end;
 	flex-grow: 1;
@@ -42,10 +42,10 @@
 	padding: .5em .3em;
 }
 
-.lightsquare_ui_user {
+.user {
 }
 
-.lightsquare_ui_main {
+.main {
 	display: flex;
 	flex-grow: 1;
 }
