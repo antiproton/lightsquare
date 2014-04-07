@@ -6,7 +6,7 @@ define(function(require) {
 	var Ractive = require("lib/dom/Ractive");
 	var Router = require("lib/Router");
 	
-	function LightSquareUi(parent, app) {
+	function LightSquareUi(app, parent) {
 		var template = new Template(html, parent);
 		
 		var links = new Ractive({

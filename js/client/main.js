@@ -6,7 +6,7 @@ define(function(require) {
 	
 	var server = new Server("ws://" + window.location.hostname + ":8080");
 	var app = new Application(server);
-	var ui = new LightsquareUi(document.body, app);
+	var ui = new LightsquareUi(app, document.body);
 	
 	server.connect();
 });
