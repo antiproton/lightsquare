@@ -11,3 +11,18 @@ body {
 	font-size: 13px;
 	margin: 0;
 }
+
+input[type="text"] {
+	box-sizing: border-box;
+	border: 1px solid #606060;
+	border-radius: 2px;
+	padding: .4em;
+	box-shadow: inset 1px 1px 3px rgba(0, 0, 0, .1);
+}
+
+button {
+	border-radius: 2px;
+	border: 1px solid #115484;
+	background: #2F77AA;
+	cursor: pointer;
+}
