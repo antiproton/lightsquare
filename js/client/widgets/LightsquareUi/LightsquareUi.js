@@ -36,21 +36,21 @@ define(function(require) {
 		var router = new Router();
 		
 		router.addRoute("/", function() {
-			require(["./pages/Home/Home"], function(HomePage) {
+			require(["./_Home/Home"], function(HomePage) {
 				template.main.innerHTML = "";
 				new HomePage(app, template.main);
 			});
 		});
 		
 		router.addRoute("/play", function() {
-			require(["./pages/Play/Play"], function(PlayPage) {
+			require(["./_Play/Play"], function(PlayPage) {
 				template.main.innerHTML = "";
 				new PlayPage(app, template.main);
 			});
 		});
 		
 		router.addRoute("/game/:id", function(params) {
-			require(["./pages/Game/Game"], function(GamePage) {
+			require(["./_Game/Game"], function(GamePage) {
 				template.main.innerHTML = "";
 				new GamePage(app, parseInt(params["id"]), template.main);
 			});
