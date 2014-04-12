@@ -3,7 +3,7 @@ html, body {
 }
 
 body {
-	font-family: "Merriweather Sans", verdana, sans-serif;
+	font-family: "Noto Sans", verdana, sans-serif;
 	font-size: 13px;
 	flex-grow: 1;
 	margin: 0;
