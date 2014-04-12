@@ -5,6 +5,7 @@ define(function(require) {
 	var Template = require("lib/dom/Template");
 	var Ractive = require("lib/dom/Ractive");
 	var Router = require("lib/Router");
+	var PageCache = require("widgets/PageCache/PageCache");
 	
 	function LightSquareUi(app, parent) {
 		var template = new Template(html, parent);
@@ -33,26 +34,36 @@ define(function(require) {
 			links.set("currentPath", window.location.pathname);
 		});
 		
+		var pageCache = new PageCache(template.main);
 		var router = new Router();
 		
-		router.addRoute("/", function() {
-			require(["./_Home/Home"], function(HomePage) {
-				template.main.innerHTML = "";
-				new HomePage(app, template.main);
+		function showPage(url, callback) {
+			if(pageCache.hasPage(url)) {
+				pageCache.showPage(url);
+			}
+			
+			else {
+				callback();
+			}
+		}
+		
+		router.addRoute("/", function(params, url) {
+			showPage(url, function() {
+				require(["./_Home/Home"], function(HomePage) {
+					var page = pageCache.createPage(url);
+					new HomePage(app, page);
+					pageCache.showPage(url);
+				});
 			});
 		});
 		
-		router.addRoute("/play", function() {
-			require(["./_Play/Play"], function(PlayPage) {
-				template.main.innerHTML = "";
-				new PlayPage(app, template.main);
-			});
-		});
-		
-		router.addRoute("/game/:id", function(params) {
-			require(["./_Game/Game"], function(GamePage) {
-				template.main.innerHTML = "";
-				new GamePage(app, parseInt(params["id"]), template.main);
+		router.addRoute("/game/:id", function(params, url) {
+			showPage(url, function() {
+				require(["./_Game/Game"], function(GamePage) {
+					var page = pageCache.createPage(url);
+					new GamePage(app, parseInt(params["id"]), page);
+					pageCache.showPage(url);
+				});
 			});
 		});
 		
