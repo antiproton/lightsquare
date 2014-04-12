@@ -29,7 +29,7 @@ define(function(require) {
 		
 		links.on("click", function(event) {
 			event.original.preventDefault();
-			router.loadPath(event.node.href);
+			router.loadPath(event.context.href);
 			links.set("currentPath", window.location.pathname);
 		});
 		
