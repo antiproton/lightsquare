@@ -1,13 +1,13 @@
 define(function(require) {
-	require("css!./resources/lightsquare_ui.css");
-	var html = require("file!./resources/lightsquare_ui.html");
+	require("css!./resources/lightsquare.css");
+	var html = require("file!./lightsquare.html");
 	var linksHtml = require("file!./resources/links.html");
 	var Template = require("lib/dom/Template");
 	var Ractive = require("lib/dom/Ractive");
 	var Router = require("lib/Router");
 	var PageCache = require("./_PageCache");
 	
-	function LightSquareUi(app, parent) {
+	function LightSquare(app, parent) {
 		var template = new Template(html, parent);
 		
 		var links = new Ractive({
@@ -66,5 +66,5 @@ define(function(require) {
 		router.loadPath();
 	}
 	
-	return LightSquareUi;
+	return LightSquare;
 });
