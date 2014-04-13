@@ -18,10 +18,6 @@ define(function(require) {
 					{
 						href: "/",
 						label: "Home"
-					},
-					{
-						href: "/play",
-						label: "Play"
 					}
 				],
 				currentPath: window.location.pathname
