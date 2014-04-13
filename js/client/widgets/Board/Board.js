@@ -1,5 +1,4 @@
 define(function(require) {
-	require("lib/Function.implement");
 	var Template = require("lib/dom/Template");
 	var create = require("lib/dom/create");
 	var style = require("lib/dom/style");
