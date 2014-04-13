@@ -1,10 +1,10 @@
 define(function(require) {
-	var html = require("file!./resources/home.html");
+	var html = require("file!./resources/home_page.html");
 	var Template = require("lib/dom/Template");
-	require("css!./resources/home.css");
+	require("css!./resources/home_page.css");
 	var Board = require("widgets/Board/Board");
 	
-	function Home(app, parent) {
+	function HomePage(app, parent) {
 		this._template = new Template(html, parent);
 		
 		this._board = new Board(this._template.random_game);
@@ -13,5 +13,5 @@ define(function(require) {
 		this._board.setSquareStyle(Board.squareStyles.GREEN);
 	}
 	
-	return Home;
+	return HomePage;
 });
