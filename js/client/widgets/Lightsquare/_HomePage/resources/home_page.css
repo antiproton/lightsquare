@@ -19,3 +19,25 @@
 	padding: .5em;
 	background: #2D2D2D;
 }
+
+div.input_pair div.label {
+	min-width: 5em;
+	margin: auto 1em auto 0;
+}
+
+input.initial_time {
+	width: 4em;
+}
+
+input.increment {
+	width: 3em;
+}
+
+input.min_rating, input.max_rating {
+	width: 5em;
+}
+
+div.quick_challenge {
+	padding: 1em .5em .5em .5em;
+	background: #D8D8D8;
+}

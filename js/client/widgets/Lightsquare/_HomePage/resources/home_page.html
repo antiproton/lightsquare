@@ -5,15 +5,12 @@
 				New game
 			</div>
 			<div class="quick_challenge">
-				<div class="sub_header">
-					Quick challenge
-				</div>
 				<div class="input_pair">
 					<div class="label">Time</div>
 					<div class="control">
-						<input type="text" data-id="quick_challenge_initial_time" value="10m">
+						<input class="initial_time" type="text" data-id="quick_challenge_initial_time" value="10m">
 						<span class="time_increment_separator">/</span>
-						<input type="text" data-id="quick_challenge_increment" value="0">
+						<input class="increment" type="text" data-id="quick_challenge_increment" value="0">
 					</div>
 				</div>
 				<div class="input_pair">
@@ -21,13 +18,13 @@
 						Rating
 					</div>
 					<div class="control">
-						<input type="text" data-id="quick_challenge_rating_from" value="-100">
+						<input class="min_rating" type="text" data-id="quick_challenge_rating_from" value="-100">
 						<span class="rating_between"> to </span>
-						<input type="text" data-id="quick_challenge_rating_to" value="+100">
+						<input class="max_rating" type="text" data-id="quick_challenge_rating_to" value="+100">
 					</div>
 				</div>
-				<div>
-					<button type="button" data-id="quick_challenge_create_button">Create</button>
+				<div class="create_game_button">
+					<a class="button" href="javascript:void(0)" data-id="create_challenge">Create challenge</a>
 				</div>
 			</div>
 		</div>

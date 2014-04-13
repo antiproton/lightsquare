@@ -17,9 +17,20 @@ input[type="text"] {
 	box-shadow: inset 1px 1px 3px rgba(0, 0, 0, .1);
 }
 
-button {
-	border-radius: 2px;
-	border: 1px solid #115484;
-	background: #2F77AA;
-	cursor: pointer;
+div.input_pair {
+	display: flex;
+	align-content: center;
+}
+
+a.button {
+	color: white;
+	text-decoration: none;
+	display: inline-block;
+	border: 1px solid #1A4C6D;
+	padding: .5em .7em;
+	background-image: linear-gradient(to bottom, #33ADFF 0%, #105DB0 100%);
+}
+
+div.create_game_button {
+	margin-top: .8em;
 }
