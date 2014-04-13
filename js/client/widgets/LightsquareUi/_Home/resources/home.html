@@ -1,39 +1,43 @@
 <div class="home">
-	<div class="random_game" data-id="random_game">
-		
-	</div>
-	<div class="new_game">
-		<div class="header">
-			New game
+	<div class="col1">
+		<div class="new_game">
+			<div class="header">
+				New game
+			</div>
+			<div class="quick_challenge">
+				<div class="sub_header">
+					Quick challenge
+				</div>
+				<div class="input_pair">
+					<div class="label">Time</div>
+					<div class="control">
+						<input type="text" data-id="quick_challenge_initial_time" value="10m">
+						<span class="time_increment_separator">/</span>
+						<input type="text" data-id="quick_challenge_increment" value="0">
+					</div>
+				</div>
+				<div class="input_pair">
+					<div class="label">
+						Rating
+					</div>
+					<div class="control">
+						<input type="text" data-id="quick_challenge_rating_from" value="-100">
+						<span class="rating_between"> to </span>
+						<input type="text" data-id="quick_challenge_rating_to" value="+100">
+					</div>
+				</div>
+				<div>
+					<button type="button" data-id="quick_challenge_create_button">Create</button>
+				</div>
+			</div>
 		</div>
-		<div class="quick_challenge">
-			<div class="sub_header">
-				Quick challenge
-			</div>
-			<div class="input_pair">
-				<div class="label">Time</div>
-				<div class="control">
-					<input type="text" data-id="quick_challenge_initial_time" value="10m">
-					<span class="time_increment_separator">/</span>
-					<input type="text" data-id="quick_challenge_increment" value="0">
-				</div>
-			</div>
-			<div class="input_pair">
-				<div class="label">
-					Rating
-				</div>
-				<div class="control">
-					<input type="text" data-id="quick_challenge_rating_from" value="-100">
-					<span class="rating_between"> to </span>
-					<input type="text" data-id="quick_challenge_rating_to" value="+100">
-				</div>
-			</div>
-			<div>
-				<button type="button" data-id="quick_challenge_create_button">Create</button>
-			</div>
+		<div class="join_game">
+			
 		</div>
 	</div>
-	<div class="join_game">
-		
+	<div class="col2">
+		<div class="random_game" data-id="random_game">
+			
+		</div>
 	</div>
 </div>

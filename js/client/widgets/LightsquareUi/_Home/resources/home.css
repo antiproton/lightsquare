@@ -4,20 +4,18 @@
 	margin-top: 1em;
 }
 
+.col1 {
+	flex-grow: 1;
+	margin-right: 1em;
+}
+
 .new_game, .join_game {
 	display: flex;
 	flex-direction: column;
 }
 
-.new_game {
-	width: 40%;
-}
-
 .new_game > .header {
+	color: white;
 	padding: .5em;
-	background: #0AA9D1;
-}
-
-.join_game {
-	width: 60%;
+	background: #2D2D2D;
 }
