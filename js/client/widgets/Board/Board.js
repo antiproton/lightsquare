@@ -16,7 +16,7 @@ define(function(require) {
 	function Board(parent) {
 		this._template = new Template(html, parent);
 
-		this.UserMove = new Event(this);
+		this.Move = new Event(this);
 		this.DragDrop = new Event(this);
 		this.DragPiece = new Event(this);
 		this.PieceDraggedOff = new Event(this);
@@ -458,7 +458,7 @@ define(function(require) {
 
 				if(square !== null) {
 					if(square !== this._move.from) {
-						this.UserMove.fire({
+						this.Move.fire({
 							from: this._move.from,
 							to: square,
 							piece: this.getPiece(this._move.from),
