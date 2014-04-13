@@ -5,7 +5,7 @@ define(function(require) {
 	var Template = require("lib/dom/Template");
 	var Ractive = require("lib/dom/Ractive");
 	var Router = require("lib/Router");
-	var PageCache = require("widgets/PageCache/PageCache");
+	var PageCache = require("./_PageCache");
 	
 	function LightSquareUi(app, parent) {
 		var template = new Template(html, parent);
