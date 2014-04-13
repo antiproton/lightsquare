@@ -1,6 +1,6 @@
 define(function(require) {
 	require("css!./resources/lightsquare.css");
-	var html = require("file!./lightsquare.html");
+	var html = require("file!./resources/lightsquare.html");
 	var linksHtml = require("file!./resources/links.html");
 	var Template = require("lib/dom/Template");
 	var Ractive = require("lib/dom/Ractive");
@@ -45,7 +45,7 @@ define(function(require) {
 		
 		router.addRoute("/", function(params, url) {
 			showPage(url, function() {
-				require(["./_Home/Home"], function(HomePage) {
+				require(["./_HomePage/HomePage"], function(HomePage) {
 					var page = pageCache.createPage(url);
 					new HomePage(app, page);
 					pageCache.showPage(url);
