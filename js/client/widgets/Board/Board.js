@@ -24,10 +24,6 @@ define(function(require) {
 		this.SelectPiece = new Event(this);
 		this.PieceSelected = new Event(this);
 		this.Deselected = new Event(this);
-		this.MouseOverSquare = new Event(this);
-		this.MouseLeavingSquare = new Event(this);
-		this.PieceOverSquare = new Event(this);
-		this.PieceLeavingSquare = new Event(this);
 
 		this._highlightedSquares = {};
 
@@ -42,9 +38,6 @@ define(function(require) {
 				y: 0
 			}
 		};
-		
-		this._squareMouseCurrentlyOver = null;
-		this._squareCurrentlyDraggingPieceOver = null;
 
 		this._viewingAs = Colour.white;
 		this._showSurround = false;
@@ -164,10 +157,6 @@ define(function(require) {
 
 		window.addEventListener("mousemove", (function(event) {
 			this._boardMouseMove(event);
-		}).bind(this));
-
-		this._template.board.addEventListener("mouseout", (function(event) {
-			this._updateMouseOverInfo(event);
 		}).bind(this));
 
 		this._updateHtml();
@@ -389,9 +378,6 @@ define(function(require) {
 	Board.prototype._boardMouseMove = function(event) {
 		event.preventDefault();
 
-		this._updateMouseOverInfo(event);
-		this._updatePieceDragInfo(event);
-
 		var args;
 
 		if(this._move.pieceSelected && !this._move.isInProgress) {
@@ -530,8 +516,6 @@ define(function(require) {
 		if(fromSquare !== null) {
 			fromSquare.setZIndexNormal();
 		}
-
-		this._updatePieceDragInfo(event);
 	}
 	
 	Board.prototype._resetMove = function() {
@@ -540,78 +524,6 @@ define(function(require) {
 		this._move.isInProgress = false;
 		this._move.piece = null;
 		this._move.pieceSelected = false;
-	}
-
-	Board.prototype._updateMouseOverInfo = function(event) {
-		var square = this._squareFromMouseEvent(event);
-
-		if(square !== null) {
-			if(this._squareMouseCurrentlyOver !== square) {
-				if(this._squareMouseCurrentlyOver !== null) {
-					this.MouseLeavingSquare.fire({
-						square: this._squareMouseCurrentlyOver
-					});
-				}
-
-				this._squareMouseCurrentlyOver = square;
-
-				this.MouseOverSquare.fire({
-					square: square
-				});
-			}
-		}
-
-		else {
-			if(this._squareMouseCurrentlyOver !== null) {
-				this.MouseLeavingSquare.fire({
-					square: this._squareMouseCurrentlyOver
-				});
-			}
-
-			this._squareMouseCurrentlyOver = null;
-		}
-	}
-
-	Board.prototype._updatePieceDragInfo = function(event) {
-		var square = this._squareFromMouseEvent(event, true);
-		
-		if(square !== null && this._move.isInProgress && this._move.isDragging) {
-			if(square !== null) {
-				if(this._squareCurrentlyDraggingPieceOver !== square) {
-					if(this._squareCurrentlyDraggingPieceOver !== null) {
-						this.PieceLeavingSquare.fire({
-							square: this._squareCurrentlyDraggingPieceOver
-						});
-					}
-
-					this._squareCurrentlyDraggingPieceOver = square;
-
-					this.PieceOverSquare.fire({
-						square: square
-					});
-				}
-			}
-
-			else {
-				if(this._squareCurrentlyDraggingPieceOver !== null) {
-					this.PieceLeavingSquare.fire({
-						square: this._squareCurrentlyDraggingPieceOver
-					});
-				}
-
-				this._squareCurrentlyDraggingPieceOver = null;
-			}
-		}
-
-		else {
-			if(this._squareCurrentlyDraggingPieceOver !== null) {
-				this.PieceLeavingSquare.fire({
-					square: this._squareCurrentlyDraggingPieceOver
-				});
-			}
-
-			this._squareCurrentlyDraggingPieceOver = null;
-		}
 	}
 
 	Board.prototype._getBoardSize = function() {
