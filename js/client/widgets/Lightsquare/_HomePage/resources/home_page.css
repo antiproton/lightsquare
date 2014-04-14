@@ -14,7 +14,11 @@
 	flex-direction: column;
 }
 
-.new_game > .header {
+.section {
+	margin-bottom: 1em;
+}
+
+.section_header {
 	color: white;
 	padding: .5em;
 	background: #2D2D2D;
