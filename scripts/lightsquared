@@ -13,9 +13,9 @@
 # Do NOT "set -e"
 
 PATH=/sbin:/usr/sbin:/bin:/usr/bin
-DESC="Chess server daemon"
-NAME=chessd
-DAEMON=/var/www/chess/js/server/chessd.js
+DESC="Lightsquare app daemon"
+NAME=lightsquared
+DAEMON=/var/www/chess/js/server/lightsquared.js
 DAEMON_ARGS="--options args"
 PIDFILE=/var/run/$NAME.pid
 SCRIPTNAME=/etc/init.d/$NAME
