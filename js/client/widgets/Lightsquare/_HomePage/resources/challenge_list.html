@@ -1,7 +1,12 @@
 <div class="challenge_list">
 	{{#challenges}}
 		<div class="challenge" on-click="accept">
-			{{clockDescription}} {{ratedOrUnrated}} - {{owner}} ({{ownerRating}})
+			<div class="challenge_details">
+				{{options.initialTime}}/{{options.timeIncrement}}
+			</div>
+			<div class="challenge_owner">
+				{{owner.username}} ({{owner.rating}})
+			</div>
 		</div>
 	{{/challenges}}
 </div>
