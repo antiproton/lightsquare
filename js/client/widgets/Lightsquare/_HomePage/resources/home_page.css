@@ -51,4 +51,21 @@ div.challenge_list {
 }
 
 div.challenge {
+	display: flex;
+	justify-content: space-between;
+	border-bottom: 1px solid #bfbfbf;
+	padding: .5em;
+	cursor: pointer;
+}
+
+div.challenge:hover {
+	background: #dfdfdf;
+}
+
+div.challenge_details {
+	font-weight: bold;
+}
+
+div.challenge_owner {
+	
 }
