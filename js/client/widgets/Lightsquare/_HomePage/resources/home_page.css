@@ -45,3 +45,10 @@ div.quick_challenge {
 	padding: 1em .5em .5em .5em;
 	background: #D8D8D8;
 }
+
+div.challenge_list {
+	background: #D8D8D8;
+}
+
+div.challenge {
+}

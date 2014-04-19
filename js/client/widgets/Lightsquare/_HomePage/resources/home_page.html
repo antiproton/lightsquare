@@ -5,27 +5,29 @@
 				New game
 			</div>
 			<div class="quick_challenge">
-				<div class="input_pair">
-					<div class="label">Time</div>
-					<div class="control">
-						<input class="initial_time" type="text" data-id="quick_challenge_initial_time" value="10m">
-						<span class="time_increment_separator">/</span>
-						<input class="increment" type="text" data-id="quick_challenge_increment" value="0">
+				<form data-id="quick_challenge_form">
+					<div class="input_pair">
+						<div class="label">Time</div>
+						<div class="control">
+							<input class="initial_time" type="text" data-id="quick_challenge_initial_time" value="10m">
+							<span class="time_increment_separator">/</span>
+							<input class="increment" type="text" data-id="quick_challenge_increment" value="0">
+						</div>
 					</div>
-				</div>
-				<div class="input_pair">
-					<div class="label">
-						Rating
+					<div class="input_pair">
+						<div class="label">
+							Rating
+						</div>
+						<div class="control">
+							<input class="min_rating" type="text" data-id="quick_challenge_rating_min" value="-100">
+							<span class="rating_between"> to </span>
+							<input class="max_rating" type="text" data-id="quick_challenge_rating_max" value="+100">
+						</div>
 					</div>
-					<div class="control">
-						<input class="min_rating" type="text" data-id="quick_challenge_rating_from" value="-100">
-						<span class="rating_between"> to </span>
-						<input class="max_rating" type="text" data-id="quick_challenge_rating_to" value="+100">
+					<div class="create_game_button">
+						<input class="button" type="submit" value="Create challenge">
 					</div>
-				</div>
-				<div class="create_game_button">
-					<a class="button" href="javascript:void(0)" data-id="create_challenge">Create challenge</a>
-				</div>
+				</form>
 			</div>
 		</div>
 		<div class="section join_game">

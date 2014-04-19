@@ -14,12 +14,27 @@ define(function(require) {
 		this._board.setShowCoords(false);
 		this._board.setSquareStyle(Board.squareStyles.GREEN);
 		
+		this._template.quick_challenge_form.addEventListener("submit", (function(event) {
+			event.preventDefault();
+			
+			app.createChallenge({
+				initialTime: this._template.quick_challenge_initial_time.value,
+				timeIncrement: this._template.quick_challenge_increment.value,
+				acceptRatingMin: this._template.quick_challenge_rating_min.value,
+				acceptRatingMax: this._template.quick_challenge_rating_max.value
+			});
+		}).bind(this));
+		
 		this._challengeList = new Ractive({
 			el: this._template.challenge_list,
 			template: challengeListHtml,
 			data: {
-				"games": []
+				"challenges": app.getChallenges().getShallowCopy()
 			}
+		});
+		
+		app.NewChallenge.addHandler(this, function(data) {
+			this._challengeList.get("challenges").push(data.challenge);
 		});
 		
 		app.ChallengeExpired.addHandler(this, function(data) {
