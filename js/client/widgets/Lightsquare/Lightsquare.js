@@ -13,6 +13,20 @@ define(function(require) {
 		this._pageCache = new PageCache(this._template.main);
 		this._setupRouter();
 		this._setupLinks();
+		this._listenForNewGames();
+		this._openCurrentGames();
+	}
+	
+	Lightsquare.prototype._openCurrentGames = function() {
+		this._app.getGames().forEach((function(game) {
+			this._router.loadPath("/game/" + game.getId());
+		}).bind(this));
+	}
+	
+	Lightsquare.prototype._listenForNewGames = function() {
+		this._app.NewGame.addHandler(this, function(game) {
+			this._router.loadPath("/game/" + game.getId());
+		});
 	}
 	
 	Lightsquare.prototype._showPage = function(url, callback) {
