@@ -69,3 +69,8 @@ div.challenge_details {
 div.challenge_owner {
 	
 }
+
+div.no_challenges {
+	text-align: center;
+	padding: .5em;
+}
