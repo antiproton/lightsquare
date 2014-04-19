@@ -7,12 +7,54 @@ define(function(require) {
 	var Router = require("lib/Router");
 	var PageCache = require("./_PageCache");
 	
-	function LightSquare(app, parent) {
-		var template = new Template(html, parent);
+	function Lightsquare(app, parent) {
+		this._app = app;
+		this._template = new Template(html, parent);
+		this._pageCache = new PageCache(this._template.main);
+		this._setupRouter();
+		this._setupLinks();
+	}
+	
+	Lightsquare.prototype._showPage = function(url, callback) {
+		if(this._pageCache.hasPage(url)) {
+			this._pageCache.showPage(url);
+		}
 		
-		var links = new Ractive({
+		else {
+			callback();
+		}
+	}
+	
+	Lightsquare.prototype._setupRouter = function() {
+		this._router = new Router();
+		
+		this._router.addRoute("/", (function(params, url) {
+			this._showPage(url, (function() {
+				require(["./_HomePage/HomePage"], (function(HomePage) {
+					var page = this._pageCache.createPage(url);
+					new HomePage(this._app, page);
+					this._pageCache.showPage(url);
+				}).bind(this));
+			}).bind(this));
+		}).bind(this));
+		
+		this._router.addRoute("/game/:id", (function(params, url) {
+			this._showPage(url, (function() {
+				require(["./_Game/Game"], (function(GamePage) {
+					var page = this._pageCache.createPage(url);
+					new GamePage(this._app, parseInt(params["id"]), page);
+					this._pageCache.showPage(url);
+				}).bind(this));
+			}).bind(this));
+		}).bind(this));
+		
+		this._router.loadPath();
+	}
+	
+	Lightsquare.prototype._setupLinks = function() {
+		this._links = new Ractive({
 			template: linksHtml,
-			el: template.nav,
+			el: this._template.nav,
 			data: {
 				links: [
 					{
@@ -24,47 +66,12 @@ define(function(require) {
 			}
 		});
 		
-		links.on("click", function(event) {
+		this._links.on("click", (function(event) {
 			event.original.preventDefault();
-			router.loadPath(event.context.href);
-			links.set("currentPath", window.location.pathname);
-		});
-		
-		var pageCache = new PageCache(template.main);
-		var router = new Router();
-		
-		function showPage(url, callback) {
-			if(pageCache.hasPage(url)) {
-				pageCache.showPage(url);
-			}
-			
-			else {
-				callback();
-			}
-		}
-		
-		router.addRoute("/", function(params, url) {
-			showPage(url, function() {
-				require(["./_HomePage/HomePage"], function(HomePage) {
-					var page = pageCache.createPage(url);
-					new HomePage(app, page);
-					pageCache.showPage(url);
-				});
-			});
-		});
-		
-		router.addRoute("/game/:id", function(params, url) {
-			showPage(url, function() {
-				require(["./_Game/Game"], function(GamePage) {
-					var page = pageCache.createPage(url);
-					new GamePage(app, parseInt(params["id"]), page);
-					pageCache.showPage(url);
-				});
-			});
-		});
-		
-		router.loadPath();
+			this._router.loadPath(event.context.href);
+			this._links.set("currentPath", window.location.pathname);
+		}).bind(this));
 	}
 	
-	return LightSquare;
+	return Lightsquare;
 });
