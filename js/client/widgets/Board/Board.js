@@ -375,8 +375,6 @@ define(function(require) {
 	}
 
 	Board.prototype._boardMouseMove = function(event) {
-		event.preventDefault();
-
 		var args;
 
 		if(this._move.pieceSelected && !this._move.isInProgress) {
