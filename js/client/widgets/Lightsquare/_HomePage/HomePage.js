@@ -29,8 +29,12 @@ define(function(require) {
 			el: this._template.challenge_list,
 			template: challengeListHtml,
 			data: {
-				"challenges": app.getChallenges().getShallowCopy()
+				"challenges": app.getChallenges()
 			}
+		});
+		
+		this._challengeList.on("accept", function(event) {
+			app.acceptChallenge(event.context.id);
 		});
 		
 		app.NewChallenge.addHandler(this, function(data) {
@@ -38,7 +42,7 @@ define(function(require) {
 		});
 		
 		app.ChallengeExpired.addHandler(this, function(data) {
-			this._challengeList.set("games", this._challengeList.get("games").filter(function(challenge) {
+			this._challengeList.set("challenges", this._challengeList.get("challenges").filter(function(challenge) {
 				return (challenge.id !== data.id);
 			}));
 		});
