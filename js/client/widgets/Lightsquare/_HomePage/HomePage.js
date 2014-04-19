@@ -33,8 +33,8 @@ define(function(require) {
 			}
 		});
 		
-		this._challengeList.on("accept", function(event) {
-			app.acceptChallenge(event.context.id);
+		this._challengeList.on("accept", function(event, id) {
+			app.acceptChallenge(id);
 		});
 		
 		app.NewChallenge.addHandler(this, function(data) {

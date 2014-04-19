@@ -1,7 +1,7 @@
 <div class="challenge_list">
 	{{#challenges.length > 0}}
 		{{#challenges}}
-			<div class="challenge" on-click="accept">
+			<div class="challenge" on-click="accept:{{id}}">
 				<div class="challenge_details">
 					{{options.initialTime}}/{{options.timeIncrement}}
 				</div>
@@ -10,10 +10,10 @@
 				</div>
 			</div>
 		{{/challenges}}
-	{{/challenges.length > 0}}
+	{{/challenges}}
 	{{^challenges.length > 0}}
 		<div class="no_challenges">
 			There are no open challenges.
 		</div>
-	{{/challenges.length > 0}}
+	{{/no challenges}}
 </div>
