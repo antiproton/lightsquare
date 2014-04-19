@@ -22,13 +22,16 @@ div.input_pair {
 	align-content: center;
 }
 
-a.button {
+a.button, input.button {
+	font-family: inherit;
+	font-size: inherit;
 	color: white;
 	text-decoration: none;
 	display: inline-block;
 	border: 1px solid #1A4C6D;
 	padding: .5em .7em;
 	background-image: linear-gradient(to bottom, #33ADFF 0%, #105DB0 100%);
+	cursor: pointer;
 }
 
 div.create_game_button {
