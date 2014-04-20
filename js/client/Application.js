@@ -6,7 +6,7 @@ define(function(require) {
 	function Application(server) {
 		this._server = server;
 		this._challenges = [];
-		this._games = [];
+		this._games = {};
 		
 		this.NewChallenge = new Event(this);
 		this.NewGame = new Event(this);
@@ -35,7 +35,7 @@ define(function(require) {
 		this._server.subscribe("/game/new", (function(gameDetails) {
 			var game = new Game(this._server, gameDetails);
 			
-			this._games.push(game);
+			this._games[gameDetails.id] = game;
 			
 			this.NewGame.fire({
 				game: game
@@ -56,7 +56,25 @@ define(function(require) {
 	}
 	
 	Application.prototype.getGames = function() {
-		return this._games.getShallowCopy();
+		var games = [];
+		
+		for(var id in this._games) {
+			games.push(this._games[id]);
+		}
+		
+		return games;
+	}
+	
+	Application.prototype.getGame = function(id) {
+		return this._games[id];
+	}
+	
+	Application.prototype.hasGame = function(id) {
+		return (id in this._games);
+	}
+	
+	Application.prototype.joinGame = function(id) {
+		this._server.send("/game/watch", id);
 	}
 	
 	return Application;
