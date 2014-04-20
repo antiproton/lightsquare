@@ -41,6 +41,8 @@ define(function(require) {
 				game: game
 			});
 		}).bind(this));
+		
+		this._server.send("/request/challenges");
 	}
 	
 	Application.prototype.createChallenge = function(options) {
