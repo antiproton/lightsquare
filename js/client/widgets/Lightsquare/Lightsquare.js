@@ -24,8 +24,8 @@ define(function(require) {
 	}
 	
 	Lightsquare.prototype._listenForNewGames = function() {
-		this._app.NewGame.addHandler(this, function(game) {
-			this._router.loadPath("/game/" + game.getId());
+		this._app.NewGame.addHandler(this, function(data) {
+			this._router.loadPath("/game/" + data.game.getId());
 		});
 	}
 	
