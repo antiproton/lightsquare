@@ -74,7 +74,7 @@ define(function(require) {
 	}
 	
 	Application.prototype.joinGame = function(id) {
-		this._server.send("/game/watch", id);
+		this._server.send("/game/spectate", id);
 	}
 	
 	return Application;
