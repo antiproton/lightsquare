@@ -9,5 +9,7 @@ define(function(require) {
 	server.ConnectionOpened.addHandler(this, function() {
 		var app = new Application(server);
 		var ui = new Lightsquare(app, document.body);
+		
+		return true;
 	});
 });
