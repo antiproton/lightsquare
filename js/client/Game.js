@@ -32,6 +32,10 @@ define(function(require) {
 			this._serverMove(move);
 		}).bind(this));
 	}
+	
+	Game.prototype.getId = function() {
+		return this._id;
+	}
 
 	Game.prototype.move = function(from, to, promoteTo) {
 		var move = this._game.move(from, to, promoteTo);
