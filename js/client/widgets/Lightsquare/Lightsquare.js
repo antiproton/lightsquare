@@ -56,10 +56,20 @@ define(function(require) {
 		
 		this._router.addRoute("/game/:id", (function(params, url) {
 			this._showPage(url, (function() {
-				require(["./_Game/Game"], (function(GamePage) {
-					var page = this._pageCache.createPage(url);
-					new GamePage(this._app, parseInt(params["id"]), page);
-					this._pageCache.showPage(url);
+				require(["./_GamePage/GamePage"], (function(GamePage) {
+					var id = parseInt(params["id"]);
+					
+					if(this._app.hasGame(id)) {
+						var page = this._pageCache.createPage(url);
+						
+						new GamePage(this._app.getGame(id), page);
+						
+						this._pageCache.showPage(url);
+					}
+					
+					else {
+						this._app.spectateGame(id);
+					}
 				}).bind(this));
 			}).bind(this));
 		}).bind(this));
