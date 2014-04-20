@@ -46,7 +46,9 @@ define(function(require) {
 			this._showPage(url, (function() {
 				require(["./_HomePage/HomePage"], (function(HomePage) {
 					var page = this._pageCache.createPage(url);
+					
 					new HomePage(this._app, page);
+					
 					this._pageCache.showPage(url);
 				}).bind(this));
 			}).bind(this));
