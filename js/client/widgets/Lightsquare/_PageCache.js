@@ -15,14 +15,14 @@ define(function(require) {
 		return (url in this._pages);
 	}
 	
-	PageCache.prototype.showPage = function(url) {
+	PageCache.prototype.showPage = function(currentUrl) {
 		for(var url in this._pages) {
 			style(this._pages[url], {
 				display: "none"
 			});
 		}
 		
-		style(this._pages[url], {
+		style(this._pages[currentUrl], {
 			display: ""
 		});
 	}
