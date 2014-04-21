@@ -8,7 +8,13 @@ define(function(require) {
 	}
 	
 	PageCache.prototype.createPage = function(url) {
-		return this._pages[url] = create("div", this._container);
+		if(!this.hasPage(url)) {
+			return this._pages[url] = create("div", this._container);
+		}
+		
+		else {
+			throw "PageCache - page with url " + url + " already exists";
+		}
 	}
 	
 	PageCache.prototype.hasPage = function(url) {
