@@ -44,7 +44,7 @@ define(function(require) {
 			}).bind(this));
 		}).bind(this));
 		
-		this._server.subscribe("/game/new", (function(gameDetails) {
+		this._server.subscribe("/game", (function(gameDetails) {
 			this._addGame(gameDetails);
 		}).bind(this));
 		
