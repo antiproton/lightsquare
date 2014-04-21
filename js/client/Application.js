@@ -9,7 +9,8 @@ define(function(require) {
 		this._games = {};
 		
 		this.NewChallenge = new Event(this);
-		this.NewGame = new Event(this);
+		this.GamesReceived = new Event(this);
+		this.GameReady = new Event(this);
 		this.ChallengeExpired = new Event(this);
 		
 		this._server.subscribe("/challenges", (function(challenges) {
@@ -33,19 +34,21 @@ define(function(require) {
 		}).bind(this));
 		
 		this._server.subscribe("/games", (function(games) {
-			games.forEach((function(gameDetails) {
-				var game = new Game(this._server, gameDetails);
+			var newGames = [];
 			
-				this._games[gameDetails.id] = game;
-				
-				this.NewGame.fire({
-					game: game
-				});
+			games.forEach((function(gameDetails) {
+				newGames.push(this._addGame(gameDetails));
 			}).bind(this));
+			
+			this.GamesReceived.fire({
+				games: newGames
+			});
 		}).bind(this));
 		
 		this._server.subscribe("/game", (function(gameDetails) {
-			this._addGame(gameDetails);
+			this.GameReady.fire({
+				game: this._addGame(gameDetails)
+			});
 		}).bind(this));
 		
 		this._server.send("/request/challenges");
@@ -69,9 +72,7 @@ define(function(require) {
 	
 		this._games[gameDetails.id] = game;
 		
-		this.NewGame.fire({
-			game: game
-		});
+		return game;
 	}
 	
 	Application.prototype.getGames = function() {
