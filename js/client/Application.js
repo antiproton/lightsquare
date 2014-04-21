@@ -12,7 +12,7 @@ define(function(require) {
 		this.NewGame = new Event(this);
 		this.ChallengeExpired = new Event(this);
 		
-		this._server.subscribe("/challenge/new", (function(challenges) {
+		this._server.subscribe("/challenges", (function(challenges) {
 			challenges.forEach((function(challenge) {
 				this._challenges.push(challenge);
 				
@@ -32,14 +32,20 @@ define(function(require) {
 			});
 		}).bind(this));
 		
+		this._server.subscribe("/games", (function(games) {
+			games.forEach((function(gameDetails) {
+				var game = new Game(this._server, gameDetails);
+			
+				this._games[gameDetails.id] = game;
+				
+				this.NewGame.fire({
+					game: game
+				});
+			}).bind(this));
+		}).bind(this));
+		
 		this._server.subscribe("/game/new", (function(gameDetails) {
-			var game = new Game(this._server, gameDetails);
-			
-			this._games[gameDetails.id] = game;
-			
-			this.NewGame.fire({
-				game: game
-			});
+			this._addGame(gameDetails);
 		}).bind(this));
 		
 		this._server.send("/request/challenges");
@@ -56,6 +62,16 @@ define(function(require) {
 	
 	Application.prototype.getChallenges = function() {
 		return this._challenges.getShallowCopy();
+	}
+	
+	Application.prototype._addGame = function(gameDetails) {
+		var game = new Game(this._server, gameDetails);
+	
+		this._games[gameDetails.id] = game;
+		
+		this.NewGame.fire({
+			game: game
+		});
 	}
 	
 	Application.prototype.getGames = function() {
