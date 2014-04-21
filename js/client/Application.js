@@ -43,6 +43,7 @@ define(function(require) {
 		}).bind(this));
 		
 		this._server.send("/request/challenges");
+		this._server.send("/request/games");
 	}
 	
 	Application.prototype.createChallenge = function(options) {
