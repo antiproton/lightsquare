@@ -14,6 +14,7 @@ define(function(require) {
 		this._setupRouter();
 		this._setupLinks();
 		this._listenForNewGames();
+		this._router.loadPath();
 		this._openCurrentGames();
 	}
 	
@@ -49,6 +50,10 @@ define(function(require) {
 	Lightsquare.prototype._setupRouter = function() {
 		this._router = new Router();
 		
+		this._router.PathChanged.addHandler(this, function() {
+			this._links.set("currentPath", window.location.pathname);
+		});
+		
 		this._router.addRoute("/", (function(params, url) {
 			this._showPage(url, (function() {
 				require(["./_HomePage/HomePage"], (function(HomePage) {
@@ -64,24 +69,24 @@ define(function(require) {
 		this._router.addRoute("/game/:id", (function(params, url) {
 			this._showPage(url, (function() {
 				require(["./_GamePage/GamePage"], (function(GamePage) {
-					var id = params["id"];
-					
-					if(this._app.hasGame(id)) {
-						var page = this._pageCache.createPage(url);
+					if(!this._pageCache.hasPage(url)) {
+						var id = params["id"];
 						
-						new GamePage(this._app.getGame(id), page);
+						if(this._app.hasGame(id)) {
+							var page = this._pageCache.createPage(url);
+							
+							new GamePage(this._app.getGame(id), page);
+							
+							this._pageCache.showPage(url);
+						}
 						
-						this._pageCache.showPage(url);
-					}
-					
-					else {
-						this._app.spectateGame(id);
+						else {
+							this._app.spectateGame(id);
+						}
 					}
 				}).bind(this));
 			}).bind(this));
 		}).bind(this));
-		
-		this._router.loadPath();
 	}
 	
 	Lightsquare.prototype._setupLinks = function() {
@@ -102,7 +107,6 @@ define(function(require) {
 		this._links.on("click", (function(event) {
 			event.original.preventDefault();
 			this._router.loadPath(event.context.href);
-			this._links.set("currentPath", window.location.pathname);
 		}).bind(this));
 	}
 	
