@@ -64,7 +64,7 @@ define(function(require) {
 		this._router.addRoute("/game/:id", (function(params, url) {
 			this._showPage(url, (function() {
 				require(["./_GamePage/GamePage"], (function(GamePage) {
-					var id = parseInt(params["id"]);
+					var id = params["id"];
 					
 					if(this._app.hasGame(id)) {
 						var page = this._pageCache.createPage(url);
