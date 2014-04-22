@@ -2,11 +2,13 @@ define(function(require) {
 	var Game = require("./Game");
 	var Event = require("lib/Event");
 	require("lib/Array.getShallowCopy");
+	var User = require("./User");
 	
 	function Application(server) {
 		this._server = server;
 		this._challenges = [];
 		this._games = {};
+		this._user = new User(this._server);
 		
 		this.NewChallenge = new Event(this);
 		this.GamesReceived = new Event(this);
