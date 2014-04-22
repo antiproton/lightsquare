@@ -27,10 +27,11 @@ a.button, input.button {
 	font-size: inherit;
 	color: white;
 	text-decoration: none;
+	text-shadow: 1px 1px 0 rgba(0, 0, 0, .5);
 	display: inline-block;
 	border: 1px solid #1A4C6D;
 	border-radius: 2px;
-	padding: .5em .7em;
+	padding: .3em .7em;
 	background-image: linear-gradient(to bottom, #33ADFF 0%, #105DB0 100%);
 	cursor: pointer;
 }
