@@ -7,24 +7,24 @@ define(function(require) {
 	var Square = require("chess/Square");
 	var PieceType = require("chess/PieceType");
 
-	function Game(server, game) {
+	function Game(server, gameDetails) {
 		this.PromotionPieceNeeded = new Event(this);
 		this.MoveReceived = new Event(this);
 		
 		this._server = server;
-		this._id = game.id;
+		this._id = gameDetails.id;
 		
 		this._players = {};
-		this._players[Colour.white] = game.white;
-		this._players[Colour.black] = game.black;
+		this._players[Colour.white] = gameDetails.white;
+		this._players[Colour.black] = gameDetails.black;
 		
-		this._options = game.options;
+		this._options = gameDetails.options;
 		this._game = new ChessGame(this._options);
 		
 		this._history = [];
 		this._moveQueue = [];
 		
-		game.history.forEach((function(move) {
+		gameDetails.history.forEach((function(move) {
 			this._history.push(Move.fromJSON(move));
 		}).bind(this));
 		
