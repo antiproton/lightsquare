@@ -33,6 +33,10 @@ div.dashboard {
 	padding: 1em 0em .5em 0em;
 }
 
+div.login_register_forms {
+	display: flex;
+}
+
 div.input_pair div.label {
 	min-width: 5em;
 	margin: auto 1em auto 0;
