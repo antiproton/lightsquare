@@ -4,18 +4,18 @@ define(function(require) {
 	require("lib/Array.getShallowCopy");
 	var User = require("./User");
 	
-	function Application(server) {
-		this._server = server;
+	function Application(user) {
+		this._user = user;
 		this._challenges = [];
 		this._games = {};
-		this._user = new User(this._server);
+		this._user = new User(this._user);
 		
 		this.NewChallenge = new Event(this);
 		this.GamesReceived = new Event(this);
 		this.GameReady = new Event(this);
 		this.ChallengeExpired = new Event(this);
 		
-		this._server.subscribe("/challenges", (function(challenges) {
+		this._user.subscribe("/challenges", (function(challenges) {
 			challenges.forEach((function(challenge) {
 				this._challenges.push(challenge);
 				
@@ -25,7 +25,7 @@ define(function(require) {
 			}).bind(this));
 		}).bind(this));
 		
-		this._server.subscribe("/challenge/expired", (function(id) {
+		this._user.subscribe("/challenge/expired", (function(id) {
 			this._challenges = this._challenges.filter(function(challenge) {
 				return (challenge.id !== id);
 			});
@@ -35,7 +35,7 @@ define(function(require) {
 			});
 		}).bind(this));
 		
-		this._server.subscribe("/games", (function(games) {
+		this._user.subscribe("/games", (function(games) {
 			var newGames = [];
 			
 			games.forEach((function(gameDetails) {
@@ -47,22 +47,22 @@ define(function(require) {
 			});
 		}).bind(this));
 		
-		this._server.subscribe("/game", (function(gameDetails) {
+		this._user.subscribe("/game", (function(gameDetails) {
 			this.GameReady.fire({
 				game: this._addGame(gameDetails)
 			});
 		}).bind(this));
 		
-		this._server.send("/request/challenges");
-		this._server.send("/request/games");
+		this._user.send("/request/challenges");
+		this._user.send("/request/games");
 	}
 	
 	Application.prototype.createChallenge = function(options) {
-		this._server.send("/challenge/create", options);
+		this._user.send("/challenge/create", options);
 	}
 	
 	Application.prototype.acceptChallenge = function(id) {
-		this._server.send("/challenge/accept", id);
+		this._user.send("/challenge/accept", id);
 	}
 	
 	Application.prototype.getChallenges = function() {
@@ -70,7 +70,7 @@ define(function(require) {
 	}
 	
 	Application.prototype._addGame = function(gameDetails) {
-		var game = new Game(this._server, gameDetails);
+		var game = new Game(this._user, gameDetails);
 	
 		this._games[gameDetails.id] = game;
 		
@@ -96,7 +96,7 @@ define(function(require) {
 	}
 	
 	Application.prototype.spectateGame = function(id) {
-		this._server.send("/game/spectate", id);
+		this._user.send("/game/spectate", id);
 	}
 	
 	return Application;
