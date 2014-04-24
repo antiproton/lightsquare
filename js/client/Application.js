@@ -1,17 +1,12 @@
 define(function(require) {
-	var Game = require("./Game");
 	var Event = require("lib/Event");
 	require("lib/Array.getShallowCopy");
-	var User = require("./User");
 	
 	function Application(server) {
 		this._server = server;
 		this._challenges = [];
-		this._games = {};
 		
 		this.NewChallenge = new Event(this);
-		this.GamesReceived = new Event(this);
-		this.GameReady = new Event(this);
 		this.ChallengeExpired = new Event(this);
 		
 		this._server.subscribe("/challenges", (function(challenges) {
@@ -34,68 +29,11 @@ define(function(require) {
 			});
 		}).bind(this));
 		
-		this._server.subscribe("/games", (function(games) {
-			var newGames = [];
-			
-			games.forEach((function(gameDetails) {
-				newGames.push(this._addGame(gameDetails));
-			}).bind(this));
-			
-			this.GamesReceived.fire({
-				games: newGames
-			});
-		}).bind(this));
-		
-		this._server.subscribe("/game", (function(gameDetails) {
-			this.GameReady.fire({
-				game: this._addGame(gameDetails)
-			});
-		}).bind(this));
-		
 		this._server.send("/request/challenges");
-		this._server.send("/request/games");
-	}
-	
-	Application.prototype.createChallenge = function(options) {
-		this._server.send("/challenge/create", options);
-	}
-	
-	Application.prototype.acceptChallenge = function(id) {
-		this._server.send("/challenge/accept", id);
 	}
 	
 	Application.prototype.getChallenges = function() {
 		return this._challenges.getShallowCopy();
-	}
-	
-	Application.prototype._addGame = function(gameDetails) {
-		var game = new Game(this._server, gameDetails);
-	
-		this._games[gameDetails.id] = game;
-		
-		return game;
-	}
-	
-	Application.prototype.getGames = function() {
-		var games = [];
-		
-		for(var id in this._games) {
-			games.push(this._games[id]);
-		}
-		
-		return games;
-	}
-	
-	Application.prototype.getGame = function(id) {
-		return this._games[id];
-	}
-	
-	Application.prototype.hasGame = function(id) {
-		return (id in this._games);
-	}
-	
-	Application.prototype.spectateGame = function(id) {
-		this._server.send("/game/spectate", id);
 	}
 	
 	return Application;
