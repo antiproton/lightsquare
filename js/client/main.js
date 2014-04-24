@@ -1,6 +1,6 @@
 define(function(require) {
 	require("lib/dom/ready!");
-	var Server = require("lib/websocket-client/Server");
+	var Server = require("lib/websocket/client/Server");
 	var Application = require("./Application");
 	var Lightsquare = require("./widgets/Lightsquare/Lightsquare");
 
