@@ -7,8 +7,9 @@ define(function(require) {
 	var Router = require("lib/Router");
 	var PageCache = require("./_PageCache");
 	
-	function Lightsquare(app, parent) {
+	function Lightsquare(app, user, parent) {
 		this._app = app;
+		this._user = user;
 		this._template = new Template(html, parent);
 		this._pageCache = new PageCache(this._template.main);
 		this._setupRouter();
@@ -72,7 +73,7 @@ define(function(require) {
 				require(["./_HomePage/HomePage"], (function(HomePage) {
 					var page = this._pageCache.createPage(url);
 					
-					new HomePage(this._app, page);
+					new HomePage(this._app, this._user, page);
 					
 					this._pageCache.showPage(url);
 				}).bind(this));
@@ -88,7 +89,7 @@ define(function(require) {
 						if(this._app.hasGame(id)) {
 							var page = this._pageCache.createPage(url);
 							
-							new GamePage(this._app.getGame(id), page);
+							new GamePage(this._app.getGame(id), this._user, page);
 							
 							this._pageCache.showPage(url);
 						}

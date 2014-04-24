@@ -7,8 +7,9 @@ define(function(require) {
 	var Board = require("widgets/Board/Board");
 	var Ractive = require("lib/dom/Ractive");
 	
-	function HomePage(app, parent) {
+	function HomePage(app, user, parent) {
 		this._app = app;
+		this._user = user;
 		this._template = new Template(html, parent);
 		
 		this._dashboard = new Ractive({

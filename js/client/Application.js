@@ -8,7 +8,6 @@ define(function(require) {
 		this._server = server;
 		this._challenges = [];
 		this._games = {};
-		this._user = new User(this._server);
 		
 		this.NewChallenge = new Event(this);
 		this.GamesReceived = new Event(this);
