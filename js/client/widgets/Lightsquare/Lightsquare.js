@@ -20,19 +20,19 @@ define(function(require) {
 	}
 	
 	Lightsquare.prototype._openCurrentGames = function() {
-		this._app.getGames().forEach((function(game) {
+		this._user.getGames().forEach((function(game) {
 			this._router.loadPath("/game/" + game.getId());
 		}).bind(this));
 	}
 	
 	Lightsquare.prototype._listenForNewGames = function() {
-		this._app.GamesReceived.addHandler(this, function(data) {
+		this._user.GamesReceived.addHandler(this, function(data) {
 			data.games.forEach((function(game) {
 				this._addGameLink(game);
 			}).bind(this));
 		});
 		
-		this._app.GameReady.addHandler(this, function(data) {
+		this._user.GameReady.addHandler(this, function(data) {
 			this._addGameLink(data.game);
 			this._goToGame(data.game);
 		});
@@ -86,10 +86,10 @@ define(function(require) {
 					if(!this._pageCache.hasPage(url)) {
 						var id = params["id"];
 						
-						if(this._app.hasGame(id)) {
+						if(this._user.hasGame(id)) {
 							var page = this._pageCache.createPage(url);
 							
-							new GamePage(this._app.getGame(id), this._user, page);
+							new GamePage(this._user.getGame(id), this._user, page);
 							
 							this._pageCache.showPage(url);
 						}
@@ -120,6 +120,7 @@ define(function(require) {
 		
 		this._links.on("click", (function(event) {
 			event.original.preventDefault();
+			
 			this._router.loadPath(event.context.href);
 		}).bind(this));
 	}
