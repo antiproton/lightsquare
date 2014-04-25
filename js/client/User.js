@@ -45,6 +45,13 @@ define(function(require) {
 		this._server.send("/request/games");
 	}
 	
+	User.prototype.login = function(username, password) {
+		this._server.send("/user/login", {
+			username: username,
+			password: password
+		});
+	}
+	
 	User.prototype.createChallenge = function(options) {
 		this._server.send("/challenge/create", options);
 	}
