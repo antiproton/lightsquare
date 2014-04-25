@@ -34,7 +34,7 @@ define(function(require) {
 		this._template.quick_challenge_form.addEventListener("submit", (function(event) {
 			event.preventDefault();
 			
-			this._app.createChallenge({
+			this._user.createChallenge({
 				initialTime: this._template.quick_challenge_initial_time.value,
 				timeIncrement: this._template.quick_challenge_increment.value,
 				acceptRatingMin: this._template.quick_challenge_rating_min.value,
@@ -51,7 +51,7 @@ define(function(require) {
 		});
 		
 		this._challengeList.on("accept", (function(event, id) {
-			this._app.acceptChallenge(id);
+			this._user.acceptChallenge(id);
 		}).bind(this));
 		
 		this._app.NewChallenge.addHandler(this, function(data) {
