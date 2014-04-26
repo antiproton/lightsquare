@@ -38,10 +38,12 @@ define(function(require) {
 	
 	Application.prototype.startUpdatingChallengeList = function() {
 		this._server.send("/unignore", "/challenges");
+		this._server.send("/unignore", "/challenge/expired");
 	}
 	
 	Application.prototype.stopUpdatingChallengeList = function() {
 		this._server.send("/ignore", "/challenges");
+		this._server.send("/ignore", "/challenge/expired");
 	}
 	
 	return Application;
