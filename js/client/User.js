@@ -20,8 +20,15 @@ define(function(require) {
 		this.GameReady = new Event(this);
 		
 		this._server.subscribe("/user/login/success", (function(data) {
-			console.log("logged in");
-			console.log(data);
+			this.LoggedIn.fire();
+		}).bind(this));
+		
+		this._server.subscribe("/user/logout", (function(data) {
+			this._logout();
+		}).bind(this));
+		
+		this._server.subscribe("/user/replaced", (function(data) {
+			this.Replaced.fire();
 		}).bind(this));
 		
 		this._server.subscribe("/games", (function(games) {
@@ -50,6 +57,17 @@ define(function(require) {
 			username: username,
 			password: password
 		});
+	}
+	
+	User.prototype.logout = function() {
+		this._server.send("/user/logout");
+	}
+	
+	User.prototype._logout = function() {
+		this._username = "Anonymous";
+		this._isLoggedIn = false;
+		
+		this.LoggedOut.fire();
 	}
 	
 	User.prototype.createChallenge = function(options) {
