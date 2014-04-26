@@ -37,11 +37,11 @@ define(function(require) {
 	}
 	
 	Application.prototype.startUpdatingChallengeList = function() {
-		this._server.send("/interested", "/challenges");
+		this._server.send("/unignore", "/challenges");
 	}
 	
 	Application.prototype.stopUpdatingChallengeList = function() {
-		this._server.send("/not_interested", "/challenges");
+		this._server.send("/ignore", "/challenges");
 	}
 	
 	return Application;
