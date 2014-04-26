@@ -17,6 +17,7 @@ define(function(require) {
 		this._listenForNewGames();
 		this._router.loadPath();
 		this._openCurrentGames();
+		this._handleUserEvents();
 	}
 	
 	Lightsquare.prototype._openCurrentGames = function() {
@@ -123,6 +124,12 @@ define(function(require) {
 			
 			this._router.loadPath(event.context.href);
 		}).bind(this));
+	}
+	
+	Lightsquare.prototype._handleUserEvents = function() {
+		this._user.Replaced.addHandler(this, function() {
+			window.location.replace("/");
+		});
 	}
 	
 	return Lightsquare;
