@@ -36,5 +36,13 @@ define(function(require) {
 		return this._challenges.getShallowCopy();
 	}
 	
+	Application.prototype.startUpdatingChallengeList = function() {
+		this._server.send("/interested", "/challenges");
+	}
+	
+	Application.prototype.stopUpdatingChallengeList = function() {
+		this._server.send("/not_interested", "/challenges");
+	}
+	
 	return Application;
 });

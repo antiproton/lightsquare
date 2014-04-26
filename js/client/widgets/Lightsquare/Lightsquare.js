@@ -79,6 +79,8 @@ define(function(require) {
 					this._pageCache.showPage(url);
 				}).bind(this));
 			}).bind(this));
+			
+			this._app.startUpdatingChallengeList();
 		}).bind(this));
 		
 		this._router.addRoute("/game/:id", (function(params, url) {
@@ -101,6 +103,8 @@ define(function(require) {
 					}
 				}).bind(this));
 			}).bind(this));
+			
+			this._app.stopUpdatingChallengeList();
 		}).bind(this));
 	}
 	
