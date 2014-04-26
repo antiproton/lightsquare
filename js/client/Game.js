@@ -29,7 +29,7 @@ define(function(require) {
 		}).bind(this));
 		
 		this._server.subscribe("/game/" + this._id + "/move", (function(move) {
-			this._serverMove(move);
+			this._handleServerMove(move);
 		}).bind(this));
 	}
 	
@@ -64,7 +64,7 @@ define(function(require) {
 		return this._game.getPosition();
 	}
 	
-	Game.prototype._serverMove = function(move) {
+	Game.prototype._handleServerMove = function(move) {
 		if(move.index > this._history.length) {
 			this._moveQueue[move.index] = move;
 		}
