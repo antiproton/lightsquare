@@ -5,6 +5,7 @@ define(function(require) {
 	function Application(server) {
 		this._server = server;
 		this._challenges = [];
+		this._isUpdatingChallengeList = true;
 		
 		this.NewChallenge = new Event(this);
 		this.ChallengeExpired = new Event(this);
@@ -37,13 +38,17 @@ define(function(require) {
 	}
 	
 	Application.prototype.startUpdatingChallengeList = function() {
-		this._server.send("/unignore", "/challenges");
-		this._server.send("/unignore", "/challenge/expired");
+		if(!this._isUpdatingChallengeList) {
+			this._server.send("/unignore", "/challenges");
+			this._server.send("/unignore", "/challenge/expired");
+		}
 	}
 	
 	Application.prototype.stopUpdatingChallengeList = function() {
-		this._server.send("/ignore", "/challenges");
-		this._server.send("/ignore", "/challenge/expired");
+		if(this._isUpdatingChallengeList) {
+			this._server.send("/ignore", "/challenges");
+			this._server.send("/ignore", "/challenge/expired");
+		}
 	}
 	
 	return Application;
