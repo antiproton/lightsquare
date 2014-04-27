@@ -39,8 +39,17 @@ define(function(require) {
 	
 	Application.prototype.startUpdatingChallengeList = function() {
 		if(!this._isUpdatingChallengeList) {
+			this._challenges.forEach((function(challenge) {
+				this.ChallengeExpired.fire({
+					id: challenge.id
+				});
+			}).bind(this));
+			
+			this._challenges = [];
+			
 			this._server.send("/unignore", "/challenges");
 			this._server.send("/unignore", "/challenge/expired");
+			this._server.send("/request/challenges");
 			
 			this._isUpdatingChallengeList = true;
 		}
