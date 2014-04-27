@@ -41,6 +41,8 @@ define(function(require) {
 		if(!this._isUpdatingChallengeList) {
 			this._server.send("/unignore", "/challenges");
 			this._server.send("/unignore", "/challenge/expired");
+			
+			this._isUpdatingChallengeList = true;
 		}
 	}
 	
@@ -48,6 +50,8 @@ define(function(require) {
 		if(this._isUpdatingChallengeList) {
 			this._server.send("/ignore", "/challenges");
 			this._server.send("/ignore", "/challenge/expired");
+			
+			this._isUpdatingChallengeList = false;
 		}
 	}
 	
