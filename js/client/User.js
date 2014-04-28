@@ -18,6 +18,7 @@ define(function(require) {
 		this.LoggedOut = new Event(this);
 		this.GamesReceived = new Event(this);
 		this.GameReady = new Event(this);
+		this.DetailsChanged = new Event(this);
 		
 		this._server.subscribe("/user/login/success", (function(data) {
 			this.LoggedIn.fire();
@@ -49,6 +50,11 @@ define(function(require) {
 			});
 		}).bind(this));
 		
+		this._server.subscribe("/user", (function(userDetails) {
+			this._loadDetails(userDetails);
+		}).bind(this));
+		
+		this._server.send("/request/user");
 		this._server.send("/request/games");
 	}
 	
@@ -106,6 +112,16 @@ define(function(require) {
 	
 	User.prototype.spectateGame = function(id) {
 		this._server.send("/game/spectate", id);
+	}
+	
+	User.prototype._loadDetails = function(userDetails) {
+		this._username = userDetails.username;
+		this._rating = userDetails.rating;
+		this._gamesPlayedAsWhite = userDetails.gamesPlayedAsWhite;
+		this._gamesPlayedAsBlack = userDetails.gamesPlayedAsBlack;
+		this._isLoggedIn = userDetails.isLoggedIn;
+		
+		this.DetailsChanged.fire();
 	}
 	
 	return User;
