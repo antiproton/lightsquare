@@ -76,6 +76,10 @@ define(function(require) {
 		this.LoggedOut.fire();
 	}
 	
+	User.prototype.getUsername = function() {
+		return this._username;
+	}
+	
 	User.prototype.createChallenge = function(options) {
 		this._server.send("/challenge/create", options);
 	}

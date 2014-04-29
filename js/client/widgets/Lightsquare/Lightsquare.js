@@ -2,6 +2,7 @@ define(function(require) {
 	require("css!./resources/lightsquare.css");
 	var html = require("file!./resources/lightsquare.html");
 	var linksHtml = require("file!./resources/links.html");
+	var userLinkHtml = require("file!./resources/user_link.html");
 	var Template = require("lib/dom/Template");
 	var Ractive = require("lib/dom/Ractive");
 	var Router = require("lib/Router");
@@ -13,7 +14,8 @@ define(function(require) {
 		this._template = new Template(html, parent);
 		this._pageCache = new PageCache(this._template.main);
 		this._setupRouter();
-		this._setupLinks();
+		this._setupNavLinks();
+		this._setupUserLink();
 		this._listenForNewGames();
 		this._router.loadPath();
 		this._openCurrentGames();
@@ -106,9 +108,25 @@ define(function(require) {
 			
 			this._app.stopUpdatingChallengeList();
 		}).bind(this));
+		
+		this._router.addRoute("/user/profile", (function(params, url) {
+			if(this._pageCache.hasPage(url)) {
+				this._pageCache.showPage(url);
+			}
+			
+			else {
+				require(["./_ProfilePage/ProfilePage"], (function(ProfilePage) {
+					var page = this._pageCache.createPage(url);
+					
+					new ProfilePage(this._user, page);
+					
+					this._pageCache.showPage(url);
+				}).bind(this));
+			}
+		}).bind(this));
 	}
 	
-	Lightsquare.prototype._setupLinks = function() {
+	Lightsquare.prototype._setupNavLinks = function() {
 		this._links = new Ractive({
 			template: linksHtml,
 			el: this._template.nav,
@@ -130,9 +148,29 @@ define(function(require) {
 		}).bind(this));
 	}
 	
+	Lightsquare.prototype._setupUserLink = function() {
+		this._userLink = new Ractive({
+			el: this._template.user,
+			template: userLinkHtml,
+			data: {
+				username: this._user.getUsername()
+			}
+		});
+		
+		this._userLink.on("click", (function(event) {
+			event.original.preventDefault();
+			
+			this._router.loadPath("/user/profile");
+		}).bind(this));
+	}
+	
 	Lightsquare.prototype._handleUserEvents = function() {
 		this._user.Replaced.addHandler(this, function() {
 			window.location.replace("/");
+		});
+		
+		this._user.DetailsChanged.addHandler(this, function() {
+			this._userLink.set("username", this._user.getUsername());
 		});
 	}
 	
