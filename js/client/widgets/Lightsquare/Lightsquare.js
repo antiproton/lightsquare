@@ -107,6 +107,7 @@ define(function(require) {
 			}
 			
 			this._pages.showPage(url);
+			this._app.stopUpdatingChallengeList();
 		}).bind(this));
 	}
 	
