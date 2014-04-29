@@ -6,13 +6,16 @@ define(function(require) {
 	var Template = require("lib/dom/Template");
 	var Ractive = require("lib/dom/Ractive");
 	var Router = require("lib/Router");
-	var PageCache = require("./_PageCache");
+	var Pages = require("./_Pages");
+	var HomePage = require("./_HomePage/HomePage");
+	var GamePage = require("./_GamePage/GamePage");
+	var ProfilePage = require("./_ProfilePage/ProfilePage");
 	
 	function Lightsquare(app, user, parent) {
 		this._app = app;
 		this._user = user;
 		this._template = new Template(html, parent);
-		this._pageCache = new PageCache(this._template.main);
+		this._pages = new Pages(this._template.main);
 		this._setupRouter();
 		this._setupNavLinks();
 		this._setupUserLink();
@@ -54,16 +57,6 @@ define(function(require) {
 		this._router.loadPath("/game/" + game.getId());
 	}
 	
-	Lightsquare.prototype._showPage = function(url, callback) {
-		if(this._pageCache.hasPage(url)) {
-			this._pageCache.showPage(url);
-		}
-		
-		else {
-			callback();
-		}
-	}
-	
 	Lightsquare.prototype._setupRouter = function() {
 		this._router = new Router();
 		
@@ -72,57 +65,48 @@ define(function(require) {
 		});
 		
 		this._router.addRoute("/", (function(params, url) {
-			this._showPage(url, (function() {
-				require(["./_HomePage/HomePage"], (function(HomePage) {
-					var page = this._pageCache.createPage(url);
-					
-					new HomePage(this._app, this._user, page);
-					
-					this._pageCache.showPage(url);
-				}).bind(this));
-			}).bind(this));
+			if(!this._pages.hasPage(url)) {
+				var page = this._pages.createPage(url);
+				
+				new HomePage(this._app, this._user, page);
+			}
 			
+			this._pages.showPage(url);
 			this._app.startUpdatingChallengeList();
 		}).bind(this));
 		
 		this._router.addRoute("/game/:id", (function(params, url) {
-			this._showPage(url, (function() {
-				require(["./_GamePage/GamePage"], (function(GamePage) {
-					if(!this._pageCache.hasPage(url)) {
-						var id = params["id"];
-						
-						if(this._user.hasGame(id)) {
-							var page = this._pageCache.createPage(url);
-							
-							new GamePage(this._user.getGame(id), this._user, page);
-							
-							this._pageCache.showPage(url);
-						}
-						
-						else {
-							this._app.spectateGame(id);
-						}
-					}
-				}).bind(this));
-			}).bind(this));
+			if(this._pages.hasPage(url)) {
+				this._pages.showPage(url);
+			}
+			
+			else {
+				var id = params["id"];
+				
+				if(this._user.hasGame(id)) {
+					var page = this._pages.createPage(url);
+					
+					new GamePage(this._user.getGame(id), this._user, page);
+					
+					this._pages.showPage(url);
+				}
+				
+				else {
+					this._app.spectateGame(id);
+				}
+			}
 			
 			this._app.stopUpdatingChallengeList();
 		}).bind(this));
 		
 		this._router.addRoute("/user/profile", (function(params, url) {
-			if(this._pageCache.hasPage(url)) {
-				this._pageCache.showPage(url);
+			if(!this._pages.hasPage(url)) {
+				var page = this._pages.createPage(url);
+				
+				new ProfilePage(this._user, page);
 			}
 			
-			else {
-				require(["./_ProfilePage/ProfilePage"], (function(ProfilePage) {
-					var page = this._pageCache.createPage(url);
-					
-					new ProfilePage(this._user, page);
-					
-					this._pageCache.showPage(url);
-				}).bind(this));
-			}
+			this._pages.showPage(url);
 		}).bind(this));
 	}
 	

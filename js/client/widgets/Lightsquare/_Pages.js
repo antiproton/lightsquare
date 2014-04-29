@@ -2,12 +2,12 @@ define(function(require) {
 	var create = require("lib/dom/create");
 	var style = require("lib/dom/style");
 	
-	function PageCache(parent) {
+	function Pages(parent) {
 		this._container = create("div", parent);
 		this._pages = {};
 	}
 	
-	PageCache.prototype.createPage = function(url) {
+	Pages.prototype.createPage = function(url) {
 		if(!this.hasPage(url)) {
 			return this._pages[url] = create("div", this._container);
 		}
@@ -17,11 +17,11 @@ define(function(require) {
 		}
 	}
 	
-	PageCache.prototype.hasPage = function(url) {
+	Pages.prototype.hasPage = function(url) {
 		return (url in this._pages);
 	}
 	
-	PageCache.prototype.showPage = function(currentUrl) {
+	Pages.prototype.showPage = function(currentUrl) {
 		for(var url in this._pages) {
 			style(this._pages[url], {
 				display: "none"
@@ -33,5 +33,5 @@ define(function(require) {
 		});
 	}
 	
-	return PageCache;
+	return Pages;
 });

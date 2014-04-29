@@ -20,8 +20,10 @@ define(function(require) {
 		this.GameReady = new Event(this);
 		this.DetailsChanged = new Event(this);
 		
-		this._server.subscribe("/user/login/success", (function(data) {
+		this._server.subscribe("/user/login/success", (function(userDetails) {
+			this._loadDetails(userDetails);
 			this.LoggedIn.fire();
+			this.DetailsChanged.fire();
 		}).bind(this));
 		
 		this._server.subscribe("/user/logout", (function(data) {
