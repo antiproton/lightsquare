@@ -26,6 +26,12 @@ define(function(require) {
 			this._user.login(this._dashboard.get("login_form.username"), this._dashboard.get("login_form.password"));
 		}).bind(this));
 		
+		this._dashboard.on("register", (function(event) {
+			event.original.preventDefault();
+			
+			this._user.register(this._dashboard.get("register_form.username"), this._dashboard.get("register_form.password"));
+		}).bind(this));
+		
 		this._board = new Board(this._template.random_game);
 		this._board.setSquareSize(60);
 		this._board.setShowCoords(false);

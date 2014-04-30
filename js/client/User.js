@@ -60,6 +60,13 @@ define(function(require) {
 		this._server.send("/request/games");
 	}
 	
+	User.prototype.register = function(username, password) {
+		this._server.send("/user/register", {
+			username: username,
+			password: password
+		});
+	}
+	
 	User.prototype.login = function(username, password) {
 		this._server.send("/user/login", {
 			username: username,
