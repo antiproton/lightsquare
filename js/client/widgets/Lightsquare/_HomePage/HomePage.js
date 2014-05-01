@@ -12,6 +12,13 @@ define(function(require) {
 		this._user = user;
 		this._template = new Template(html, parent);
 		
+		this._setupDashboard();
+		this._setupBoard();
+		this._setupQuickChallengeForm();
+		this._setupChallengeList();
+	}
+	
+	HomePage.prototype._setupDashboard = function() {
 		this._dashboard = new Ractive({
 			el: this._template.dashboard,
 			template: dashboardHtml,
@@ -31,12 +38,16 @@ define(function(require) {
 			
 			this._user.register(this._dashboard.get("register_form.username"), this._dashboard.get("register_form.password"));
 		}).bind(this));
-		
+	}
+	
+	HomePage.prototype._setupBoard = function() {
 		this._board = new Board(this._template.random_game);
 		this._board.setSquareSize(60);
 		this._board.setShowCoords(false);
 		this._board.setSquareStyle(Board.squareStyles.GREEN);
-		
+	}
+	
+	HomePage.prototype._setupQuickChallengeForm = function() {
 		this._template.quick_challenge_form.addEventListener("submit", (function(event) {
 			event.preventDefault();
 			
@@ -47,7 +58,9 @@ define(function(require) {
 				acceptRatingMax: this._template.quick_challenge_rating_max.value
 			});
 		}).bind(this));
-		
+	}
+	
+	HomePage.prototype._setupChallengeList = function() {
 		this._challengeList = new Ractive({
 			el: this._template.challenge_list,
 			template: challengeListHtml,
