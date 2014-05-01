@@ -10,6 +10,7 @@ define(function(require) {
 	var HomePage = require("./_HomePage/HomePage");
 	var GamePage = require("./_GamePage/GamePage");
 	var ProfilePage = require("./_ProfilePage/ProfilePage");
+	var WelcomePage = require("./_WelcomePage/WelcomePage");
 	
 	function Lightsquare(app, user, parent) {
 		this._app = app;
@@ -109,6 +110,17 @@ define(function(require) {
 			this._pages.showPage(url);
 			this._app.stopUpdatingChallengeList();
 		}).bind(this));
+		
+		this._router.addRoute("/user/welcome", (function(params, url) {
+			if(!this._pages.hasPage(url)) {
+				var page = this._pages.createPage(url);
+				
+				new WelcomePage(this._user, page);
+			}
+			
+			this._pages.showPage(url);
+			this._app.stopUpdatingChallengeList();
+		}).bind(this));
 	}
 	
 	Lightsquare.prototype._setupNavLinks = function() {
@@ -156,6 +168,10 @@ define(function(require) {
 		
 		this._user.DetailsChanged.addHandler(this, function() {
 			this._userLink.set("username", this._user.getUsername());
+		});
+		
+		this._user.Registered.addHandler(this, function() {
+			this._router.loadPath("/user/welcome");
 		});
 	}
 	

@@ -16,6 +16,7 @@ define(function(require) {
 		this.LoggedIn = new Event(this);
 		this.LoginFailed = new Event(this);
 		this.LoggedOut = new Event(this);
+		this.Registered = new Event(this);
 		this.GamesReceived = new Event(this);
 		this.GameReady = new Event(this);
 		this.DetailsChanged = new Event(this);
@@ -28,6 +29,10 @@ define(function(require) {
 		
 		this._server.subscribe("/user/logout", (function(data) {
 			this._logout();
+		}).bind(this));
+		
+		this._server.subscribe("/user/register/success", (function(data) {
+			this.Registered.fire();
 		}).bind(this));
 		
 		this._server.subscribe("/user/replaced", (function(data) {
