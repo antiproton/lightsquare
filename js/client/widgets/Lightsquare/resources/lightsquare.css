@@ -7,6 +7,7 @@
 
 .header {
 	display: flex;
+	background-color: #F4F4F4;
 }
 
 .links {
@@ -23,6 +24,7 @@
 
 .links a.on, .links a.on:hover {
 	border-bottom: 2px solid #3D3D3D;
+	background-color: #E8E8E8;
 }
 
 .links a:hover {
