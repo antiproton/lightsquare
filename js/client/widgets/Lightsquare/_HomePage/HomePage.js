@@ -65,7 +65,7 @@ define(function(require) {
 			el: this._template.challenge_list,
 			template: challengeListHtml,
 			data: {
-				"challenges": app.getChallenges()
+				"challenges": this._app.getChallenges()
 			}
 		});
 		
