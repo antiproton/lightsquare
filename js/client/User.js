@@ -116,14 +116,6 @@ define(function(require) {
 		return game;
 	}
 	
-	User.prototype.getGame = function(id) {
-		return this._games[id];
-	}
-	
-	User.prototype.hasGame = function(id) {
-		return (id in this._games);
-	}
-	
 	User.prototype.spectateGame = function(id) {
 		this._server.send("/game/spectate", id);
 	}

@@ -15,40 +15,34 @@ define(function(require) {
 	function Lightsquare(app, user, parent) {
 		this._app = app;
 		this._user = user;
+		this._games = {}
+		
 		this._template = new Template(html, parent);
 		this._pages = new Pages(this._template.main);
+		
 		this._setupRouter();
 		this._setupNavLinks();
 		this._setupUserLink();
-		this._listenForNewGames();
+		
 		this._handleUserEvents();
+		
 		this._router.loadPath();
 	}
 	
-	Lightsquare.prototype._listenForNewGames = function() {
-		this._user.GamesReceived.addHandler(this, function(data) {
-			data.games.forEach((function(game) {
-				this._addGameLink(game);
-			}).bind(this));
-		});
+	Lightsquare.prototype._addGame = function(game) {
+		var id = game.getId();
+		var href = "/game/" + id;
 		
-		this._user.GameReady.addHandler(this, function(data) {
-			this._addGameLink(data.game);
-			this._goToGame(data.game);
-		});
-	}
-	
-	Lightsquare.prototype._addGameLink = function(game) {
-		var href = "/game/" + game.getId();
+		this._games[id] = game;
 		
 		this._links.get("links").push({
 			href: href,
-			label: game.getId()
+			label: id
 		});
 	}
 	
-	Lightsquare.prototype._goToGame = function(game) {
-		this._router.loadPath("/game/" + game.getId());
+	Lightsquare.prototype._goToGame = function(id) {
+		this._router.loadPath("/game/" + id);
 	}
 	
 	Lightsquare.prototype._setupRouter = function() {
@@ -77,10 +71,10 @@ define(function(require) {
 			else {
 				var id = params["id"];
 				
-				if(this._user.hasGame(id)) {
+				if(id in this._games) {
 					var page = this._pages.createPage(url);
 					
-					new GamePage(this._user.getGame(id), this._user, page);
+					new GamePage(this._games[id], this._user, page);
 					
 					this._pages.showPage(url);
 				}
@@ -165,6 +159,16 @@ define(function(require) {
 		
 		this._user.Registered.addHandler(this, function() {
 			this._router.loadPath("/user/welcome");
+		});
+		
+		this._user.GamesReceived.addHandler(this, function(data) {
+			data.games.forEach((function(game) {
+				this._addGame(game);
+			}).bind(this));
+		});
+		
+		this._user.NeededInGame.addHandler(this, function(data) {
+			this._goToGame(data.id);
 		});
 	}
 	
