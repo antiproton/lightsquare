@@ -21,15 +21,8 @@ define(function(require) {
 		this._setupNavLinks();
 		this._setupUserLink();
 		this._listenForNewGames();
-		this._router.loadPath();
-		this._openCurrentGames();
 		this._handleUserEvents();
-	}
-	
-	Lightsquare.prototype._openCurrentGames = function() {
-		this._user.getGames().forEach((function(game) {
-			this._router.loadPath("/game/" + game.getId());
-		}).bind(this));
+		this._router.loadPath();
 	}
 	
 	Lightsquare.prototype._listenForNewGames = function() {
