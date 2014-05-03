@@ -48,8 +48,8 @@ define(function(require) {
 	Lightsquare.prototype._setupRouter = function() {
 		this._router = new Router();
 		
-		this._router.PathChanged.addHandler(this, function() {
-			this._links.set("currentPath", window.location.pathname);
+		this._router.PathChanged.addHandler(this, function(data) {
+			this._links.set("currentPath", data.path);
 		});
 		
 		this._router.addRoute("/", (function(params, url) {
@@ -121,7 +121,7 @@ define(function(require) {
 						label: "Home"
 					}
 				],
-				currentPath: window.location.pathname
+				currentPath: this._router.getCurrentPath()
 			}
 		});
 		
