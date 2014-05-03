@@ -165,6 +165,8 @@ define(function(require) {
 			data.games.forEach((function(game) {
 				this._addGame(game);
 			}).bind(this));
+			
+			this._router.loadPath();
 		});
 		
 		this._user.NeededInGame.addHandler(this, function(data) {
