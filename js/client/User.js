@@ -110,16 +110,6 @@ define(function(require) {
 		return game;
 	}
 	
-	User.prototype.getGames = function() {
-		var games = [];
-		
-		for(var id in this._games) {
-			games.push(this._games[id]);
-		}
-		
-		return games;
-	}
-	
 	User.prototype.getGame = function(id) {
 		return this._games[id];
 	}
