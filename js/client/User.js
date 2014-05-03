@@ -18,7 +18,7 @@ define(function(require) {
 		this.LoggedOut = new Event(this);
 		this.Registered = new Event(this);
 		this.GamesReceived = new Event(this);
-		this.GameReady = new Event(this);
+		this.NeededInGame = new Event(this);
 		this.DetailsChanged = new Event(this);
 		
 		this._server.subscribe("/user/login/success", (function(userDetails) {
@@ -52,8 +52,14 @@ define(function(require) {
 		}).bind(this));
 		
 		this._server.subscribe("/game", (function(gameDetails) {
-			this.GameReady.fire({
-				game: this._addGame(gameDetails)
+			var game = this._addGame(gameDetails);
+			
+			this.GamesReceived.fire({
+				games: [game]
+			});
+			
+			this.NeededInGame.fire({
+				id: game.getId()
 			});
 		}).bind(this));
 		
