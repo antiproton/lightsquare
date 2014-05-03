@@ -93,7 +93,7 @@ define(function(require) {
 				}
 				
 				else {
-					this._app.spectateGame(id);
+					this._user.spectateGame(id);
 				}
 			}
 			
