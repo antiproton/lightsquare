@@ -12,6 +12,10 @@ define(function(require) {
 		var app = new Application(server);
 		var ui = new Lightsquare(app, user, document.body);
 		
+		user.Replaced.addHandler(this, function() {
+			window.location.replace("/");
+		});
+		
 		return true;
 	});
 });

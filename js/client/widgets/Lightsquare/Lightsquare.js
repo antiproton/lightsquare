@@ -149,10 +149,6 @@ define(function(require) {
 	}
 	
 	Lightsquare.prototype._handleUserEvents = function() {
-		this._user.Replaced.addHandler(this, function() {
-			window.location.replace("/");
-		});
-		
 		this._user.DetailsChanged.addHandler(this, function() {
 			this._userLink.set("username", this._user.getUsername());
 		});
