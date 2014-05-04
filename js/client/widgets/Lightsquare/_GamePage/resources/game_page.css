@@ -1,3 +1,7 @@
-div.game_page {
+div.game {
 	
+}
+
+div.game_main {
+	display: flex;
 }
