@@ -64,6 +64,21 @@ define(function(require) {
 		return this._game.getPosition();
 	}
 	
+	Game.prototype.getUserColour = function(user) {
+		var player;
+		var userColour = null;
+		
+		Colour.forEach(function(colour) {
+			player = this._players[colour];
+			
+			if((user.isLoggedIn() && user.getUsername() === player.username) || user.getId() === player.id) {
+				userColour = colour;
+			}
+		}, this);
+		
+		return userColour;
+	}
+	
 	Game.prototype._handleServerMove = function(move) {
 		if(move.index > this._history.length) {
 			this._moveQueue[move.index] = move;
