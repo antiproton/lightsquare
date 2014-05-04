@@ -64,8 +64,8 @@ define(function(require) {
 		return move;
 	}
 	
-	Game.prototype.getPosition = function() {
-		return this._game.getPosition();
+	Game.prototype.getHistory = function() {
+		return this._game.getHistory();
 	}
 	
 	Game.prototype.getUserColour = function(user) {
