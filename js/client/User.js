@@ -62,6 +62,10 @@ define(function(require) {
 		return this._id;
 	}
 	
+	User.prototype.isLoggedIn = function() {
+		return this._isLoggedIn;
+	}
+	
 	User.prototype.createChallenge = function(options) {
 		this._server.send("/challenge/create", options);
 	}
