@@ -31,6 +31,10 @@ define(function(require) {
 		this._server.subscribe("/game/" + this._id + "/move", (function(move) {
 			this._handleServerMove(move);
 		}).bind(this));
+		
+		this._server.send("/game/" + this._id + "/request/moves", {
+			startingIndex: this._history.length
+		});
 	}
 	
 	Game.prototype.getId = function() {
