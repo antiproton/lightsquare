@@ -4,6 +4,7 @@ define(function(require) {
 	var Glicko = require("chess/Glicko");
 	
 	function User(server) {
+		this._id = null;
 		this._games = {};
 		this._server = server;
 		this._username = "Anonymous";
@@ -20,7 +21,68 @@ define(function(require) {
 		this.GamesReceived = new Event(this);
 		this.NeededInGame = new Event(this);
 		this.DetailsChanged = new Event(this);
+		this.HasIdentity = new Event(this);
 		
+		this._subscribeToServerMessages();
+		
+		this._server.send("/request/user");
+		this._server.send("/request/games");
+	}
+	
+	User.prototype.register = function(username, password) {
+		this._server.send("/user/register", {
+			username: username,
+			password: password
+		});
+	}
+	
+	User.prototype.login = function(username, password) {
+		this._server.send("/user/login", {
+			username: username,
+			password: password
+		});
+	}
+	
+	User.prototype.logout = function() {
+		this._server.send("/user/logout");
+	}
+	
+	User.prototype._logout = function() {
+		this._username = "Anonymous";
+		this._isLoggedIn = false;
+		
+		this.LoggedOut.fire();
+	}
+	
+	User.prototype.getUsername = function() {
+		return this._username;
+	}
+	
+	User.prototype.getId = function() {
+		return this._id;
+	}
+	
+	User.prototype.createChallenge = function(options) {
+		this._server.send("/challenge/create", options);
+	}
+	
+	User.prototype.acceptChallenge = function(id) {
+		this._server.send("/challenge/accept", id);
+	}
+	
+	User.prototype._addGame = function(gameDetails) {
+		var game = new Game(this._server, gameDetails);
+	
+		this._games[gameDetails.id] = game;
+		
+		return game;
+	}
+	
+	User.prototype.spectateGame = function(id) {
+		this._server.send("/game/spectate", id);
+	}
+	
+	User.prototype._subscribeToServerMessages = function() {
 		this._server.subscribe("/user/login/success", (function(userDetails) {
 			this._loadDetails(userDetails);
 			this.LoggedIn.fire();
@@ -65,62 +127,12 @@ define(function(require) {
 		
 		this._server.subscribe("/user", (function(userDetails) {
 			this._loadDetails(userDetails);
+			this.HasIdentity.fire();
 		}).bind(this));
-		
-		this._server.send("/request/user");
-		this._server.send("/request/games");
-	}
-	
-	User.prototype.register = function(username, password) {
-		this._server.send("/user/register", {
-			username: username,
-			password: password
-		});
-	}
-	
-	User.prototype.login = function(username, password) {
-		this._server.send("/user/login", {
-			username: username,
-			password: password
-		});
-	}
-	
-	User.prototype.logout = function() {
-		this._server.send("/user/logout");
-	}
-	
-	User.prototype._logout = function() {
-		this._username = "Anonymous";
-		this._isLoggedIn = false;
-		
-		this.LoggedOut.fire();
-	}
-	
-	User.prototype.getUsername = function() {
-		return this._username;
-	}
-	
-	User.prototype.createChallenge = function(options) {
-		this._server.send("/challenge/create", options);
-	}
-	
-	User.prototype.acceptChallenge = function(id) {
-		this._server.send("/challenge/accept", id);
-	}
-	
-	User.prototype._addGame = function(gameDetails) {
-		var game = new Game(this._server, gameDetails);
-	
-		this._games[gameDetails.id] = game;
-		
-		return game;
-	}
-	
-	User.prototype.spectateGame = function(id) {
-		this._server.send("/game/spectate", id);
 	}
 	
 	User.prototype._loadDetails = function(userDetails) {
+		this._id = userDetails.id;
 		this._username = userDetails.username;
 		this._rating = userDetails.rating;
 		this._gamesPlayedAsWhite = userDetails.gamesPlayedAsWhite;
