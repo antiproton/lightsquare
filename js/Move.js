@@ -77,7 +77,7 @@ define(function(require) {
 				return new Move({
 					label: move.getLabel(),
 					fullLabel: move.getFullLabel(),
-					colour: Colour.getFen(move.getColour()),
+					colour: move.getColour().fenString,
 					fullmove: move.getFullmove(),
 					isCheck: move.isCheck(),
 					isMate: move.isMate(),
