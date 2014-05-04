@@ -2,3 +2,22 @@
 	border: 1px solid black;
 	background: white;
 }
+
+
+.fullmove_root {
+	display: flex;
+	flex-direction: row;
+	padding: 3px;
+}
+
+.fullmove_root:nth-child(even) {
+	background: #efefef;
+}
+
+.fullmove_fullmove_col {
+	width: 20%;
+}
+
+.fullmove_white_col, .fullmove_black_col {
+	width: 40%;
+}

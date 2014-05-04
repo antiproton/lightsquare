@@ -1,73 +1,74 @@
 define(function(require) {
 	var Event = require("lib/Event");
-	var Move = require("./_Move/Move");
-	var Fullmove = require("./_Fullmove/Fullmove");
-	var Template = require("lib/dom/Template");
-	var html = require("file!./resources/history.html");
+	var Fullmove = require("./Fullmove");
+	var Ractive = require("lib/dom/Ractive");
 	var Colour = require("chess/Colour");
 	require("lib/Array.remove");
+	var html = require("file!./resources/history.html");
 	require("css!./resources/history.css");
 
 	function History(parent) {
 		this.UserSelect = new Event(this);
-		this._template = new Template(html, parent);
+		
+		this._template = new Ractive({
+			template: html,
+			el: parent,
+			data: {
+				selectedFullLabel: null,
+				fullmoves: []
+			}
+		});
+		
 		this._fullmoves = [];
-		this._selectedMove = null;
 	}
 
 	History.prototype.move = function(move) {
-		var historyMove = new Move(move);
-		var lastFullmove = this._fullmoves[this._fullmoves.length - 1] || null;
+		var lastFullmove = this._getLastFullmove();
 
 		if(lastFullmove === null || move.getColour() === Colour.white) {
-			lastFullmove = this._fullmoves.push(new Fullmove(this._template.root, move.getFullmove()));
+			lastFullmove = this._fullmoves.push(new Fullmove());
 		}
 
-		lastFullmove.add(historyMove);
-
-		historyMove.UserSelect.addHandler(this, function() {
-			this.select(historyMove);
-			
-			this.UserSelect.fire({
-				move: historyMove
-			});
-		});
-
-		this.select(historyMove);
+		lastFullmove.add(move);
 	}
 
 	History.prototype.undo = function() {
+		var fullmove = this._getLastFullmove();
 		var move = this.getLastMove();
 		var fullmove;
 
-		if(move !== null) {
-			fullmove = move.getParentFullmove();
-			fullmove.remove(move);
+		//if(move !== null) {
+		//	fullmove = move.getParentFullmove();
+		//	fullmove.remove(move);
+		//
+		//	if(fullmove.isEmpty()) {
+		//		this._fullmoves.remove(fullmove);
+		//		fullmove.removeNode();
+		//	}
+		//
+		//	if(previousMove !== null) {
+		//		previousMove.setNextItem(null);
+		//	}
+		//
+		//	this._lastMove = previousMove;
+		//}
+		//
+		//if(this._selectedMove === move) {
+		//	this.select(this.getLastMove());
+		//}
+	}
 
-			if(fullmove.isEmpty()) {
-				this._fullmoves.remove(fullmove);
-				fullmove.removeNode();
-			}
-
-			if(previousMove !== null) {
-				previousMove.setNextItem(null);
-			}
-
-			this._lastMove = previousMove;
-		}
-		
-		if(this._selectedMove === move) {
-			this.select(this.getLastMove());
-		}
+	History.prototype.select = function(move) {
+		this._ractive.set("selectedFullLabel", move.getFullLabel());
 	}
 
 	History.prototype.clear = function() {
-		this._template.root.innerHTML = "";
+		this._ractive.set("fullmoves", []);
 		this._fullmoves = [];
 	}
 
 	History.prototype.getLastMove = function() {
-		var fullmove = this._fullmoves[this._fullmoves.length - 1] || null;
+		var fullmove = this._getLastFullmove();
 
 		if(fullmove !== null) {
 			return fullmove.getLastMove();
@@ -77,17 +78,9 @@ define(function(require) {
 			return null;
 		}
 	}
-
-	History.prototype.select = function(move) {
-		if(this._selectedMove !== null) {
-			this._selectedMove.deselect();
-		}
-
-		if(move !== null) {
-			move.select();
-		}
-
-		this._selectedMove = move;
+	
+	History.prototype._getLastFullmove = function() {
+		return (this._fullmoves[this._fullmoves.length - 1] || null);
 	}
 
 	return History;
