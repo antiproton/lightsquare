@@ -6,10 +6,11 @@ define(function(require) {
 	var Event = require("lib/Event");
 	var Square = require("chess/Square");
 	var PieceType = require("chess/PieceType");
+	var Fen = require("chess/Fen");
 
 	function Game(server, gameDetails) {
 		this.PromotionPieceNeeded = new Event(this);
-		this.MoveReceived = new Event(this);
+		this.Move = new Event(this);
 		
 		this._server = server;
 		this._id = gameDetails.id;
@@ -18,15 +19,25 @@ define(function(require) {
 		this._players[Colour.white] = gameDetails.white;
 		this._players[Colour.black] = gameDetails.black;
 		
-		this._options = gameDetails.options;
-		this._game = new ChessGame(this._options);
-		
 		this._history = [];
 		this._moveQueue = [];
 		
 		gameDetails.history.forEach((function(move) {
 			this._history.push(Move.fromJSON(move));
 		}).bind(this));
+		
+		this._options = gameDetails.options;
+		
+		var startingFen = Fen.STARTING_FEN;
+		
+		if(this._history.length > 0) {
+			startingFen = this._history[this._history.length - 1].getPositionAfter().getFen();
+		}
+		
+		this._game = new ChessGame({
+			startingFen: startingFen,
+			isTimed: false
+		});
 		
 		this._server.subscribe("/game/" + this._id + "/move", (function(move) {
 			this._handleServerMove(move);
@@ -42,15 +53,17 @@ define(function(require) {
 	}
 
 	Game.prototype.move = function(from, to, promoteTo) {
-		var move = this._game.move(from, to, promoteTo);
+		var move = new ChessMove(this.getPosition(), from, to, promoteTo);
 		
 		if(move.isLegal()) {
 			if(move.isPromotion() && promoteTo === undefined) {
-				this._game.undoLastMove();
-				this.PromotionPieceNeeded.fire();
+				this.PromotionPieceNeeded.fire({
+					move: move
+				});
 			}
 			
 			else {
+				this._game.move(from, to, promoteTo);
 				this._history.push(move);
 				
 				this._server.send("/game/" + this._id + "/move", {
@@ -58,10 +71,12 @@ define(function(require) {
 					to: to.squareNo,
 					promoteTo: (promoteTo ? promoteTo.sanString : undefined)
 				});
+				
+				this.Move.fire({
+					move: move
+				});
 			}
 		}
-		
-		return move;
 	}
 	
 	Game.prototype.getPosition = function() {
@@ -69,7 +84,7 @@ define(function(require) {
 	}
 	
 	Game.prototype.getHistory = function() {
-		return this._game.getHistory();
+		return this._history;
 	}
 	
 	Game.prototype.getUserColour = function(user) {
@@ -119,7 +134,7 @@ define(function(require) {
 		
 		this._history.push(move);
 		
-		this.MoveReceived.fire({
+		this.Move.fire({
 			move: move
 		});
 	}
