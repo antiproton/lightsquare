@@ -20,7 +20,7 @@ define(function(require) {
 	}
 
 	Fullmove.prototype.getLastMove = function() {
-		return (this._moves[Colour.white] || this._moves[Colour.black]);
+		return (this._moves[Colour.black] || this._moves[Colour.white]);
 	}
 
 	return Fullmove;
