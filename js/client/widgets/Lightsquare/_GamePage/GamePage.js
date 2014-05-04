@@ -11,8 +11,8 @@ define(function(require) {
 		this._user = user;
 		
 		this._setupBoard();
-		
 		this._handleUserEvents();
+		
 		this._adjustOrientation();
 	}
 	
