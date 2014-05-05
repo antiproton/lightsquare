@@ -1,23 +1,27 @@
-.history_colview_root {
+div.history {
 	border: 1px solid black;
 	background: white;
 }
 
-
-.fullmove_root {
+div.history_fullmove {
 	display: flex;
 	flex-direction: row;
 	padding: 3px;
 }
 
-.fullmove_root:nth-child(even) {
+div.history_fullmove:nth-child(even) {
 	background: #efefef;
 }
 
-.fullmove_fullmove_col {
+div.history_fullmove_number {
 	width: 20%;
 }
 
-.fullmove_white_col, .fullmove_black_col {
+div.history_move_label {
 	width: 40%;
+	cursor: pointer;
+}
+
+div.history_move_label.selected {
+	text-decoration: underline;
 }

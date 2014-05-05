@@ -22,6 +22,18 @@ define(function(require) {
 	Fullmove.prototype.getLastMove = function() {
 		return (this._moves[Colour.black] || this._moves[Colour.white]);
 	}
+	
+	Fullmove.prototype.getWhiteMove = function() {
+		return this._moves[Colour.white];
+	}
+	
+	Fullmove.prototype.getBlackMove = function() {
+		return this._moves[Colour.black];
+	}
+	
+	Fullmove.prototype.getFullmove = function() {
+		return this.getLastMove() ? this.getLastMove().getFullmove() : null;
+	}
 
 	return Fullmove;
 });

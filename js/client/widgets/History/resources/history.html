@@ -1,18 +1,15 @@
-<div class="history_colview_root">
-	{{fullmoves}}
-		<div data-id="root" class="fullmove_root">
-	<div class="fullmove_fullmove_col" data-id="fullmove_col">
-
-	</div>
-	<div class="fullmove_white_col" data-id="white_col">
-
-	</div>
-	<div class="fullmove_black_col" data-id="black_col">
-
-	</div>
-	<div class="cb i">
-
-	</div>
-</div>
+<div class="history">
+	{{#fullmoves}}
+		<div class="history_fullmove">
+			<div class="history_fullmove_number">
+				{{this.getFullmove()}}
+			</div>
+			<div class="history_move_label {{selectedMove === this.getWhiteMove() ? 'selected' : ''}}" on-click="select:{{this.getWhiteMove()}}">
+				{{this.getWhiteMove().getLabel()}}
+			</div>
+			<div class="history_move_label {{selectedMove === this.getBlackMove() ? 'selected' : ''}}" on-click="select:{{this.getBlackMove()}}">
+				{{this.getBlackMove().getLabel()}}
+			</div>
+		</div>
 	{{/fullmoves}}
 </div>
