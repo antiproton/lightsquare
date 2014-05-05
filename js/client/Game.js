@@ -19,6 +19,7 @@ define(function(require) {
 		this._players[Colour.white] = gameDetails.white;
 		this._players[Colour.black] = gameDetails.black;
 		
+		this._isInProgress = true;
 		this._history = [];
 		this._moveQueue = [];
 		
@@ -37,6 +38,10 @@ define(function(require) {
 		this._game = new ChessGame({
 			startingFen: startingFen,
 			isTimed: false
+		});
+		
+		this._game.GameOver.addHandler(this, function() {
+			this._gameOver();
 		});
 		
 		this._server.subscribe("/game/" + this._id + "/move", (function(move) {
@@ -141,6 +146,10 @@ define(function(require) {
 				move: move
 			});
 		}
+	}
+	
+	Game.prototype._gameOver = function() {
+		this._isInProgress = false;
 	}
 	
 	return Game;
