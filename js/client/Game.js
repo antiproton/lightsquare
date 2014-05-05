@@ -53,28 +53,30 @@ define(function(require) {
 	}
 
 	Game.prototype.move = function(from, to, promoteTo) {
-		var move = new ChessMove(this.getPosition(), from, to, promoteTo);
-		
-		if(move.isLegal()) {
-			if(move.isPromotion() && promoteTo === undefined) {
-				this.PromotionPieceNeeded.fire({
-					move: move
-				});
-			}
+		if(this._isInProgress) {
+			var move = new ChessMove(this.getPosition(), from, to, promoteTo);
 			
-			else {
-				this._game.move(from, to, promoteTo);
-				this._history.push(move);
+			if(move.isLegal()) {
+				if(move.isPromotion() && promoteTo === undefined) {
+					this.PromotionPieceNeeded.fire({
+						move: move
+					});
+				}
 				
-				this._server.send("/game/" + this._id + "/move", {
-					from: from.squareNo,
-					to: to.squareNo,
-					promoteTo: (promoteTo ? promoteTo.sanString : undefined)
-				});
-				
-				this.Move.fire({
-					move: move
-				});
+				else {
+					this._game.move(from, to, promoteTo);
+					this._history.push(move);
+					
+					this._server.send("/game/" + this._id + "/move", {
+						from: from.squareNo,
+						to: to.squareNo,
+						promoteTo: (promoteTo ? promoteTo.sanString : undefined)
+					});
+					
+					this.Move.fire({
+						move: move
+					});
+				}
 			}
 		}
 	}
