@@ -109,6 +109,10 @@ define(function(require) {
 		return userColour;
 	}
 	
+	Game.prototype.getPlayerName = function(colour) {
+		return this._players[colour].username;
+	}
+	
 	Game.prototype._handleServerMove = function(move) {
 		if(move.index > this._history.length) {
 			this._moveQueue[move.index] = move;
