@@ -15,7 +15,7 @@ define(function(require) {
 	function Lightsquare(app, user, parent) {
 		this._app = app;
 		this._user = user;
-		this._games = {}
+		this._games = {};
 		
 		this._template = new Template(html, parent);
 		this._pages = new Pages(this._template.main);
