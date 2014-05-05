@@ -132,11 +132,13 @@ define(function(require) {
 			promoteTo
 		);
 		
-		this._history.push(move);
-		
-		this.Move.fire({
-			move: move
-		});
+		if(move.isLegal()) {
+			this._history.push(move);
+			
+			this.Move.fire({
+				move: move
+			});
+		}
 	}
 	
 	return Game;
