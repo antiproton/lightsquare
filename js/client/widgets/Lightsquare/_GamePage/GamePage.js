@@ -24,23 +24,23 @@ define(function(require) {
 	
 	GamePage.prototype.getTitle = function() {
 		var timingStyle = this._game.getTimingStyle().getDescription();
-		var userColour = this._game.getUserColour();
+		var userColour = this._game.getUserColour(this._user);
 		var whiteName = this._game.getPlayerName(Colour.white);
 		var blackName = this._game.getPlayerName(Colour.black);
-		var title;
-		
 		if(userColour === null) {
-			title = whiteName + " vs " + blackName + " " + timingStyle;
+			return whiteName + " vs " + blackName + " " + timingStyle;
 		}
 		
 		else {
 			var opponentName = this._game.getPlayerName(userColour.opposite);
-			var remainingTime = this._game.getRemainingTime(userColour);
+			var timeLeft = this._game.getTimeLeft(userColour);
 			
-			title = opponentName + " " + timingStyle + " (" + remainingTime.getColonDisplay() + ")";
+			return opponentName + " " + timingStyle + " (" + timeLeft.getColonDisplay() + ")";
 		}
-		
-		return title;
+	}
+	
+	GamePage.prototype.getId = function() {
+		return this._game.getId();
 	}
 	
 	GamePage.prototype._setupGame = function() {
