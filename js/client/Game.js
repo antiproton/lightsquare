@@ -7,6 +7,9 @@ define(function(require) {
 	var Square = require("chess/Square");
 	var PieceType = require("chess/PieceType");
 	var Fen = require("chess/Fen");
+	var Clock = require("./Clock");
+	var TimingStyle = require("chess/TimingStyle");
+	var Time = require("chess/Time");
 
 	function Game(server, gameDetails) {
 		this.PromotionPieceNeeded = new Event(this);
@@ -22,6 +25,13 @@ define(function(require) {
 		this._isInProgress = true;
 		this._history = [];
 		this._moveQueue = [];
+		
+		this._timingStyle = new TimingStyle({
+			initialTime: Time.fromUnitString(gameDetails.options.initialTime, Time.minutes),
+			timeIncrement: Time.fromUnitString(gameDetails.options.timeIncrement, Time.seconds)
+		});
+		
+		this._clock = new Clock(this._server, this);
 		
 		gameDetails.history.forEach((function(move) {
 			this._history.push(Move.fromJSON(move));
@@ -111,6 +121,10 @@ define(function(require) {
 	
 	Game.prototype.getPlayerName = function(colour) {
 		return this._players[colour].username;
+	}
+	
+	Game.prototype.getTimeLeft = function(colour) {
+		return this._clock.getTimeLeft(colour);
 	}
 	
 	Game.prototype._handleServerMove = function(move) {
