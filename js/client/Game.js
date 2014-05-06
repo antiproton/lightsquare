@@ -17,28 +17,25 @@ define(function(require) {
 		this.Move = new Event(this);
 		
 		this._server = server;
-		this._id = gameDetails.id;
+		this._gameDetails = gameDetails;
+		this._id = this._gameDetails.id;
 		
 		this._players = {};
-		this._players[Colour.white] = gameDetails.white;
-		this._players[Colour.black] = gameDetails.black;
+		this._players[Colour.white] = this._gameDetails.white;
+		this._players[Colour.black] = this._gameDetails.black;
 		
 		this._isInProgress = true;
 		this._history = [];
 		this._moveQueue = [];
 		
 		this._timingStyle = new TimingStyle({
-			initialTime: Time.fromUnitString(gameDetails.options.initialTime, Time.minutes),
-			timeIncrement: Time.fromUnitString(gameDetails.options.timeIncrement, Time.seconds)
+			initialTime: Time.fromUnitString(this._gameDetails.options.initialTime, Time.minutes),
+			timeIncrement: Time.fromUnitString(this._gameDetails.options.timeIncrement, Time.seconds)
 		});
 		
-		this._clock = new Clock(this._server, this);
-		
-		gameDetails.history.forEach((function(move) {
+		this._gameDetails.history.forEach((function(move) {
 			this._history.push(Move.fromJSON(move));
 		}).bind(this));
-		
-		this._options = gameDetails.options;
 		
 		var startingFen = Fen.STARTING_FEN;
 		
@@ -54,6 +51,8 @@ define(function(require) {
 		this._game.GameOver.addHandler(this, function() {
 			this._gameOver();
 		});
+		
+		this._clock = new Clock(this._server, this, this._timingStyle);
 		
 		this._server.subscribe("/game/" + this._id + "/move", (function(move) {
 			this._handleServerMove(move);
@@ -130,6 +129,10 @@ define(function(require) {
 	
 	Game.prototype.getTimingStyle = function() {
 		return this._timingStyle;
+	}
+	
+	Game.prototype.getStartTime = function() {
+		return this._gameDetails.startTime;
 	}
 	
 	Game.prototype._handleServerMove = function(move) {
