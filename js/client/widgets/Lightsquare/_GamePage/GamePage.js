@@ -1,4 +1,5 @@
 define(function(require) {
+	var Event = require("lib/Event");
 	var html = require("file!./resources/game_page.html");
 	require("css!./resources/game_page.css");
 	var Template = require("lib/dom/Template");
@@ -11,12 +12,35 @@ define(function(require) {
 		this._game = game;
 		this._user = user;
 		
+		this.TitleChanged = new Event(this);
+		
 		this._setupBoard();
 		this._setupHistory();
 		this._setupGame();
 		this._handleUserEvents();
 		
 		this._adjustOrientation();
+	}
+	
+	GamePage.prototype.getTitle = function() {
+		var timingStyle = this._game.getTimingStyle().getDescription();
+		var userColour = this._game.getUserColour();
+		var whiteName = this._game.getPlayerName(Colour.white);
+		var blackName = this._game.getPlayerName(Colour.black);
+		var title;
+		
+		if(userColour === null) {
+			title = whiteName + " vs " + blackName + " " + timingStyle;
+		}
+		
+		else {
+			var opponentName = this._game.getPlayerName(userColour.opposite);
+			var remainingTime = this._game.getRemainingTime(userColour);
+			
+			title = opponentName + " " + timingStyle + " (" + remainingTime.getColonDisplay() + ")";
+		}
+		
+		return title;
 	}
 	
 	GamePage.prototype._setupGame = function() {
