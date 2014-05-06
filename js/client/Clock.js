@@ -2,8 +2,10 @@ define(function(require) {
 	var time = require("lib/time");
 	var Event = require("lib/Event");
 	var Time = require("chess/Time");
+	var Colour = require("chess/Colour");
 	
 	function Clock(server, game) {
+		this._server = server;
 		this._timingStyle = game.getTimingStyle();
 		
 		this._moves = game.getHistory();
