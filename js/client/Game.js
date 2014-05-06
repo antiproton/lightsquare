@@ -149,24 +149,28 @@ define(function(require) {
 	}
 	
 	Game.prototype._applyServerMove = function(serverMove) {
-		var promoteTo = PieceType.queen;
-		
-		if(serverMove.promoteTo !== undefined) {
-			promoteTo = PieceType.fromSanString(serverMove.promoteTo)
+		if(serverMove.index in this._history) {
+			this._history[serverMove.index].setTime(serverMove.time);
 		}
 		
-		var move = this._game.move(
-			Square.fromSquareNo(serverMove.from),
-			Square.fromSquareNo(serverMove.to),
-			promoteTo
-		);
-		
-		if(move.isLegal()) {
-			this._history.push(move);
+		else {
+			var chessMove = this._game.move(
+				Square.fromSquareNo(serverMove.from),
+				Square.fromSquareNo(serverMove.to),
+				serverMove.promoteTo ? PieceType.fromSanString(serverMove.promoteTo) : PieceType.queen
+			);
 			
-			this.Move.fire({
-				move: move
-			});
+			if(chessMove !== null && chessMove.isLegal()) {
+				var move = Move.fromMove(chessMove);
+				
+				move.setTime(serverMove.time);
+				
+				this._history.push(move);
+				
+				this.Move.fire({
+					move: move
+				});
+			}
 		}
 	}
 	
