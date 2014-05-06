@@ -127,6 +127,10 @@ define(function(require) {
 		return this._clock.getTimeLeft(colour);
 	}
 	
+	Game.prototype.getTimingStyle = function() {
+		return this._timingStyle;
+	}
+	
 	Game.prototype._handleServerMove = function(move) {
 		if(move.index > this._history.length) {
 			this._moveQueue[move.index] = move;
