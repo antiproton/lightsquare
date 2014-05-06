@@ -56,6 +56,10 @@ define(function(require) {
 		return this._details.time;
 	}
 	
+	Move.prototype.setTime = function(time) {
+		this._details.time = time;
+	}
+	
 	Move.prototype.isLegal = function() {
 		return true;
 	}
