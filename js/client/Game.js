@@ -80,7 +80,7 @@ define(function(require) {
 				
 				else {
 					this._game.move(from, to, promoteTo);
-					this._history.push(move);
+					this._history.push(Move.fromMove(move));
 					
 					this._server.send("/game/" + this._id + "/move", {
 						from: from.squareNo,
