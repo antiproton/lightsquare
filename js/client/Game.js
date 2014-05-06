@@ -10,6 +10,7 @@ define(function(require) {
 	var Clock = require("./Clock");
 	var TimingStyle = require("chess/TimingStyle");
 	var Time = require("chess/Time");
+	require("lib/Array.getShallowCopy");
 
 	function Game(server, gameDetails) {
 		this.PromotionPieceNeeded = new Event(this);
@@ -101,7 +102,7 @@ define(function(require) {
 	}
 	
 	Game.prototype.getHistory = function() {
-		return this._history;
+		return this._history.getShallowCopy();
 	}
 	
 	Game.prototype.getUserColour = function(user) {
