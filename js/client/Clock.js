@@ -6,6 +6,7 @@ define(function(require) {
 	
 	function Clock(server, game, timingStyle) {
 		this._server = server;
+		this._game = game;
 		this._clock = new ChessClock(game, timingStyle);
 		this._serverTimeDifference = 0;
 		this._estimateTimeDifference();
@@ -14,7 +15,7 @@ define(function(require) {
 	Clock.prototype.getTimeLeft = function(colour) {
 		var timeLeft = this._clock.getTimeLeft(colour);
 		
-		if(colour === this._game.getPosition.getActiveColour()) {
+		if(colour === this._game.getPosition().getActiveColour()) {
 			timeLeft += this._serverTimeDifference;
 		}
 		
