@@ -7,19 +7,16 @@ define(function(require) {
 	function Clock(server, game, timingStyle) {
 		this._server = server;
 		this._game = game;
-		this._clock = new ChessClock(game, timingStyle);
 		this._serverTimeDifference = 0;
 		this._estimateTimeDifference();
+		
+		this._clock = new ChessClock(game, timingStyle, (function() {
+			return time() + this._serverTimeDifference;
+		}).bind(this));
 	}
 	
 	Clock.prototype.getTimeLeft = function(colour) {
-		var timeLeft = this._clock.getTimeLeft(colour);
-		
-		if(colour === this._game.getPosition().getActiveColour()) {
-			timeLeft += this._serverTimeDifference;
-		}
-		
-		return Time.fromMilliseconds(timeLeft);
+		return this._clock.getTimeLeft(colour);
 	}
 	
 	Clock.prototype._estimateTimeDifference = function() {
