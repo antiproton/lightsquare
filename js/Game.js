@@ -2,7 +2,7 @@ define(function(require) {
 	var ChessGame = require("chess/Game");
 	var Colour = require("chess/Colour");
 	var ChessMove = require("chess/Move");
-	var Move = require("common/Move");
+	var Move = require("jsonchess/Move");
 	var Event = require("lib/Event");
 	var Square = require("chess/Square");
 	var PieceType = require("chess/PieceType");
