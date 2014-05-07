@@ -156,7 +156,6 @@ define(function(require) {
 	}
 	
 	Game.prototype._clockTick = function() {
-		console.log(this._clock.getTimeLeft().valueOf());
 		var times = {};
 		
 		Colour.forEach(function(colour) {
