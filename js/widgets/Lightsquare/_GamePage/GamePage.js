@@ -6,6 +6,8 @@ define(function(require) {
 	var Board = require("widgets/Board/Board");
 	var History = require("widgets/History/History");
 	var Colour = require("chess/Colour");
+	var Ractive = require("lib/dom/Ractive");
+	var playerInfoHtml = require("file!./resources/player_info.html");
 	
 	function GamePage(game, user, parent) {
 		this._template = new Template(html, parent);
@@ -14,10 +16,13 @@ define(function(require) {
 		
 		this.TitleChanged = new Event(this);
 		
+		this._setupPlayerInfo();
 		this._setupBoard();
 		this._setupHistory();
 		this._setupGame();
 		this._handleUserEvents();
+		
+		this._viewingAs = this._game.getUserColour(this._user) || Colour.white;
 		
 		this._adjustOrientation();
 	}
@@ -25,15 +30,15 @@ define(function(require) {
 	GamePage.prototype.getTitle = function() {
 		var timingStyle = this._game.getTimingStyle().getDescription();
 		var userColour = this._game.getUserColour(this._user);
-		var whiteName = this._game.getPlayerName(Colour.white);
-		var blackName = this._game.getPlayerName(Colour.black);
+		var whiteName = this._game.getPlayer(Colour.white).username;
+		var blackName = this._game.getPlayer(Colour.black).usernamme;
 		
 		if(userColour === null) {
 			return whiteName + " vs " + blackName + " (" + timingStyle + ")";
 		}
 		
 		else {
-			var opponentName = this._game.getPlayerName(userColour.opposite);
+			var opponentName = this._game.getPlayer(userColour.opposite).username;
 			var timeLeft = this._game.getTimeLeft(userColour);
 			
 			return opponentName + " (" + timingStyle + ") " + timeLeft.getColonDisplay();
@@ -63,9 +68,21 @@ define(function(require) {
 			this._board.setBoardArray(data.move.getPositionAfter().getBoardArray());
 		});
 		
-		this._game.ClockTick.addHandler(this, function() {
+		this._game.ClockTick.addHandler(this, function(data) {
 			this.TitleChanged.fire();
+			this._updateClocks(data.times);
 		});
+	}
+	
+	GamePage.prototype._setupPlayerInfo = function() {
+		this._playerInfo = {};
+		
+		["player", "opponent"].forEach((function(key) {
+			this._playerInfo[key] = new Ractive({
+				el: this._template[key],
+				template: playerInfoHtml
+			});
+		}).bind(this));
 	}
 	
 	GamePage.prototype._setupBoard = function() {
@@ -81,10 +98,34 @@ define(function(require) {
 		this._history = new History(this._template.history);
 	}
 	
-	GamePage.prototype._adjustOrientation = function(viewAs) {
-		viewAs = viewAs || this._game.getUserColour(this._user) || Colour.white;
+	GamePage.prototype._adjustOrientation = function() {
+		this._board.setViewingAs(this._viewingAs);
 		
-		this._board.setViewingAs(viewAs);
+		var players = {};
+		
+		Colour.forEach((function(colour) {
+			players[colour] = this._game.getPlayer(colour);
+		}).bind(this));
+		
+		var playerInfo = {
+			player: players[this._viewingAs],
+			opponent: players[this._viewingAs.opposite]
+		};
+		
+		for(var key in playerInfo) {
+			this._playerInfo[key].set("player", playerInfo[key]);
+		}
+	}
+	
+	GamePage.prototype._updateClocks = function(times) {
+		var timesByRelevance = {
+			player: times[this._viewingAs],
+			opponent: times[this._viewingAs.opposite]
+		};
+		
+		for(var key in timesByRelevance) {
+			this._playerInfo[key].set("time", timesByRelevance[key]);
+		}
 	}
 	
 	GamePage.prototype._handleUserEvents = function() {
