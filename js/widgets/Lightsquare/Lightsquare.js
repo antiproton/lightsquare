@@ -30,15 +30,7 @@ define(function(require) {
 	}
 	
 	Lightsquare.prototype._addGame = function(game) {
-		var id = game.getId();
-		var href = "/game/" + id;
-		
-		this._games[id] = game;
-		
-		this._links.get("links").push({
-			href: href,
-			label: id
-		});
+		this._games[game.getId()] = game;
 	}
 	
 	Lightsquare.prototype._goToGame = function(id) {
@@ -74,8 +66,9 @@ define(function(require) {
 				if(id in this._games) {
 					var page = this._pages.createPage(url);
 					
-					new GamePage(this._games[id], this._user, page);
+					var gamePage = new GamePage(this._games[id], this._user, page);
 					
+					this._links.get("games").push(gamePage);
 					this._pages.showPage(url);
 				}
 				
@@ -121,14 +114,15 @@ define(function(require) {
 						label: "Home"
 					}
 				],
+				games: [],
 				currentPath: this._router.getCurrentPath()
 			}
 		});
 		
-		this._links.on("click", (function(event) {
+		this._links.on("click", (function(event, href) {
 			event.original.preventDefault();
 			
-			this._router.loadPath(event.context.href);
+			this._router.loadPath(href);
 		}).bind(this));
 	}
 	
