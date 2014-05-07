@@ -122,8 +122,8 @@ define(function(require) {
 		return userColour;
 	}
 	
-	Game.prototype.getPlayerName = function(colour) {
-		return this._players[colour].username;
+	Game.prototype.getPlayer = function(colour) {
+		return this._players[colour];
 	}
 	
 	Game.prototype.getTimeLeft = function(colour) {
