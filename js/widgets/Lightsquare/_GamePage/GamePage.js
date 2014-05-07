@@ -62,6 +62,10 @@ define(function(require) {
 			this._history.move(data.move);
 			this._board.setBoardArray(data.move.getPositionAfter().getBoardArray());
 		});
+		
+		this._game.ClockTick.addHandler(this, function() {
+			this.TitleChanged.fire();
+		});
 	}
 	
 	GamePage.prototype._setupBoard = function() {

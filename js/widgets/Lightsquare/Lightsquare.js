@@ -15,7 +15,7 @@ define(function(require) {
 	function Lightsquare(app, user, parent) {
 		this._app = app;
 		this._user = user;
-		this._games = {};
+		this._gamePages = {};
 		
 		this._template = new Template(html, parent);
 		this._pages = new Pages(this._template.main);
@@ -29,12 +29,18 @@ define(function(require) {
 		this._router.loadPath();
 	}
 	
-	Lightsquare.prototype._addGame = function(game) {
-		this._games[game.getId()] = game;
-	}
-	
-	Lightsquare.prototype._goToGame = function(id) {
-		this._router.loadPath("/game/" + id);
+	Lightsquare.prototype._addGamePage = function(game) {
+		var id = game.getId();
+		var page = this._pages.createPage("/game/" + id);
+		var gamePage = new GamePage(game, this._user, page);
+		
+		this._links.get("gamePages").push(gamePage);
+		
+		gamePage.TitleChanged.addHandler(this, function() {
+			var index = this._links.get("gamePages").indexOf(gamePage);
+			
+			this._links.update("gamePages." + index);
+		});
 	}
 	
 	Lightsquare.prototype._setupRouter = function() {
@@ -61,20 +67,7 @@ define(function(require) {
 			}
 			
 			else {
-				var id = params["id"];
-				
-				if(id in this._games) {
-					var page = this._pages.createPage(url);
-					
-					var gamePage = new GamePage(this._games[id], this._user, page);
-					
-					this._links.get("games").push(gamePage);
-					this._pages.showPage(url);
-				}
-				
-				else {
-					this._user.spectateGame(id);
-				}
+				this._user.spectateGame(params["id"]);
 			}
 			
 			this._app.stopUpdatingChallengeList();
@@ -114,7 +107,7 @@ define(function(require) {
 						label: "Home"
 					}
 				],
-				games: [],
+				gamePages: [],
 				currentPath: this._router.getCurrentPath()
 			}
 		});
@@ -153,14 +146,14 @@ define(function(require) {
 		
 		this._user.GamesReceived.addHandler(this, function(data) {
 			data.games.forEach((function(game) {
-				this._addGame(game);
+				this._addGamePage(game);
 			}).bind(this));
 			
 			this._router.loadPath();
 		});
 		
 		this._user.NeededInGame.addHandler(this, function(data) {
-			this._goToGame(data.id);
+			this._router.loadPath("/game/" + data.id);
 		});
 	}
 	
