@@ -27,15 +27,16 @@ define(function(require) {
 		var userColour = this._game.getUserColour(this._user);
 		var whiteName = this._game.getPlayerName(Colour.white);
 		var blackName = this._game.getPlayerName(Colour.black);
+		
 		if(userColour === null) {
-			return whiteName + " vs " + blackName + " " + timingStyle;
+			return whiteName + " vs " + blackName + " (" + timingStyle + ")";
 		}
 		
 		else {
 			var opponentName = this._game.getPlayerName(userColour.opposite);
 			var timeLeft = this._game.getTimeLeft(userColour);
 			
-			return opponentName + " " + timingStyle + " (" + timeLeft.getColonDisplay() + ")";
+			return opponentName + " (" + timingStyle + ") " + timeLeft.getColonDisplay();
 		}
 	}
 	
