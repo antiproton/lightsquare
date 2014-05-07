@@ -6,7 +6,6 @@ define(function(require) {
 	
 	function Clock(server, game, timingStyle) {
 		this._server = server;
-		this._game = game;
 		this._serverTimeDifference = 0;
 		this._estimateTimeDifference();
 		
