@@ -15,6 +15,7 @@ define(function(require) {
 	function Game(server, gameDetails) {
 		this.PromotionPieceNeeded = new Event(this);
 		this.Move = new Event(this);
+		this.ClockTick = new Event(this);
 		
 		this._server = server;
 		this._gameDetails = gameDetails;
@@ -61,6 +62,8 @@ define(function(require) {
 		this._server.send("/game/" + this._id + "/request/moves", {
 			startingIndex: this._history.length
 		});
+		
+		this._clockTick();
 	}
 	
 	Game.prototype.getId = function() {
@@ -150,6 +153,23 @@ define(function(require) {
 				this._applyServerMove(nextMove);
 			}
 		}
+	}
+	
+	Game.prototype._clockTick = function() {
+		console.log(this._clock.getTimeLeft().valueOf());
+		var times = {};
+		
+		Colour.forEach(function(colour) {
+			times[colour] = this._clock.getTimeLeft(colour);
+		}, this);
+		
+		this.ClockTick.fire({
+			times: times
+		});
+		
+		setTimeout((function() {
+			this._clockTick();
+		}).bind(this), 100);
 	}
 	
 	Game.prototype._applyServerMove = function(serverMove) {
