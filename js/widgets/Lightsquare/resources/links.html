@@ -1,8 +1,16 @@
 <div class="links">
 	{{#links}}
-		<a on-click="click:{{href}}" href="{{href}}" class="{{href === currentPath ? 'on' : ''}}">{{label}}</a>
+		<a
+			on-click="click:{{href}}"
+			href="{{href}}"
+			class="{{href === currentPath ? 'on' : ''}}"
+		>{{label}}</a>
 	{{/links}}
 	{{#gamePages}}
-		<a on-click="click:{{'/game/' + this.getId()}}" href="/game/{{this.getId()}}" class="{{'/game/' + this.getId() === currentPath ? 'on' : ''}}">{{this.getTitle()}}</a>
+		<a
+		   on-click="click:{{'/game/' + this.getId()}}"
+		   href="/game/{{this.getId()}}"
+		   class="{{'/game/' + this.getId() === currentPath ? 'on' : ''}}"
+		>{{getTitle(this, currentPath)}}</a>
 	{{/gamePages}}
 </div>

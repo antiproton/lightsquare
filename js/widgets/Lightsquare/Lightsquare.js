@@ -11,6 +11,7 @@ define(function(require) {
 	var GamePage = require("./_GamePage/GamePage");
 	var ProfilePage = require("./_ProfilePage/ProfilePage");
 	var WelcomePage = require("./_WelcomePage/WelcomePage");
+	var Colour = require("chess/Colour");
 	
 	function Lightsquare(app, user, parent) {
 		this._app = app;
@@ -108,7 +109,29 @@ define(function(require) {
 					}
 				],
 				gamePages: [],
-				currentPath: this._router.getCurrentPath()
+				currentPath: this._router.getCurrentPath(),
+				getTitle: function(gamePage, currentPath) {
+					var timingStyle = gamePage.getTimingStyle().getDescription();
+					var playerColour = gamePage.getPlayerColour();
+					var whiteName = gamePage.getPlayerName(Colour.white);
+					var blackName = gamePage.getPlayerName(Colour.black);
+					
+					if(playerColour === null) {
+						return whiteName + " vs " + blackName + " (" + timingStyle + ")";
+					}
+					
+					else {
+						var opponentName = gamePage.getPlayerName(playerColour.opposite);
+						var timeLeft = gamePage.getTimeLeft(playerColour);
+						var title = opponentName + " (" + timingStyle + ")";
+						
+						if(currentPath !== "/game/" + gamePage.getId()) {
+							title += " " + timeLeft.getColonDisplay();
+						}
+						
+						return title;
+					}
+				}
 			}
 		});
 		
