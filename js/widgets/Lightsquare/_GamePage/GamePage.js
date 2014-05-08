@@ -27,22 +27,16 @@ define(function(require) {
 		this._adjustOrientation();
 	}
 	
-	GamePage.prototype.getTitle = function() {
-		var timingStyle = this._game.getTimingStyle().getDescription();
-		var userColour = this._game.getUserColour(this._user);
-		var whiteName = this._game.getPlayer(Colour.white).username;
-		var blackName = this._game.getPlayer(Colour.black).username;
-		
-		if(userColour === null) {
-			return whiteName + " vs " + blackName + " (" + timingStyle + ")";
-		}
-		
-		else {
-			var opponentName = this._game.getPlayer(userColour.opposite).username;
-			var timeLeft = this._game.getTimeLeft(userColour);
-			
-			return opponentName + " (" + timingStyle + ") " + timeLeft.getColonDisplay();
-		}
+	GamePage.prototype.getPlayerColour = function() {
+		return this._game.getUserColour(this._user);
+	}
+	
+	GamePage.prototype.getTimingStyle = function() {
+		return this._game.getTimingStyle();
+	}
+	
+	GamePage.prototype.getPlayerName = function(colour) {
+		return this._game.getPlayer(colour).username;
 	}
 	
 	GamePage.prototype.getId = function() {
