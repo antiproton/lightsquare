@@ -3,7 +3,7 @@ html, body {
 }
 
 body {
-	font-family: verdana, sans-serif;
+	font-family: arial, verdana, sans-serif;
 	font-size: 14px;
 	flex-grow: 1;
 	margin: 0;
