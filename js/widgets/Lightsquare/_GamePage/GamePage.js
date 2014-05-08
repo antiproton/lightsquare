@@ -14,7 +14,7 @@ define(function(require) {
 		this._game = game;
 		this._user = user;
 		
-		this.TitleChanged = new Event(this);
+		this.PlayerClockTick = new Event(this);
 		
 		this._setupPlayerInfo();
 		this._setupBoard();
@@ -69,7 +69,10 @@ define(function(require) {
 		});
 		
 		this._game.ClockTick.addHandler(this, function(data) {
-			this.TitleChanged.fire();
+			if(this._game.getUserColour(this._user) === this._game.getPosition().getActiveColour()) {
+				this.PlayerClockTick.fire();
+			}
+			
 			this._updateClocks(data.times);
 		});
 	}

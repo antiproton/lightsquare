@@ -36,7 +36,7 @@ define(function(require) {
 		
 		this._links.get("gamePages").push(gamePage);
 		
-		gamePage.TitleChanged.addHandler(this, function() {
+		gamePage.PlayerClockTick.addHandler(this, function() {
 			var index = this._links.get("gamePages").indexOf(gamePage);
 			
 			this._links.update("gamePages." + index);
