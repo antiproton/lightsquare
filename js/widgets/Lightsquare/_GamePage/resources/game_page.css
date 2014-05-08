@@ -18,3 +18,16 @@ div.game_player {
 	flex-grow: 1;
 	padding: .5em 0 .5em .5em;
 }
+
+div.game_history_chat_and_controls {
+	flex-grow: 1;
+	margin-left: .6em;
+}
+
+div.game_details {
+	font-size: 1.2em;
+	display: flex;
+	flex-grow: 1;
+	border-bottom: 2px solid #dfdfdf;
+	padding: .5em 0 .5em .5em;
+}
