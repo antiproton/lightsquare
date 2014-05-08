@@ -1,20 +1,20 @@
-.root {
+div.root {
 	display: flex;
 	flex-direction: column;
 	margin: 0 auto;
 	width: 80%;
 }
 
-.header {
+div.header {
 	display: flex;
 	background-color: #F4F4F4;
 }
 
-.links {
+div.links {
 	display: flex;
 }
 
-.links a {
+div.links a {
 	color: #2f2f2f;
 	text-decoration: none;
 	display: block;
@@ -22,38 +22,37 @@
 	padding: .5em .7em;
 }
 
-.links a.on, .links a.on:hover {
+div.links a.on, div.links a.on:hover {
 	border-bottom: 2px solid #3D3D3D;
 	background-color: #E8E8E8;
 }
 
-.links a:hover {
+div.links a:hover {
 	border-color: #c0c0c0;
 }
 
-.user {
-	display: flex;
-	justify-content: flex-end;
+div.header_center {
 	flex-grow: 1;
 	border-bottom: 2px solid #dfdfdf;
-	padding: .4em .3em 0 0;
+}
+
+div.user {
+	display: flex;
+	justify-content: flex-end;
 }
 
 a.user_link {
 	color: black;
-	font-size: .9em;
 	text-decoration: none;
-	display: inline-block;
-	border-radius: 3px;
-	padding: 2px 5px;
-	background: #E2E2E2;
-	box-shadow: 1px 1px 0px rgba(0, 0, 0, .3);
+	display: block;
+	border-bottom: 2px solid #dfdfdf;
+	padding: .5em .7em;
 }
 
 a.user_link:hover {
 	background: #EDEDED;
 }
 
-.main {
+div.main {
 	flex-grow: 1;
 }
