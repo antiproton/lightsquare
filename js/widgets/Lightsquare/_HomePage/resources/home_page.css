@@ -14,11 +14,11 @@
 	flex-direction: column;
 }
 
-.section {
+div.section {
 	margin-bottom: 1em;
 }
 
-.section_header {
+div.section_header {
 	color: white;
 	padding: .5em;
 	background: #2D2D2D;
