@@ -39,6 +39,10 @@ define(function(require) {
 		return this._game.getPlayer(colour).username;
 	}
 	
+	GamePage.prototype.getTimeLeft = function(colour) {
+		return this._game.getTimeLeft(colour);
+	}
+	
 	GamePage.prototype.getId = function() {
 		return this._game.getId();
 	}
