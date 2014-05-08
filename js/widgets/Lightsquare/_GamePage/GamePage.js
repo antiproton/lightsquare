@@ -31,7 +31,7 @@ define(function(require) {
 		var timingStyle = this._game.getTimingStyle().getDescription();
 		var userColour = this._game.getUserColour(this._user);
 		var whiteName = this._game.getPlayer(Colour.white).username;
-		var blackName = this._game.getPlayer(Colour.black).usernamme;
+		var blackName = this._game.getPlayer(Colour.black).username;
 		
 		if(userColour === null) {
 			return whiteName + " vs " + blackName + " (" + timingStyle + ")";
