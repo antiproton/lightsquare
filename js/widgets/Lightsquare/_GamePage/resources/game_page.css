@@ -5,3 +5,16 @@ div.game {
 div.game_main {
 	display: flex;
 }
+
+div.game_board_and_players {
+	display: flex;
+	flex-direction: column;
+}
+
+div.game_player {
+	font-size: 1.2em;
+	display: flex;
+	justify-content: space-between;
+	flex-grow: 1;
+	padding: .5em 0 .5em .5em;
+}
