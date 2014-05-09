@@ -117,16 +117,16 @@ define(function(require) {
 					var blackName = gamePage.getPlayerName(Colour.black);
 					
 					if(playerColour === null) {
-						return whiteName + " vs " + blackName + " (" + timingStyle + ")";
+						return whiteName + " vs " + blackName + " | " + timingStyle;
 					}
 					
 					else {
 						var opponentName = gamePage.getPlayerName(playerColour.opposite);
 						var timeLeft = gamePage.getTimeLeft(playerColour);
-						var title = opponentName + " (" + timingStyle + ")";
+						var title = opponentName + " | " + timingStyle;
 						
 						if(currentPath !== "/game/" + gamePage.getId()) {
-							title += " " + timeLeft.getColonDisplay();
+							title += " | " + timeLeft.getColonDisplay();
 						}
 						
 						return title;
