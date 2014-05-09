@@ -31,7 +31,7 @@ define(function(require) {
 		
 		this._timingStyle = new TimingStyle({
 			initialTime: Time.fromUnitString(this._gameDetails.options.initialTime, Time.minutes),
-			timeIncrement: Time.fromUnitString(this._gameDetails.options.timeIncrement, Time.seconds)
+			increment: Time.fromUnitString(this._gameDetails.options.timeIncrement, Time.seconds)
 		});
 		
 		this._gameDetails.history.forEach((function(move) {
