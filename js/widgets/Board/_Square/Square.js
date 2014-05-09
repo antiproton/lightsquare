@@ -11,7 +11,7 @@ define(function(require) {
 		this._template = new Template(html, parent);
 		this._square = square;
 		this._size = size || Square.DEFAULT_SIZE;
-		this._squareStyle = Square.styles.BLUE;
+		this._squareStyle = Square.styles.GREEN;
 		this._highlightType = Square.highlightTypes.NONE;
 		this._colour = (this._square.coords.x % 2 === this._square.coords.y % 2 ? "black" : "white");
 
