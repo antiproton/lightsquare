@@ -3,8 +3,8 @@ html, body {
 }
 
 body {
-	font-family: arial, verdana, sans-serif;
-	font-size: 14px;
+	font-family: Georgia, serif;
+	font-size: 1.1em;
 	flex-grow: 1;
 	margin: 0;
 }
@@ -25,15 +25,18 @@ div.input_pair {
 a.button, input.button {
 	font-family: inherit;
 	font-size: inherit;
-	color: white;
+	color: #3C84B7;
 	text-decoration: none;
-	text-shadow: 1px 1px 0 rgba(0, 0, 0, .5);
+	text-shadow: 1px 1px 0 rgba(0, 0, 0, .1);
 	display: inline-block;
-	border: 1px solid #1A4C6D;
-	border-radius: 2px;
-	padding: .3em .7em;
-	background-image: linear-gradient(to bottom, #33ADFF 0%, #105DB0 100%);
+	padding: .3em .0em;
+	background: none;
+	border: 0;
 	cursor: pointer;
+}
+
+a.button:hover, input.button:hover {
+	text-decoration: underline;
 }
 
 div.create_game_button {

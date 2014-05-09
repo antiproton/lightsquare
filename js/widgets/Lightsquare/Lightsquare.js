@@ -105,7 +105,7 @@ define(function(require) {
 				links: [
 					{
 						href: "/",
-						label: "Home"
+						label: "Lightsquare"
 					}
 				],
 				gamePages: [],

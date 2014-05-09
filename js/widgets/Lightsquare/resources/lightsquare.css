@@ -1,8 +1,7 @@
 div.root {
 	display: flex;
+	flex-grow: 1;
 	flex-direction: column;
-	margin: 0 auto;
-	width: 80%;
 }
 
 div.header {
@@ -23,8 +22,9 @@ div.links a {
 }
 
 div.links a.on, div.links a.on:hover {
-	border-bottom: 2px solid #3D3D3D;
-	background-color: #E8E8E8;
+	color: #E0F6FF;
+	border-bottom: 2px solid #094F77;
+	background-color: #3F8EBF;
 }
 
 div.links a:hover {

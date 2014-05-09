@@ -88,6 +88,7 @@ define(function(require) {
 	
 	GamePage.prototype._setupBoard = function() {
 		this._board = new Board(this._template.board);
+		this._board.setSquareSize(75);
 		this._board.setBoardArray(this._game.getPosition().getBoardArray());
 		
 		this._board.Move.addHandler(this, function(data) {
