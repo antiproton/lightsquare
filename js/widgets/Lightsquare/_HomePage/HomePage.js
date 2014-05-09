@@ -1,7 +1,7 @@
 define(function(require) {
 	var html = require("file!./resources/home_page.html");
 	var challengeListHtml = require("file!./resources/challenge_list.html");
-	var dashboardHtml = require("file!./resources/dashboard.html");
+	var loginForm = require("file!./resources/login_form.html");
 	var Template = require("lib/dom/Template");
 	require("css!./resources/home_page.css");
 	var Board = require("widgets/Board/Board");
@@ -12,31 +12,29 @@ define(function(require) {
 		this._user = user;
 		this._template = new Template(html, parent);
 		
-		this._setupDashboard();
+		this._setupLoginForm();
 		this._setupBoard();
 		this._setupQuickChallengeForm();
 		this._setupChallengeList();
 	}
 	
-	HomePage.prototype._setupDashboard = function() {
-		this._dashboard = new Ractive({
-			el: this._template.dashboard,
-			template: dashboardHtml,
-			data: {
-				
-			}
+	HomePage.prototype._setupLoginForm = function() {
+		this._loginForm = new Ractive({
+			el: this._template.login_form,
+			template: loginForm,
+			data: {}
 		});
 		
-		this._dashboard.on("login", (function(event) {
+		this._loginForm.on("login", (function(event) {
 			event.original.preventDefault();
 			
-			this._user.login(this._dashboard.get("login_form.username"), this._dashboard.get("login_form.password"));
+			this._user.login(this._loginForm.get("login_username"), this._loginForm.get("login_password"));
 		}).bind(this));
 		
-		this._dashboard.on("register", (function(event) {
+		this._loginForm.on("register", (function(event) {
 			event.original.preventDefault();
 			
-			this._user.register(this._dashboard.get("register_form.username"), this._dashboard.get("register_form.password"));
+			this._user.register(this._loginForm.get("login_username"), this._loginForm.get("login_passwordd"));
 		}).bind(this));
 	}
 	

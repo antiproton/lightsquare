@@ -14,29 +14,6 @@
 	flex-direction: column;
 }
 
-div.section {
-	margin-bottom: 1em;
-}
-
-div.section_header {
-	color: white;
-	padding: .5em;
-	background: #2D2D2D;
-}
-
-div.dashboard_header {
-	font-size: 1.5em;
-	padding: .1em 0;
-}
-
-div.dashboard {
-	padding: 1em 0em .5em 0em;
-}
-
-div.login_register_forms {
-	display: flex;
-}
-
 div.input_pair div.label {
 	min-width: 5em;
 	margin: auto 1em auto 0;
