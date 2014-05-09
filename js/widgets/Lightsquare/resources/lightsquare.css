@@ -9,11 +9,11 @@ div.header {
 	background-color: #F4F4F4;
 }
 
-div.links {
+div.nav {
 	display: flex;
 }
 
-div.links a {
+div.nav a {
 	color: #2f2f2f;
 	text-decoration: none;
 	display: block;
@@ -21,13 +21,13 @@ div.links a {
 	padding: .5em .7em;
 }
 
-div.links a.on, div.links a.on:hover {
+div.nav a.on, div.nav a.on:hover {
 	color: #E0F6FF;
 	border-bottom: 2px solid #094F77;
 	background-color: #3F8EBF;
 }
 
-div.links a:hover {
+div.nav a:hover {
 	border-color: #c0c0c0;
 }
 
