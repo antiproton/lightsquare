@@ -1,8 +1,7 @@
 define(function(require) {
 	require("css!./resources/lightsquare.css");
 	var html = require("file!./resources/lightsquare.html");
-	var linksHtml = require("file!./resources/links.html");
-	var userLinkHtml = require("file!./resources/user_link.html");
+	var headerHtml = require("file!./resources/header.html");
 	var Template = require("lib/dom/Template");
 	var Ractive = require("lib/dom/Ractive");
 	var Router = require("lib/Router");
@@ -22,8 +21,7 @@ define(function(require) {
 		this._pages = new Pages(this._template.main);
 		
 		this._setupRouter();
-		this._setupNavLinks();
-		this._setupUserLink();
+		this._setupHeader();
 		
 		this._handleUserEvents();
 		
@@ -35,12 +33,12 @@ define(function(require) {
 		var page = this._pages.createPage("/game/" + id);
 		var gamePage = new GamePage(game, this._user, page);
 		
-		this._links.get("gamePages").push(gamePage);
+		this._header.get("gamePages").push(gamePage);
 		
 		gamePage.PlayerClockTick.addHandler(this, function() {
-			var index = this._links.get("gamePages").indexOf(gamePage);
+			var index = this._header.get("gamePages").indexOf(gamePage);
 			
-			this._links.update("gamePages." + index);
+			this._header.update("gamePages." + index);
 		});
 	}
 	
@@ -48,7 +46,7 @@ define(function(require) {
 		this._router = new Router();
 		
 		this._router.PathChanged.addHandler(this, function(data) {
-			this._links.set("currentPath", data.path);
+			this._header.set("currentPath", data.path);
 		});
 		
 		this._router.addRoute("/", (function(params, url) {
@@ -97,20 +95,15 @@ define(function(require) {
 		}).bind(this));
 	}
 	
-	Lightsquare.prototype._setupNavLinks = function() {
-		this._links = new Ractive({
-			template: linksHtml,
-			el: this._template.nav,
+	Lightsquare.prototype._setupHeader = function() {
+		this._header = new Ractive({
+			template: headerHtml,
+			el: this._template.header,
 			data: {
-				links: [
-					{
-						href: "/",
-						label: "Lightsquare"
-					}
-				],
+				username: this._user.getUsername(),
 				gamePages: [],
 				currentPath: this._router.getCurrentPath(),
-				getTitle: function(gamePage, currentPath) {
+				getGameTitle: function(gamePage, currentPath) {
 					var timingStyle = gamePage.getTimingStyle().getDescription();
 					var playerColour = gamePage.getPlayerColour();
 					var whiteName = gamePage.getPlayerName(Colour.white);
@@ -135,32 +128,16 @@ define(function(require) {
 			}
 		});
 		
-		this._links.on("click", (function(event, href) {
+		this._header.on("navigate", (function(event, href) {
 			event.original.preventDefault();
 			
 			this._router.loadPath(href);
 		}).bind(this));
 	}
 	
-	Lightsquare.prototype._setupUserLink = function() {
-		this._userLink = new Ractive({
-			el: this._template.user,
-			template: userLinkHtml,
-			data: {
-				username: this._user.getUsername()
-			}
-		});
-		
-		this._userLink.on("click", (function(event) {
-			event.original.preventDefault();
-			
-			this._router.loadPath("/user/profile");
-		}).bind(this));
-	}
-	
 	Lightsquare.prototype._handleUserEvents = function() {
 		this._user.DetailsChanged.addHandler(this, function() {
-			this._userLink.set("username", this._user.getUsername());
+			this._header.set("username", this._user.getUsername());
 		});
 		
 		this._user.Registered.addHandler(this, function() {

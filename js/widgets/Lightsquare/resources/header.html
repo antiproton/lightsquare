@@ -1,0 +1,16 @@
+<a
+	on-click="navigate:/"
+	href="/"
+	class="{{'/' === currentPath ? 'on' : ''}}"
+>Lightsquare</a>
+{{#gamePages}}
+	<a
+	   on-click="navigate:{{'/game/' + this.getId()}}"
+	   href="/game/{{this.getId()}}"
+	   class="{{'/game/' + this.getId() === currentPath ? 'on' : ''}}"
+	>{{getGameTitle(this, currentPath)}}</a>
+{{/gamePages}}
+<div class="header_spacer">
+	
+</div>
+<a class="user_link" href="javascript:void(0)" on-click="navigate:/user/profile">{{username}}</a>

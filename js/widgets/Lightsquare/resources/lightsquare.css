@@ -6,14 +6,11 @@ div.root {
 
 div.header {
 	display: flex;
+	flex-wrap: wrap;
 	background-color: #F4F4F4;
 }
 
-div.nav {
-	display: flex;
-}
-
-div.nav a {
+div.header a {
 	color: #2f2f2f;
 	text-decoration: none;
 	display: block;
@@ -21,24 +18,19 @@ div.nav a {
 	padding: .5em .7em;
 }
 
-div.nav a.on, div.nav a.on:hover {
+div.header a.on, div.header a.on:hover {
 	color: #E0F6FF;
 	border-bottom: 2px solid #094F77;
 	background-color: #3F8EBF;
 }
 
-div.nav a:hover {
+div.header a:hover {
 	border-color: #c0c0c0;
 }
 
-div.header_center {
+div.header_spacer {
 	flex-grow: 1;
 	border-bottom: 2px solid #dfdfdf;
-}
-
-div.user {
-	display: flex;
-	justify-content: flex-end;
 }
 
 a.user_link {
