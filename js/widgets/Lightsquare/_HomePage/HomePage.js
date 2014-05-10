@@ -1,9 +1,9 @@
 define(function(require) {
-	var html = require("file!./resources/home_page.html");
-	var challengeListHtml = require("file!./resources/challenge_list.html");
-	var loginForm = require("file!./resources/login_form.html");
+	var html = require("file!./home_page.html");
+	var challengeListHtml = require("file!./challenge_list.html");
+	var loginForm = require("file!./login_form.html");
 	var Template = require("lib/dom/Template");
-	require("css!./resources/home_page.css");
+	require("css!./home_page.css");
 	var Board = require("widgets/Board/Board");
 	var Ractive = require("lib/dom/Ractive");
 	
