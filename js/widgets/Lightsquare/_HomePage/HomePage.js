@@ -2,9 +2,11 @@ define(function(require) {
 	var html = require("file!./home_page.html");
 	var challengeListHtml = require("file!./challenge_list.html");
 	var loginForm = require("file!./login_form.html");
+	var createChallengeFormHtml = require("file!./create_challenge_form.html");
 	var Template = require("lib/dom/Template");
 	require("css!./home_page.css");
 	require("css!./login_form.css");
+	require("css!./create_challenge_form.css");
 	var Board = require("widgets/Board/Board");
 	var Ractive = require("lib/dom/Ractive");
 	
@@ -15,7 +17,7 @@ define(function(require) {
 		
 		this._setupLoginForm();
 		this._setupBoard();
-		this._setupQuickChallengeForm();
+		this._setupCreateChallengeForm();
 		this._setupChallengeList();
 	}
 	
@@ -46,15 +48,23 @@ define(function(require) {
 		this._board.setSquareStyle(Board.squareStyles.GREEN);
 	}
 	
-	HomePage.prototype._setupQuickChallengeForm = function() {
-		this._template.quick_challenge_form.addEventListener("submit", (function(event) {
-			event.preventDefault();
+	HomePage.prototype._setupCreateChallengeForm = function() {
+		this._createChallengeForm = new Ractive({
+			el: this._template.create_challenge,
+			template: createChallengeFormHtml,
+			data: {
+				
+			}
+		});
+		
+		this._createChallengeForm.on("submit", (function(event, initialTime, timeIncrement, ratingMin, ratingMax) {
+			event.original.preventDefault();
 			
 			this._user.createChallenge({
-				initialTime: this._template.quick_challenge_initial_time.value,
-				timeIncrement: this._template.quick_challenge_increment.value,
-				acceptRatingMin: this._template.quick_challenge_rating_min.value,
-				acceptRatingMax: this._template.quick_challenge_rating_max.value
+				initialTime: initialTime,
+				timeIncrement: timeIncrement,
+				acceptRatingMin: ratingMin,
+				acceptRatingMax: ratingMax
 			});
 		}).bind(this));
 	}
