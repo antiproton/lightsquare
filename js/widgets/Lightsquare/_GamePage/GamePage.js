@@ -1,13 +1,13 @@
 define(function(require) {
 	var Event = require("lib/Event");
-	var html = require("file!./resources/game_page.html");
-	require("css!./resources/game_page.css");
+	var html = require("file!./game_page.html");
+	require("css!./game_page.css");
 	var Template = require("lib/dom/Template");
 	var Board = require("widgets/Board/Board");
 	var History = require("widgets/History/History");
 	var Colour = require("chess/Colour");
 	var Ractive = require("lib/dom/Ractive");
-	var playerInfoHtml = require("file!./resources/player_info.html");
+	var playerInfoHtml = require("file!./player_info.html");
 	
 	function GamePage(game, user, parent) {
 		this._template = new Template(html, parent);
