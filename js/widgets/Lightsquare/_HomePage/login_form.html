@@ -1,6 +1,6 @@
-<form class="login" on-submit="login">
+<form class="login" on-submit="login:{{username}},{{password}}">
 	<input type="text" value="{{username}}" placeholder="username">
 	<input type="password" value="{{password}}" placeholder="password">
 	<input class="button" type="submit" value="Log in">
-	<input class="button" type="button" on-click="register" value="register">
+	<input class="button" type="button" on-click="register:{{username}},{{password}}" value="register">
 </form>

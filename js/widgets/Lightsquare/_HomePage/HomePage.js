@@ -26,16 +26,16 @@ define(function(require) {
 			data: {}
 		});
 		
-		this._loginForm.on("login", (function(event) {
+		this._loginForm.on("login", (function(event, username, password) {
 			event.original.preventDefault();
 			
-			this._user.login(this._loginForm.get("login_username"), this._loginForm.get("login_password"));
+			this._user.login(username, password);
 		}).bind(this));
 		
-		this._loginForm.on("register", (function(event) {
+		this._loginForm.on("register", (function(event, username, password) {
 			event.original.preventDefault();
 			
-			this._user.register(this._loginForm.get("login_username"), this._loginForm.get("login_passwordd"));
+			this._user.register(username, password);
 		}).bind(this));
 	}
 	
