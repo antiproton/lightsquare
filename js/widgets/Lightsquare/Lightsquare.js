@@ -1,7 +1,7 @@
 define(function(require) {
-	require("css!./resources/lightsquare.css");
-	var html = require("file!./resources/lightsquare.html");
-	var headerHtml = require("file!./resources/header.html");
+	require("css!./lightsquare.css");
+	var html = require("file!./lightsquare.html");
+	var headerHtml = require("file!./header.html");
 	var Template = require("lib/dom/Template");
 	var Ractive = require("lib/dom/Ractive");
 	var Router = require("lib/Router");
