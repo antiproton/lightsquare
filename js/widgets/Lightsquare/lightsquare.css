@@ -46,5 +46,11 @@ a.user_link:hover {
 }
 
 div.main {
+	display: flex;
+	flex-grow: 1;
+}
+
+div.page {
+	display: flex;
 	flex-grow: 1;
 }
