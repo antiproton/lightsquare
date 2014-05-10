@@ -3,8 +3,8 @@ define(function(require) {
 	var Fullmove = require("./_Fullmove");
 	var Ractive = require("lib/dom/Ractive");
 	var Colour = require("chess/Colour");
-	var html = require("file!./resources/history.html");
-	require("css!./resources/history.css");
+	var html = require("file!./history.html");
+	require("css!./history.css");
 
 	function History(parent) {
 		this.UserSelect = new Event(this);
