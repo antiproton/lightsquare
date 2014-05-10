@@ -12,6 +12,11 @@ define(function(require) {
 	var WelcomePage = require("./_WelcomePage/WelcomePage");
 	var Colour = require("chess/Colour");
 	
+	var MouseButtons = {
+		left: 0,
+		middle: 1
+	};
+	
 	function Lightsquare(app, user, parent) {
 		this._app = app;
 		this._user = user;
@@ -129,9 +134,11 @@ define(function(require) {
 		});
 		
 		this._header.on("navigate", (function(event, href) {
-			event.original.preventDefault();
+			if(event.original.button !== MouseButtons.middle) {
+				event.original.preventDefault();
 			
-			this._router.loadPath(href);
+				this._router.loadPath(href);
+			}
 		}).bind(this));
 	}
 	
