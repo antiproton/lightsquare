@@ -35,16 +35,20 @@ define(function(require) {
 	
 	Lightsquare.prototype._addGamePage = function(game) {
 		var id = game.getId();
-		var page = this._pages.createPage("/game/" + id);
-		var gamePage = new GamePage(game, this._user, page);
+		var url = "/game/" + id;
 		
-		this._header.get("gamePages").push(gamePage);
-		
-		gamePage.PlayerClockTick.addHandler(this, function() {
-			var index = this._header.get("gamePages").indexOf(gamePage);
+		if(!this._pages.hasPage(url)) {
+			var page = this._pages.createPage(url);
+			var gamePage = new GamePage(game, this._user, page);
 			
-			this._header.update("gamePages." + index);
-		});
+			this._header.get("gamePages").push(gamePage);
+			
+			gamePage.PlayerClockTick.addHandler(this, function() {
+				var index = this._header.get("gamePages").indexOf(gamePage);
+				
+				this._header.update("gamePages." + index);
+			});
+		}
 	}
 	
 	Lightsquare.prototype._setupRouter = function() {
