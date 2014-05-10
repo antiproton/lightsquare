@@ -39,7 +39,3 @@ a.button, input.button {
 a.button:hover, input.button:hover {
 	text-decoration: underline;
 }
-
-div.create_game_button {
-	margin-top: .8em;
-}
