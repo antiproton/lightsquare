@@ -3,17 +3,23 @@ define(function(require) {
 	var style = require("lib/dom/style");
 	
 	function Pages(parent) {
-		this._container = create("div", parent);
+		this._container = parent;
 		this._pages = {};
 	}
 	
 	Pages.prototype.createPage = function(url) {
 		if(!this.hasPage(url)) {
-			return this._pages[url] = create("div", this._container);
+			var page = create("div", this._container);
+			
+			page.className = "page";
+			
+			this._pages[url] = page;
+			
+			return page;
 		}
 		
 		else {
-			throw "PageCache - page with url " + url + " already exists";
+			throw "Pages - page with url " + url + " already exists";
 		}
 	}
 	
