@@ -4,39 +4,6 @@ html, body {
 }
 
 body {
-	font-family: "Times New Roman", serif;
-	color: #202020;
-	font-size: 1.1em;
 	flex-grow: 1;
 	margin: 0;
-}
-
-input[type="text"], input[type="password"] {
-	box-sizing: border-box;
-	border: 1px solid #8C8C8C;
-	border-radius: 2px;
-	padding: .4em;
-	box-shadow: inset 1px 1px 3px rgba(0, 0, 0, .1);
-}
-
-div.input_pair {
-	display: flex;
-	align-content: center;
-}
-
-a.button, input.button {
-	font-family: inherit;
-	font-size: inherit;
-	color: #3C84B7;
-	text-decoration: none;
-	text-shadow: 1px 1px 0 rgba(0, 0, 0, .1);
-	display: inline-block;
-	padding: .3em .0em;
-	background: none;
-	border: 0;
-	cursor: pointer;
-}
-
-a.button:hover, input.button:hover {
-	text-decoration: underline;
 }
