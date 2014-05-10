@@ -1,6 +1,6 @@
 define(function(require) {
 	var Template = require("lib/dom/Template");
-	var html = require("file!./resources/piece.html");
+	var html = require("file!./piece.html");
 	var style = require("lib/dom/style");
 	var Fen = require("chess/Fen");
 
@@ -48,7 +48,6 @@ define(function(require) {
 		if(this._piece !== null) {
 			path = [
 				".",
-				"resources",
 				"pieces",
 				this._style,
 				this._size,
