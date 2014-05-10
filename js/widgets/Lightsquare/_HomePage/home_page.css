@@ -1,70 +1,30 @@
-.home {
+div.home {
 	display: flex;
-	width: 100%;
-	padding-top: 1em;
-}
-
-.col1 {
 	flex-grow: 1;
-	margin-right: 1em;
+	background: #F4F4F4;
 }
 
-.new_game, .join_game {
+div.toprow {
 	display: flex;
-	flex-direction: column;
+	flex-grow: 1;
+	padding: .8em;
 }
 
-div.input_pair div.label {
-	min-width: 5em;
-	margin: auto 1em auto 0;
-}
-
-input.initial_time {
-	width: 4em;
-}
-
-input.increment {
-	width: 3em;
-}
-
-input.min_rating, input.max_rating {
-	width: 5em;
-}
-
-div.quick_challenge {
-	padding: 1em .5em .5em .5em;
-	background: #D8D8D8;
-}
-
-div.challenge_list {
-	background: #D8D8D8;
-}
-
-div.challenge {
-	display: flex;
-	justify-content: space-between;
-	border-bottom: 1px solid #bfbfbf;
+div.toprow > div {
+	border: 1px solid #A8A8A8;
 	padding: .5em;
-	cursor: pointer;
+	background: white;
 }
 
-div.challenge:hover {
-	background: #dfdfdf;
-}
-
-div.challenge_details {
-	font-weight: bold;
-}
-
-div.challenge_owner {
+div.create_challenge {
 	
 }
 
-div.no_challenges {
-	text-align: center;
-	padding: .5em;
+div.challenge_graph {
+	flex-grow: 1;
+	margin: 0 .8em;
 }
 
-div.random_game {
-	margin-bottom: 1em;
+div.login_form {
+	
 }
