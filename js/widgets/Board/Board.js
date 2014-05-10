@@ -9,8 +9,8 @@ define(function(require) {
 	var Square = require("./_Square/Square");
 	var Piece = require("chess/Piece");
 	var Colour = require("chess/Colour");
-	require("css!./resources/board.css");
-	var html = require("file!./resources/board.html");
+	require("css!./board.css");
+	var html = require("file!./board.html");
 
 	function Board(parent) {
 		this._template = new Template(html, parent);
