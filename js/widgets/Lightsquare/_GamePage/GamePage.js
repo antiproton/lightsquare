@@ -98,6 +98,10 @@ define(function(require) {
 	
 	GamePage.prototype._setupHistory = function() {
 		this._history = new History(this._template.history);
+		
+		this._history.UserSelect.addHandler(this, function(data) {
+			this._board.setBoardArray(data.move.getPositionAfter().getBoardArray());
+		});
 	}
 	
 	GamePage.prototype._adjustOrientation = function() {
