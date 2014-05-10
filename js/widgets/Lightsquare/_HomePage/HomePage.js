@@ -4,6 +4,7 @@ define(function(require) {
 	var loginForm = require("file!./login_form.html");
 	var Template = require("lib/dom/Template");
 	require("css!./home_page.css");
+	require("css!./login_form.css");
 	var Board = require("widgets/Board/Board");
 	var Ractive = require("lib/dom/Ractive");
 	
