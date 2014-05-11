@@ -2,3 +2,28 @@ form.create_challenge {
 	display: flex;
 	flex-direction: column;
 }
+
+form.create_challenge input {
+	width: 14em;
+}
+
+form.create_challenge label {
+	font-size: .8em;
+	width: 17.5em;
+	margin: .7em 0 .2em 0;
+}
+
+form.create_challenge label:first-child {
+	margin-top: 0;
+}
+
+form.create_challenge > input[type="submit"] {
+	color: #2F4F00;
+	text-shadow: 1px 1px 0 rgba(255, 255, 255, .3);
+	margin-top: .5em;
+	border: 1px solid #648C2A;
+	border-radius: 2px;
+	padding: .3em 0;
+	background: #91B758;
+	cursor: pointer;
+}

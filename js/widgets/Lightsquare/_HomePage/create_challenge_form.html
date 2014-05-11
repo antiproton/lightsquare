@@ -1,7 +1,11 @@
-<form class="create_challenge" on-submit="submit:'{{initial_time}}','{{time_increment}}','{{rating_min}}','{{rating_max}}'">
-	<input type="text" placeholder="initial time, e.g. 10m" value="{{initial_time}}">
-	<input type="text" placeholder="increment" value="{{time_increment}}">
-	<input type="text" placeholder="min rating" value="{{rating_min}}">
-	<input type="text" placeholder="max rating" value="{{rating_max}}">
+<form class="create_challenge" on-submit="submit:'{{initialTime}}','{{timeIncrement}}','{{ratingMin}}','{{ratingMax}}'">
+	<label>Initial time</label>
+	<input type="text" value="{{initialTime}}">
+	<label>Increment</label>
+	<input type="text" value="{{timeIncrement}}">
+	<label>Min. opponent rating</label>
+	<input type="text" value="{{ratingMin}}">
+	<label>Max. opponent rating</label>
+	<input type="text" value="{{ratingMax}}">
 	<input type="submit" value="Create challenge">
 </form>
