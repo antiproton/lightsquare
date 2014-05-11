@@ -43,6 +43,21 @@ a.button, input.button {
 	cursor: pointer;
 }
 
-a.button:hover, input.button:hover {
+input[type="button"], input[type="submit"], a.button {
+	color: #2F4F00;
+	text-shadow: 1px 1px 0 rgba(255, 255, 255, .3);
+	margin-top: .5em;
+	border: 1px solid #648C2A;
+	border-radius: 2px;
+	padding: .3em 0;
+	background: #91B758;
+	cursor: pointer;
+}
+
+input[type="button"]:hover, input[type="submit"]:hover, a.button:hover {
 	text-decoration: underline;
+}
+
+input[type="button"]:active, input[type="submit"]:active, a.button:active {
+	box-shadow: inset 2px 2px 1px rgba(0, 0, 0, .2);
 }

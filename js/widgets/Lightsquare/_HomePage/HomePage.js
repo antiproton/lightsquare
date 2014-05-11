@@ -5,8 +5,6 @@ define(function(require) {
 	var createChallengeFormHtml = require("file!./create_challenge_form.html");
 	var Template = require("lib/dom/Template");
 	require("css!./home_page.css");
-	require("css!./login_form.css");
-	require("css!./create_challenge_form.css");
 	var Board = require("widgets/Board/Board");
 	var Ractive = require("lib/dom/Ractive");
 	

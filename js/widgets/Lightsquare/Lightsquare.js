@@ -1,6 +1,7 @@
 define(function(require) {
 	require("css!./lightsquare.css");
 	require("css!./header.css");
+	require("css!./single_column_form.css");
 	var html = require("file!./lightsquare.html");
 	var headerHtml = require("file!./header.html");
 	var Template = require("lib/dom/Template");
