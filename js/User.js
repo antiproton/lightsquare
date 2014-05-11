@@ -62,6 +62,10 @@ define(function(require) {
 		return this._id;
 	}
 	
+	User.prototype.getRating = function() {
+		return this._rating;
+	}
+	
 	User.prototype.isLoggedIn = function() {
 		return this._isLoggedIn;
 	}
