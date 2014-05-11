@@ -4,11 +4,14 @@ div.header {
 	background-color: #F4F4F4;
 }
 
+div.header a, div.user_link, div.header_spacer {
+	border-bottom: 2px solid #CECECE;
+}
+
 div.header a {
 	color: #2f2f2f;
 	text-decoration: none;
 	display: block;
-	border-bottom: 2px solid #dfdfdf;
 	padding: .5em .7em;
 }
 
@@ -19,19 +22,18 @@ div.header a.on, div.header a.on:hover {
 }
 
 div.header a:hover {
-	border-color: #c0c0c0;
+	border-color: #BABABA;
 }
 
 div.header_spacer {
 	flex-grow: 1;
-	border-bottom: 2px solid #dfdfdf;
 }
 
 a.user_link {
 	color: black;
 	text-decoration: none;
 	display: block;
-	border-bottom: 2px solid #dfdfdf;
+	border-bottom: 2px solid #CECECE;
 	padding: .5em .7em;
 }
 
