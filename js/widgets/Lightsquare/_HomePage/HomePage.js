@@ -53,7 +53,10 @@ define(function(require) {
 			el: this._template.create_challenge,
 			template: createChallengeFormHtml,
 			data: {
-				
+				initialTime: "10m",
+				timeIncrement: "5",
+				ratingMin: "-100",
+				ratingMax: "+100"
 			}
 		});
 		
