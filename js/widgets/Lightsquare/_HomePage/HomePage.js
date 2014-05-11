@@ -7,6 +7,7 @@ define(function(require) {
 	require("css!./home_page.css");
 	var Board = require("widgets/Board/Board");
 	var Ractive = require("lib/dom/Ractive");
+	var Time = require("chess/Time");
 	
 	function HomePage(app, user, parent) {
 		this._app = app;

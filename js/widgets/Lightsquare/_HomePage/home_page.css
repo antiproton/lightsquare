@@ -14,7 +14,7 @@ div.toprow {
 }
 
 div.toprow > div {
-	padding: .5em;
+	
 }
 
 div.challenge_graph {
@@ -35,7 +35,7 @@ input.login {
 
 input.register {
 	color: #6D5529;
-	text-shadow: 1px 1px 0 rgba(0, 0, 0, .1);
+	text-shadow: 1px 1px 0 rgba(255, 255, 255, .3);
 	border-color: #CEB780;
 	background: #F9F4D4;
 }

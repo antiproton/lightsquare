@@ -17,6 +17,26 @@ div.page {
 	flex-grow: 1;
 }
 
+label {
+	font-size: .9em;
+}
+
+form.single_column {
+	display: flex;
+	flex-direction: column;
+	width: 12em;
+}
+
+form.single_column label {
+	color: #5E5E5E;
+	text-align: center;
+	margin: .5em 0 .1em 0;
+}
+
+form.single_column input {
+	text-align: center;
+}
+
 input {
 	font-family: inherit;
 	font-size: inherit;
