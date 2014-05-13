@@ -1,0 +1,13 @@
+<div class="challenge_graph">
+	<div class="challenge_graph_challenges">
+		{{#challenges:index}}
+			<div
+				 class="challenge_graph_challenge"
+				 style="top: {{getTopOffset(this, index)}}px; left: {{getLeftOffset(this, index)}}px"
+				 on-click="accept:'{{id}}'"
+			>
+				{{owner.username}} {{options.initialTime}} / {{options.timeIncrement}}
+			</div>
+		{{/challenges}}
+	</div>
+</div>

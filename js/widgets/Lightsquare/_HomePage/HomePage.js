@@ -1,13 +1,13 @@
 define(function(require) {
+	require("css!./home_page.css");
 	var html = require("file!./home_page.html");
-	var challengeListHtml = require("file!./challenge_list.html");
-	var loginForm = require("file!./login_form.html");
+	var loginFormHtml = require("file!./login_form.html");
 	var createChallengeFormHtml = require("file!./create_challenge_form.html");
 	var Template = require("lib/dom/Template");
-	require("css!./home_page.css");
 	var Board = require("widgets/Board/Board");
 	var Ractive = require("lib/dom/Ractive");
 	var Time = require("chess/Time");
+	var ChallengeGraph = require("widgets/ChallengeGraph/ChallengeGraph");
 	
 	function HomePage(app, user, parent) {
 		this._app = app;
@@ -17,13 +17,13 @@ define(function(require) {
 		this._setupLoginForm();
 		this._setupBoard();
 		this._setupCreateChallengeForm();
-		this._setupChallengeList();
+		this._setupChallengeGraph();
 	}
 	
 	HomePage.prototype._setupLoginForm = function() {
 		this._loginForm = new Ractive({
 			el: this._template.login_form,
-			template: loginForm,
+			template: loginFormHtml,
 			data: {}
 		});
 		
@@ -71,27 +71,11 @@ define(function(require) {
 		}).bind(this));
 	}
 	
-	HomePage.prototype._setupChallengeList = function() {
-		this._challengeList = new Ractive({
-			el: this._template.challenge_list,
-			template: challengeListHtml,
-			data: {
-				"challenges": this._app.getChallenges()
-			}
-		});
+	HomePage.prototype._setupChallengeGraph = function() {
+		this._challengeGraph = new ChallengeGraph(this._app, this._template.challenge_graph);
 		
-		this._challengeList.on("accept", (function(event, id) {
-			this._user.acceptChallenge(id);
-		}).bind(this));
-		
-		this._app.NewChallenge.addHandler(this, function(data) {
-			this._challengeList.get("challenges").push(data.challenge);
-		});
-		
-		this._app.ChallengeExpired.addHandler(this, function(data) {
-			this._challengeList.set("challenges", this._challengeList.get("challenges").filter(function(challenge) {
-				return (challenge.id !== data.id);
-			}));
+		this._challengeGraph.AcceptChallenge.addHandler(this, function(data) {
+			this._user.acceptChallenge(data.id);
 		});
 	}
 	

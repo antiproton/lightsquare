@@ -17,9 +17,10 @@ div.toprow > div {
 	
 }
 
-div.challenge_graph {
+div.challenges {
 	flex-grow: 1;
 	margin: 0 .8em;
+	background: yellow;
 }
 
 form.login {
