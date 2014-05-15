@@ -1,11 +1,11 @@
 define(function(require) {
 	require("css!./home_page.css");
 	var html = require("file!./home_page.html");
-	var createChallengeFormHtml = require("file!./create_challenge_form.html");
 	var Template = require("lib/dom/Template");
 	var Board = require("widgets/Board/Board");
 	var Ractive = require("lib/dom/Ractive");
 	var Time = require("chess/Time");
+	var CreateChallengeForm = require("_CreateChallengeForm/CreateChallengeForm");
 	var ChallengeGraph = require("widgets/ChallengeGraph/ChallengeGraph");
 	var LoginForm = require("./_LoginForm/LoginForm");
 	
@@ -32,35 +32,11 @@ define(function(require) {
 	}
 	
 	HomePage.prototype._setupCreateChallengeForm = function() {
-		this._createChallengeForm = new Ractive({
-			el: this._template.create_challenge,
-			template: createChallengeFormHtml,
-			data: {
-				initialTime: "10m",
-				timeIncrement: "5",
-				ratingMin: "-100",
-				ratingMax: "+100"
-			}
-		});
-		
-		this._createChallengeForm.on("submit", (function(event, initialTime, timeIncrement, ratingMin, ratingMax) {
-			event.original.preventDefault();
-			
-			this._user.createChallenge({
-				initialTime: initialTime,
-				timeIncrement: timeIncrement,
-				acceptRatingMin: ratingMin,
-				acceptRatingMax: ratingMax
-			});
-		}).bind(this));
+		this._createChallengeForm = new CreateChallengeForm(this._user, this._template.create_challenge);
 	}
 	
 	HomePage.prototype._setupChallengeGraph = function() {
 		this._challengeGraph = new ChallengeGraph(this._app, this._template.challenge_graph);
-		
-		this._challengeGraph.AcceptChallenge.addHandler(this, function(data) {
-			this._user.acceptChallenge(data.id);
-		});
 	}
 	
 	return HomePage;
