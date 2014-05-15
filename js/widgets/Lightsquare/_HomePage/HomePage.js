@@ -36,7 +36,7 @@ define(function(require) {
 	}
 	
 	HomePage.prototype._setupChallengeGraph = function() {
-		this._challengeGraph = new ChallengeGraph(this._app, this._template.challenge_graph);
+		this._challengeGraph = new ChallengeGraph(this._app, this._user, this._template.challenge_graph);
 	}
 	
 	return HomePage;
