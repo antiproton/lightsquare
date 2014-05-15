@@ -1,7 +1,6 @@
 define(function(require) {
 	require("css!./home_page.css");
 	var html = require("file!./home_page.html");
-	var loginFormHtml = require("file!./login_form.html");
 	var createChallengeFormHtml = require("file!./create_challenge_form.html");
 	var Template = require("lib/dom/Template");
 	var Board = require("widgets/Board/Board");
@@ -21,33 +20,7 @@ define(function(require) {
 	}
 	
 	HomePage.prototype._setupLoginForm = function() {
-		this._loginForm = new Ractive({
-			el: this._template.login_form,
-			template: loginFormHtml,
-			data: {
-				register: false
-			}
-		});
-		
-		this._loginForm.on("submit", (function(event, username, password) {
-			event.original.preventDefault();
-			
-			if(this._loginForm.get("register")) {
-				this._user.register(username, password);
-			}
-			
-			else {
-				this._user.login(username, password);
-			}
-		}).bind(this));
-		
-		this._loginForm.on("login", (function(event, username, password) {
-			this._loginForm.set("register", false);
-		}).bind(this));
-		
-		this._loginForm.on("register", (function(event, username, password) {
-			this._loginForm.set("register", true);
-		}).bind(this));
+		this._loginForm = new LoginForm(this._user, this._template.login_form);
 	}
 	
 	HomePage.prototype._setupBoard = function() {
