@@ -15,20 +15,12 @@ define(function(require) {
 		this._template = new Template(html, parent);
 		
 		this._setupLoginForm();
-		this._setupBoard();
 		this._setupCreateChallengeForm();
 		this._setupChallengeGraph();
 	}
 	
 	HomePage.prototype._setupLoginForm = function() {
 		this._loginForm = new LoginForm(this._user, this._template.login_form);
-	}
-	
-	HomePage.prototype._setupBoard = function() {
-		this._board = new Board(this._template.random_game);
-		this._board.setSquareSize(60);
-		this._board.setShowCoords(false);
-		this._board.setSquareStyle(Board.squareStyles.GREEN);
 	}
 	
 	HomePage.prototype._setupCreateChallengeForm = function() {
