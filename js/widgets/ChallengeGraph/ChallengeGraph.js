@@ -3,12 +3,13 @@ define(function(require) {
 	var html = require("file!./challenge_graph.html");
 	var Event = require("lib/Event");
 	
-	function ChallengeGraph(app, parent) {
+	function ChallengeGraph(app, user, parent) {
 		this.AcceptChallenge = new Event(this);
 		
 		this._graphHeightEms = 20;
 		this._challengeHeightEms = 1.4;
 		this._app = app;
+		this._user = user;
 		this._setupTemplate(parent);
 		this._updateTemplate();
 	}
@@ -36,9 +37,7 @@ define(function(require) {
 		});
 		
 		this._template.on("accept", (function(event, id) {
-			this.AcceptChallenge.fire({
-				id: id
-			});
+			this._user.acceptChallenge(id);
 		}).bind(this));
 		
 		var lastZIndex = 1;
