@@ -2,7 +2,7 @@ define(function(require) {
 	var html = require("file!./create_challenge_form.html");
 	var Ractive = require("lib/dom/Ractive");
 	
-	function CreateChallengeForm(app, user, parent) {
+	function CreateChallengeForm(user, parent) {
 		var template = new Ractive({
 			el: parent,
 			template: html,
