@@ -6,7 +6,7 @@ define(function(require) {
 	var Ractive = require("lib/dom/Ractive");
 	var Time = require("chess/Time");
 	var CreateChallengeForm = require("./_CreateChallengeForm/CreateChallengeForm");
-	var ChallengeGraph = require("widgets/ChallengeGraph/ChallengeGraph");
+	var ChallengeGraph = require("./_ChallengeGraph/ChallengeGraph");
 	var LoginForm = require("./_LoginForm/LoginForm");
 	
 	function HomePage(app, user, parent) {
