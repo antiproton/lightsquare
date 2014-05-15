@@ -13,14 +13,9 @@ div.toprow {
 	padding: .8em;
 }
 
-div.toprow > div {
-	
-}
-
 div.challenges {
 	flex-grow: 1;
 	margin: 0 .8em;
-	background: yellow;
 }
 
 form.login {
