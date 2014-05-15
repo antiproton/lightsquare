@@ -4,8 +4,6 @@ define(function(require) {
 	var Event = require("lib/Event");
 	
 	function ChallengeGraph(app, user, parent) {
-		this.AcceptChallenge = new Event(this);
-		
 		this._graphHeightEms = 20;
 		this._challengeHeightEms = 1.4;
 		this._app = app;
