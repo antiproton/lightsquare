@@ -6,6 +6,8 @@ define(function(require) {
 	function ChallengeGraph(app, parent) {
 		this.AcceptChallenge = new Event(this);
 		
+		this._graphHeightEms = 20;
+		this._challengeHeightEms = 1.4;
 		this._app = app;
 		this._setupTemplate(parent);
 		this._updateTemplate();
@@ -16,17 +18,19 @@ define(function(require) {
 			el: parent,
 			template: html,
 			data: {
+				graphHeight: this._graphHeightEms + "em",
+				challengeHeight: this._challengeHeightEms + "em",
 				challenges: this._app.getChallenges(),
 				getLeftOffset: function(challenge) {
-					console.log("left");
-					console.log(challenge);
-					console.log("");
+					var initialTime = Time.fromUnitString(challenge.options.initialTime);
 				},
 				getTopOffset: function(challenge, index) {
-					console.log("top");
-					console.log(challenge);
-					console.log(index);
-					console.log("");
+					var ratingAbove1000 = Math.max(0, challenge.owner.rating - 1000);
+					var ratingScale = 1 / (1500 / ratingAbove1000);
+					console.log(ratingScale);
+					var emOffset = 20 - (ratingScale * 20);
+					
+					return emOffset + "em";
 				}
 			}
 		});
@@ -36,6 +40,12 @@ define(function(require) {
 				id: id
 			});
 		}).bind(this));
+		
+		var lastZIndex = 1;
+		
+		this._template.on("focus", function(event) {
+			event.original.target.style.zIndex = ++lastZIndex;
+		});
 		
 		this._app.NewChallenge.addHandler(this, function() {
 			this._updateTemplate();
