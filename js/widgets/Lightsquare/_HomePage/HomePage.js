@@ -24,19 +24,29 @@ define(function(require) {
 		this._loginForm = new Ractive({
 			el: this._template.login_form,
 			template: loginFormHtml,
-			data: {}
+			data: {
+				register: false
+			}
 		});
 		
-		this._loginForm.on("login", (function(event, username, password) {
+		this._loginForm.on("submit", (function(event, username, password) {
 			event.original.preventDefault();
 			
-			this._user.login(username, password);
+			if(this._loginForm.get("register")) {
+				this._user.register(username, password);
+			}
+			
+			else {
+				this._user.login(username, password);
+			}
+		}).bind(this));
+		
+		this._loginForm.on("login", (function(event, username, password) {
+			this._loginForm.set("register", false);
 		}).bind(this));
 		
 		this._loginForm.on("register", (function(event, username, password) {
-			event.original.preventDefault();
-			
-			this._user.register(username, password);
+			this._loginForm.set("register", true);
 		}).bind(this));
 	}
 	
