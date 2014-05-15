@@ -1,0 +1,23 @@
+form.login {
+	width: 10em;
+}
+
+input.login {
+	color: #545454;
+	text-shadow: 1px 1px 0 rgba(0, 0, 0, .1);
+	border-color: #9B9B9B;
+	background: #BFBFBF;
+}
+
+input.register {
+	color: #6D5529;
+	text-shadow: 1px 1px 0 rgba(255, 255, 255, .3);
+	border-color: #CEB780;
+	background: #F9F4D4;
+}
+
+a.login, a.register {
+	text-align: center;
+	color: #4A839E;
+	margin-top: .3em;
+}
