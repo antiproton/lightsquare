@@ -27,7 +27,7 @@ define(function(require) {
 					var ratingAbove1000 = Math.max(0, challenge.owner.rating - 1000);
 					var ratingScale = 1 / (1500 / ratingAbove1000);
 					console.log(ratingScale);
-					var emOffset = 20 - (ratingScale * 20);
+					var emOffset = 20 - (index * this._challengeHeightEms + ratingScale * 20);
 					
 					return emOffset + "em";
 				}
