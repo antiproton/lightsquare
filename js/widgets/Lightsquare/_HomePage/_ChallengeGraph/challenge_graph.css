@@ -7,21 +7,44 @@ div.challenge_graph_ratings {
 	font-size: .8em;
 	display: flex;
 	flex-direction: column;
-	justify-content: space-around;
-	padding-right: .3em;
+	justify-content: space-between;
+	padding: .3em .3em .3em 0;
 }
 
 div.challenge_graph_ratings > div {
 	text-align: right;
 }
 
+div.challenge_graph_body {
+	flex-grow: 1;
+	height: 20em;
+	border: 1px solid #ababab;
+	background: white;
+}
+
+div.challenge_graph_body > div {
+	position: relative;
+	height: 20em;
+}
+
 div.challenge_graph_challenges {
 	display: flex;
 	flex-direction: column;
 	align-items: flex-start;
-	flex-grow: 1;
-	border: 1px solid #ababab;
-	background: white;
+	width: 100%;
+	background: yellow;
+	opacity: .5;
+}
+
+div.challenge_graph_rating_lines {
+	
+	background: purple;
+	opacity: .5;
+}
+
+div.challenge_graph_time_lines {
+	background: green;
+	opacity: .8;
 }
 
 div.challenge_graph_challenge {

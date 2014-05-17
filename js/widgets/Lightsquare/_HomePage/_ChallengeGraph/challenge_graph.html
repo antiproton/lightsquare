@@ -4,30 +4,38 @@
 			2200
 		</div>
 		<div>
-			
+			1900
 		</div>
 		<div>
-			1500
+			1600
 		</div>
 		<div>
-			
+			1300
 		</div>
 		<div>
-			1100
+			1000
 		</div>
 	</div>
-	<div class="challenge_graph_challenges" style="height: {{graphHeight}}">
-		{{#challenges:index}}
-			<div
-				class="challenge_graph_challenge"
-				style="top: {{getTopOffset(this)}}; left: {{getLeftOffset(this)}}; height: {{challengeHeight}}"
-				on-click="accept:'{{id}}'"
-				on-mouseover="focus:{{this}}"
-			>
-				<div class="challenge_graph_challenge_label">
-					{{owner.username}} {{options.initialTime}} / {{options.timeIncrement}}
+	<div class="challenge_graph_body" style="height: {{graphHeightInEm}}em">
+		<div class="challenge_graph_rating_lines" style="height: {{graphHeightInEm}}em;">
+			
+		</div>
+		<div class="challenge_graph_time_lines" style="height: {{graphHeightInEm}}em; top: -{{graphHeightInEm}}em">
+			
+		</div>
+		<div class="challenge_graph_challenges" style="height: {{graphHeightInEm}}em; top: -{{graphHeightInEm * 2}}em">
+			{{#challenges:index}}
+				<div
+					class="challenge_graph_challenge"
+					style="top: {{getTopOffset(this, index)}}; left: {{getLeftOffsetInEm(this)}}em; height: {{challengeHeight}}"
+					on-click="accept:'{{id}}'"
+					on-mouseover="focus:{{this}}"
+				>
+					<div class="challenge_graph_challenge_label">
+						{{owner.username}} {{options.initialTime}} / {{options.timeIncrement}}
+					</div>
 				</div>
-			</div>
-		{{/challenges}}
+			{{/challenges}}
+		</div>
 	</div>
 </div>

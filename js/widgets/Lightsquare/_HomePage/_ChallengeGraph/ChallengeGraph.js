@@ -4,8 +4,9 @@ define(function(require) {
 	var Event = require("lib/Event");
 	
 	function ChallengeGraph(app, user, parent) {
-		this._graphHeightEms = 20;
-		this._challengeHeightEms = 1.4;
+		this._graphHeightInEm = 20;
+		this._challengeHeightInEm = 1.4;
+		this._yAxisFactor = 1.20;
 		this._app = app;
 		this._user = user;
 		this._setupTemplate(parent);
@@ -17,20 +18,20 @@ define(function(require) {
 			el: parent,
 			template: html,
 			data: {
-				graphHeight: this._graphHeightEms + "em",
-				challengeHeight: this._challengeHeightEms + "em",
+				graphHeightInEm: this._graphHeightInEm,
+				challengeHeightInEm: this._challengeHeightInEm,
 				challenges: this._app.getChallenges(),
-				getLeftOffset: function(challenge) {
+				getLeftOffsetInEm: function(challenge) {
 					var initialTime = Time.fromUnitString(challenge.options.initialTime);
 				},
-				getTopOffset: function(challenge, index) {
-					var ratingAbove1000 = Math.max(0, challenge.owner.rating - 1000);
+				getTopOffsetInEm: (function(challenge, index) {
+					var ratingAbove1000 = Math.max(0, challenge.owner.rating - 1000) * this._yAxisFactor;
 					var ratingScale = 1 / (1500 / ratingAbove1000);
-					console.log(ratingScale);
-					var emOffset = 20 - (index * this._challengeHeightEms + ratingScale * 20);
 					
-					return emOffset + "em";
-				}
+					var emOffset = 20 - (ratingScale * 20 + index * this._challengeHeightEms);
+					
+					return emOffset;
+				}).bind(this)
 			}
 		});
 		
