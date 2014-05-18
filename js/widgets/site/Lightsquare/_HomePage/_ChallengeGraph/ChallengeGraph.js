@@ -12,10 +12,17 @@ define(function(require) {
 	ChallengeGraph.prototype._setupTemplate = function(parent) {
 		var graphHeightInEm = 20;
 		var graphRangeInEm = graphHeightInEm - 1;
-		var challengeHeightInEm = 1.4;
+		var challengeHeightInEm = 2;
 		var minRating = 1000;
 		var maxRating = 2200;
 		var ratingRange = maxRating - minRating;
+		//
+		//var timeBrackets = [
+		//	["1s", "1m",
+		//	["1m1s", "3m"],
+		//	["3m1s", "5m"],
+		//	["5m
+		//];
 		
 		this._template = new Ractive({
 			el: parent,

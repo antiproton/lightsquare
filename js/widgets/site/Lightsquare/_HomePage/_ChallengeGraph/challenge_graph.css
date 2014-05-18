@@ -4,14 +4,14 @@ div.challenge_graph {
 
 div.challenge_graph_ratings {
 	color: #3f3f3f;
-	font-size: .8em;
 	display: flex;
 	flex-direction: column;
 	justify-content: space-between;
-	padding: .3em .3em .3em 0;
+	padding: .3em .3em 1.3em 0;
 }
 
 div.challenge_graph_ratings > div {
+	font-size: .8em;
 	text-align: right;
 }
 
@@ -32,19 +32,14 @@ div.challenge_graph_challenges {
 	flex-direction: column;
 	align-items: flex-start;
 	width: 100%;
-	background: yellow;
-	opacity: .5;
 }
 
 div.challenge_graph_rating_lines {
 	
-	background: purple;
-	opacity: .5;
 }
 
 div.challenge_graph_time_lines {
-	background: green;
-	opacity: .8;
+	
 }
 
 div.challenge_graph_challenge {
@@ -52,8 +47,10 @@ div.challenge_graph_challenge {
 	align-items: center;
 	position: relative;
 	box-sizing: border-box;
+	width: 10%;
+	min-width: 5em;
 	border: 1px solid #cfcfcf;
-	padding: 0 .5em;
+	padding: .3em .5em;
 	box-shadow: 1px 2px 2px rgba(0, 0, 0, .3);
 	background: #efefef;
 	opacity: .8;
@@ -62,4 +59,23 @@ div.challenge_graph_challenge {
 
 div.challenge_graph_challenge:hover {
 	opacity: 1;
+}
+
+div.challenge_graph_body_and_time_brackets {
+	display: flex;
+	flex-direction: column;
+	flex-grow: 1;
+}
+
+div.challenge_graph_challenge_label {
+	font-size: .8em;
+	text-align: center;
+}
+
+div.challenge_graph_time_brackets {
+	height: 1em;
+}
+
+div.challenge_graph_time_brackets > div {
+	font-size: .8em;
 }
