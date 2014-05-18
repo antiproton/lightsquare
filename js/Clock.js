@@ -1,7 +1,5 @@
 define(function(require) {
 	var time = require("lib/time");
-	var Event = require("lib/Event");
-	var Time = require("chess/Time");
 	var ChessClock = require("chess/Clock");
 	
 	function Clock(server, game, timingStyle) {
