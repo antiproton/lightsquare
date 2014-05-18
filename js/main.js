@@ -3,7 +3,7 @@ define(function(require) {
 	var Server = require("lib/websocket/client/Server");
 	var User = require("./User");
 	var Application = require("./Application");
-	var Lightsquare = require("./widgets/Lightsquare/Lightsquare");
+	var Lightsquare = require("./widgets/site/Lightsquare/Lightsquare");
 
 	var server = new Server("ws://" + window.location.hostname + ":8080");
 	

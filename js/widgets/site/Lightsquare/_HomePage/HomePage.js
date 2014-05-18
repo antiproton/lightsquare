@@ -2,7 +2,7 @@ define(function(require) {
 	require("css!./home_page.css");
 	var html = require("file!./home_page.html");
 	var Template = require("lib/dom/Template");
-	var Board = require("widgets/Board/Board");
+	var Board = require("widgets/chess/Board/Board");
 	var Ractive = require("lib/dom/Ractive");
 	var Time = require("chess/Time");
 	var CreateChallengeForm = require("./_CreateChallengeForm/CreateChallengeForm");

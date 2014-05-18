@@ -3,8 +3,8 @@ define(function(require) {
 	var html = require("file!./game_page.html");
 	require("css!./game_page.css");
 	var Template = require("lib/dom/Template");
-	var Board = require("widgets/Board/Board");
-	var History = require("widgets/History/History");
+	var Board = require("widgets/chess/Board/Board");
+	var History = require("widgets/chess/History/History");
 	var Colour = require("chess/Colour");
 	var Ractive = require("lib/dom/Ractive");
 	var playerInfoHtml = require("file!./player_info.html");
