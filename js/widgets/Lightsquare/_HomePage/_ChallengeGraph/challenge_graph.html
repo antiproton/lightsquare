@@ -27,7 +27,7 @@
 			{{#challenges:index}}
 				<div
 					class="challenge_graph_challenge"
-					style="top: {{getTopOffset(this, index)}}; left: {{getLeftOffsetInEm(this)}}em; height: {{challengeHeight}}"
+					style="top: {{getTopOffsetInEm(this, index)}}em; left: {{getLeftOffsetInEm(this)}}em; height: {{challengeHeightInEm}}em"
 					on-click="accept:'{{id}}'"
 					on-mouseover="focus:{{this}}"
 				>

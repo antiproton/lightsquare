@@ -4,33 +4,37 @@ define(function(require) {
 	var Event = require("lib/Event");
 	
 	function ChallengeGraph(app, user, parent) {
-		this._graphHeightInEm = 20;
-		this._challengeHeightInEm = 1.4;
-		this._yAxisFactor = 1.20;
 		this._app = app;
 		this._user = user;
 		this._setupTemplate(parent);
-		this._updateTemplate();
 	}
 	
 	ChallengeGraph.prototype._setupTemplate = function(parent) {
+		var graphHeightInEm = 20;
+		var graphRangeInEm = graphHeightInEm - 1;
+		var challengeHeightInEm = 1.4;
+		var minRating = 1000;
+		var maxRating = 2200;
+		var ratingRange = maxRating - minRating;
+		
 		this._template = new Ractive({
 			el: parent,
 			template: html,
 			data: {
-				graphHeightInEm: this._graphHeightInEm,
-				challengeHeightInEm: this._challengeHeightInEm,
+				graphHeightInEm: graphHeightInEm,
+				challengeHeightInEm: challengeHeightInEm,
 				challenges: this._app.getChallenges(),
 				getLeftOffsetInEm: function(challenge) {
 					var initialTime = Time.fromUnitString(challenge.options.initialTime);
 				},
 				getTopOffsetInEm: (function(challenge, index) {
-					var ratingAbove1000 = Math.max(0, challenge.owner.rating - 1000) * this._yAxisFactor;
-					var ratingScale = 1 / (1500 / ratingAbove1000);
+					var ratingAboveMinimum = Math.max(0, challenge.owner.rating - minRating);
+					var asd = ratingRange / graphRangeInEm;
+					var offsetInEm = graphRangeInEm - ratingAboveMinimum / asd;
 					
-					var emOffset = 20 - (ratingScale * 20 + index * this._challengeHeightEms);
+					offsetInEm -= challengeHeightInEm * index;
 					
-					return emOffset;
+					return offsetInEm;
 				}).bind(this)
 			}
 		});
