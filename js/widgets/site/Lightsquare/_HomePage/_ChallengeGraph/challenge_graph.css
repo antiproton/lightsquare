@@ -34,10 +34,6 @@ div.challenge_graph_challenges {
 	width: 100%;
 }
 
-div.challenge_graph_rating_lines {
-	
-}
-
 div.challenge_graph_time_lines {
 	display: flex;
 }
