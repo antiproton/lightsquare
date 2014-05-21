@@ -55,11 +55,7 @@ define(function(require) {
 			event.original.target.style.zIndex = ++lastZIndex;
 		});
 		
-		this._app.NewChallenge.addHandler(this, function() {
-			this._updateTemplate();
-		});
-		
-		this._app.ChallengeExpired.addHandler(this, function() {
+		this._app.ChallengeListUpdated.addHandler(this, function() {
 			this._updateTemplate();
 		});
 	}

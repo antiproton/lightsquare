@@ -7,16 +7,13 @@ define(function(require) {
 		this._challenges = [];
 		this._isUpdatingChallengeList = true;
 		
-		this.NewChallenge = new Event(this);
-		this.ChallengeExpired = new Event(this);
+		this.ChallengeListUpdated = new Event(this);
 		
 		this._server.subscribe("/challenges", (function(challenges) {
 			challenges.forEach((function(challenge) {
 				this._challenges.push(challenge);
 				
-				this.NewChallenge.fire({
-					challenge: challenge
-				});
+				this.ChallengeListUpdated.fire();
 			}).bind(this));
 		}).bind(this));
 		
@@ -25,9 +22,7 @@ define(function(require) {
 				return (challenge.id !== id);
 			});
 			
-			this.ChallengeExpired.fire({
-				id: id
-			});
+			this.ChallengeListUpdated.fire();
 		}).bind(this));
 		
 		this._server.send("/request/challenges");
@@ -39,14 +34,6 @@ define(function(require) {
 	
 	Application.prototype.startUpdatingChallengeList = function() {
 		if(!this._isUpdatingChallengeList) {
-			this._challenges.forEach((function(challenge) {
-				this.ChallengeExpired.fire({
-					id: challenge.id
-				});
-			}).bind(this));
-			
-			this._challenges = [];
-			
 			this._server.send("/unignore", "/challenges");
 			this._server.send("/unignore", "/challenge/expired");
 			this._server.send("/request/challenges");
@@ -57,6 +44,10 @@ define(function(require) {
 	
 	Application.prototype.stopUpdatingChallengeList = function() {
 		if(this._isUpdatingChallengeList) {
+			this._challenges = [];
+			
+			this.ChallengeListUpdated.fire();
+			
 			this._server.send("/ignore", "/challenges");
 			this._server.send("/ignore", "/challenge/expired");
 			
