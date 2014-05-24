@@ -6,6 +6,28 @@ define(function(require) {
 	function ChallengeGraph(app, user, parent) {
 		this._app = app;
 		this._user = user;
+		
+		this._minRating = 1000;
+		this._maxRating = 2200;
+		this._challengesByRatingAndTime = {};
+		
+		var timeBrackets = ["0", "1m", "3m", "5m", "10m", "20m", "1h"];
+		var ratingBrackets = [];
+		
+		for(var ratingBracket = this._minRating; ratingBracket <= this._maxRating; ratingBracket += 100) {
+			ratingBrackets.push(ratingBracket);
+		}
+		
+		var challengesByRatingAndTime = {};
+		
+		ratingBrackets.forEach(function(ratingBracket) {
+			this._challengesByRatingAndTime[ratingBracket] = {};
+			
+			timeBrackets.forEach(function(timeBracket) {
+				this._challengesByRatingAndTime[ratingBracket][timeBracket] = 0;
+			});
+		});
+		
 		this._setupTemplate(parent);
 	}
 	
@@ -13,16 +35,7 @@ define(function(require) {
 		var graphHeightInEm = 20;
 		var graphRangeInEm = graphHeightInEm - 1;
 		var challengeHeightInEm = 2;
-		var minRating = 1000;
-		var maxRating = 2200;
-		var ratingRange = maxRating - minRating;
-		//
-		//var timeBrackets = [
-		//	["1s", "1m",
-		//	["1m1s", "3m"],
-		//	["3m1s", "5m"],
-		//	["5m
-		//];
+		var ratingRange = this._maxRating - this._minRating;
 		
 		this._template = new Ractive({
 			el: parent,
@@ -62,6 +75,19 @@ define(function(require) {
 	
 	ChallengeGraph.prototype._updateTemplate = function() {
 		this._template.set("challenges", this._app.getChallenges());
+	}
+	
+	ChallengeGraph.prototype._update = function() {
+		for(var ratingBracket in this._challengesByRatingAndTime) {
+			for(var timeBracket in this._challengesByRatingAndTime[ratingBracket]) {
+				this._challengesByRatingAndTime[ratingBracket][timeBracket] = 0;
+			}
+		}
+	}
+	
+	ChallengeGraph.prototype._countChallengesInBracket = function(challenge) {
+		var ratingBracket = challenge.owner.rating - challenge.owner.rating % 100;
+		var timeBracket;
 	}
 	
 	return ChallengeGraph;
