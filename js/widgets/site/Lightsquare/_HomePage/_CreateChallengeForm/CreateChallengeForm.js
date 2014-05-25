@@ -14,14 +14,14 @@ define(function(require) {
 			}
 		});
 		
-		template.on("submit", function(event, initialTime, timeIncrement, ratingMin, ratingMax) {
+		template.on("submit", function(event) {
 			event.original.preventDefault();
 			
 			user.createChallenge({
-				initialTime: initialTime,
-				timeIncrement: timeIncrement,
-				acceptRatingMin: ratingMin,
-				acceptRatingMax: ratingMax
+				initialTime: template.get("initialTime").toString(),
+				timeIncrement: template.get("timeIncrement").toString(),
+				acceptRatingMin: template.get("ratingMin").toString(),
+				acceptRatingMax: template.get("ratingMax").toString()
 			});
 		});
 	}
