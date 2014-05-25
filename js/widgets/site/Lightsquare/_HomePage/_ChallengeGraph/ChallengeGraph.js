@@ -134,7 +134,7 @@ define(function(require) {
 				gridSquaresMoved++;
 			}
 			
-			if(!(gridSquare in occupiedGridSquares)) {
+			if(!(gridSquare in occupiedGridSquares) && gridSquaresMoved <= maxGridSquaresToMove) {
 				topOffset -= this._challengeHeightInEm * index;
 				
 				graphChallenges.push({
