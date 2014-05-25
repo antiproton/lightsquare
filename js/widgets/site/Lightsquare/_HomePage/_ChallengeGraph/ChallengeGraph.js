@@ -67,16 +67,6 @@ define(function(require) {
 			this._user.acceptChallenge(id);
 		}).bind(this));
 		
-		var lastZIndex = 1;
-		
-		this._template.on("focus", function(event) {
-			var element = event.original.target;
-			
-			if(element.className === "challenge_graph_challenge") {
-				element.style.zIndex = ++lastZIndex;
-			}
-		});
-		
 		this._app.ChallengeListUpdated.addHandler(this, function() {
 			this._updateTemplate();
 		});
