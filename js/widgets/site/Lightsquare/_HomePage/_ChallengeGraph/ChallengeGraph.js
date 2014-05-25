@@ -2,39 +2,47 @@ define(function(require) {
 	require("css!./challenge_graph.css");
 	var html = require("file!./challenge_graph.html");
 	var Event = require("lib/Event");
+	var Time = require("chess/Time");
+	require("lib/Array.getShallowCopy");
+	
+	var AVERAGE_MOVES_PER_GAME = 30;
 	
 	function ChallengeGraph(app, user, parent) {
 		this._app = app;
 		this._user = user;
 		
+		this._timeBrackets = ["0", "1m", "3m", "5m", "10m", "20m", "1h"].map(function(lowerBound, index, lowerBounds) {
+			var upperBound = null;
+			
+			if(index < lowerBounds.length - 1) {
+				upperBound = Time.fromUnitString(lowerBounds[index + 1]);
+			}
+			
+			return {
+				index: index,
+				lowerBound: Time.fromUnitString(lowerBound),
+				upperBound: upperBound
+			};
+		});
+		
+		this._timeBracketWidthInPercent = 100 / this._timeBrackets.length;
+		
 		this._minRating = 1000;
 		this._maxRating = 2200;
-		this._challengesByRatingAndTime = {};
 		
-		var timeBrackets = ["0", "1m", "3m", "5m", "10m", "20m", "1h"];
-		var ratingBrackets = [];
+		this._ratingBrackets = [];
 		
-		for(var ratingBracket = this._minRating; ratingBracket <= this._maxRating; ratingBracket += 100) {
-			ratingBrackets.push(ratingBracket);
+		for(var rating = this._minRating; rating <= this._maxRating; rating += 100) {
+			this._ratingBrackets.push(rating);
 		}
-		
-		var challengesByRatingAndTime = {};
-		
-		ratingBrackets.forEach(function(ratingBracket) {
-			this._challengesByRatingAndTime[ratingBracket] = {};
-			
-			timeBrackets.forEach(function(timeBracket) {
-				this._challengesByRatingAndTime[ratingBracket][timeBracket] = 0;
-			});
-		});
 		
 		this._setupTemplate(parent);
 	}
 	
 	ChallengeGraph.prototype._setupTemplate = function(parent) {
 		var graphHeightInEm = 20;
-		var graphRangeInEm = graphHeightInEm - 1;
 		var challengeHeightInEm = 2;
+		var graphRangeInEm = graphHeightInEm - challengeHeightInEm;
 		var ratingRange = this._maxRating - this._minRating;
 		
 		this._template = new Ractive({
@@ -43,11 +51,11 @@ define(function(require) {
 			data: {
 				graphHeightInEm: graphHeightInEm,
 				challengeHeightInEm: challengeHeightInEm,
-				challenges: this._app.getChallenges(),
-				getLeftOffsetInEm: function(challenge) {
-					var initialTime = Time.fromUnitString(challenge.options.initialTime);
-				},
-				getTopOffsetInEm: (function(challenge, index) {
+				challenges: [],
+				getLeftOffsetInPercent: (function(graphChallenge) {
+					return graphChallenge.timeBracket.index * this._timeBracketWidthInPercent;
+				}).bind(this),
+				getTopOffsetInEm: (function(graphChallenge, index) {
 					var ratingAboveMinimum = Math.max(0, challenge.owner.rating - minRating);
 					var offsetInEm = graphRangeInEm - ratingAboveMinimum / (ratingRange / graphRangeInEm);
 					
@@ -74,7 +82,34 @@ define(function(require) {
 	}
 	
 	ChallengeGraph.prototype._updateTemplate = function() {
-		this._template.set("challenges", this._app.getChallenges());
+		var challenges = this._app.getChallenges();
+		var graphChallenges = [];
+		
+		challenges.forEach((function(challenge) {
+			var rating = challenge.owner.rating;
+			var ratingBracket = Math.max(this._minRating, rating - rating % 100);
+			var initialTime = Time.fromUnitString(challenge.options.initialTime);
+			var timeIncrement = Time.fromUnitString(challenge.options.timeIncrement, Time.seconds) * AVERAGE_MOVES_PER_GAME;
+			var estimatedTotalTime = initialTime + timeIncrement;
+			var timeBracket;
+			
+			this._timeBrackets.getShallowCopy().reverse().some(function(bracket) {
+				if(estimatedTotalTime > bracket.lowerBound) {
+					timeBracket = bracket;
+					
+					return true;
+				}
+			});
+			
+			graphChallenges.push({
+				timeBracket: timeBracket,
+				ratingBracket: ratingBracket,
+				estimatedTotalTime: estimatedTotalTime,
+				challenge: challenge
+			});
+		}).bind(this));
+		
+		this._template.set("challenges", graphChallenges);
 	}
 	
 	ChallengeGraph.prototype._update = function() {

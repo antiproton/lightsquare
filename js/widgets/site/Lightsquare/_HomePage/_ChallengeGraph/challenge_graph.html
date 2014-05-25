@@ -30,12 +30,12 @@
 				{{#challenges:index}}
 					<div
 						class="challenge_graph_challenge"
-						style="top: {{getTopOffsetInEm(this, index)}}em; left: {{getLeftOffsetInEm(this)}}em; height: {{challengeHeightInEm}}em"
+						style="top: {{getTopOffsetInEm(this, index)}}em; left: {{getLeftOffsetInPercent(this)}}%; height: {{challengeHeightInEm}}em"
 						on-click="accept:'{{id}}'"
 						on-mouseover="focus:{{this}}"
 					>
 						<div class="challenge_graph_challenge_label">
-							{{owner.username}} {{options.initialTime}} / {{options.timeIncrement}}
+							{{challenge.owner.username}} {{challenge.options.initialTime}} / {{challenge.options.timeIncrement}}
 						</div>
 					</div>
 				{{/challenges}}
