@@ -67,6 +67,9 @@ div.challenge_graph_body_and_time_brackets {
 div.challenge_graph_challenge_label {
 	font-size: .8em;
 	text-align: center;
+	display: flex;
+	flex-direction: column;
+	flex-grow: 1;
 }
 
 div.challenge_graph_time_brackets {

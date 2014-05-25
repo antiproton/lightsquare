@@ -70,7 +70,11 @@ define(function(require) {
 		var lastZIndex = 1;
 		
 		this._template.on("focus", function(event) {
-			event.original.target.style.zIndex = ++lastZIndex;
+			var element = event.original.target;
+			
+			if(element.className === "challenge_graph_challenge") {
+				element.style.zIndex = ++lastZIndex;
+			}
 		});
 		
 		this._app.ChallengeListUpdated.addHandler(this, function() {
