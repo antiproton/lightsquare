@@ -53,7 +53,20 @@ define(function(require) {
 				challengeHeightInEm: challengeHeightInEm,
 				challenges: [],
 				getLeftOffsetInPercent: (function(graphChallenge) {
-					return graphChallenge.timeBracket.index * this._timeBracketWidthInPercent;
+					var bracket = graphChallenge.timeBracket;
+					var leftEdgeOffsetInPercent = bracket.index * this._timeBracketWidthInPercent;
+					
+					if(bracket.upperBound !== null) {
+						var bracketRange = bracket.upperBound - bracket.lowerBound;
+						var timeWithinRange = graphChallenge.estimatedTotalTime - bracket.lowerBound;
+						var offsetWithinBracketInPercent = (timeWithinRange / bracketRange) * this._timeBracketWidthInPercent;
+						
+						return leftEdgeOffsetInPercent + offsetWithinBracketInPercent;
+					}
+					
+					else {
+						return leftEdgeOffsetInPercent;
+					}
 				}).bind(this),
 				getTopOffsetInEm: (function(graphChallenge, index) {
 					var ratingAboveMinimum = Math.max(0, challenge.owner.rating - minRating);
