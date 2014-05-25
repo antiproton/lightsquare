@@ -69,8 +69,8 @@ define(function(require) {
 					}
 				}).bind(this),
 				getTopOffsetInEm: (function(graphChallenge, index) {
-					var ratingAboveMinimum = Math.max(0, challenge.owner.rating - minRating);
-					var offsetInEm = graphRangeInEm - ratingAboveMinimum / (ratingRange / graphRangeInEm);
+					var ratingAboveMinimum = Math.max(0, graphChallenge.challenge.owner.rating - this._minRating);
+					var offsetInEm = Math.max(0, graphRangeInEm - ratingAboveMinimum / (ratingRange / graphRangeInEm));
 					
 					offsetInEm -= challengeHeightInEm * index;
 					
