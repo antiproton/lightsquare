@@ -11,6 +11,14 @@ define(function(require) {
 		this._app = app;
 		this._user = user;
 		
+		this._graphHeightInEm = 20;
+		this._challengeHeightInEm = 2;
+		
+		this._gridResolution = {
+			x: 1.2,
+			y: 0.5
+		};
+		
 		this._timeBrackets = ["0", "1m", "3m", "5m", "10m", "20m", "1h"].map(function(lowerBound, index, lowerBounds) {
 			var upperBound = null;
 			
@@ -30,9 +38,11 @@ define(function(require) {
 		this._minRating = 1000;
 		this._maxRating = 2200;
 		
+		this._ratingBracketSize = 100;
+		
 		this._ratingBrackets = [];
 		
-		for(var rating = this._minRating; rating <= this._maxRating; rating += 100) {
+		for(var rating = this._minRating; rating <= this._maxRating; rating += this._ratingBracketSize) {
 			this._ratingBrackets.push(rating);
 		}
 		
@@ -40,42 +50,16 @@ define(function(require) {
 	}
 	
 	ChallengeGraph.prototype._setupTemplate = function(parent) {
-		var graphHeightInEm = 20;
-		var challengeHeightInEm = 2;
-		var graphRangeInEm = graphHeightInEm - challengeHeightInEm;
+		var graphRangeInEm = this._graphHeightInEm - this._challengeHeightInEm;
 		var ratingRange = this._maxRating - this._minRating;
 		
 		this._template = new Ractive({
 			el: parent,
 			template: html,
 			data: {
-				graphHeightInEm: graphHeightInEm,
-				challengeHeightInEm: challengeHeightInEm,
-				challenges: [],
-				getLeftOffsetInPercent: (function(graphChallenge) {
-					var bracket = graphChallenge.timeBracket;
-					var leftEdgeOffsetInPercent = bracket.index * this._timeBracketWidthInPercent;
-					
-					if(bracket.upperBound !== null) {
-						var bracketRange = bracket.upperBound - bracket.lowerBound;
-						var timeWithinRange = graphChallenge.estimatedTotalTime - bracket.lowerBound;
-						var offsetWithinBracketInPercent = (timeWithinRange / bracketRange) * this._timeBracketWidthInPercent;
-						
-						return leftEdgeOffsetInPercent + offsetWithinBracketInPercent;
-					}
-					
-					else {
-						return leftEdgeOffsetInPercent;
-					}
-				}).bind(this),
-				getTopOffsetInEm: (function(graphChallenge, index) {
-					var ratingAboveMinimum = Math.max(0, graphChallenge.challenge.owner.rating - this._minRating);
-					var offsetInEm = Math.max(0, graphRangeInEm - ratingAboveMinimum / (ratingRange / graphRangeInEm));
-					
-					offsetInEm -= challengeHeightInEm * index;
-					
-					return offsetInEm;
-				}).bind(this)
+				graphHeightInEm: this._graphHeightInEm,
+				challengeHeightInEm: this._challengeHeightInEm,
+				challenges: []
 			}
 		});
 		
@@ -95,12 +79,15 @@ define(function(require) {
 	}
 	
 	ChallengeGraph.prototype._updateTemplate = function() {
+		var occupiedGridSquares = {};
 		var challenges = this._app.getChallenges();
+		var graphRangeInEm = this._graphHeightInEm - this._challengeHeightInEm;
+		var ratingRange = this._maxRating - this._minRating;
 		var graphChallenges = [];
 		
-		challenges.forEach((function(challenge) {
+		challenges.forEach((function(challenge, index) {
 			var rating = challenge.owner.rating;
-			var ratingBracket = Math.max(this._minRating, rating - rating % 100);
+			var ratingBracket = Math.max(this._minRating, rating - rating % this._ratingBracketSize);
 			var initialTime = Time.fromUnitString(challenge.options.initialTime);
 			var timeIncrement = Time.fromUnitString(challenge.options.timeIncrement, Time.seconds) * AVERAGE_MOVES_PER_GAME;
 			var estimatedTotalTime = initialTime + timeIncrement;
@@ -114,28 +101,49 @@ define(function(require) {
 				}
 			});
 			
-			graphChallenges.push({
-				timeBracket: timeBracket,
-				ratingBracket: ratingBracket,
-				estimatedTotalTime: estimatedTotalTime,
-				challenge: challenge
-			});
+			var leftOffset = timeBracket.index * this._timeBracketWidthInPercent;
+			
+			if(timeBracket.upperBound !== null) {
+				var bracketRange = timeBracket.upperBound - timeBracket.lowerBound;
+				var timeWithinRange = estimatedTotalTime - timeBracket.lowerBound;
+				var offsetWithinBracket = (timeWithinRange / bracketRange) * this._timeBracketWidthInPercent;
+				
+				leftOffset += offsetWithinBracket;
+			}
+			
+			var ratingAboveMinimum = Math.max(0, challenge.owner.rating - this._minRating);
+			var topOffset = Math.max(0, graphRangeInEm - ratingAboveMinimum / (ratingRange / graphRangeInEm));
+			
+			
+			var gridX = leftOffset - leftOffset % this._gridResolution.x;
+			var gridY = topOffset - topOffset % this._gridResolution.y;
+			var gridSquare = gridX + "," + gridY;
+			var gridSquaresMoved = 0;
+			var maxGridSquaresToMove = 3;
+			
+			while(gridSquare in occupiedGridSquares && gridSquaresMoved <= maxGridSquaresToMove) {
+				gridX += this._gridResolution.x;
+				gridY += this._gridResolution.y;
+				leftOffset = gridX;
+				topOffset = gridY;
+				gridSquare = gridX + "," + gridY;
+				gridSquaresMoved++;
+			}
+			
+			if(!(gridSquare in occupiedGridSquares)) {
+				topOffset -= this._challengeHeightInEm * index;
+				
+				graphChallenges.push({
+					leftOffsetInPercent: leftOffset,
+					topOffsetInEm: topOffset,
+					challenge: challenge
+				});
+				
+				occupiedGridSquares[gridSquare] = true;
+			}
 		}).bind(this));
 		
 		this._template.set("challenges", graphChallenges);
-	}
-	
-	ChallengeGraph.prototype._update = function() {
-		for(var ratingBracket in this._challengesByRatingAndTime) {
-			for(var timeBracket in this._challengesByRatingAndTime[ratingBracket]) {
-				this._challengesByRatingAndTime[ratingBracket][timeBracket] = 0;
-			}
-		}
-	}
-	
-	ChallengeGraph.prototype._countChallengesInBracket = function(challenge) {
-		var ratingBracket = challenge.owner.rating - challenge.owner.rating % 100;
-		var timeBracket;
 	}
 	
 	return ChallengeGraph;

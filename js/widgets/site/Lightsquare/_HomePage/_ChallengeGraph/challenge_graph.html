@@ -30,7 +30,7 @@
 				{{#challenges:index}}
 					<div
 						class="challenge_graph_challenge"
-						style="top: {{getTopOffsetInEm(this, index)}}em; left: {{getLeftOffsetInPercent(this)}}%; height: {{challengeHeightInEm}}em"
+						style="top: {{topOffsetInEm}}em; left: {{leftOffsetInPercent}}%; height: {{challengeHeightInEm}}em"
 						on-click="accept:'{{id}}'"
 						on-mouseover="focus:{{this}}"
 					>
