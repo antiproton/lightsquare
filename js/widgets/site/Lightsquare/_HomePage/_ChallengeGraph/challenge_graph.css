@@ -44,6 +44,19 @@ div.challenge_graph_time_lines > div {
 	border-right: 1px solid #E2E2E2;
 }
 
+div.challenge_graph_no_challenges_message {
+	display: flex;
+	justify-content: space-around;
+	align-items: center;
+}
+
+div.challenge_graph_no_challenges_message > div {
+	font-size: 1.2em;
+	color: #ababab;
+	padding: 1em;
+	background: white;
+}
+
 div.challenge_graph_challenge {
 	display: flex;
 	align-items: center;
