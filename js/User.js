@@ -18,6 +18,7 @@ define(function(require) {
 		this.LoginFailed = new Event(this);
 		this.LoggedOut = new Event(this);
 		this.Registered = new Event(this);
+		this.RegistrationFailed = new Event(this);
 		this.GamesReceived = new Event(this);
 		this.NeededInGame = new Event(this);
 		this.DetailsChanged = new Event(this);
@@ -97,12 +98,24 @@ define(function(require) {
 			this.DetailsChanged.fire();
 		}).bind(this));
 		
-		this._server.subscribe("/user/logout", (function(data) {
+		this._server.subscribe("/user/login/failure", (function(data) {
+			this.LoginFailed.fire({
+				reason: data.reason
+			});
+		}).bind(this));
+		
+		this._server.subscribe("/user/logout", (function() {
 			this._logout();
 		}).bind(this));
 		
-		this._server.subscribe("/user/register/success", (function(data) {
+		this._server.subscribe("/user/register/success", (function() {
 			this.Registered.fire();
+		}).bind(this));
+		
+		this._server.subscribe("/user/register/failure", (function(data) {
+			this.RegistrationFailed.fire({
+				reason: data.reason
+			});
 		}).bind(this));
 		
 		this._server.subscribe("/user/replaced", (function(data) {
