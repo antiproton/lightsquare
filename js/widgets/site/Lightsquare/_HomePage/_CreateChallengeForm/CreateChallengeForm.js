@@ -28,6 +28,3 @@ define(function(require) {
 	
 	return CreateChallengeForm;
 });
-
-
-
