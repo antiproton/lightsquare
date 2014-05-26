@@ -1,4 +1,4 @@
-<form class="single_column login" on-submit="submit:{{username}},{{password}}">
+<form class="single_column login" on-submit="submit">
 	<label>Username</label>
 	<input type="text" value="{{username}}">
 	<label>Password</label>
@@ -11,4 +11,9 @@
 		<input class="login" type="submit" value="Log in">
 		<a class="register" href="javascript:void(0)" on-click="register">Create account</a>
 	{{/register}}
+	{{#error}}
+	<div class="login_form_error">
+		{{error}}
+	</div>
+	{{/error}}
 </form>
