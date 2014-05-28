@@ -12,5 +12,9 @@ div.challenges_and_login {
 
 div.challenges {
 	flex-grow: 1;
-	margin: 0 .8em;
+}
+
+div.challenges, div.login_form {
+	
+	margin-left: .8em;
 }
