@@ -3,7 +3,6 @@ div.home {
 	flex-direction: column;
 	flex-grow: 1;
 	box-shadow: inset 0 3px 8px rgba(0, 0, 0, .05);
-	background: #EFEFEF;
 }
 
 div.challenges_and_login {
