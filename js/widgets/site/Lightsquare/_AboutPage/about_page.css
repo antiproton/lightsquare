@@ -1,0 +1,27 @@
+div.about {
+	display: flex;
+	margin: 1em .8em;
+}
+
+div.about > div {
+	display: flex;
+	box-sizing: border-box;
+	width: 33.3%;
+	padding-left: .8em;
+}
+
+div.about > div:first-child {
+	padding-left: 0;
+}
+
+div.about_column {
+	font-size: .9em;
+	color: #323232;
+	flex-grow: 1;
+}
+
+div.about_column > h1 {
+	font-size: 1.3em;
+	font-weight: normal;
+	margin-top: 0;
+}

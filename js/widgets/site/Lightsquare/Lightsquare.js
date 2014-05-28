@@ -8,6 +8,7 @@ define(function(require) {
 	var Router = require("lib/Router");
 	var Pages = require("./_Pages");
 	var HomePage = require("./_HomePage/HomePage");
+	var AboutPage = require("./_AboutPage/AboutPage");
 	var GamePage = require("./_GamePage/GamePage");
 	var ProfilePage = require("./_ProfilePage/ProfilePage");
 	var WelcomePage = require("./_WelcomePage/WelcomePage");
@@ -98,6 +99,17 @@ define(function(require) {
 				var page = this._pages.createPage(url);
 				
 				new WelcomePage(this._user, page);
+			}
+			
+			this._pages.showPage(url);
+			this._app.stopUpdatingChallengeList();
+		}).bind(this));
+		
+		this._router.addRoute("/about", (function(params, url) {
+			if(!this._pages.hasPage(url)) {
+				var page = this._pages.createPage(url);
+				
+				new AboutPage(page);
 			}
 			
 			this._pages.showPage(url);
