@@ -4,11 +4,11 @@ div.header {
 	background-color: #F4F4F4;
 }
 
-div.header a, div.user_link, div.header_spacer {
+div.header > * {
 	border-bottom: 2px solid #CECECE;
 }
 
-div.header a {
+div.header > a {
 	color: #2f2f2f;
 	text-decoration: none;
 	display: block;
@@ -39,4 +39,13 @@ a.user_link {
 
 a.user_link:hover {
 	background: #EDEDED;
+}
+
+div.logout {
+	
+	padding: .5em .7em;
+}
+
+div.logout a {
+	font-size: .9em;
 }

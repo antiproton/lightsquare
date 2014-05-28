@@ -53,6 +53,7 @@ define(function(require) {
 		this._isLoggedIn = false;
 		
 		this.LoggedOut.fire();
+		this.DetailsChanged.fire();
 	}
 	
 	User.prototype.getUsername = function() {

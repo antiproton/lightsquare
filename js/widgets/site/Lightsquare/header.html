@@ -14,3 +14,8 @@
 	
 </div>
 <a class="user_link" href="javascript:void(0)" on-click="navigate:/user/profile">{{username}}</a>
+{{#userIsLoggedIn}}
+	<div class="logout">
+		<a class="logout" title="Log out" href="javascript:void(0)" on-click="logout">Log out</a>
+	</div>
+{{/userIsLoggedIn}}

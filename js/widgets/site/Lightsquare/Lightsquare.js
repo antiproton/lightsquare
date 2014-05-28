@@ -123,6 +123,7 @@ define(function(require) {
 			el: this._template.header,
 			data: {
 				username: this._user.getUsername(),
+				userIsLoggedIn: false,
 				gamePages: [],
 				currentPath: this._router.getCurrentPath(),
 				getGameTitle: function(gamePage, currentPath) {
@@ -157,6 +158,10 @@ define(function(require) {
 				this._router.loadPath(href);
 			}
 		}).bind(this));
+		
+		this._header.on("logout", (function() {
+			this._user.logout();
+		}).bind(this));
 	}
 	
 	Lightsquare.prototype._handleUserEvents = function() {
@@ -178,6 +183,18 @@ define(function(require) {
 		
 		this._user.NeededInGame.addHandler(this, function(data) {
 			this._router.loadPath("/game/" + data.id);
+		});
+		
+		this._user.LoggedIn.addHandler(this, function() {
+			this._header.set("userIsLoggedIn", true);
+		});
+		
+		this._user.LoggedOut.addHandler(this, function() {
+			this._header.set("userIsLoggedIn", false);
+		});
+		
+		this._user.HasIdentity.addHandler(this, function() {
+			this._header.set("userIsLoggedIn", this._user.isLoggedIn());
 		});
 	}
 	
