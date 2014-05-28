@@ -1,15 +1,13 @@
 div.home {
 	display: flex;
+	flex-direction: column;
 	flex-grow: 1;
-	align-items: flex-start;
 	box-shadow: inset 0 3px 8px rgba(0, 0, 0, .05);
 	background: #EFEFEF;
 }
 
-div.toprow {
+div.challenges_and_login {
 	display: flex;
-	align-items: flex-start;
-	flex-grow: 1;
 	padding: .8em;
 }
 
