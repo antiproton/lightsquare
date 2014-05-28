@@ -13,7 +13,7 @@ div.game_player, div.game_history_spacer {
 }
 
 div.game_history_spacer {
-	color: white;
+	color: rgba(0, 0, 0, 0);
 }
 
 div.game_player {
