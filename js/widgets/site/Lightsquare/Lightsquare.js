@@ -186,16 +186,20 @@ define(function(require) {
 		});
 		
 		this._user.LoggedIn.addHandler(this, function() {
-			this._header.set("userIsLoggedIn", true);
+			this._updateLoginDependentUiElements();
 		});
 		
 		this._user.LoggedOut.addHandler(this, function() {
-			this._header.set("userIsLoggedIn", false);
+			this._updateLoginDependentUiElements();
 		});
 		
 		this._user.HasIdentity.addHandler(this, function() {
-			this._header.set("userIsLoggedIn", this._user.isLoggedIn());
+			this._updateLoginDependentUiElements();
 		});
+	}
+	
+	Lightsquare.prototype._updateLoginDependentUiElements = function() {
+		this._header.set("userIsLoggedIn", this._user.isLoggedIn());
 	}
 	
 	return Lightsquare;
