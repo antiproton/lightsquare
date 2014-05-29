@@ -170,14 +170,6 @@ define(function(require) {
 			this._header.set("username", this._user.getUsername());
 		});
 		
-		this._user.Registered.addHandler(this, function() {
-			/*
-			TODO open the notifications thing so that the user
-			can see the note they just received saying thanks for
-			registering
-			*/
-		});
-		
 		this._user.GamesReceived.addHandler(this, function(data) {
 			data.games.forEach((function(game) {
 				this._addGamePage(game);
