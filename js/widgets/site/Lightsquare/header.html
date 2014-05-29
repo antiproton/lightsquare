@@ -1,11 +1,11 @@
 <a
-	on-click="navigate:/"
+	on-click="navigate"
 	href="/"
 	class="{{'/' === currentPath ? 'on' : ''}}"
 >Lightsquare</a>
 {{#gamePages}}
 	<a
-	   on-click="navigate:{{'/game/' + this.getId()}}"
+	   on-click="navigate"
 	   href="/game/{{this.getId()}}"
 	   class="{{'/game/' + this.getId() === currentPath ? 'on' : ''}}"
 	>{{getGameTitle(this, currentPath)}}</a>
@@ -13,7 +13,7 @@
 <div class="header_spacer">
 	
 </div>
-<a class="user_link" href="javascript:void(0)" on-click="navigate:/user/profile">{{username}}</a>
+<a class="user_link" href="/user/profile" on-click="navigate">{{username}}</a>
 {{#userIsLoggedIn}}
 	<div class="logout">
 		<a class="logout" title="Log out" href="javascript:void(0)" on-click="logout">Log out</a>

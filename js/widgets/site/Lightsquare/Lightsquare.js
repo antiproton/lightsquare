@@ -3,6 +3,7 @@ define(function(require) {
 	require("css!./header.css");
 	var html = require("file!./lightsquare.html");
 	var headerHtml = require("file!./header.html");
+	var footerHtml = require("file!./footer.html");
 	var Template = require("lib/dom/Template");
 	var Ractive = require("lib/dom/Ractive");
 	var Router = require("lib/Router");
@@ -29,6 +30,7 @@ define(function(require) {
 		
 		this._setupRouter();
 		this._setupHeader();
+		this._setupFooter();
 		
 		this._handleUserEvents();
 		
@@ -151,11 +153,11 @@ define(function(require) {
 			}
 		});
 		
-		this._header.on("navigate", (function(event, href) {
+		this._header.on("navigate", (function(event) {
 			if(event.original.button !== MouseButtons.middle) {
 				event.original.preventDefault();
 			
-				this._router.loadPath(href);
+				this._router.loadPath(event.node.getAttribute("href"));
 			}
 		}).bind(this));
 		
@@ -200,6 +202,21 @@ define(function(require) {
 	
 	Lightsquare.prototype._updateLoginDependentUiElements = function() {
 		this._header.set("userIsLoggedIn", this._user.isLoggedIn());
+	}
+	
+	Lightsquare.prototype._setupFooter = function() {
+		this._footer = new Ractive({
+			template: footerHtml,
+			el: this._template.footer
+		});
+		
+		this._footer.on("navigate", (function(event) {
+			if(event.original.button !== MouseButtons.middle) {
+				event.original.preventDefault();
+				
+				this._router.loadPath(event.node.getAttribute("href"));
+			}
+		}).bind(this));
 	}
 	
 	return Lightsquare;
