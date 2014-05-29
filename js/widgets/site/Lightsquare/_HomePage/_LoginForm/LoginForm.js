@@ -20,8 +20,8 @@ define(function(require) {
 			
 			this._clearError();
 			
-			var username = this._template.get("username").toString();
-			var password = this._template.get("password").toString();
+			var username = (this._template.get("username") || "").toString();
+			var password = (this._template.get("password") || "").toString();
 			
 			if(this._template.get("register")) {
 				this._user.register(username, password);
