@@ -172,7 +172,11 @@ define(function(require) {
 		});
 		
 		this._user.Registered.addHandler(this, function() {
-			this._router.loadPath("/user/welcome");
+			/*
+			TODO open the notifications thing so that the user
+			can see the note they just received saying thanks for
+			registering
+			*/
 		});
 		
 		this._user.GamesReceived.addHandler(this, function(data) {
