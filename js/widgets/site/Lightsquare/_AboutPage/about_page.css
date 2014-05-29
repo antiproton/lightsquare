@@ -1,30 +1,9 @@
 div.about {
-	display: flex;
-	margin: 1em .8em;
+	width: 60%;
+	margin: 1em auto;
 }
 
-div.about > div {
-	display: flex;
-	align-items: flex-start;
-	box-sizing: border-box;
-	width: 33.3%;
-	padding-left: .8em;
-}
-
-div.about > div:first-child {
-	padding-left: 0;
-}
-
-div.about_column {
-	font-size: .9em;
-	color: #323232;
-	flex-grow: 1;
-	padding: .8em;
-	box-shadow: 1px 1px 1px rgba(0, 0, 0, .2);
-	background: white;
-}
-
-div.about_column > h1 {
+div.about > h1 {
 	font-size: 1.3em;
 	font-weight: normal;
 	margin-top: 0;
