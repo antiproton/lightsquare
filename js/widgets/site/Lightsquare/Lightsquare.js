@@ -12,7 +12,6 @@ define(function(require) {
 	var AboutPage = require("./_AboutPage/AboutPage");
 	var GamePage = require("./_GamePage/GamePage");
 	var ProfilePage = require("./_ProfilePage/ProfilePage");
-	var WelcomePage = require("./_WelcomePage/WelcomePage");
 	var Colour = require("chess/Colour");
 	
 	var MouseButtons = {
