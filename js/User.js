@@ -51,6 +51,9 @@ define(function(require) {
 	User.prototype._logout = function() {
 		this._username = "Anonymous";
 		this._isLoggedIn = false;
+		this._gamesPlayedAsWhite = 0;
+		this._gamesPlayedAsBlack = 0;
+		this._rating = Glicko.INITIAL_RATING;
 		
 		this.LoggedOut.fire();
 		this.DetailsChanged.fire();
