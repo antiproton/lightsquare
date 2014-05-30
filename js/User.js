@@ -79,6 +79,10 @@ define(function(require) {
 		this._server.send("/challenge/create", options);
 	}
 	
+	User.prototype.cancelChallenge = function() {
+		this._server.send("/challenge/cancel");
+	}
+	
 	User.prototype.acceptChallenge = function(id) {
 		this._server.send("/challenge/accept", id);
 	}
