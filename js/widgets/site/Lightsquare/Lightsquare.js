@@ -95,17 +95,6 @@ define(function(require) {
 			this._app.stopUpdatingChallengeList();
 		}).bind(this));
 		
-		this._router.addRoute("/user/welcome", (function(params, url) {
-			if(!this._pages.hasPage(url)) {
-				var page = this._pages.createPage(url);
-				
-				new WelcomePage(this._user, page);
-			}
-			
-			this._pages.showPage(url);
-			this._app.stopUpdatingChallengeList();
-		}).bind(this));
-		
 		this._router.addRoute("/about", (function(params, url) {
 			if(!this._pages.hasPage(url)) {
 				var page = this._pages.createPage(url);
