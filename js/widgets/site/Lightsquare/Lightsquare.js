@@ -88,7 +88,7 @@ define(function(require) {
 			if(!this._pages.hasPage(url)) {
 				var page = this._pages.createPage(url);
 				
-				new ProfilePage(this._user, page);
+				new ProfilePage(page);
 			}
 			
 			this._pages.showPage(url);
