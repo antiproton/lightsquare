@@ -1,10 +1,26 @@
 define(function(require) {
 	require("css!./profile_page.css");
 	var html = require("file!./profile_page.html");
-	var Template = require("lib/dom/Template");
+	var Ractive = require("lib/dom/Ractive");
 	
-	function ProfilePage(parent) {
-		this._template = new Template(html, parent);
+	function ProfilePage(user, parent) {
+		this._user = user;
+		
+		this._template = new Ractive({
+			template: html,
+			el: parent,
+			data: {
+				user: this._user
+			}
+		});
+		
+		this._user.DetailsChanged.addHandler(this, function() {
+			this._template.update();
+		});
+		
+		this._user.HasIdentity.addHandler(this, function() {
+			this._template.update();
+		});
 	}
 	
 	return ProfilePage;

@@ -1,3 +1,33 @@
 div.profile {
-	
+	width: 60%;
+	margin: 1em auto;
+	padding: 1em;
+	box-shadow: 1px 2px 7px rgba(0, 0, 0, .2);
+	background: white;
+}
+
+div.profile > h1 {
+	text-align: center;
+	font-size: 1.3em;
+	font-weight: normal;
+	margin-top: 0;
+}
+
+table.profile_details {
+	width: 100%;
+	border-collapse: collapse;
+}
+
+table.profile_details td {
+	border: 1px solid #D6D6D6;
+	padding: .4em;
+}
+
+table.profile_details td:first-child {
+	text-align: right;
+	font-weight: normal;
+	font-size: .9em;
+	color: #777777;
+	width: 5em;
+	background: #F7F7F7;
 }
