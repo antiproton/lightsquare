@@ -40,7 +40,7 @@ div.challenge_graph_time_lines {
 
 div.challenge_graph_time_lines > div {
 	box-sizing: border-box;
-	width: 14.285%;
+	width: 20%;
 	border-right: 1px solid #E2E2E2;
 }
 
@@ -98,6 +98,6 @@ div.challenge_graph_time_brackets {
 div.challenge_graph_time_brackets > div {
 	font-size: .8em;
 	text-align: center;
-	width: 14.285%;
+	width: 20%;
 	margin-top: .3em;
 }

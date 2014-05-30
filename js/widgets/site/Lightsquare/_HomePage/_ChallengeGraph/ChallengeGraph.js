@@ -19,7 +19,7 @@ define(function(require) {
 			y: 0.5
 		};
 		
-		this._timeBrackets = ["0", "1m", "3m", "5m", "10m", "20m", "1h"].map(function(lowerBound, index, lowerBounds) {
+		this._timeBrackets = ["0", "3m", "10m", "20m", "1h"].map(function(lowerBound, index, lowerBounds) {
 			var upperBound = null;
 			
 			if(index < lowerBounds.length - 1) {
