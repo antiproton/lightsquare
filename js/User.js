@@ -24,8 +24,10 @@ define(function(require) {
 		this.DetailsChanged = new Event(this);
 		this.HasIdentity = new Event(this);
 		this.ChallengeCreated = new Event(this);
-		this.ChallengeAccepted = new Event(this);
 		this.ChallengeExpired = new Event(this);
+		this.ChallengeAccepted = new Event(this);
+		this.ChallengeTimeout = new Event(this);
+		this.ChallengeCanceled = new Event(this);
 		
 		this._subscribeToServerMessages();
 		
@@ -168,7 +170,18 @@ define(function(require) {
 			});
 		}).bind(this));
 		
-		this._server.subscribe("/current_challenge/expired", (function() {
+		this._server.subscribe("/current_challenge/accepted", (function() {
+			this.ChallengeAccepted.fire();
+			this.ChallengeExpired.fire();
+		}).bind(this));
+		
+		this._server.subscribe("/current_challenge/canceled", (function() {
+			this.ChallengeCanceled.fire();
+			this.ChallengeExpired.fire();
+		}).bind(this));
+		
+		this._server.subscribe("/current_challenge/timeout", (function() {
+			this.ChallengeTimeout.fire();
 			this.ChallengeExpired.fire();
 		}).bind(this));
 	}
