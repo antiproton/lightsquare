@@ -9,9 +9,8 @@ define(function(require) {
 		this._server = server;
 		this._username = "Anonymous";
 		this._isLoggedIn = false;
-		this._gamesPlayedAsWhite = 0;
-		this._gamesPlayedAsBlack = 0;
 		this._rating = Glicko.INITIAL_RATING;
+		this._currentChallenge = null;
 		
 		this.Replaced = new Event(this);
 		this.LoggedIn = new Event(this);
@@ -56,8 +55,6 @@ define(function(require) {
 	User.prototype._logout = function() {
 		this._username = "Anonymous";
 		this._isLoggedIn = false;
-		this._gamesPlayedAsWhite = 0;
-		this._gamesPlayedAsBlack = 0;
 		this._rating = Glicko.INITIAL_RATING;
 		
 		this.LoggedOut.fire();
@@ -90,6 +87,10 @@ define(function(require) {
 	
 	User.prototype.acceptChallenge = function(id) {
 		this._server.send("/challenge/accept", id);
+	}
+	
+	User.prototype.getCurrentChallenge = function() {
+		return this._currentChallenge;
 	}
 	
 	User.prototype._addGame = function(gameDetails) {
@@ -165,22 +166,30 @@ define(function(require) {
 		}).bind(this));
 		
 		this._server.subscribe("/current_challenge", (function(challengeDetails) {
+			this._currentChallenge = challengeDetails;
+			
 			this.ChallengeCreated.fire({
 				details: challengeDetails
 			});
 		}).bind(this));
 		
 		this._server.subscribe("/current_challenge/accepted", (function() {
+			this._currentChallenge = null;
+			
 			this.ChallengeAccepted.fire();
 			this.ChallengeExpired.fire();
 		}).bind(this));
 		
 		this._server.subscribe("/current_challenge/canceled", (function() {
+			this._currentChallenge = null;
+			
 			this.ChallengeCanceled.fire();
 			this.ChallengeExpired.fire();
 		}).bind(this));
 		
 		this._server.subscribe("/current_challenge/timeout", (function() {
+			this._currentChallenge = null;
+			
 			this.ChallengeTimeout.fire();
 			this.ChallengeExpired.fire();
 		}).bind(this));
@@ -189,10 +198,9 @@ define(function(require) {
 	User.prototype._loadDetails = function(userDetails) {
 		this._id = userDetails.id;
 		this._username = userDetails.username;
-		this._rating = userDetails.rating;
-		this._gamesPlayedAsWhite = userDetails.gamesPlayedAsWhite;
-		this._gamesPlayedAsBlack = userDetails.gamesPlayedAsBlack;
 		this._isLoggedIn = userDetails.isLoggedIn;
+		this._rating = userDetails.rating;
+		this._currentChallenge = userDetails.currentChallenge;
 		
 		this.DetailsChanged.fire();
 	}

@@ -59,7 +59,12 @@ define(function(require) {
 			data: {
 				graphHeightInEm: this._graphHeightInEm,
 				challengeHeightInEm: this._challengeHeightInEm,
-				challenges: []
+				challenges: [],
+				isCurrentChallenge: (function(challenge) {
+					var currentChallenge = this._user.getCurrentChallenge();
+					
+					return (currentChallenge !== null && challenge.id === currentChallenge.id);
+				}).bind(this)
 			}
 		});
 		

@@ -27,7 +27,7 @@
 			<div class="challenge_graph_challenges" style="height: {{graphHeightInEm}}em; top: -{{graphHeightInEm}}em">
 				{{#challenges:index}}
 					<div
-						class="challenge_graph_challenge"
+						class="challenge_graph_challenge {{isCurrentChallenge(challenge) ? 'current_challenge' : ''}}"
 						style="top: {{topOffsetInEm}}em; left: {{leftOffsetInPercent}}%; height: {{challengeHeightInEm}}em"
 						on-click="accept:'{{challenge.id}}'"
 					>

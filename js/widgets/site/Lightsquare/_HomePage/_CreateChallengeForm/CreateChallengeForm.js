@@ -36,11 +36,17 @@ define(function(require) {
 			}
 		}).bind(this));
 		
-		user.ChallengeCreated.addHandler(this, function() {
+		this._setWaiting(this._user.getCurrentChallenge() !== null);
+		
+		this._user.HasIdentity.addHandler(this, function() {
+			this._setWaiting(this._user.getCurrentChallenge() !== null);
+		});
+		
+		this._user.ChallengeCreated.addHandler(this, function() {
 			this._setWaiting(true);
 		});
 		
-		user.ChallengeExpired.addHandler(this, function() {
+		this._user.ChallengeExpired.addHandler(this, function() {
 			this._setWaiting(false);
 		});
 	}

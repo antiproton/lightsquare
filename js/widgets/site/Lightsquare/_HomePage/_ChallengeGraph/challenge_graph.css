@@ -72,6 +72,11 @@ div.challenge_graph_challenge {
 	cursor: pointer;
 }
 
+div.challenge_graph_challenge.current_challenge {
+	
+	cursor: default;
+}
+
 div.challenge_graph_challenge:hover {
 	z-index: 2;
 }
