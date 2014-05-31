@@ -5,7 +5,7 @@ define(function(require) {
 	var jsonChessConstants = require("jsonchess/constants");
 	
 	function CreateChallengeForm(user, parent) {
-		var template = new Ractive({
+		this._template = new Ractive({
 			el: parent,
 			template: html,
 			data: {
@@ -17,32 +17,38 @@ define(function(require) {
 			}
 		});
 		
-		var waitingTimer = null;
+		this._user = user;
+		this._waiting = false;
 		
-		template.on("create_or_cancel", function(event) {
+		this._template.on("create_or_cancel", (function(event) {
 			event.original.preventDefault();
 			
-			if(template.get("waiting")) {
-				user.cancelChallenge();
-				template.set("waiting", false);
-				clearTimeout(waitingTimer);
+			if(this._waiting) {
+				this._user.cancelChallenge();
 			}
 			
 			else {
-				user.createChallenge({
-					initialTime: template.get("initialTime").toString(),
-					timeIncrement: template.get("timeIncrement").toString(),
-					acceptRatingMin: template.get("ratingMin").toString(),
-					acceptRatingMax: template.get("ratingMax").toString()
+				this._user.createChallenge({
+					initialTime: this._template.get("initialTime").toString(),
+					timeIncrement: this._template.get("timeIncrement").toString(),
+					acceptRatingMin: this._template.get("ratingMin").toString(),
+					acceptRatingMax: this._template.get("ratingMax").toString()
 				});
-				
-				template.set("waiting", true);
-				
-				waitingTimer = setTimeout(function() {
-					template.set("waiting", false);
-				}, jsonChessConstants.CHALLENGE_TIMEOUT);
 			}
+		}).bind(this));
+		
+		user.ChallengeCreated.addHandler(this, function() {
+			this._setWaiting(true);
 		});
+		
+		user.ChallengeExpired.addHandler(this, function() {
+			this._setWaiting(false);
+		});
+	}
+	
+	CreateChallengeForm.prototype._setWaiting = function(waiting) {
+		this._waiting = waiting;
+		this._template.set("waiting", waiting);
 	}
 	
 	return CreateChallengeForm;

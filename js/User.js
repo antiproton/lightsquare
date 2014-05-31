@@ -23,6 +23,9 @@ define(function(require) {
 		this.NeededInGame = new Event(this);
 		this.DetailsChanged = new Event(this);
 		this.HasIdentity = new Event(this);
+		this.ChallengeCreated = new Event(this);
+		this.ChallengeAccepted = new Event(this);
+		this.ChallengeExpired = new Event(this);
 		
 		this._subscribeToServerMessages();
 		
@@ -157,6 +160,16 @@ define(function(require) {
 		this._server.subscribe("/user", (function(userDetails) {
 			this._loadDetails(userDetails);
 			this.HasIdentity.fire();
+		}).bind(this));
+		
+		this._server.subscribe("/current_challenge", (function(challengeDetails) {
+			this.ChallengeCreated.fire({
+				details: challengeDetails
+			});
+		}).bind(this));
+		
+		this._server.subscribe("/current_challenge/expired", (function() {
+			this.ChallengeExpired.fire();
 		}).bind(this));
 	}
 	
