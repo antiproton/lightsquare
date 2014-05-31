@@ -1,5 +1,4 @@
 define(function(require) {
-	require("css!./create_challenge_form.css");
 	var html = require("file!./create_challenge_form.html");
 	var Ractive = require("lib/dom/Ractive");
 	var jsonChessConstants = require("jsonchess/constants");
