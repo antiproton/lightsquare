@@ -127,7 +127,6 @@ define(function(require) {
 			var ratingAboveMinimum = Math.max(0, challenge.owner.rating - this._minRating);
 			var topOffset = Math.max(0, graphRangeInEm - ratingAboveMinimum / (ratingRange / graphRangeInEm));
 			
-			
 			var gridX = leftOffset - leftOffset % this._gridResolution.x;
 			var gridY = topOffset - topOffset % this._gridResolution.y;
 			var gridSquare = gridX + "," + gridY;
