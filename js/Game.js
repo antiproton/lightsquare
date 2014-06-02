@@ -138,6 +138,10 @@ define(function(require) {
 		return this._gameDetails.startTime;
 	}
 	
+	Game.prototype.isInProgress = function() {
+		return this._isInProgress;
+	}
+	
 	Game.prototype._handleServerMove = function(move) {
 		if(move.index > this._history.length) {
 			this._moveQueue[move.index] = move;
