@@ -19,10 +19,9 @@
 	<div class="challenge_graph_body_and_time_brackets">
 		<div class="challenge_graph_body" style="height: {{graphHeightInEm}}em">
 			<div class="challenge_graph_time_lines" style="height: {{graphHeightInEm}}em;">
-				<div></div>
-				<div></div>
-				<div></div>
-				<div></div>
+				{{#timeBrackets}}
+					<div style="width: {{timeBracketWidthInPercent}}%"></div>
+				{{/timeBrackets}}
 			</div>
 			<div class="challenge_graph_challenges" style="height: {{graphHeightInEm}}em; top: -{{graphHeightInEm}}em">
 				{{#challenges:index}}
@@ -51,21 +50,11 @@
 			{{/challenges}}
 		</div>
 		<div class="challenge_graph_time_brackets">
-			<div>
-				&lt; 3m
-			</div>
-			<div>
-				3m - 10m
-			</div>
-			<div>
-				10m - 20m
-			</div>
-			<div>
-				20m - 1h
-			</div>
-			<div>
-				&gt; 1h
-			</div>
+			{{#timeBrackets}}
+				<div>
+					{{label}}
+				</div>
+			{{/timeBrackets}}
 		</div>
 	</div>
 </div>

@@ -21,15 +21,27 @@ define(function(require) {
 		
 		this._timeBrackets = ["0", "3m", "10m", "20m", "1h"].map(function(lowerBound, index, lowerBounds) {
 			var upperBound = null;
+			var previous = lowerBounds[index - 1];
+			var next = lowerBounds[index + 1];
+			var label = lowerBound + " - " + next;
 			
-			if(index < lowerBounds.length - 1) {
-				upperBound = Time.fromUnitString(lowerBounds[index + 1]);
+			if(next) {
+				upperBound = Time.fromUnitString(next);
+			}
+			
+			if(!previous) {
+				label = "< " + next;
+			}
+			
+			else if(!next) {
+				label = "> " + previous;
 			}
 			
 			return {
 				index: index,
 				lowerBound: Time.fromUnitString(lowerBound),
-				upperBound: upperBound
+				upperBound: upperBound,
+				label: label
 			};
 		});
 		
@@ -59,11 +71,13 @@ define(function(require) {
 			data: {
 				graphHeightInEm: this._graphHeightInEm,
 				challengeHeightInEm: this._challengeHeightInEm,
+				timeBracketWidthInPercent: 100 / this._timeBrackets.length,
+				timeBrackets: this._timeBrackets,
 				challenges: [],
 				isCurrentChallenge: (function(challenge) {
 					var currentChallenge = this._user.getCurrentChallenge();
 					
-					return (currentChallenge !== null && challenge.id === currentChallenge.id);
+					return (currentChallenge !== null && challenge.id === currentChallenge.getId());
 				}).bind(this)
 			}
 		});

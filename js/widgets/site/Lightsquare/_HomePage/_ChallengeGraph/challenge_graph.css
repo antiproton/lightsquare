@@ -17,14 +17,12 @@ div.challenge_graph_ratings > div {
 
 div.challenge_graph_body {
 	flex-grow: 1;
-	height: 20em;
 	border: 1px solid #ababab;
 	background: white;
 }
 
 div.challenge_graph_body > div {
 	position: relative;
-	height: 20em;
 }
 
 div.challenge_graph_challenges {
@@ -40,8 +38,11 @@ div.challenge_graph_time_lines {
 
 div.challenge_graph_time_lines > div {
 	box-sizing: border-box;
-	width: 20%;
 	border-right: 1px solid #E2E2E2;
+}
+
+div.challenge_graph_time_lines > div:last-child {
+	border-right: 0;
 }
 
 div.challenge_graph_no_challenges_message {
@@ -73,7 +74,9 @@ div.challenge_graph_challenge {
 }
 
 div.challenge_graph_challenge.current_challenge {
-	
+	color: white;
+	border-color: #1f1f1f;
+	background: #323232;
 	cursor: default;
 }
 
