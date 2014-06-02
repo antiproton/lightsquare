@@ -11,7 +11,7 @@ define(function(require) {
 		this._app = app;
 		this._user = user;
 		
-		this._graphHeightInEm = 20;
+		this._graphHeightInEm = 30;
 		this._challengeHeightInEm = 2;
 		
 		this._gridResolution = {
