@@ -5,7 +5,7 @@ define(function(require) {
 	
 	function User(server) {
 		this._id = null;
-		this._games = {};
+		this._games = [];
 		this._server = server;
 		this._username = "Anonymous";
 		this._isLoggedIn = false;
@@ -93,10 +93,16 @@ define(function(require) {
 		return this._currentChallenge;
 	}
 	
+	User.prototype.hasGamesInProgress = function() {
+		return this._games.some((function(game) {
+			return (game.getUserColour(this) !== null && game.isInProgress());
+		}).bind(this));
+	}
+	
 	User.prototype._addGame = function(gameDetails) {
 		var game = new Game(this._server, gameDetails);
 	
-		this._games[gameDetails.id] = game;
+		this._games.push(game);
 		
 		return game;
 	}
