@@ -135,7 +135,12 @@ define(function(require) {
 				graphChallenges.push({
 					leftOffsetInPercent: leftOffset,
 					topOffsetInEm: topOffset,
-					challenge: challenge
+					challenge: {
+						id: challenge.id,
+						owner: challenge.owner.username,
+						initialTime: Time.fromUnitString(challenge.options.initialTime, Time.minutes).getUnitString(Time.minutes),
+						timeIncrement: Time.fromUnitString(challenge.options.timeIncrement, Time.seconds).getUnitString(Time.seconds)
+					}
 				});
 				
 				occupiedGridSquares[gridSquare] = true;
