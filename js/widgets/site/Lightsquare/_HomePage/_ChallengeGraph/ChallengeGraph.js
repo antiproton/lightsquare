@@ -34,7 +34,7 @@ define(function(require) {
 			}
 			
 			else if(!next) {
-				label = "> " + previous;
+				label = "> " + lowerBound;
 			}
 			
 			return {
