@@ -71,7 +71,7 @@ define(function(require) {
 			data: {
 				graphHeightInEm: this._graphHeightInEm,
 				challengeHeightInEm: this._challengeHeightInEm,
-				timeBracketWidthInPercent: 100 / this._timeBrackets.length,
+				timeBracketWidthInPercent: this._timeBracketWidthInPercent,
 				timeBrackets: this._timeBrackets,
 				challenges: [],
 				isCurrentChallenge: (function(challenge) {
