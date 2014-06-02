@@ -15,8 +15,8 @@ define(function(require) {
 		this._challengeHeightInEm = 2;
 		
 		this._gridResolution = {
-			x: 1.2,
-			y: 0.5
+			x: 2,
+			y: 1
 		};
 		
 		this._timeBrackets = ["0", "3m", "10m", "20m", "1h"].map(function(lowerBound, index, lowerBounds) {
