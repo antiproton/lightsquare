@@ -1,8 +1,10 @@
 define(function(require) {
 	require("css!./lightsquare.css");
 	require("css!./header.css");
+	require("css!./logoutConfirmation.css");
 	var html = require("file!./lightsquare.html");
 	var headerHtml = require("file!./header.html");
+	var logoutConfirmationHtml = require("file!./logoutConfirmation.html");
 	var Template = require("lib/dom/Template");
 	var Ractive = require("lib/dom/Ractive");
 	var Router = require("lib/Router");
@@ -17,6 +19,8 @@ define(function(require) {
 		middle: 1
 	};
 	
+	var MILLISECONDS_PER_SECOND = 1000;
+	
 	function Lightsquare(app, user, parent) {
 		this._app = app;
 		this._user = user;
@@ -27,6 +31,7 @@ define(function(require) {
 		
 		this._setupRouter();
 		this._setupHeader();
+		this._setupMessage();
 		
 		this._handleUserEvents();
 		
@@ -136,8 +141,60 @@ define(function(require) {
 		}).bind(this));
 		
 		this._header.on("logout", (function() {
-			this._user.logout();
+			if(this._user.hasGamesInProgress()) {
+				this._displayLogoutConfirmation();
+			}
+			
+			else {
+				this._user.logout();
+			}
 		}).bind(this));
+	}
+	
+	Lightsquare.prototype._displayLogoutConfirmation = function() {
+		this._template.message.innerHTML = "";
+		
+		this._logoutConfirmation = new Ractive({
+			el: this._template.message,
+			template: logoutConfirmationHtml,
+			data: {
+				message: "asd"
+			}
+		});
+		
+		this._logoutConfirmation.on("logout", (function() {
+			this._user.logout();
+			this._hideMessage();
+		}).bind(this));
+		
+		this._logoutConfirmation.on("cancel", (function() {
+			this._hideMessage();
+		}).bind(this));
+		
+		this._showMessage(5);
+	}
+	
+	Lightsquare.prototype._setupMessage = function() {
+		this._hideMessageTimer = null;
+		this._template.message.style.display = "none";
+	}
+	
+	Lightsquare.prototype._showMessage = function(duration) {
+		this._template.message.style.display = "";
+		
+		this._hideMessageTimer = setTimeout((function() {
+			this._hideMessage();
+		}).bind(this), duration * MILLISECONDS_PER_SECOND);
+	}
+	
+	Lightsquare.prototype._hideMessage = function() {
+		this._template.message.style.display = "none";
+		
+		if(this._hideMessageTimer !== null) {
+			clearTimeout(this._hideMessageTimer);
+			
+			this._hideMessageTimer = null;
+		}
 	}
 	
 	Lightsquare.prototype._handleUserEvents = function() {

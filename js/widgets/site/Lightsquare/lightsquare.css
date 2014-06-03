@@ -93,3 +93,13 @@ input[type="button"]:hover, input[type="submit"]:hover, a.button:hover {
 input[type="button"]:active, input[type="submit"]:active, a.button:active {
 	box-shadow: inset 2px 2px 1px rgba(0, 0, 0, .2);
 }
+
+div.message {
+	position: absolute;
+	z-index: 2;
+	top: 3em;
+	right: .5em;
+	border: 1px solid #206482;
+	padding: .5em;
+	background: #CDEBF4;
+}
