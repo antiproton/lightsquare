@@ -74,9 +74,6 @@ div.challenge_graph_challenge {
 }
 
 div.challenge_graph_challenge.current_challenge {
-	color: white;
-	border-color: #1f1f1f;
-	background: #323232;
 	cursor: default;
 }
 
