@@ -74,11 +74,7 @@ define(function(require) {
 				timeBracketWidthInPercent: this._timeBracketWidthInPercent,
 				timeBrackets: this._timeBrackets,
 				challenges: [],
-				isCurrentChallenge: (function(challenge) {
-					var currentChallenge = this._user.getCurrentChallenge();
-					
-					return (currentChallenge !== null && challenge.id === currentChallenge.getId());
-				}).bind(this)
+				currentChallengeId: null
 			}
 		});
 		
@@ -88,6 +84,18 @@ define(function(require) {
 		
 		this._app.ChallengeListUpdated.addHandler(this, function() {
 			this._updateTemplate();
+		});
+		
+		this._user.HasIdentity.addHandler(this, function() {
+			this._updateCurrentChallenge();
+		});
+		
+		this._user.ChallengeCreated.addHandler(this, function(data) {
+			this._updateCurrentChallenge();
+		});
+		
+		this._user.ChallengeExpired.addHandler(this, function() {
+			this._updateCurrentChallenge();
 		});
 	}
 	
@@ -161,6 +169,17 @@ define(function(require) {
 		}).bind(this));
 		
 		this._template.set("challenges", graphChallenges);
+	}
+	
+	ChallengeGraph.prototype._updateCurrentChallenge = function() {
+		var currentChallengeId = null;
+		var currentChallenge = this._user.getCurrentChallenge();
+		
+		if(currentChallenge !== null) {
+			currentChallengeId = currentChallenge.id;
+		}
+		
+		this._template.set("currentChallengeId", currentChallengeId);
 	}
 	
 	return ChallengeGraph;
