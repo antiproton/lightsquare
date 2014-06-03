@@ -36,10 +36,12 @@ define(function(require) {
 			}
 		}).bind(this));
 		
+		this._fillInLastChallengeCreated();
 		this._setWaiting(this._user.getCurrentChallenge() !== null);
 		
 		this._user.HasIdentity.addHandler(this, function() {
 			this._setWaiting(this._user.getCurrentChallenge() !== null);
+			this._fillInLastChallengeCreated();
 		});
 		
 		this._user.ChallengeCreated.addHandler(this, function() {
@@ -54,6 +56,17 @@ define(function(require) {
 	CreateChallengeForm.prototype._setWaiting = function(waiting) {
 		this._waiting = waiting;
 		this._template.set("waiting", waiting);
+	}
+	
+	CreateChallengeForm.prototype._fillInLastChallengeCreated = function() {
+		var options = this._user.getLastChallengeOptions();
+		
+		if(options !== null) {
+			this._template.set("initialTime", options.initialTime);
+			this._template.set("timeIncrement", options.timeIncrement);
+			this._template.set("acceptRatingMin", options.acceptRatingMin);
+			this._template.set("acceptRatingMax", options.acceptRatingMax);
+		}
 	}
 	
 	return CreateChallengeForm;

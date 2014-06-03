@@ -11,6 +11,7 @@ define(function(require) {
 		this._isLoggedIn = false;
 		this._rating = Glicko.INITIAL_RATING;
 		this._currentChallenge = null;
+		this._lastChallengeOptions = null;
 		
 		this.Replaced = new Event(this);
 		this.LoggedIn = new Event(this);
@@ -91,6 +92,10 @@ define(function(require) {
 	
 	User.prototype.getCurrentChallenge = function() {
 		return this._currentChallenge;
+	}
+	
+	User.prototype.getLastChallengeOptions = function() {
+		return this._lastChallengeOptions;
 	}
 	
 	User.prototype.hasGamesInProgress = function() {
@@ -207,6 +212,7 @@ define(function(require) {
 		this._isLoggedIn = userDetails.isLoggedIn;
 		this._rating = userDetails.rating;
 		this._currentChallenge = userDetails.currentChallenge;
+		this._lastChallengeOptions = userDetails.lastChallengeOptions;
 		
 		this.DetailsChanged.fire();
 	}
