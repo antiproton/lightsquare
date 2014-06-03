@@ -16,6 +16,7 @@ define(function(require) {
 		this.PromotionPieceNeeded = new Event(this);
 		this.Move = new Event(this);
 		this.ClockTick = new Event(this);
+		this.GameOver = new Event(this);
 		
 		this._server = server;
 		this._gameDetails = gameDetails;
@@ -49,14 +50,18 @@ define(function(require) {
 			isTimed: false
 		});
 		
-		this._game.GameOver.addHandler(this, function() {
-			this._gameOver();
+		this._game.GameOver.addHandler(this, function(data) {
+			this._gameOver(data.result);
 		});
 		
 		this._clock = new Clock(this._server, this, this._timingStyle);
 		
 		this._server.subscribe("/game/" + this._id + "/move", (function(move) {
 			this._handleServerMove(move);
+		}).bind(this));
+		
+		this._server.subscribe("/game/" + this._id + "/game_over", (function(data) {
+			this._gameOver(data.result);
 		}).bind(this));
 		
 		this._server.send("/game/" + this._id + "/request/moves", {
@@ -201,8 +206,12 @@ define(function(require) {
 		}
 	}
 	
-	Game.prototype._gameOver = function() {
+	Game.prototype._gameOver = function(result) {
 		this._isInProgress = false;
+		
+		this.GameOver.fire({
+			result: result
+		});
 	}
 	
 	return Game;
