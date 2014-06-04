@@ -1,5 +1,5 @@
 <div class="challenge_graph">
-	<div class="challenge_graph_ratings">
+	<div class="ratings">
 		<div>
 			2200
 		</div>
@@ -16,9 +16,9 @@
 			1000
 		</div>
 	</div>
-	<div class="challenge_graph_body_and_time_brackets">
+	<div class="body_and_time_brackets">
 		<div class="challenge_graph_body" style="height: {{graphHeightInEm}}em">
-			<div class="challenge_graph_time_lines" style="height: {{graphHeightInEm}}em;">
+			<div class="time_lines" style="height: {{graphHeightInEm}}em;">
 				{{#timeBrackets}}
 					<div style="width: {{timeBracketWidthInPercent}}%"></div>
 				{{/timeBrackets}}
@@ -26,15 +26,15 @@
 			<div class="challenge_graph_challenges" style="height: {{graphHeightInEm}}em; top: -{{graphHeightInEm}}em">
 				{{#challenges:index}}
 					<div
-						class="challenge_graph_challenge {{challenge.id === currentChallengeId ? 'current_challenge' : ''}}"
+						class="challenge {{challenge.id === currentChallengeId ? 'current_challenge' : 'not_current_challenge'}}"
 						style="top: {{topOffsetInEm}}em; left: {{leftOffsetInPercent}}%; height: {{challengeHeightInEm}}em"
 						on-click="accept:'{{challenge.id}}'"
 					>
-						<div class="challenge_graph_challenge_label">
-							<div class="challenge_graph_challenge_owner">
+						<div class="challenge_label">
+							<div class="challenge_owner">
 								{{challenge.owner}}
 							</div>
-							<div class="challenge_graph_challenge_time">
+							<div class="challenge_time">
 								{{challenge.initialTime}} / {{challenge.timeIncrement}}
 							</div>
 						</div>
@@ -42,14 +42,14 @@
 				{{/challenges}}
 			</div>
 			{{^challenges}}
-			<div class="challenge_graph_no_challenges_message" style="height: {{graphHeightInEm}}em; top: -{{graphHeightInEm * 2}}em">
+			<div class="no_challenges_message" style="height: {{graphHeightInEm}}em; top: -{{graphHeightInEm * 2}}em">
 				<div>
 					There are currently no open challenges.
 				</div>
 			</div>
 			{{/challenges}}
 		</div>
-		<div class="challenge_graph_time_brackets">
+		<div class="time_brackets">
 			{{#timeBrackets}}
 				<div>
 					{{label}}
