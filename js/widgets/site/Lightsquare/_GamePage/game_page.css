@@ -1,5 +1,11 @@
+div.game {
+	display: flex;
+	flex-grow: 1;
+}
+
 div.game_main {
 	display: flex;
+	flex-grow: 1;
 }
 
 div.game_board_and_players {
@@ -19,10 +25,30 @@ div.game_history_spacer {
 div.game_player {
 	display: flex;
 	justify-content: space-between;
-	flex-grow: 1;
 }
 
 div.game_history_chat_and_controls {
 	flex-grow: 1;
-	margin-left: .6em;
+}
+
+div.game_history_and_controls {
+	display: flex;
+}
+
+div.game_controls {
+	display: flex;
+	flex-direction: column-reverse;
+	min-width: 8em;
+	padding: 0 .3em;
+}
+
+div.game_controls button {
+	font-family: inherit;
+	font-size: .9em;
+	color: #303030;
+	cursor: pointer;
+}
+
+div.game_chat {
+	padding: .3em;
 }

@@ -8,6 +8,8 @@ define(function(require) {
 	var Colour = require("chess/Colour");
 	var Ractive = require("lib/dom/Ractive");
 	var playerInfoHtml = require("file!./player_info.html");
+	var controlsHtml = require("file!./controls.html");
+	var Chat = require("./_Chat/Chat");
 	
 	function GamePage(game, user, parent) {
 		this._template = new Template(html, parent);
@@ -18,8 +20,10 @@ define(function(require) {
 		
 		this._setupPlayerInfo();
 		this._setupBoard();
+		this._setupControls();
 		this._setupHistory();
 		this._setupGame();
+		this._setupChat();
 		this._handleUserEvents();
 		
 		this._viewingAs = this._game.getUserColour(this._user) || Colour.white;
@@ -96,12 +100,23 @@ define(function(require) {
 		});
 	}
 	
+	GamePage.prototype._setupControls = function() {
+		this._controls = new Ractive({
+			el: this._template.controls,
+			template: controlsHtml
+		});
+	}
+	
 	GamePage.prototype._setupHistory = function() {
 		this._history = new History(this._template.history);
 		
 		this._history.UserSelect.addHandler(this, function(data) {
 			this._board.setBoardArray(data.move.getPositionAfter().getBoardArray());
 		});
+	}
+	
+	GamePage.prototype._setupChat = function() {
+		this._chat = new Chat(this._game, this._template.chat);
 	}
 	
 	GamePage.prototype._adjustOrientation = function() {
