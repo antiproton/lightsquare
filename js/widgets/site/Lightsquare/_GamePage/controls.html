@@ -1,5 +1,7 @@
-<input type="button" on-click="resign" value="Resign">
-<input type="button" on-click="offer_draw" value="Offer draw">
-{{#canClaimDraw}}
-	<button type="button" on-click="claim_draw">Claim draw</button>
-{{/canClaimDraw}}
+<div class="controls">
+	<input type="button" on-click="resign" value="Resign">
+	<input type="button" on-click="offer_or_accept_draw" value="{{drawOffered ? 'Accept' : 'Offer'}} draw">
+	{{#canClaimDraw}}
+		<button type="button" on-click="claim_draw">Claim draw</button>
+	{{/canClaimDraw}}
+</div>

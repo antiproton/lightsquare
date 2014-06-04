@@ -2,6 +2,7 @@ define(function(require) {
 	var Event = require("lib/Event");
 	var html = require("file!./game_page.html");
 	require("css!./game_page.css");
+	require("css!./controls.css");
 	var Template = require("lib/dom/Template");
 	var Board = require("widgets/chess/Board/Board");
 	var History = require("widgets/chess/History/History");
@@ -20,19 +21,26 @@ define(function(require) {
 		
 		this._setupPlayerInfo();
 		this._setupBoard();
-		this._setupControls();
 		this._setupHistory();
 		this._setupGame();
 		this._setupChat();
 		this._handleUserEvents();
 		
-		this._viewingAs = this._game.getUserColour(this._user) || Colour.white;
+		if(this._userIsPlaying()) {
+			this._setupControls();
+		}
+		
+		this._viewingAs = this.getPlayerColour() || Colour.white;
 		
 		this._adjustOrientation();
 	}
 	
 	GamePage.prototype.getPlayerColour = function() {
 		return this._game.getUserColour(this._user);
+	}
+	
+	GamePage.prototype._userIsPlaying = function() {
+		return (this.getPlayerColour() !== null);
 	}
 	
 	GamePage.prototype.getTimingStyle = function() {
@@ -103,7 +111,34 @@ define(function(require) {
 	GamePage.prototype._setupControls = function() {
 		this._controls = new Ractive({
 			el: this._template.controls,
-			template: controlsHtml
+			template: controlsHtml,
+			data: {
+				drawOffered: this._game.isDrawOffered(),
+				userIsActivePlayer: (this.getPlayerColour() === this._game.getPosition().getActiveColour())
+			}
+		});
+		
+		this._controls.on("resign", (function() {
+			this._game.resign();
+		}).bind(this));
+		
+		this._controls.on("accept_or_offer_draw", (function() {
+			if(this.getPlayerColour() === this._game.getPosition().getActiveColour()) {
+				this._game.acceptDraw();
+			}
+			
+			else {
+				this._game.offerDraw();
+			}
+		}).bind(this));
+		
+		this._game.Move.addHandler(this, function() {
+			this._controls.set("userIsActivePlayer", (this.getPlayerColour() === this._game.getPosition().getActiveColour()));
+			this._controls.set("drawOffered", false);
+		});
+		
+		this._game.DrawOffered.addHandler(this, function() {
+			this._controls.set("drawOffered", true);
 		});
 	}
 	

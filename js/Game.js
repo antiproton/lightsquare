@@ -17,27 +17,31 @@ define(function(require) {
 		this.Move = new Event(this);
 		this.ClockTick = new Event(this);
 		this.GameOver = new Event(this);
+		this.DrawOffered = new Event(this);
 		
 		this._server = server;
-		this._gameDetails = gameDetails;
-		this._id = this._gameDetails.id;
+		
+		this._startTime = gameDetails.startTime;
+		this._id = gameDetails.id;
+		this._isInProgress = gameDetails.isInProgress;
+		this._isDrawOffered = gameDetails.isDrawOffered;
+		this._isUndoRequested = gameDetails.isUndoRequested;
 		
 		this._players = {};
-		this._players[Colour.white] = this._gameDetails.white;
-		this._players[Colour.black] = this._gameDetails.black;
+		this._players[Colour.white] = gameDetails.white;
+		this._players[Colour.black] = gameDetails.black;
 		
-		this._isInProgress = true;
 		this._history = [];
 		this._moveQueue = [];
 		
-		this._timingStyle = new TimingStyle({
-			initialTime: Time.fromUnitString(this._gameDetails.options.initialTime, Time.minutes),
-			increment: Time.fromUnitString(this._gameDetails.options.timeIncrement, Time.seconds)
-		});
-		
-		this._gameDetails.history.forEach((function(move) {
+		gameDetails.history.forEach((function(move) {
 			this._history.push(Move.fromJSON(move));
 		}).bind(this));
+		
+		this._timingStyle = new TimingStyle({
+			initialTime: Time.fromUnitString(gameDetails.options.initialTime, Time.minutes),
+			increment: Time.fromUnitString(gameDetails.options.timeIncrement, Time.seconds)
+		});
 		
 		var startingFen = Fen.STARTING_FEN;
 		
@@ -50,12 +54,21 @@ define(function(require) {
 			isTimed: false
 		});
 		
-		this._game.GameOver.addHandler(this, function(data) {
-			this._gameOver(data.result);
-		});
-		
 		this._clock = new Clock(this._server, this, this._timingStyle);
 		
+		if(this._isInProgress) {
+			this._game.GameOver.addHandler(this, function(data) {
+				this._gameOver(data.result);
+			});
+			
+			this._subscribeToServerMessages();
+			this._requestLatestMoves();
+			
+			this._clockTick();
+		}
+	}
+	
+	Game.prototype._subscribeToServerMessages = function() {
 		this._server.subscribe("/game/" + this._id + "/move", (function(move) {
 			this._handleServerMove(move);
 		}).bind(this));
@@ -64,11 +77,15 @@ define(function(require) {
 			this._gameOver(data.result);
 		}).bind(this));
 		
+		this._server.subscribe("/game/" + this._id + "/draw_offer", (function(data) {
+			this.DrawOffered.fire();
+		}).bind(this));
+	}
+	
+	Game.prototype._requestLatestMoves = function() {
 		this._server.send("/game/" + this._id + "/request/moves", {
 			startingIndex: this._history.length
 		});
-		
-		this._clockTick();
 	}
 	
 	Game.prototype.getId = function() {
@@ -101,6 +118,24 @@ define(function(require) {
 					});
 				}
 			}
+		}
+	}
+	
+	Game.prototype.resign = function() {
+		if(this._isInProgress) {
+			this._server.send("/game/" + this._id + "/resign");
+		}
+	}
+	
+	Game.prototype.offerDraw = function() {
+		if(this._isInProgress) {
+			this._server.send("/game/" + this._id + "/offer_draw");
+		}
+	}
+	
+	Game.prototype.acceptDraw = function() {
+		if(this._isInProgress) {
+			this._server.send("/game/" + this._id + "/accept_draw");
 		}
 	}
 	
@@ -140,11 +175,15 @@ define(function(require) {
 	}
 	
 	Game.prototype.getStartTime = function() {
-		return this._gameDetails.startTime;
+		return this._startTime;
 	}
 	
 	Game.prototype.isInProgress = function() {
 		return this._isInProgress;
+	}
+	
+	Game.prototype.isDrawOffered = function() {
+		return this._isDrawOffered;
 	}
 	
 	Game.prototype._handleServerMove = function(move) {
