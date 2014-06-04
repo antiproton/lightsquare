@@ -6,6 +6,7 @@ div.game {
 div.game_main {
 	display: flex;
 	justify-content: center;
+	margin-left: 1em;
 }
 
 div.game_details {
@@ -40,13 +41,14 @@ div.game_controls {
 	display: flex;
 	flex-direction: column-reverse;
 	min-width: 8em;
+	margin-right: .3em;
 }
 
-div.game_controls button {
-	font-family: inherit;
-	font-size: .9em;
-	color: #303030;
-	cursor: pointer;
+div.game_controls input {
+	color: #404040;
+	margin: .2em 0 0 0;
+	border-color: #b0b0b0;
+	background: #f7f7f7;
 }
 
 div.game_chat {
