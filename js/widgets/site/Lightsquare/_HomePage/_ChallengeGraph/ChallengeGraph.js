@@ -7,6 +7,18 @@ define(function(require) {
 	
 	var AVERAGE_MOVES_PER_GAME = 30;
 	
+	function getAbsoluteRating(ownerRating, ratingSpecifier) {
+		var firstChar = ratingSpecifier.charAt(0);
+		
+		if(firstChar === "-" || firstChar === "+") {
+			return ownerRating + parseInt(ratingSpecifier);
+		}
+		
+		else {
+			return parseInt(ratingSpecifier);
+		}
+	}
+	
 	function ChallengeGraph(app, user, parent) {
 		this._app = app;
 		this._user = user;
@@ -150,21 +162,30 @@ define(function(require) {
 				gridSquaresMoved++;
 			}
 			
-			if(!(gridSquare in occupiedGridSquares) && gridSquaresMoved <= maxGridSquaresToMove) {
-				topOffset -= this._challengeHeightInEm * index;
-				
-				graphChallenges.push({
-					leftOffsetInPercent: leftOffset,
-					topOffsetInEm: topOffset,
-					challenge: {
-						id: challenge.id,
-						owner: challenge.owner.username,
-						initialTime: Time.fromUnitString(challenge.options.initialTime, Time.minutes).getUnitString(Time.minutes),
-						timeIncrement: Time.fromUnitString(challenge.options.timeIncrement, Time.seconds).getUnitString(Time.seconds)
-					}
-				});
-				
-				occupiedGridSquares[gridSquare] = true;
+			var acceptsRating = {
+				min: getAbsoluteRating(rating, challenge.options.acceptRatingMin),
+				max: getAbsoluteRating(rating, challenge.options.acceptRatingMax)
+			};
+			
+			var userRating = this._user.getRating();
+			
+			if(userRating >= acceptsRating.min && userRating <= acceptsRating.max) {
+				if(!(gridSquare in occupiedGridSquares) && gridSquaresMoved <= maxGridSquaresToMove) {
+					topOffset -= this._challengeHeightInEm * index;
+					
+					graphChallenges.push({
+						leftOffsetInPercent: leftOffset,
+						topOffsetInEm: topOffset,
+						challenge: {
+							id: challenge.id,
+							owner: challenge.owner.username,
+							initialTime: Time.fromUnitString(challenge.options.initialTime, Time.minutes).getUnitString(Time.minutes),
+							timeIncrement: Time.fromUnitString(challenge.options.timeIncrement, Time.seconds).getUnitString(Time.seconds)
+						}
+					});
+					
+					occupiedGridSquares[gridSquare] = true;
+				}
 			}
 		}).bind(this));
 		
