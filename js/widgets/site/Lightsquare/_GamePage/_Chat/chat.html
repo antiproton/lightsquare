@@ -1,0 +1,16 @@
+<div class="chat">
+	<div class="chat_history">
+		{{#messages}}
+			<div class="chat_message">
+				<span class="message_from">{{from}}:</span>
+				<span class="message_body">{{body}}</span>
+			</div>
+		{{/messages}}
+	</div>
+	<form on-submit="send">
+		<div class="chat_controls">
+			<input class="chat_message" type="text" id="message" value="{{message}}">
+			<input class="chat_send" type="submit" value="Send">
+		</div>
+	</form>
+</div>
