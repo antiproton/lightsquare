@@ -194,6 +194,10 @@ define(function(require) {
 		return this._isDrawOffered;
 	}
 	
+	Game.prototype.getLastMove = function() {
+		return this._history[this._history.length - 1] || null;
+	}
+	
 	Game.prototype.sendChatMessage = function(message) {
 		this._server.send("/game/" + this._id + "/chat", message);
 	}

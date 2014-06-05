@@ -19,12 +19,14 @@ define(function(require) {
 		
 		this.PlayerClockTick = new Event(this);
 		
+		this._setupChat();
+		this._handleUserEvents();
 		this._setupPlayerInfo();
 		this._setupBoard();
 		this._setupHistory();
 		this._setupGame();
-		this._setupChat();
-		this._handleUserEvents();
+		
+		this._history.select(this._game.getLastMove());
 		
 		if(this._userIsPlaying()) {
 			this._setupControls();
@@ -147,6 +149,10 @@ define(function(require) {
 		
 		this._history.UserSelect.addHandler(this, function(data) {
 			this._board.setBoardArray(data.move.getPositionAfter().getBoardArray());
+		});
+		
+		this._game.Move.addHandler(this, function(data) {
+			this._history.select(data.move);
 		});
 	}
 	
