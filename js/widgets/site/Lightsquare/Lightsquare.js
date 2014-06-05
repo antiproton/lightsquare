@@ -39,7 +39,7 @@ define(function(require) {
 		
 		this._handleUserEvents();
 		
-		this._router.loadPath();
+		this._router.loadFromUrl();
 	}
 	
 	Lightsquare.prototype._addGamePage = function(game) {
@@ -63,7 +63,7 @@ define(function(require) {
 	Lightsquare.prototype._setupRouter = function() {
 		this._router = new Router();
 		
-		this._router.PathChanged.addHandler(this, function(data) {
+		this._router.UrlChanged.addHandler(this, function(data) {
 			this._header.set("currentPath", data.path);
 		});
 		
@@ -84,6 +84,8 @@ define(function(require) {
 			}
 			
 			else {
+				this._router.setCurrentPath("/");
+				this._header.set("currentPath", "/");
 				this._user.spectateGame(params["id"]);
 			}
 			
@@ -140,7 +142,7 @@ define(function(require) {
 			if(event.original.button !== MouseButtons.middle) {
 				event.original.preventDefault();
 			
-				this._router.loadPath(event.node.getAttribute("href"));
+				this._router.navigate(event.node.getAttribute("href"));
 			}
 		}).bind(this));
 		
@@ -221,11 +223,11 @@ define(function(require) {
 				this._addGamePage(game);
 			}).bind(this));
 			
-			this._router.loadPath();
+			this._router.loadFromUrl();
 		});
 		
 		this._user.NeededInGame.addHandler(this, function(data) {
-			this._router.loadPath("/game/" + data.id);
+			this._router.navigate("/game/" + data.id);
 		});
 		
 		this._user.LoggedIn.addHandler(this, function() {
