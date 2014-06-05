@@ -1,0 +1,28 @@
+<div class="loading_indicator">
+	<div class="loading_indicator_dialog">
+		{{^troubleConnecting}}
+			<div class="loading_indicator_image">
+				<img src="{{getAbsolutePath('./loading.gif')}}">
+			</div>
+			<div class="loading_indicator_message">
+				Connecting to the server...
+			</div>
+		{{/troubleConnecting}}
+		{{#troubleConnecting}}
+			<div class="not_connected_message">
+				<h1>Connection problem</h1>
+				<h3>It's taking longer than usual to establish a connection to the server.</h3>
+				<p>
+					If reloading the page doesn't work, the server has probably crashed and
+					will be back online shortly.
+				</p>
+				<h2>Interrupted games</h2>
+				<p>
+					Your games are stored locally.  Once the server comes back online, click
+					"Restore game" on the homepage (under Tools) to pick up where you left off.
+					(Both players need to do this for the game to be restored).
+				</p>
+			</div>
+		{{/troubleConnecting}}
+	</div>
+</div>

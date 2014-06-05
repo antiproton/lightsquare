@@ -1,0 +1,22 @@
+div.loading_indicator {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	flex-grow: 1;
+	background: #efefef;
+}
+
+div.loading_indicator h1,
+div.loading_indicator h2,
+div.loading_indicator h3
+{
+	font-weight: normal;
+}
+
+div.loading_indicator_dialog {
+	text-align: center;
+	width: 40em;
+	padding: 1em;
+	box-shadow: 0 0 5px rgba(0, 0, 0, .2);
+	background: white;
+}
