@@ -13,6 +13,11 @@ define(function(require) {
 		this._currentChallenge = null;
 		this._lastChallengeOptions = null;
 		
+		this._preferences = {
+			alwaysQueen: null,
+			pieceStyle: null
+		};
+		
 		this.Replaced = new Event(this);
 		this.LoggedIn = new Event(this);
 		this.LoginFailed = new Event(this);
@@ -64,6 +69,20 @@ define(function(require) {
 	
 	User.prototype.getUsername = function() {
 		return this._username;
+	}
+	
+	User.prototype.getPreferences = function() {
+		return this._preferences;
+	}
+	
+	User.prototype.updatePreferences = function(preferences) {
+		for(var preference in this._preferences) {
+			if(preference in preferences) {
+				this._preferences[preference] = preferences[preference];
+			}
+		}
+		
+		this._server.send("/user/preferences/update", preferences);
 	}
 	
 	User.prototype.getId = function() {
@@ -213,6 +232,7 @@ define(function(require) {
 		this._rating = userDetails.rating;
 		this._currentChallenge = userDetails.currentChallenge;
 		this._lastChallengeOptions = userDetails.lastChallengeOptions;
+		this._preferences = userDetails.preferences;
 		
 		this.DetailsChanged.fire();
 	}
