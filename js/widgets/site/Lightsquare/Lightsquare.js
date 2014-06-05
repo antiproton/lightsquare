@@ -19,8 +19,6 @@ define(function(require) {
 		middle: 1
 	};
 	
-	var MILLISECONDS_PER_SECOND = 1000;
-	
 	function Lightsquare(app, user, parent) {
 		this._app = app;
 		this._user = user;
@@ -179,12 +177,12 @@ define(function(require) {
 		this._template.message.style.display = "none";
 	}
 	
-	Lightsquare.prototype._showMessage = function(duration) {
+	Lightsquare.prototype._showMessage = function(durationInSeconds) {
 		this._template.message.style.display = "";
 		
 		this._hideMessageTimer = setTimeout((function() {
 			this._hideMessage();
-		}).bind(this), duration * MILLISECONDS_PER_SECOND);
+		}).bind(this), durationInSeconds * 1000);
 	}
 	
 	Lightsquare.prototype._hideMessage = function() {
