@@ -8,6 +8,7 @@ define(function(require) {
 		this._isUpdatingChallengeList = true;
 		
 		this.ChallengeListUpdated = new Event(this);
+		this.ServerDisconnected = new Event(this);
 		
 		this._server.subscribe("/challenges", (function(challenges) {
 			challenges.forEach((function(challenge) {
@@ -24,6 +25,10 @@ define(function(require) {
 			
 			this.ChallengeListUpdated.fire();
 		}).bind(this));
+		
+		this._server.ConnectionLost.addHandler(this, function() {
+			this.ServerDisconnected.fire();
+		});
 		
 		this._server.send("/request/challenges");
 	}
