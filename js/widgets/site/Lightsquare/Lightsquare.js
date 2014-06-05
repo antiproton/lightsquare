@@ -160,10 +160,7 @@ define(function(require) {
 		
 		this._logoutConfirmation = new Ractive({
 			el: this._template.message,
-			template: logoutConfirmationHtml,
-			data: {
-				message: "asd"
-			}
+			template: logoutConfirmationHtml
 		});
 		
 		this._logoutConfirmation.on("logout", (function() {
