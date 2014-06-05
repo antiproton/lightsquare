@@ -1,6 +1,5 @@
 div.history {
 	font-size: .8em;
-	width: 15em;
 	height: 14em;
 	border: 1px solid #BFBFBF;
 	overflow-y: scroll;
@@ -13,9 +12,8 @@ div.history_fullmove {
 	padding: 3px;
 }
 
-div.history_fullmove > div {
-	padding: .3em;
-	box-sizing: border-box;
+div.history_fullmove {
+	padding: .4em;
 }
 
 div.history_fullmove:nth-child(even) {
@@ -24,13 +22,12 @@ div.history_fullmove:nth-child(even) {
 
 div.history_fullmove_number {
 	text-align: right;
-	width: 10%;
-	min-width: 3em;
-	padding-right: 1.5em !important;
+	width: 1.3em;
+	padding-right: 1.5em;
 }
 
 div.history_move_label {
-	width: 40%;
+	width: 4.2em;
 	cursor: pointer;
 }
 
