@@ -2,9 +2,11 @@ define(function(require) {
 	require("css!./lightsquare.css");
 	require("css!./header.css");
 	require("css!./logoutConfirmation.css");
+	require("css!./serverDisconnectMessage.css");
 	var html = require("file!./lightsquare.html");
 	var headerHtml = require("file!./header.html");
 	var logoutConfirmationHtml = require("file!./logoutConfirmation.html");
+	var serverDisconnectMessageHtml = require("file!./serverDisconnectMessage.html");
 	var Template = require("lib/dom/Template");
 	var Ractive = require("lib/dom/Ractive");
 	var Router = require("lib/Router");
