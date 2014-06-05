@@ -18,6 +18,7 @@ define(function(require) {
 		this.ClockTick = new Event(this);
 		this.GameOver = new Event(this);
 		this.DrawOffered = new Event(this);
+		this.ChatMessageReceived = new Event(this);
 		
 		this._server = server;
 		
@@ -71,6 +72,13 @@ define(function(require) {
 	Game.prototype._subscribeToServerMessages = function() {
 		this._server.subscribe("/game/" + this._id + "/move", (function(move) {
 			this._handleServerMove(move);
+		}).bind(this));
+		
+		this._server.subscribe("/game/" + this._id + "/chat", (function(message) {
+			this.ChatMessageReceived.fire({
+				from: message.from,
+				body: message.body
+			});
 		}).bind(this));
 		
 		this._server.subscribe("/game/" + this._id + "/game_over", (function(data) {
@@ -184,6 +192,10 @@ define(function(require) {
 	
 	Game.prototype.isDrawOffered = function() {
 		return this._isDrawOffered;
+	}
+	
+	Game.prototype.sendChatMessage = function(message) {
+		this._server.send("/game/" + this._id + "/chat", message);
 	}
 	
 	Game.prototype._handleServerMove = function(move) {
