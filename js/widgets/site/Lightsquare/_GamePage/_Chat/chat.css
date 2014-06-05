@@ -34,3 +34,8 @@ input.chat_send {
 	padding: 0 1em;
 	background: #166996;
 }
+
+span.chat_message_from {
+	font-size: .8em;
+	color: #4f4f4f;
+}
