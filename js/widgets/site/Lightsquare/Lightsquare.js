@@ -224,6 +224,7 @@ define(function(require) {
 			}).bind(this));
 			
 			this._router.loadFromUrl();
+			this._header.set("currentPath", this._router.getCurrentPath());
 		});
 		
 		this._user.NeededInGame.addHandler(this, function(data) {
