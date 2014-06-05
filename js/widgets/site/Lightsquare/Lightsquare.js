@@ -81,6 +81,7 @@ define(function(require) {
 		this._router.addRoute("/game/:id", (function(params, url) {
 			if(this._pages.hasPage(url)) {
 				this._pages.showPage(url);
+				this._app.stopUpdatingChallengeList();
 			}
 			
 			else {
@@ -88,8 +89,6 @@ define(function(require) {
 				this._header.set("currentPath", "/");
 				this._user.spectateGame(params["id"]);
 			}
-			
-			this._app.stopUpdatingChallengeList();
 		}).bind(this));
 		
 		this._router.addRoute("/user/profile", (function(params, url) {
