@@ -10,7 +10,7 @@ define(function(require) {
 	var loadingIndicator = new LoadingIndicator(document.body, 3);
 	
 	server.ConnectionOpened.addHandler(this, function() {
-		document.body.innerHTML = "";
+		loadingIndicator.remove();
 		
 		var user = new User(server);
 		var app = new Application(server);
@@ -18,6 +18,10 @@ define(function(require) {
 		
 		user.Replaced.addHandler(this, function() {
 			window.location.replace("/");
+		});
+		
+		server.ConnectionOpened.addHandler(this, function() {
+			window.location.reload();
 		});
 		
 		return true;
