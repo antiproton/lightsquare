@@ -1,4 +1,4 @@
-div.loading_indicator {
+div.loading_indicator_container {
 	display: flex;
 	align-items: center;
 	justify-content: center;
@@ -6,17 +6,30 @@ div.loading_indicator {
 	background: #efefef;
 }
 
-div.loading_indicator h1,
-div.loading_indicator h2,
-div.loading_indicator h3
-{
+div.loading_indicator_dialog * {
 	font-weight: normal;
 }
 
 div.loading_indicator_dialog {
 	text-align: center;
 	width: 40em;
-	padding: 1em;
 	box-shadow: 0 0 5px rgba(0, 0, 0, .2);
 	background: white;
+}
+
+div.loading_indicator_header {
+	text-align: left;
+	color: #494431;
+	border-bottom: 1px solid #C4B893;
+	padding: .4em;
+	background: #FFFCE5;
+}
+
+div.loading_indicator_body {
+	color: #2f2f2f;
+	padding: 1em;
+}
+
+div.loading_indicator_body h2 {
+	color: #4f4f4f;
 }

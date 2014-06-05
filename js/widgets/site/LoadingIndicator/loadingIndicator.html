@@ -1,26 +1,35 @@
-<div class="loading_indicator">
+<div class="loading_indicator_container">
 	<div class="loading_indicator_dialog">
 		{{^troubleConnecting}}
-			<div class="loading_indicator_image">
-				<img src="{{getAbsolutePath('./loading.gif')}}">
-			</div>
-			<div class="loading_indicator_message">
-				Connecting to the server...
+			<div class="loading_indicator_body">
+				<p>
+					<img src="{{getAbsolutePath('./loading.gif')}}">
+				</p>
+				<p>
+					Connecting to the server...
+				</p>
 			</div>
 		{{/troubleConnecting}}
 		{{#troubleConnecting}}
-			<div class="not_connected_message">
-				<h1>Connection problem</h1>
+			<div class="loading_indicator_header">
+				Connection problem
+			</div>
+			<div class="loading_indicator_body">
 				<h3>It's taking longer than usual to establish a connection to the server.</h3>
 				<p>
 					If reloading the page doesn't work, the server has probably crashed and
 					will be back online shortly.
 				</p>
-				<h2>Interrupted games</h2>
+				<h2>Interrupted games:</h2>
 				<p>
-					Your games are stored locally.  Once the server comes back online, click
-					"Restore game" on the homepage (under Tools) to pick up where you left off.
-					(Both players need to do this for the game to be restored).
+					Your games are stored locally, so no game data has been lost.  Once the
+					server comes back online, click "Restore game" on the homepage (under Tools)
+					to pick up where you left off.  (Both players need to do this for the game
+					to be restored).
+				</p>
+				<p>
+					You can check the status of the server on the
+					<a href="http://twitter.com/lightsquaredev">Twitter feed</a>.
 				</p>
 			</div>
 		{{/troubleConnecting}}

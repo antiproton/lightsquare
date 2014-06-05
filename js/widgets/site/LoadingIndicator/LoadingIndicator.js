@@ -20,5 +20,9 @@ define(function(require) {
 		}).bind(this), secondsToWait * 1000);
 	}
 	
+	LoadingIndicator.prototype.remove = function() {
+		this._template.detach();
+	}
+	
 	return LoadingIndicator;
 });
