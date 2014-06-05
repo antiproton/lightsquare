@@ -24,6 +24,10 @@ define(function(require) {
 		this._user = user;
 		this._gamePages = {};
 		
+		this._app.ServerDisconnected.addHandler(this, function() {
+			this._displayServerDisconnectMessage();
+		});
+		
 		this._template = new Template(html, parent);
 		this._pages = new Pages(this._template.main);
 		
@@ -172,6 +176,17 @@ define(function(require) {
 		this._showMessage(5);
 	}
 	
+	Lightsquare.prototype._displayServerDisconnectMessage = function() {
+		this._template.message.innerHTML = "";
+		
+		new Ractive({
+			el: this._template.message,
+			template: serverDisconnectMessageHtml
+		});
+		
+		this._showMessage();
+	}
+	
 	Lightsquare.prototype._setupMessage = function() {
 		this._hideMessageTimer = null;
 		this._template.message.style.display = "none";
@@ -180,9 +195,11 @@ define(function(require) {
 	Lightsquare.prototype._showMessage = function(durationInSeconds) {
 		this._template.message.style.display = "";
 		
-		this._hideMessageTimer = setTimeout((function() {
-			this._hideMessage();
-		}).bind(this), durationInSeconds * 1000);
+		if(durationInSeconds) {
+			this._hideMessageTimer = setTimeout((function() {
+				this._hideMessage();
+			}).bind(this), durationInSeconds * 1000);
+		}
 	}
 	
 	Lightsquare.prototype._hideMessage = function() {
