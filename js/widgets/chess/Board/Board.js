@@ -124,6 +124,8 @@ define(function(require) {
 		this._squares.forEach(function(square) {
 			square.setPieceStyle(pieceStyle);
 		});
+		
+		this._promotionDialog.setPieceStyle(pieceStyle);
 	}
 
 	Board.prototype.setSquareStyle = function(squareStyle) {
@@ -325,9 +327,9 @@ define(function(require) {
 	}
 	
 	Board.prototype._setupPromotionDialog = function() {
-		var promotionDialog = new PromotionDialog(this._template.promotion_dialog);
+		this._promotionDialog = new PromotionDialog(this._template.promotion_dialog);
 		
-		promotionDialog.PieceSelected.addHandler(this, function(data) {
+		this._promotionDialog.PieceSelected.addHandler(this, function(data) {
 			this.Move.fire({
 				from: this._pendingPromotion.from,
 				to: this._pendingPromotion.to,
