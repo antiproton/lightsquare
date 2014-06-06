@@ -46,10 +46,6 @@
 	user-select: none;
 }
 
-.board_coord.board_file {
-
-}
-
 .board_coord.board_rank {
 	margin-top: 1px;
 }
