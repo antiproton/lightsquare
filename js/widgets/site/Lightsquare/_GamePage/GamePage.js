@@ -7,6 +7,7 @@ define(function(require) {
 	var Board = require("widgets/chess/Board/Board");
 	var History = require("widgets/chess/History/History");
 	var Colour = require("chess/Colour");
+	var Move = require("chess/Move");
 	var Ractive = require("lib/dom/Ractive");
 	var playerInfoHtml = require("file!./player_info.html");
 	var controlsHtml = require("file!./controls.html");
@@ -66,15 +67,6 @@ define(function(require) {
 			this._history.move(move);
 		}).bind(this));
 		
-		this._game.PromotionPieceNeeded.addHandler(this, function(data) {
-			/*
-			TODO
-			
-			involves _user.getPrefs() and a new widget.  need to find out how to do
-			absolute positioning with flex display
-			*/
-		});
-		
 		this._game.Move.addHandler(this, function(data) {
 			this._history.move(data.move);
 			this._board.setBoardArray(data.move.getPositionAfter().getBoardArray());
@@ -106,7 +98,15 @@ define(function(require) {
 		this._board.setBoardArray(this._game.getPosition().getBoardArray());
 		
 		this._board.Move.addHandler(this, function(data) {
-			this._game.move(data.from, data.to);
+			var promoteTo = (this._user.getPreferences().alwaysQueen ? PieceType.queen : data.promoteTo);
+			
+			if(promoteTo === null && (new Move(this._game.getPosition(), data.from, data.to)).isPromotion()) {
+				this._board.promptForPromotionPiece();
+			}
+			
+			else {
+				this._game.move(data.from, data.to, data.promoteTo);
+			}
 		});
 	}
 	
