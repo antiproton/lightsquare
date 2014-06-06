@@ -13,7 +13,6 @@ define(function(require) {
 	require("lib/Array.getShallowCopy");
 
 	function Game(server, gameDetails) {
-		this.PromotionPieceNeeded = new Event(this);
 		this.Move = new Event(this);
 		this.ClockTick = new Event(this);
 		this.GameOver = new Event(this);
@@ -105,26 +104,18 @@ define(function(require) {
 			var move = new ChessMove(this.getPosition(), from, to, promoteTo);
 			
 			if(move.isLegal()) {
-				if(move.isPromotion() && promoteTo === undefined) {
-					this.PromotionPieceNeeded.fire({
-						move: move
-					});
-				}
+				this._game.move(from, to, promoteTo);
+				this._history.push(Move.fromMove(move));
 				
-				else {
-					this._game.move(from, to, promoteTo);
-					this._history.push(Move.fromMove(move));
-					
-					this._server.send("/game/" + this._id + "/move", {
-						from: from.squareNo,
-						to: to.squareNo,
-						promoteTo: (promoteTo ? promoteTo.sanString : undefined)
-					});
-					
-					this.Move.fire({
-						move: move
-					});
-				}
+				this._server.send("/game/" + this._id + "/move", {
+					from: from.squareNo,
+					to: to.squareNo,
+					promoteTo: (promoteTo ? promoteTo.sanString : undefined)
+				});
+				
+				this.Move.fire({
+					move: move
+				});
 			}
 		}
 	}
