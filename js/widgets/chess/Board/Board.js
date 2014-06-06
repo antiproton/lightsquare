@@ -11,6 +11,7 @@ define(function(require) {
 	var Colour = require("chess/Colour");
 	require("css!./board.css");
 	var html = require("file!./board.html");
+	var PromotionDialog = require("./_PromotionDialog/PromotionDialog");
 
 	function Board(parent) {
 		this._template = new Template(html, parent);
@@ -38,6 +39,8 @@ define(function(require) {
 			}
 		};
 
+		this._lastMoveEvent = null;
+		this._pendingPromotion = null;
 		this._viewingAs = Colour.white;
 		this._showSurround = false;
 		this._showCoords = true;
@@ -112,6 +115,10 @@ define(function(require) {
 	Board.prototype.disableHtmlUpdates = function() {
 		this._htmlUpdatesEnabled = false;
 	}
+	
+	Board.prototype.setAlwaysQueen = function(alwaysQueen) {
+		this._alwaysQueen = alwaysQueen;
+	}
 
 	Board.prototype.setPieceStyle = function(pieceStyle) {
 		this._squares.forEach(function(square) {
@@ -153,6 +160,7 @@ define(function(require) {
 	Board.prototype._setupHtml = function() {
 		this._setupHtmlCoords();
 		this._setupHtmlSquares();
+		this._setupPromotionDialog();
 
 		window.addEventListener("mousemove", (function(event) {
 			this._boardMouseMove(event);
@@ -300,6 +308,37 @@ define(function(require) {
 
 			square.setSquarePosition(posX, posY);
 		}).bind(this));
+	}
+	
+	Board.prototype.promptForPromotionPiece = function() {
+		this._pendingPromotion = this._lastMoveEvent;
+		
+		style(this._template.promotion_dialog, {
+			display: "block",
+			top: this._lastMoveEvent.clientY,
+			left: this._lastMoveEvent.clientX
+		});
+	}
+	
+	Board.prototype._hidePromotionDialog = function() {
+		this._template.promotion_dialog.style.display = "";
+	}
+	
+	Board.prototype._setupPromotionDialog = function() {
+		var promotionDialog = new PromotionDialog(this._template.promotion_dialog);
+		
+		promotionDialog.PieceSelected.addHandler(this, function(data) {
+			this.Move.fire({
+				from: this._pendingPromotion.from,
+				to: this._pendingPromotion.to,
+				piece: this._pendingPromotion.piece,
+				promoteTo: data.type,
+				event: this._pendingPromotion.event
+			});
+			
+			this._pendingPromotion = null;
+			this._hidePromotionDialog();
+		});
 	}
 
 	Board.prototype._squareFromMouseEvent = function(event, useMoveOffsets) {
@@ -450,24 +489,30 @@ define(function(require) {
 		}
 
 		if(!args.cancel) {
+			var from = this._move.from;
+			var piece = this.getPiece(this._move.from);
+			
 			if(this._move.isInProgress) {
 				this.Deselected.fire();
 
 				if(square !== null) {
-					if(square !== this._move.from) {
-						this.Move.fire({
-							from: this._move.from,
+					if(square !== from) {
+						this._lastMoveEvent = {
+							from: from,
 							to: square,
-							piece: this.getPiece(this._move.from),
+							piece: piece,
+							promoteTo: null,
 							event: event
-						});
+						};
+						
+						this.Move.fire(this._lastMoveEvent);
 					}
 				}
 
 				else {
 					this.PieceDraggedOff.fire({
-						from: this._move.from,
-						piece: this.getPiece(this._move.from),
+						from: from,
+						piece: piece,
 						event: event
 					});
 				}
@@ -477,7 +522,7 @@ define(function(require) {
 				this._resetMove();
 			}
 
-			else if(this._move.pieceSelected && square === this._move.from) {
+			else if(this._move.pieceSelected && square === from) {
 				args = {
 					square: square,
 					piece: this.getPiece(square),
