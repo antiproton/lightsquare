@@ -490,7 +490,7 @@ define(function(require) {
 			this.DragDrop.fire(args);
 		}
 
-		if(!args.cancel) {
+		if(!args.cancel && fromSquare !== null) {
 			var from = this._move.from;
 			var piece = this.getPiece(this._move.from);
 			
