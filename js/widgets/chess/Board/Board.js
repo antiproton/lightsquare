@@ -212,6 +212,24 @@ define(function(require) {
 			this._squares[chessSquare.squareNo] = square;
 		}).bind(this));
 	}
+	
+	Board.prototype._setupPromotionDialog = function() {
+		this._promotionDialogPieceSize = 45;
+		this._promotionDialog = new PromotionDialog(this._promotionDialogPieceSize, this._template.promotion_dialog);
+		
+		this._promotionDialog.PieceSelected.addHandler(this, function(data) {
+			this.Move.fire({
+				from: this._pendingPromotion.from,
+				to: this._pendingPromotion.to,
+				piece: this._pendingPromotion.piece,
+				promoteTo: data.type,
+				event: this._pendingPromotion.event
+			});
+			
+			this._pendingPromotion = null;
+			this._hidePromotionDialog();
+		});
+	}
 
 	Board.prototype._updateHtml = function() {
 		var boardSize = this._getBoardSize();
@@ -314,33 +332,22 @@ define(function(require) {
 	
 	Board.prototype.promptForPromotionPiece = function() {
 		this._pendingPromotion = this._lastMoveEvent;
+		this._promotionDialog.setColour(this._lastMoveEvent.piece.colour);
+		
+		var boardOffsets = getOffsets(this._template.board);
+		
+		var x = this._lastMoveEvent.event.pageX - boardOffsets.x;
+		var y = this._lastMoveEvent.event.pageY - boardOffsets.y;
 		
 		style(this._template.promotion_dialog, {
 			display: "block",
-			top: this._lastMoveEvent.clientY,
-			left: this._lastMoveEvent.clientX
+			top: y - this._promotionDialogPieceSize,
+			left: x
 		});
 	}
 	
 	Board.prototype._hidePromotionDialog = function() {
 		this._template.promotion_dialog.style.display = "";
-	}
-	
-	Board.prototype._setupPromotionDialog = function() {
-		this._promotionDialog = new PromotionDialog(this._template.promotion_dialog);
-		
-		this._promotionDialog.PieceSelected.addHandler(this, function(data) {
-			this.Move.fire({
-				from: this._pendingPromotion.from,
-				to: this._pendingPromotion.to,
-				piece: this._pendingPromotion.piece,
-				promoteTo: data.type,
-				event: this._pendingPromotion.event
-			});
-			
-			this._pendingPromotion = null;
-			this._hidePromotionDialog();
-		});
 	}
 
 	Board.prototype._squareFromMouseEvent = function(event, useMoveOffsets) {
