@@ -8,6 +8,7 @@ define(function(require) {
 	var History = require("widgets/chess/History/History");
 	var Colour = require("chess/Colour");
 	var Move = require("chess/Move");
+	var PieceType = require("chess/PieceType");
 	var Ractive = require("lib/dom/Ractive");
 	var playerInfoHtml = require("file!./player_info.html");
 	var controlsHtml = require("file!./controls.html");
