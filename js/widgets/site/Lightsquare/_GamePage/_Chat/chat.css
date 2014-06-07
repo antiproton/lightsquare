@@ -27,12 +27,12 @@ input.chat_message {
 }
 
 input.chat_send {
-	color: #EFF8FC;
+	color: #444444;
 	text-shadow: 1px 1px 0 rgba(255, 255, 255, .1);
 	margin: 0;
-	border: 1px solid #094F77;
+	border: 1px solid #BFBFBF;
 	padding: 0 1em;
-	background: #166996;
+	background: #E5E5E5;
 }
 
 span.chat_message_from {
