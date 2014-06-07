@@ -24,6 +24,7 @@ define(function(require) {
 		this._startTime = gameDetails.startTime;
 		this._id = gameDetails.id;
 		this._isInProgress = gameDetails.isInProgress;
+		this._result = gameDetails.result;
 		this._isDrawOffered = gameDetails.isDrawOffered;
 		this._isUndoRequested = gameDetails.isUndoRequested;
 		
@@ -142,6 +143,10 @@ define(function(require) {
 		return this._game.getPosition();
 	}
 	
+	Game.prototype.getResult = function() {
+		return this._result;
+	}
+	
 	Game.prototype.getHistory = function() {
 		return this._history.getShallowCopy();
 	}
@@ -254,6 +259,7 @@ define(function(require) {
 	
 	Game.prototype._gameOver = function(result) {
 		this._isInProgress = false;
+		this._result = result;
 		
 		this.GameOver.fire({
 			result: result
