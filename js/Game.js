@@ -139,6 +139,12 @@ define(function(require) {
 		}
 	}
 	
+	Game.prototype.claimDraw = function() {
+		if(this._isInProgress && this.isDrawClaimable()) {
+			this._server.send("/game/" + this._id + "/claim_draw");
+		}
+	}
+	
 	Game.prototype.getPosition = function() {
 		return this._game.getPosition();
 	}
