@@ -37,10 +37,13 @@ div.game_history_and_controls {
 	display: flex;
 }
 
-div.game_controls_and_status {
+div.game_controls_and_result {
 	display: flex;
 	flex-direction: column;
 	justify-content: flex-end;
+}
+
+div.game_result, div.game_controls {
 	min-width: 8em;
 	margin-right: .3em;
 }
@@ -57,9 +60,16 @@ div.game_controls input {
 	background: #f7f7f7;
 }
 
-div.game_status {
+div.game_controls input.disabled,
+div.game_controls input.disabled:active,
+div.game_controls input.disabled:hover {
+	color: #9E9E9E;
+}
+
+div.game_result {
 	font-size: .8em;
 	color: #1398D6;
+	box-sizing: border-box;
 	border-radius: 3px;
 	padding: .32em;
 	opacity: .8;
