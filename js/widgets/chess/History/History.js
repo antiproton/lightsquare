@@ -10,6 +10,7 @@ define(function(require) {
 		this.UserSelect = new Event(this);
 		
 		this._fullmoves = [];
+		this._scrollOnNewMoves = true;
 		
 		this._template = new Ractive({
 			template: html,
@@ -27,6 +28,12 @@ define(function(require) {
 				move: move
 			});
 		}).bind(this));
+		
+		this._historyNode = this._template.nodes.history;
+		
+		this._historyNode.addEventListener("scroll", (function() {
+			this._scrollOnNewMoves = (this._historyNode.scrollHeight - this._historyNode.scrollTop === this._historyNode.clientHeight);
+		}).bind(this));
 	}
 
 	History.prototype.move = function(move) {
@@ -41,6 +48,10 @@ define(function(require) {
 		lastFullmove.add(move);
 		
 		this._updateLastFullmove();
+			
+		if(this._scrollOnNewMoves) {
+			this._historyNode.scrollTop = this._historyNode.scrollHeight;
+		}
 	}
 
 	History.prototype.undo = function() {
