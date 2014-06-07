@@ -404,7 +404,7 @@ define(function(require) {
 
 		var piece = targetSquare.getPiece();
 		
-		if(!this._move.pieceSelected && !this._move.isInProgress && piece !== null) {
+		if(!this._move.pieceSelected && this._pendingPromotion === null && !this._move.isInProgress && piece !== null) {
 			targetSquare.setZIndexAbove();
 			
 			this._move.pieceSelected = true;
