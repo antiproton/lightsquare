@@ -122,7 +122,7 @@ define(function(require) {
 			this._game.resign();
 		}).bind(this));
 		
-		this._template.on("accept_or_offer_draw", (function() {
+		this._template.on("offer_or_accept_draw", (function() {
 			if(this._userIsActivePlayer()) {
 				this._game.acceptDraw();
 			}
