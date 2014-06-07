@@ -33,7 +33,7 @@ define(function(require) {
 				isInProgress: this._game.isInProgress(),
 				userIsPlaying: this._userIsPlaying(),
 				userIsActivePlayer: this._userIsActivePlayer(),
-				drawOffered: false,
+				drawOffered: this._game.isDrawOffered(),
 				canClaimDraw: this._game.isDrawClaimable()
 			}
 		});
