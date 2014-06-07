@@ -20,13 +20,9 @@ div.game_board_and_players {
 	flex-direction: column;
 }
 
-div.game_player, div.game_history_spacer {
+div.game_player, div.game_result {
 	font-size: 1.2em;
 	padding: .5em 0 .5em .5em;
-}
-
-div.game_history_spacer {
-	color: rgba(0, 0, 0, 0);
 }
 
 div.game_player {
@@ -34,24 +30,20 @@ div.game_player {
 	justify-content: space-between;
 }
 
+div.game_result {
+	text-align: right;
+}
+
 div.game_history_and_controls {
 	display: flex;
-}
-
-div.game_controls_and_result {
-	display: flex;
-	flex-direction: column;
-	justify-content: flex-end;
-}
-
-div.game_result, div.game_controls {
-	min-width: 8em;
-	margin-right: .3em;
 }
 
 div.game_controls {
 	display: flex;
 	flex-direction: column;
+	justify-content: flex-end;
+	min-width: 8em;
+	margin-right: .3em;
 }
 
 div.game_controls input {
@@ -65,18 +57,6 @@ div.game_controls input.disabled,
 div.game_controls input.disabled:active,
 div.game_controls input.disabled:hover {
 	color: #9E9E9E;
-}
-
-div.game_result {
-	color: #1398D6;
-	box-sizing: border-box;
-	border-radius: 3px;
-	padding: .32em;
-	opacity: .8;
-}
-
-div.game_result_label {
-	font-size: .8em;
 }
 
 div.game_chat {

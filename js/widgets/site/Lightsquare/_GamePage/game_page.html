@@ -24,37 +24,39 @@
 	</div>
 	<div class="game_details">
 		<div class="game_history_chat_and_controls">
-			<div class="game_history_spacer">
-				Invisible writing
+			<div class="game_result">
+				&nbsp;
+				{{^isInProgress}}
+					{{result.summary}}
+				{{/isInProgress}}
 			</div>
 			<div class="game_history_and_controls">
-				<div class="game_controls_and_result">
-					{{^isInProgress}}
-						<div class="game_result">
-							<div class="game_result_label">
-								{{result.summary}}
-							</div>
-						</div>
-					{{/isInProgress}}
-					{{#(userIsPlaying && isInProgress)}}
-						<div class="game_controls">
-							<input type="button" on-click="resign" value="Resign">
-							<input
-								type="button"
-								on-click="offer_or_accept_draw"
-								value="{{(drawOffered && userIsActivePlayer) ? 'Accept' : 'Offer'}} draw"
-								class="{{
-									(
+				{{#userIsPlaying}}
+					<div class="game_controls">
+						<input
+							type="button"
+							on-click="resign"
+							value="Resign"
+							class="{{!isInProgress ? 'disabled' : ''}}"
+						>
+						<input
+							type="button"
+							on-click="offer_or_accept_draw"
+							value="{{(drawOffered && userIsActivePlayer) ? 'Accept' : 'Offer'}} draw"
+							class="{{
+								(
+									isInProgress && (
 										(!drawOffered && !userIsActivePlayer)
 										|| (drawOffered && userIsActivePlayer)
-									) ? '' : 'disabled'}}"
-							>
-							{{#canClaimDraw}}
-								<input type="button" on-click="claim_draw" value="Claim draw">
-							{{/canClaimDraw}}
-						</div>
-					{{/(userIsPlaying && isInProgress)}}
-				</div>
+									)
+								) ? '' : 'disabled'
+							}}"
+						>
+						{{#canClaimDraw}}
+							<input type="button" on-click="claim_draw" value="Claim draw">
+						{{/canClaimDraw}}
+					</div>
+				{{/userIsPlaying}}
 				<div class="game_history" id="history">
 					
 				</div>
