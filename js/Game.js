@@ -44,14 +44,8 @@ define(function(require) {
 			increment: Time.fromUnitString(gameDetails.options.timeIncrement, Time.seconds)
 		});
 		
-		var startingFen = Fen.STARTING_FEN;
-		
-		if(this._history.length > 0) {
-			startingFen = this._history[this._history.length - 1].getPositionAfter().getFen();
-		}
-		
 		this._game = new ChessGame({
-			startingFen: startingFen,
+			history: this._history,
 			isTimed: false
 		});
 		
