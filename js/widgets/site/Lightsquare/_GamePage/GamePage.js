@@ -106,7 +106,7 @@ define(function(require) {
 			}
 			
 			else {
-				this._game.move(moveEvent.from, moveEvent.to, moveEvent.promoteTo);
+				this._game.move(moveEvent.from, moveEvent.to, promoteTo);
 			}
 		});
 	}
