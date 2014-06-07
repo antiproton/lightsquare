@@ -85,8 +85,10 @@ define(function(require) {
 			this._gameOver(data.result);
 		}).bind(this));
 		
-		this._server.subscribe("/game/" + this._id + "/draw_offer", (function(data) {
-			this.DrawOffered.fire();
+		this._server.subscribe("/game/" + this._id + "/draw_offer", (function(colour) {
+			if(Colour.fromFenString(colour) === this._game.getPosition().getActiveColour().opposite) {
+				this.DrawOffered.fire();
+			}
 		}).bind(this));
 	}
 	
