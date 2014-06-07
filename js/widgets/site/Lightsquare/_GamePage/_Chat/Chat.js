@@ -25,7 +25,7 @@ define(function(require) {
 		this._template.on("send", (function(event) {
 			event.original.preventDefault();
 			
-			this._game.sendChatMessage(this._template.get("message"));
+			this._game.sendChatMessage((this._template.get("message") || "").toString());
 			this._template.set("message", "");
 		}).bind(this));
 		
