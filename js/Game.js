@@ -236,9 +236,11 @@ define(function(require) {
 			times: times
 		});
 		
-		setTimeout((function() {
-			this._clockTick();
-		}).bind(this), 100);
+		if(this._isInProgress) {
+			setTimeout((function() {
+				this._clockTick();
+			}).bind(this), 100);
+		}
 	}
 	
 	Game.prototype._applyServerMove = function(serverMove) {
