@@ -41,13 +41,13 @@ div.game_controls_and_status {
 	display: flex;
 	flex-direction: column;
 	justify-content: flex-end;
+	min-width: 8em;
+	margin-right: .3em;
 }
 
 div.game_controls {
 	display: flex;
 	flex-direction: column;
-	min-width: 8em;
-	margin-right: .3em;
 }
 
 div.game_controls input {
@@ -55,6 +55,14 @@ div.game_controls input {
 	margin: .2em 0 0 0;
 	border-color: #b0b0b0;
 	background: #f7f7f7;
+}
+
+div.game_status {
+	font-size: .8em;
+	color: #1398D6;
+	border-radius: 3px;
+	padding: .32em;
+	opacity: .8;
 }
 
 div.game_chat {

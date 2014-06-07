@@ -30,9 +30,11 @@ define(function(require) {
 			data: {
 				players: {},
 				result: this._game.getResult(),
+				isInProgress: this._game.isInProgress(),
 				userIsPlaying: this._userIsPlaying(),
 				userIsActivePlayer: this._userIsActivePlayer(),
-				drawOffered: false
+				drawOffered: false,
+				canClaimDraw: this._game.isDrawClaimable()
 			}
 		});
 		
@@ -75,6 +77,7 @@ define(function(require) {
 			this._board.setBoardArray(data.move.getPositionAfter().getBoardArray());
 			this._template.set("userIsActivePlayer", this._userIsActivePlayer());
 			this._template.set("drawOffered", false);
+			this._template.set("canClaimDraw", this._game.isDrawClaimable());
 			this._history.select(data.move);
 		});
 		
@@ -92,6 +95,7 @@ define(function(require) {
 		
 		this._game.GameOver.addHandler(this, function(data) {
 			this._template.set("result", data.result);
+			this._template.set("isInProgress", false);
 		});
 	}
 	
@@ -126,6 +130,10 @@ define(function(require) {
 			else {
 				this._game.offerDraw();
 			}
+		}).bind(this));
+		
+		this._template.on("claim_draw", (function() {
+			this._game.claimDraw();
 		}).bind(this));
 	}
 	

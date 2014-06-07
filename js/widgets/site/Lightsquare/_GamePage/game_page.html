@@ -30,14 +30,14 @@
 			<div class="game_history_and_controls">
 				<div class="game_controls_and_status">
 					<div class="game_status">
-						{{#result}}
-							{{result.summary}}
-						{{/result}}
-						{{^result}}
+						{{#isInProgress}}
 							Game in progress
-						{{/result}}
+						{{/isInProgress}}
+						{{^isInProgress}}
+							{{result.summary}}
+						{{/isInProgress}}
 					</div>
-					{{#userIsPlaying}}
+					{{#(userIsPlaying && isInProgress)}}
 						<div class="game_controls">
 							<input type="button" on-click="resign" value="Resign">
 							<input
@@ -51,10 +51,10 @@
 									) ? '' : 'disabled'}}"
 							>
 							{{#canClaimDraw}}
-								<button type="button" on-click="claim_draw">Claim draw</button>
+								<input type="button" on-click="claim_draw" value="Claim draw">
 							{{/canClaimDraw}}
 						</div>
-					{{/userIsPlaying}}
+					{{/(userIsPlaying && isInProgress)}}
 				</div>
 				<div class="game_history" id="history">
 					
