@@ -94,6 +94,18 @@ input[type="button"]:active, input[type="submit"]:active, a.button:active {
 	box-shadow: inset 2px 2px 1px rgba(0, 0, 0, .2);
 }
 
+input[type="button"].disabled,
+input[type="button"].disabled:active,
+input[type="button"].disabled:hover,
+a.button.disabled,
+a.button.disabled:active,
+a.button.disabled:hover {
+	color: #466B10;
+	box-shadow: none;
+	text-decoration: none;
+	cursor: default;
+}
+
 div.message {
 	position: absolute;
 	z-index: 2;
