@@ -225,24 +225,6 @@ define(function(require) {
 		}
 	}
 	
-	Game.prototype._clockTick = function() {
-		var times = {};
-		
-		Colour.forEach(function(colour) {
-			times[colour] = this._clock.getTimeLeft(colour);
-		}, this);
-		
-		this.ClockTick.fire({
-			times: times
-		});
-		
-		if(this._isInProgress) {
-			setTimeout((function() {
-				this._clockTick();
-			}).bind(this), 100);
-		}
-	}
-	
 	Game.prototype._applyServerMove = function(serverMove) {
 		if(serverMove.index in this._history) {
 			this._history[serverMove.index].setTime(serverMove.time);
@@ -266,6 +248,24 @@ define(function(require) {
 					move: move
 				});
 			}
+		}
+	}
+	
+	Game.prototype._clockTick = function() {
+		var times = {};
+		
+		Colour.forEach(function(colour) {
+			times[colour] = this._clock.getTimeLeft(colour);
+		}, this);
+		
+		this.ClockTick.fire({
+			times: times
+		});
+		
+		if(this._isInProgress) {
+			setTimeout((function() {
+				this._clockTick();
+			}).bind(this), 100);
 		}
 	}
 	
