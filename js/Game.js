@@ -196,6 +196,10 @@ define(function(require) {
 		return this._isDrawOffered;
 	}
 	
+	Game.prototype.isDrawClaimable = function() {
+		return (this._game.isFiftymoveClaimable() || this._game.isThreefoldClaimable());
+	}
+	
 	Game.prototype.getLastMove = function() {
 		return this._history[this._history.length - 1] || null;
 	}
