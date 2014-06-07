@@ -330,7 +330,7 @@ define(function(require) {
 		}).bind(this));
 	}
 	
-	Board.prototype.promptForPromotionPiece = function() {
+	Board.prototype._promptForPromotionPiece = function() {
 		this._pendingPromotion = this._lastMoveEvent;
 		this._promotionDialog.setColour(this._lastMoveEvent.piece.colour);
 		
@@ -511,7 +511,10 @@ define(function(require) {
 							to: square,
 							piece: piece,
 							promoteTo: null,
-							event: event
+							event: event,
+							promptForPromotionPiece: (function() {
+								this._promptForPromotionPiece();
+							}).bind(this)
 						};
 						
 						this.Move.fire(this._lastMoveEvent);

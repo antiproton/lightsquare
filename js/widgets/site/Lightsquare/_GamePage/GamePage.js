@@ -98,15 +98,15 @@ define(function(require) {
 		this._board.setSquareSize(75);
 		this._board.setBoardArray(this._game.getPosition().getBoardArray());
 		
-		this._board.Move.addHandler(this, function(data) {
-			var promoteTo = (this._user.getPreferences().alwaysQueen ? PieceType.queen : data.promoteTo);
+		this._board.Move.addHandler(this, function(moveEvent) {
+			var promoteTo = (this._user.getPreferences().alwaysQueen ? PieceType.queen : moveEvent.promoteTo);
 			
-			if(promoteTo === null && (new Move(this._game.getPosition(), data.from, data.to)).isPromotion()) {
-				this._board.promptForPromotionPiece();
+			if(promoteTo === null && (new Move(this._game.getPosition(), moveEvent.from, moveEvent.to)).isPromotion()) {
+				moveEvent.promptForPromotionPiece();
 			}
 			
 			else {
-				this._game.move(data.from, data.to, data.promoteTo);
+				this._game.move(moveEvent.from, moveEvent.to, moveEvent.promoteTo);
 			}
 		});
 	}
