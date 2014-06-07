@@ -37,8 +37,17 @@ div.game_history_and_controls {
 	display: flex;
 }
 
+div.game_controls_and_status {
+	display: flex;
+	flex-direction: column;
+	justify-content: flex-end;
+}
+
 div.game_controls {
 	display: flex;
+	flex-direction: column;
+	min-width: 8em;
+	margin-right: .3em;
 }
 
 div.game_controls input {

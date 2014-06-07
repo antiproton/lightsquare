@@ -1,14 +1,24 @@
 <div class="game">
 	<div class="game_main">
 		<div class="game_board_and_players">
-			<div class="game_player" data-id="opponent">
+			<div class="game_player">
+				<div class="player_username">
+					{{players.opponent.username}} ({{players.opponent.rating}})
+				</div>
+				<div class="player_clock">
+					{{players.opponent.time.getColonDisplay(players.opponent.time < 10000)}}
+				</div>
+			</div>
+			<div class="game_board" id="board">
 				
 			</div>
-			<div class="game_board" data-id="board">
-				
-			</div>
-			<div class="game_player" data-id="player">
-				
+			<div class="game_player">
+				<div class="player_username">
+					{{players.player.username}} ({{players.player.rating}})
+				</div>
+				<div class="player_clock">
+					{{players.player.time.getColonDisplay(players.player.time < 10000)}}
+				</div>
 			</div>
 		</div>
 	</div>
@@ -18,14 +28,39 @@
 				Invisible writing
 			</div>
 			<div class="game_history_and_controls">
-				<div class="game_controls" data-id="controls">
-					
+				<div class="game_controls_and_status">
+					<div class="game_status">
+						{{#result}}
+							{{result.summary}}
+						{{/result}}
+						{{^result}}
+							Game in progress
+						{{/result}}
+					</div>
+					{{#userIsPlaying}}
+						<div class="game_controls">
+							<input type="button" on-click="resign" value="Resign">
+							<input
+								type="button"
+								on-click="offer_or_accept_draw"
+								value="{{(drawOffered && userIsActivePlayer) ? 'Accept' : 'Offer'}} draw"
+								class="{{
+									(
+										(!drawOffered && !userIsActivePlayer)
+										|| (drawOffered && userIsActivePlayer)
+									) ? '' : 'disabled'}}"
+							>
+							{{#canClaimDraw}}
+								<button type="button" on-click="claim_draw">Claim draw</button>
+							{{/canClaimDraw}}
+						</div>
+					{{/userIsPlaying}}
 				</div>
-				<div class="game_history" data-id="history">
+				<div class="game_history" id="history">
 					
 				</div>
 			</div>
-			<div class="game_chat" data-id="chat">
+			<div class="game_chat" id="chat">
 				
 			</div>
 		</div>

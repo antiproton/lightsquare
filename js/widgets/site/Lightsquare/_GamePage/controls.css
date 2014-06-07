@@ -1,6 +1,0 @@
-div.controls {
-	display: flex;
-	flex-direction: column-reverse;
-	min-width: 8em;
-	margin-right: .3em;
-}
