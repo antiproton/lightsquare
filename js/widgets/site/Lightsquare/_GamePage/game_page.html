@@ -29,14 +29,13 @@
 			</div>
 			<div class="game_history_and_controls">
 				<div class="game_controls_and_result">
-					<div class="game_result">
-						{{#isInProgress}}
-							Game in progress
-						{{/isInProgress}}
-						{{^isInProgress}}
-							{{result.summary}}
-						{{/isInProgress}}
-					</div>
+					{{^isInProgress}}
+						<div class="game_result">
+							<div class="game_result_label">
+								{{result.summary}}
+							</div>
+						</div>
+					{{/isInProgress}}
 					{{#(userIsPlaying && isInProgress)}}
 						<div class="game_controls">
 							<input type="button" on-click="resign" value="Resign">

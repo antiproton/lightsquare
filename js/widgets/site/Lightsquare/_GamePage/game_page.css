@@ -67,12 +67,15 @@ div.game_controls input.disabled:hover {
 }
 
 div.game_result {
-	font-size: .8em;
 	color: #1398D6;
 	box-sizing: border-box;
 	border-radius: 3px;
 	padding: .32em;
 	opacity: .8;
+}
+
+div.game_result_label {
+	font-size: .8em;
 }
 
 div.game_chat {
