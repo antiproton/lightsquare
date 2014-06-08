@@ -3,8 +3,6 @@ define(function(require) {
 	var html = require("file!./piece.html");
 	var style = require("lib/dom/style");
 	var Fen = require("chess/Fen");
-	
-	var spritePieces = "PNBRQKpnbrqk";
 
 	function Piece(parent, size) {
 		this._template = new Template(html, parent);
@@ -44,7 +42,7 @@ define(function(require) {
 		var offset = this._size;
 		
 		if(this._piece !== null) {
-			offset = -spritePieces.indexOf(this._piece) * this._size;
+			offset = -"PNBRQKpnbrqk".indexOf(this._piece) * this._size;
 		}
 		
 		var path = [
