@@ -3,13 +3,15 @@ define(function(require) {
 	var html = require("file!./piece.html");
 	var style = require("lib/dom/style");
 	var Fen = require("chess/Fen");
+	
+	var spritePieces = "PNBRQKpnbrqk";
 
 	function Piece(parent, size) {
 		this._template = new Template(html, parent);
 		this._style = "Merida";
 		this._piece = null;
 		this._size = size || Piece.DEFAULT_SIZE;
-		this._setupHtml();
+		this._updateSprite();
 	}
 
 	Piece.styles = [
@@ -21,30 +23,30 @@ define(function(require) {
 
 	Piece.prototype.setPiece = function(piece) {
 		this._piece = piece;
-		this._updatePiece();
+		this._updateSprite();
 	}
 	
 	Piece.prototype.getPiece = function() {
 		return this._piece;
 	}
 
-	Piece.prototype._updatePiece = function() {
-		var offset = (this._piece ? "PNBRQKpnbrqk".indexOf(this._piece) * this._size : -this._size);
-		
-		this._template.root.style.backgroundPosition = offset + "px 0";
-	}
-
 	Piece.prototype.setStyle = function(style) {
 		this._style = style;
-		this._updatePieceSet();
+		this._updateSprite();
 	}
 
 	Piece.prototype.setSize = function(size) {
 		this._size = size;
-		this._updatePieceSet();
+		this._updateSprite();
 	}
 	
-	Piece.prototype._updatePieceSet = function() {
+	Piece.prototype._updateSprite = function() {
+		var offset = this._size;
+		
+		if(this._piece !== null) {
+			offset = -spritePieces.indexOf(this._piece) * this._size;
+		}
+		
 		var path = [
 			".",
 			"pieces",
@@ -53,7 +55,13 @@ define(function(require) {
 			"sprite.png"
 		];
 		
-		this._template.root.style.backgroundImage = "url('" + require.toUrl(path.join("/")) + "')";
+		style(this._template.root, {
+			width: this._size,
+			height: this._size,
+			backgroundImage: "url('" + require.toUrl(path.join("/")) + "')",
+			backgroundPosition: offset + "px 0",
+			backgroundRepeat: "no-repeat"
+		});
 	}
 
 	return Piece;
