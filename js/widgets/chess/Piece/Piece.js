@@ -51,7 +51,7 @@ define(function(require) {
 				"pieces",
 				this._style,
 				this._size,
-				this._piece.fenString + ".png"
+				this._piece.colour.fenString + this._piece.type.sanString + ".png"
 			];
 
 			backgroundImage = "url('" + require.toUrl(path.join("/")) + "')";
