@@ -172,6 +172,10 @@ define(function(require) {
 		return this._players[colour];
 	}
 	
+	Game.prototype.getActivePlayer = function() {
+		return this._players[this._game.getPosition().getActiveColour()];
+	}
+	
 	Game.prototype.getTimeLeft = function(colour) {
 		return this._clock.getTimeLeft(colour);
 	}
