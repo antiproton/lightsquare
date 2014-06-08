@@ -30,14 +30,26 @@ define(function(require) {
 		}).bind(this));
 		
 		this._game.ChatMessageReceived.addHandler(this, function(message) {
-			this._template.get("messages").push({
-				from: message.from,
-				body: message.body
-			});
+			this._addMessage(message.body, message.from);
 			
 			if(this._scrollOnNewMessages) {
 				history.scrollTop = history.scrollHeight;
 			}
+		});
+		
+		this._game.DrawOffered.addHandler(this, function() {
+			this._addMessage(this._game.getActivePlayer().username + " has offered a draw.");
+		});
+		
+		this._game.GameOver.addHandler(this, function(data) {
+			this._addMessage("Game over - " + data.result.description + ".");
+		});
+	}
+	
+	Chat.prototype._addMessage = function(body, from) {
+		this._template.get("messages").push({
+			from: from,
+			body: body
 		});
 	}
 	
