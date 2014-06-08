@@ -19,19 +19,6 @@ define(function(require) {
 
 	Piece.DEFAULT_SIZE = 60;
 
-	Piece.prototype._setupHtml = function() {
-		this._updateHtml();
-	}
-
-	Piece.prototype._updateHtml = function() {
-		style(this._template.root, {
-			width: this._size,
-			height: this._size
-		});
-
-		this._updatePiece();
-	}
-
 	Piece.prototype.setPiece = function(piece) {
 		this._piece = piece;
 		this._updatePiece();
@@ -42,34 +29,31 @@ define(function(require) {
 	}
 
 	Piece.prototype._updatePiece = function() {
-		var backgroundImage = "none";
-		var path;
-
-		if(this._piece !== null) {
-			path = [
-				".",
-				"pieces",
-				this._style,
-				this._size,
-				this._piece.colour.fenString + this._piece.type.sanString + ".png"
-			];
-
-			backgroundImage = "url('" + require.toUrl(path.join("/")) + "')";
-		}
-
-		if(this._template.root.style.backgroundImage !== backgroundImage) {
-			this._template.root.style.backgroundImage = backgroundImage;
-		}
+		var offset = (this._piece ? "PNBRQKpnbrqk".indexOf(this._piece) * this._size : -this._size);
+		
+		this._template.root.style.backgroundPosition = offset + "px 0";
 	}
 
 	Piece.prototype.setStyle = function(style) {
 		this._style = style;
-		this._updatePiece();
+		this._updatePieceSet();
 	}
 
 	Piece.prototype.setSize = function(size) {
 		this._size = size;
-		this._updateHtml();
+		this._updatePieceSet();
+	}
+	
+	Piece.prototype._updatePieceSet = function() {
+		var path = [
+			".",
+			"pieces",
+			this._style,
+			this._size,
+			"sprite.png"
+		];
+		
+		this._template.root.style.backgroundImage = "url('" + require.toUrl(path.join("/")) + "')";
 	}
 
 	return Piece;
