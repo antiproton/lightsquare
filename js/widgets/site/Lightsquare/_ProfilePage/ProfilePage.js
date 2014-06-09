@@ -2,6 +2,8 @@ define(function(require) {
 	require("css!./profile_page.css");
 	var html = require("file!./profile_page.html");
 	var Ractive = require("lib/dom/Ractive");
+	var Piece = require("widgets/chess/Piece/Piece");
+	var Board = require("widgets/chess/Board/Board");
 	
 	function ProfilePage(user, parent) {
 		this._user = user;
@@ -10,7 +12,10 @@ define(function(require) {
 			template: html,
 			el: parent,
 			data: {
-				user: this._user
+				user: this._user,
+				pieceStyles: Piece.styles,
+				boardSizes: Board.sizes,
+				boardStyles: Board.squareStyles
 			}
 		});
 		
