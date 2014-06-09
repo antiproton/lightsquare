@@ -61,6 +61,7 @@ define(function(require) {
 		}).bind(this));
 		
 		this._setupPreviewBoard();
+		this._updatePreviewBoard();
 	}
 	
 	ProfilePage.prototype._setupPreviewBoard = function() {
@@ -72,9 +73,17 @@ define(function(require) {
 	ProfilePage.prototype._updatePreviewBoard = function() {
 		var prefs = this._user.getPreferences();
 		
-		this._previewBoard.setSquareSize(prefs.boardSize);
-		this._previewBoard.setSquareStyle(prefs.boardStyle);
-		this._previewBoard.setPieceStyle(prefs.pieceStyle);
+		if(prefs.boardSize) {
+			this._previewBoard.setSquareSize(prefs.boardSize);
+		}
+		
+		if(prefs.boardStyle) {
+			this._previewBoard.setSquareStyle(prefs.boardStyle);
+		}
+		
+		if(prefs.pieceStyle) {
+			this._previewBoard.setPieceStyle(prefs.pieceStyle);
+		}
 	}
 	
 	return ProfilePage;
