@@ -53,3 +53,26 @@ div.profile input[type="checkbox"] {
 	display: inline-block;
 	vertical-align: middle;
 }
+
+div.preview_board_container {
+	width: 240px;
+	height: 240px;
+	margin: .7em 0 0 0;
+	overflow: hidden;
+}
+
+div.preview_board {
+	position: relative;
+	z-index: 1;
+	width: 240px;
+	height: 240px;
+}
+
+div.preview_board_overlay {
+	position: relative;
+	z-index: 2;
+	top: -240px;
+	width: 240px;
+	height: 240px;
+	background: url('/js/widgets/site/Lightsquare/_ProfilePage/preview_board_overlay.png');
+}
