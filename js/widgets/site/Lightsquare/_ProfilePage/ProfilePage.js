@@ -98,8 +98,8 @@ define(function(require) {
 		
 		this._template.set("prefs", {
 			alwaysQueen: !!prefs.alwaysQueen,
-			boardStyle: (prefs.boardStyle || Board.DEFAULT_SQUARE_SIZE),
-			boardSize: (prefs.boardSize ? prefs.boardSize.toString() : null),
+			boardStyle: (prefs.boardStyle || Board.DEFAULT_SQUARE_STYLE),
+			boardSize: (prefs.boardSize || Board.DEFAULT_SQUARE_SIZE),
 			pieceStyle: (prefs.pieceStyle || Piece.DEFAULT_STYLE)
 		});
 		
