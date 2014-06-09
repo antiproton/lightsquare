@@ -9,21 +9,22 @@
 		</tbody>
 	</table>
 	<h2>Preferences</h2>
+	<h3>Gameplay</h3>
 	<div class="input_pair">
 		<div class="input_label">
-			<label for="alwaysQueen">Always queen:</label>
+			<label for="alwaysQueen">Always queen</label>
 		</div>
 		<div class="input_control">
-			<input type="checkbox" id="alwaysQueen" on-change="save:'alwaysQueen'" checked="{{alwaysQueen}}">
+			<input type="checkbox" id="alwaysQueen" on-change="saveAlwaysQueen" checked="{{prefs.alwaysQueen}}">
 		</div>
 	</div>
-	<h3>Board</h3>
+	<h3>Appearance</h3>
 	<div class="input_pair">
 		<div class="input_label">
 			<label for="boardStyle">Style</label>
 		</div>
 		<div class="input_control">
-			<select id="boardStyle" value="{{boardStyle}}" on-change="save:'boardStyle'">
+			<select id="boardStyle" value="{{prefs.boardStyle}}" on-change="saveBoardStyle">
 				{{#boardStyles}}
 					<option value="{{code}}">{{label}}</option>
 				{{/boardStyles}}
@@ -35,7 +36,7 @@
 			<label for="boardSize">Size</label>
 		</div>
 		<div class="input_control">
-			<select id="boardSize" value="{{boardSize}}" on-change="save:'boardSize'">
+			<select id="boardSize" value="{{prefs.boardSize}}" on-change="saveBoardSize">
 				{{#boardSizes}}
 					<option value="{{code}}">{{label}}</option>
 				{{/boardSizes}}
@@ -47,9 +48,10 @@
 			<label for="pieceStyle">Pieces</label>
 		</div>
 		<div class="input_control">
-			<select id="pieceStyle" value="{{pieceStyle}}" on-change="save:'pieceStyle'">
-				<option value="Alpha">Alpha</option>
-				<option value="Merida">Classic</option>
+			<select id="pieceStyle" value="{{prefs.pieceStyle}}" on-change="savePieceStyle">
+				{{#pieceStyles}}
+					<option value="{{.}}">{{.}}</option>
+				{{/pieceStyles}}
 			</select>
 		</div>
 	</div>
@@ -58,10 +60,10 @@
 		</div>
 		<div class="input_control">
 			<div class="preview_board_container">
-				<div class="preview_board"  id="preview_board">
+				<div class="preview_board" id="preview_board">
 					
 				</div>
-				<div class="preview_board_overlay">
+				<div class="preview_board_overlay" id="preview_board_overlay">
 					
 				</div>
 			</div>

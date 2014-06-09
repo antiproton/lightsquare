@@ -6,17 +6,22 @@ div.profile {
 	background: white;
 }
 
-div.profile h1, div.profile h2 {
+div.profile * {
 	font-weight: normal;
 }
 
 div.profile h1 {
 	text-align: center;
-	font-size: 1.3em;
+	font-size: 1.4em;
 	margin-top: 0;
 }
 
 div.profile h2 {
+	text-align: center;
+	font-size: 1.2em;
+}
+
+div.profile h3 {
 	font-size: 1.1em;
 }
 
@@ -74,5 +79,4 @@ div.preview_board_overlay {
 	top: -240px;
 	width: 240px;
 	height: 240px;
-	background: url('/js/widgets/site/Lightsquare/_ProfilePage/preview_board_overlay.png');
 }
