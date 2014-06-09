@@ -43,12 +43,8 @@ define(function(require) {
 	};
 
 	Square.prototype.setHighlight = function(highlightType) {
-		var oldClassName = "board_square_highlight_" + this._highlightType;
-		var newClassName = "board_square_highlight_" + highlightType;
-
-		this._template.highlight.classList.remove(oldClassName);
-		this._template.highlight.classList.add(newClassName);
-
+		this._template.highlight.classList.remove("board_square_highlight_" + this._highlightType);
+		this._template.highlight.classList.add("board_square_highlight_" + highlightType);
 		this._highlightType = highlightType;
 	}
 
