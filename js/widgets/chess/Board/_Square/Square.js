@@ -107,22 +107,20 @@ define(function(require) {
 	}
 
 	Square.prototype._setupHtml = function() {
-		var self = this;
-
 		this._template.root.classList.add("board_square_" + this._colour);
 		this._template.root.classList.add("board_square_" + this._squareStyle);
 
-		this._template.piece.addEventListener("mousedown", function(event) {
-			self.MouseDown.fire({
+		this._template.piece.addEventListener("mousedown", (function(event) {
+			this.MouseDown.fire({
 				event: event
 			});
-		});
+		}).bind(this));
 
-		this._template.piece.addEventListener("mouseup", function(event) {
-			self.MouseUp.fire({
+		this._template.piece.addEventListener("mouseup", (function(event) {
+			this.MouseUp.fire({
 				event: event
 			});
-		});
+		}).bind(this));
 
 		this._piece = new Piece(this._template.piece);
 		this._piece.setSize(this._size);
