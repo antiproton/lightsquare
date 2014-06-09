@@ -18,15 +18,15 @@ define(function(require) {
 	];
 	
 	Piece.sizes = {
-		"tiny": 20,
-		"extra small": 30,
-		"small": 45,
-		"standard": 60,
-		"large": 75,
-		"extra large": 90
+		"Tiny": 20,
+		"Extra small": 30,
+		"Small": 45,
+		"Standard": 60,
+		"Large": 75,
+		"Extra large": 90
 	};
 
-	Piece.DEFAULT_SIZE = Piece.sizes["standard"];
+	Piece.DEFAULT_SIZE = 60;
 
 	Piece.prototype.setPiece = function(piece) {
 		this._piece = piece;
