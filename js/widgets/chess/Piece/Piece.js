@@ -6,7 +6,7 @@ define(function(require) {
 
 	function Piece(parent, size) {
 		this._template = new Template(html, parent);
-		this._style = "Classic";
+		this._style = Piece.DEFAULT_STYLE;
 		this._piece = null;
 		this._size = size || Piece.DEFAULT_SIZE;
 		this._updateSprite();
@@ -27,6 +27,7 @@ define(function(require) {
 	};
 
 	Piece.DEFAULT_SIZE = 60;
+	Piece.DEFAULT_STYLE = "Classic";
 
 	Piece.prototype.setPiece = function(piece) {
 		this._piece = piece;
