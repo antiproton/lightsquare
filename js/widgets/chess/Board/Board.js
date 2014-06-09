@@ -54,6 +54,7 @@ define(function(require) {
 		this._setupHtml();
 	}
 
+	Board.sizes = Square.sizes;
 	Board.squareStyles = Square.styles;
 	Board.squareHighlightTypes = Square.highlightTypes;
 	

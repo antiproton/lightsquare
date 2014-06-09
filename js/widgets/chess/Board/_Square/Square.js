@@ -26,7 +26,8 @@ define(function(require) {
 		GREEN: "green",
 		BLUE: "blue"
 	};
-
+	
+	Square.sizes = Piece.sizes;
 	Square.DEFAULT_SIZE = Piece.DEFAULT_SIZE;
 
 	Square.highlightTypes = {
