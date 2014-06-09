@@ -57,6 +57,7 @@ define(function(require) {
 	Board.sizes = Square.sizes;
 	Board.squareStyles = Square.styles;
 	Board.squareHighlightTypes = Square.highlightTypes;
+	Board.DEFAULT_SQUARE_SIZE = Square.DEFAULT_SIZE;
 	
 	Board.prototype.setBoardArray = function(board) {
 		ChessSquare.forEach((function(square) {
