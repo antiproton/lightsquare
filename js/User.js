@@ -13,7 +13,7 @@ define(function(require) {
 		this._currentChallenge = null;
 		this._lastChallengeOptions = null;
 		
-		this._preferences = {
+		this._prefs = {
 			alwaysQueen: null,
 			pieceStyle: null,
 			boardSize: null,
@@ -73,18 +73,18 @@ define(function(require) {
 		return this._username;
 	}
 	
-	User.prototype.getPreferences = function() {
-		return this._preferences;
+	User.prototype.getPrefs = function() {
+		return this._prefs;
 	}
 	
-	User.prototype.updatePreferences = function(preferences) {
-		for(var preference in this._preferences) {
-			if(preference in preferences) {
-				this._preferences[preference] = preferences[preference];
+	User.prototype.updatePrefs = function(prefs) {
+		for(var pref in this._prefs) {
+			if(pref in prefs) {
+				this._prefs[pref] = prefs[pref];
 			}
 		}
 		
-		this._server.send("/user/preferences/update", preferences);
+		this._server.send("/user/prefs/update", prefs);
 	}
 	
 	User.prototype.getId = function() {
@@ -234,7 +234,7 @@ define(function(require) {
 		this._rating = userDetails.rating;
 		this._currentChallenge = userDetails.currentChallenge;
 		this._lastChallengeOptions = userDetails.lastChallengeOptions;
-		this._preferences = userDetails.preferences;
+		this._prefs = userDetails.prefs;
 		
 		this.DetailsChanged.fire();
 	}
