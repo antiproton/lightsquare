@@ -16,8 +16,17 @@ define(function(require) {
 		"Alpha",
 		"Merida"
 	];
+	
+	Piece.sizes = {
+		"tiny": 20,
+		"extra small": 30,
+		"small": 45,
+		"standard": 60,
+		"large": 75,
+		"extra large": 90
+	};
 
-	Piece.DEFAULT_SIZE = 60;
+	Piece.DEFAULT_SIZE = Piece.sizes["standard"];
 
 	Piece.prototype.setPiece = function(piece) {
 		this._piece = piece;
