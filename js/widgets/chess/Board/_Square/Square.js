@@ -71,8 +71,8 @@ define(function(require) {
 
 	Square.prototype.setSquareStyle = function(squareStyle) {
 		this._template.root.classList.remove("board_square_" + this._squareStyle);
+		this._template.root.classList.add("board_square_" + squareStyle);
 		this._squareStyle = squareStyle;
-		this._template.root.classList.add("board_square_" + this._squareStyle);
 	}
 
 	Square.prototype.setZIndexAbove = function() {
