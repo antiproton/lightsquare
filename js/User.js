@@ -15,7 +15,9 @@ define(function(require) {
 		
 		this._preferences = {
 			alwaysQueen: null,
-			pieceStyle: null
+			pieceStyle: null,
+			boardSize: null,
+			boardStyle: null
 		};
 		
 		this.Replaced = new Event(this);
