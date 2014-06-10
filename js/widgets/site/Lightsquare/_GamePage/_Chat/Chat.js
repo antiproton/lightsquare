@@ -46,7 +46,7 @@ define(function(require) {
 		});
 		
 		this._game.Aborted.addHandler(this, function() {
-			this._addMessage("Game aborted by the server");
+			this._addMessage("Game aborted by the server.");
 		});
 	}
 	
