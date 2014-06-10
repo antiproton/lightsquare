@@ -97,6 +97,10 @@ define(function(require) {
 			this._template.set("result", data.result);
 			this._template.set("isInProgress", false);
 		});
+		
+		this._game.Aborted.addHandler(this, function() {
+			this._template.set("isInProgress", false);
+		});
 	}
 	
 	GamePage.prototype._setupBoard = function() {
