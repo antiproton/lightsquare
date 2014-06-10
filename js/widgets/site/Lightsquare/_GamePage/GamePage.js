@@ -105,7 +105,7 @@ define(function(require) {
 		this._board.setBoardArray(this._game.getPosition().getBoardArray());
 		
 		this._board.Move.addHandler(this, function(moveEvent) {
-			var promoteTo = (this._user.getPreferences().alwaysQueen ? PieceType.queen : moveEvent.promoteTo);
+			var promoteTo = (this._user.getPrefs().alwaysQueen ? PieceType.queen : moveEvent.promoteTo);
 			
 			if(promoteTo === null && (new Move(this._game.getPosition(), moveEvent.from, moveEvent.to)).isPromotion()) {
 				moveEvent.promptForPromotionPiece();
