@@ -53,6 +53,7 @@ div.no_challenges_message {
 
 div.no_challenges_message > div {
 	font-size: 1.2em;
+	text-align: center;
 	color: #ababab;
 	padding: 1em;
 	background: white;
