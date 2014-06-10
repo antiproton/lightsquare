@@ -13,11 +13,11 @@ define(function(require) {
 		this._setupTemplate(parent);
 		
 		this._user.DetailsChanged.addHandler(this, function() {
-			this._template.update();
+			this._updateUserDetails();
 		});
 		
 		this._user.HasIdentity.addHandler(this, function() {
-			this._template.update();
+			this._updateUserDetails();
 			this._updatePrefs();
 		});
 	}
@@ -90,7 +90,7 @@ define(function(require) {
 		
 		this._setupPreviewBoardOverlay();
 		this._setupPreviewBoard();
-		this._updatePreviewBoard();
+		this._updatePrefs();
 	}
 	
 	ProfilePage.prototype._updatePrefs = function() {
@@ -133,6 +133,10 @@ define(function(require) {
 		if(prefs.pieceStyle) {
 			this._previewBoard.setPieceStyle(prefs.pieceStyle);
 		}
+	}
+	
+	ProfilePage.prototype._updateUserDetails = function() {
+		this._template.update("user");
 	}
 	
 	return ProfilePage;
