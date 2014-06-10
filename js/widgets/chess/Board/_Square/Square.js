@@ -29,7 +29,7 @@ define(function(require) {
 	
 	Square.sizes = Piece.sizes;
 	Square.DEFAULT_SIZE = Piece.DEFAULT_SIZE;
-	Square.DEFAULT_STYLE = "blue";
+	Square.DEFAULT_STYLE = "brown";
 
 	Square.highlightTypes = {
 		NONE: "none",
