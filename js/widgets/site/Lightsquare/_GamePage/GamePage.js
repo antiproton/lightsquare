@@ -86,7 +86,7 @@ define(function(require) {
 		});
 		
 		this._game.ClockTick.addHandler(this, function(data) {
-			if(this.getPlayerColour() === this._game.getPosition().getActiveColour()) {
+			if(this.getPlayerColour() === this._game.getActiveColour()) {
 				this.PlayerClockTick.fire();
 			}
 			
@@ -169,7 +169,7 @@ define(function(require) {
 	}
 	
 	GamePage.prototype._userIsActivePlayer = function() {
-		return (this.getPlayerColour() === this._game.getPosition().getActiveColour());
+		return (this.getPlayerColour() === this._game.getActiveColour());
 	}
 	
 	GamePage.prototype._setupChat = function() {
