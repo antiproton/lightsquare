@@ -101,7 +101,6 @@ define(function(require) {
 	
 	GamePage.prototype._setupBoard = function() {
 		this._board = new Board(this._template.nodes.board);
-		this._board.setSquareSize(75);
 		this._board.setBoardArray(this._game.getPosition().getBoardArray());
 		
 		this._board.Move.addHandler(this, function(moveEvent) {
@@ -115,6 +114,24 @@ define(function(require) {
 				this._game.move(moveEvent.from, moveEvent.to, promoteTo);
 			}
 		});
+		
+		this._setBoardPrefs();
+	}
+	
+	GamePage.prototype._setBoardPrefs = function() {
+		var prefs = this._user.getPrefs();
+		
+		if(prefs.boardStyle) {
+			this._board.setSquareStyle(prefs.boardStyle);
+		}
+		
+		if(prefs.pieceStyle) {
+			this._board.setPieceStyle(prefs.pieceStyle);
+		}
+		
+		if(prefs.boardSize) {
+			this._board.setSquareSize(prefs.boardSize);
+		}
 	}
 	
 	GamePage.prototype._setupControls = function() {
@@ -189,6 +206,11 @@ define(function(require) {
 	GamePage.prototype._handleUserEvents = function() {
 		this._user.HasIdentity.addHandler(this, function() {
 			this._updateUserDependentElements();
+			this._setBoardPrefs();
+		});
+		
+		this._user.PrefsChanged.addHandler(this, function() {
+			this._setBoardPrefs();
 		});
 		
 		this._user.LoggedIn.addHandler(this, function() {
