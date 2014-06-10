@@ -44,6 +44,10 @@ define(function(require) {
 		this._game.GameOver.addHandler(this, function(data) {
 			this._addMessage("Game over: " + data.result.description + ".");
 		});
+		
+		this._game.Aborted.addHandler(this, function() {
+			this._addMessage("Game aborted by the server");
+		});
 	}
 	
 	Chat.prototype._addMessage = function(body, from) {
