@@ -42,7 +42,7 @@ define(function(require) {
 		});
 		
 		this._game.GameOver.addHandler(this, function(data) {
-			this._addMessage("Game over - " + data.result.description + ".");
+			this._addMessage("Game over: " + data.result.description + ".");
 		});
 	}
 	
