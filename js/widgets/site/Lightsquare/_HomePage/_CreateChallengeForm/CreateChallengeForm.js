@@ -68,8 +68,8 @@ define(function(require) {
 		if(options !== null) {
 			this._template.set("initialTime", options.initialTime);
 			this._template.set("timeIncrement", options.timeIncrement);
-			this._template.set("acceptRatingMin", options.acceptRatingMin);
-			this._template.set("acceptRatingMax", options.acceptRatingMax);
+			this._template.set("ratingMin", options.acceptRatingMin);
+			this._template.set("ratingMax", options.acceptRatingMax);
 		}
 	}
 	
