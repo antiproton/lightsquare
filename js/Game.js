@@ -145,6 +145,10 @@ define(function(require) {
 		return this._game.getPosition();
 	}
 	
+	Game.prototype.getActiveColour = function() {
+		return this._game.getActiveColour();
+	}
+	
 	Game.prototype.getResult = function() {
 		return this._result;
 	}
