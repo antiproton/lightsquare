@@ -80,7 +80,7 @@ define(function(require) {
 		}).bind(this));
 		
 		this._server.subscribe("/game/" + this._id + "/draw_offer", (function(colour) {
-			if(Colour.fromFenString(colour) === this._game.getPosition().getActiveColour().opposite) {
+			if(Colour.fromFenString(colour) === this._game.getActiveColour().opposite) {
 				this.DrawOffered.fire();
 			}
 		}).bind(this));
@@ -173,7 +173,7 @@ define(function(require) {
 	}
 	
 	Game.prototype.getActivePlayer = function() {
-		return this._players[this._game.getPosition().getActiveColour()];
+		return this._players[this._game.getActiveColour()];
 	}
 	
 	Game.prototype.getTimeLeft = function(colour) {
