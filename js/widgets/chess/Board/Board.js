@@ -427,11 +427,12 @@ define(function(require) {
 
 	Board.prototype._boardMouseMove = function(event) {
 		var args;
+		var from = this._move.from;
 
 		if(this._move.pieceSelected && !this._move.isInProgress) {
 			args = {
-				square: this._move.from,
-				piece: this.getPiece(this._move.from),
+				square: from,
+				piece: this.getPiece(from),
 				dragging: true,
 				cancel: false
 			};
@@ -440,7 +441,7 @@ define(function(require) {
 
 			if(args.cancel) {
 				this._resetMove();
-				this._squares[this._from.squareNo].setZIndexNormal();
+				this._squares[from.squareNo].setZIndexNormal();
 			}
 
 			else {
@@ -448,14 +449,14 @@ define(function(require) {
 				this._move.isInProgress = true;
 
 				this.PieceSelected.fire({
-					square: this._from
+					square: from
 				});
 			}
 		}
 
 		if(this._move.pieceSelected && this._move.isDragging) {
 			args = {
-				from: this._move.from,
+				from: from,
 				piece: this._move.piece,
 				cancel: false
 			};
@@ -463,7 +464,7 @@ define(function(require) {
 			this.DragPiece.fire(args);
 
 			if(!args.cancel) {
-				this._squares[this._move.from.squareNo].setPiecePosition(
+				this._squares[from.squareNo].setPiecePosition(
 					event.pageX - this._move.mouseOffsets.x,
 					event.pageY - this._move.mouseOffsets.y
 				);
