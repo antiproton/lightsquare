@@ -34,7 +34,8 @@ define(function(require) {
 				userIsPlaying: this._userIsPlaying(),
 				userIsActivePlayer: this._userIsActivePlayer(),
 				drawOffered: this._game.isDrawOffered(),
-				canClaimDraw: this._game.isDrawClaimable()
+				canClaimDraw: this._game.isDrawClaimable(),
+				timingDescription: this._game.getTimingStyle().getDescription()
 			}
 		});
 		
@@ -161,6 +162,14 @@ define(function(require) {
 		
 		this._template.on("claim_draw", (function() {
 			this._game.claimDraw();
+		}).bind(this));
+		
+		this._template.on("rematch", function() {
+			this._game.offerRematch();
+		});
+		
+		this._template.on("new_game", (function() {
+			
 		}).bind(this));
 	}
 	

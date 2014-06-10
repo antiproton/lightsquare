@@ -33,28 +33,31 @@
 			<div class="game_history_and_controls">
 				{{#userIsPlaying}}
 					<div class="game_controls">
-						<input
-							type="button"
-							on-click="resign"
-							value="Resign"
-							class="{{!isInProgress ? 'disabled' : ''}}"
-						>
-						<input
-							type="button"
-							on-click="offer_or_accept_draw"
-							value="{{(drawOffered && userIsActivePlayer) ? 'Accept' : 'Offer'}} draw"
-							class="{{
-								(
-									isInProgress && (
+						{{#isInProgress}}
+							<input
+								type="button"
+								on-click="resign"
+								value="Resign"
+							>
+							<input
+								type="button"
+								on-click="offer_or_accept_draw"
+								value="{{(drawOffered && userIsActivePlayer) ? 'Accept' : 'Offer'}} draw"
+								class="{{
+									(
 										(!drawOffered && !userIsActivePlayer)
 										|| (drawOffered && userIsActivePlayer)
-									)
-								) ? '' : 'disabled'
-							}}"
-						>
-						{{#canClaimDraw && isInProgress}}
-							<input type="button" on-click="claim_draw" value="Claim draw">
-						{{/canClaimDraw && isInProgress}}
+									) ? '' : 'disabled'
+								}}"
+							>
+							{{#canClaimDraw}}
+								<input type="button" on-click="claim_draw" value="Claim draw">
+							{{/canClaimDraw}}
+						{{/isInProgress}}
+						{{^isInProgress}}
+							<input type="button" on-click="rematch" value="Rematch">
+							<input type="button" on-click="new_game" value="New {{timingDescription}}">
+						{{/isInProgress}}
 					</div>
 				{{/userIsPlaying}}
 				<div class="game_history" id="history">
