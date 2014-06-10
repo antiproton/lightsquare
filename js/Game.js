@@ -16,6 +16,7 @@ define(function(require) {
 		this.Move = new Event(this);
 		this.ClockTick = new Event(this);
 		this.GameOver = new Event(this);
+		this.Aborted = new Event(this);
 		this.DrawOffered = new Event(this);
 		this.ChatMessageReceived = new Event(this);
 		
@@ -77,6 +78,10 @@ define(function(require) {
 		
 		this._server.subscribe("/game/" + this._id + "/game_over", (function(data) {
 			this._gameOver(data.result);
+		}).bind(this));
+		
+		this._server.subscribe("/game/" + this._id + "/aborted", (function() {
+			this._abort();
 		}).bind(this));
 		
 		this._server.subscribe("/game/" + this._id + "/draw_offer", (function(colour) {
@@ -271,6 +276,11 @@ define(function(require) {
 				this._clockTick();
 			}).bind(this), 100);
 		}
+	}
+	
+	Game.prototype._abort = function() {
+		this._isInProgress = false;
+		this.Aborted.fire();
 	}
 	
 	Game.prototype._gameOver = function(result) {
