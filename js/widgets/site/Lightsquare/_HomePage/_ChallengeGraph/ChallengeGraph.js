@@ -168,8 +168,12 @@ define(function(require) {
 			};
 			
 			var userRating = this._user.getRating();
+			var currentChallenge = this._user.getCurrentChallenge();
 			
-			if(userRating >= acceptsRating.min && userRating <= acceptsRating.max) {
+			if(
+				(currentChallenge !== null && challenge.id === currentChallenge.id)
+				|| (userRating >= acceptsRating.min && userRating <= acceptsRating.max)
+			) {
 				if(!(gridSquare in occupiedGridSquares) && gridSquaresMoved <= maxGridSquaresToMove) {
 					topOffset -= this._challengeHeightInEm * index;
 					
