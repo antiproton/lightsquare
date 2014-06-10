@@ -107,6 +107,12 @@ define(function(require) {
 		this._board = new Board(this._template.nodes.board);
 		this._board.setBoardArray(this._game.getPosition().getBoardArray());
 		
+		this._board.SelectPiece.addHandler(this, function(data) {
+			if(!this._userIsActivePlayer() || data.piece.colour !== this.getPlayerColour()) {
+				data.cancel = true;
+			}
+		});
+		
 		this._board.Move.addHandler(this, function(moveEvent) {
 			var promoteTo = (this._user.getPrefs().alwaysQueen ? PieceType.queen : moveEvent.promoteTo);
 			
