@@ -108,7 +108,7 @@ define(function(require) {
 		this._board.setBoardArray(this._game.getPosition().getBoardArray());
 		
 		this._board.SelectPiece.addHandler(this, function(data) {
-			if(!this._userIsActivePlayer() || data.piece.colour !== this.getPlayerColour()) {
+			if(!this._userIsActivePlayer() || data.piece.colour !== this.getPlayerColour() || !this._game.isInProgress()) {
 				data.cancel = true;
 			}
 		});
