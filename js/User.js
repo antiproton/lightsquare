@@ -30,6 +30,7 @@ define(function(require) {
 		this.NeededInGame = new Event(this);
 		this.DetailsChanged = new Event(this);
 		this.HasIdentity = new Event(this);
+		this.PrefsChanged = new Event(this);
 		this.ChallengeCreated = new Event(this);
 		this.ChallengeExpired = new Event(this);
 		this.ChallengeAccepted = new Event(this);
@@ -84,6 +85,7 @@ define(function(require) {
 			}
 		}
 		
+		this.PrefsChanged.fire();
 		this._server.send("/user/prefs/update", prefs);
 	}
 	
