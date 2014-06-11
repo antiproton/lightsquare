@@ -12,7 +12,7 @@ define(function(require) {
 	var Time = require("chess/Time");
 	require("lib/Array.getShallowCopy");
 
-	function Game(server, gameDetails) {
+	function Game(user, server, gameDetails) {
 		this.Move = new Event(this);
 		this.ClockTick = new Event(this);
 		this.GameOver = new Event(this);
@@ -23,6 +23,7 @@ define(function(require) {
 		this.RematchDeclined = new Event(this);
 		this.Rematch = new Event(this);
 		
+		this._user = user;
 		this._server = server;
 		
 		this._startTime = gameDetails.startTime;
@@ -102,9 +103,7 @@ define(function(require) {
 		}).bind(this));
 		
 		this._server.subscribe("/game/" + this._id + "/rematch", (function(gameDetails) {
-			this.Rematch.fire({
-				game: new Game(this._server, gameDetails)
-			});
+			this._rematch(gameDetails);
 		}).bind(this));
 	}
 	
@@ -169,6 +168,12 @@ define(function(require) {
 	
 	Game.prototype.declineRematch = function() {
 		this._server.send("/game/" + this._id + "/decline_rematch");
+	}
+	
+	Game.prototype._rematch = function(gameDetails) {
+		this.Rematch.fire({
+			game: new Game(this._user, this._server, gameDetails)
+		});
 	}
 	
 	Game.prototype.getPosition = function() {

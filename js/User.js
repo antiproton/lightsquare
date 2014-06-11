@@ -125,7 +125,7 @@ define(function(require) {
 	}
 	
 	User.prototype._addGame = function(gameDetails) {
-		var game = new Game(this._server, gameDetails);
+		var game = new Game(this, this._server, gameDetails);
 	
 		this._games.push(game);
 		
