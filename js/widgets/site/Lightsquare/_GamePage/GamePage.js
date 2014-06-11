@@ -164,9 +164,9 @@ define(function(require) {
 			this._game.claimDraw();
 		}).bind(this));
 		
-		this._template.on("rematch", function() {
+		this._template.on("rematch", (function() {
 			this._game.offerOrAcceptRematch();
-		});
+		}).bind(this));
 		
 		this._template.on("new_game", (function() {
 			
