@@ -62,11 +62,11 @@ define(function(require) {
 				this._gameOver(data.result);
 			});
 			
-			this._subscribeToServerMessages();
 			this._requestLatestMoves();
-			
 			this._clockTick();
 		}
+		
+		this._subscribeToServerMessages();
 	}
 	
 	Game.prototype._subscribeToServerMessages = function() {
