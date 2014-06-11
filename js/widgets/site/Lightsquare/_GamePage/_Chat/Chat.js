@@ -4,7 +4,6 @@ define(function(require) {
 	var Ractive = require("lib/dom/Ractive");
 	
 	function Chat(game, parent) {
-		this._game = game;
 		this._scrollOnNewMessages = true;
 		
 		this._template = new Ractive({
@@ -29,6 +28,12 @@ define(function(require) {
 			this._template.set("message", "");
 		}).bind(this));
 		
+		this._setupGame(game);
+	}
+	
+	Chat.prototype._setupGame = function(game) {
+		this._game = game;
+		
 		this._game.ChatMessageReceived.addHandler(this, function(message) {
 			this._addMessage(message.body, message.from);
 			
@@ -39,6 +44,18 @@ define(function(require) {
 		
 		this._game.DrawOffered.addHandler(this, function() {
 			this._addMessage(this._game.getActivePlayer().username + " has offered a draw.");
+		});
+		
+		this._game.RematchOffered.addHandler(this, function() {
+			
+		});
+		
+		this._game.RematchDeclined.addHandler(this, function() {
+			
+		});
+		
+		this._game.Rematch.addHandler(this, function() {
+			this._setupGame(data.game);
 		});
 		
 		this._game.GameOver.addHandler(this, function(data) {
