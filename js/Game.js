@@ -163,6 +163,14 @@ define(function(require) {
 		}
 	}
 	
+	Game.prototype.offerOrAcceptRematch = function() {
+		this._server.send("/game/" + this._id + "/offer_or_accept_rematch");
+	}
+	
+	Game.prototype.declineRematch = function() {
+		this._server.send("/game/" + this._id + "/decline_rematch");
+	}
+	
 	Game.prototype.getPosition = function() {
 		return this._game.getPosition();
 	}
