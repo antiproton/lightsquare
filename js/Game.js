@@ -19,6 +19,9 @@ define(function(require) {
 		this.Aborted = new Event(this);
 		this.DrawOffered = new Event(this);
 		this.ChatMessageReceived = new Event(this);
+		this.RematchOffered = new Event(this);
+		this.RematchDeclined = new Event(this);
+		this.Rematch = new Event(this);
 		
 		this._server = server;
 		
@@ -88,6 +91,20 @@ define(function(require) {
 			if(Colour.fromFenString(colour) === this._game.getActiveColour().opposite) {
 				this.DrawOffered.fire();
 			}
+		}).bind(this));
+		
+		this._server.subscribe("/game/" + this._id + "/rematch_offer", (function() {
+			this.RematchOffered.fire();
+		}).bind(this));
+		
+		this._server.subscribe("/game/" + this._id + "/rematch_declined", (function() {
+			this.RematchDeclined.fire();
+		}).bind(this));
+		
+		this._server.subscribe("/game/" + this._id + "/rematch", (function(gameDetails) {
+			this.Rematch.fire({
+				game: new Game(this._server, gameDetails)
+			});
 		}).bind(this));
 	}
 	
