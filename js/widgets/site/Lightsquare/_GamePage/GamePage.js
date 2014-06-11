@@ -49,7 +49,7 @@ define(function(require) {
 	}
 	
 	GamePage.prototype.getPlayerColour = function() {
-		return this._game.getUserColour(this._user);
+		return this._game.getUserColour();
 	}
 	
 	GamePage.prototype._userIsPlaying = function() {
