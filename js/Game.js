@@ -24,7 +24,6 @@ define(function(require) {
 		this.Rematch = new Event(this);
 		
 		this._user = user;
-		this._userColour = this._getUserColour();
 		this._server = server;
 		
 		this._startTime = gameDetails.startTime;
@@ -37,6 +36,7 @@ define(function(require) {
 		this._players = {};
 		this._players[Colour.white] = gameDetails.white;
 		this._players[Colour.black] = gameDetails.black;
+		this._userColour = this._getUserColour();
 		
 		this._history = [];
 		this._moveQueue = [];
