@@ -16,34 +16,24 @@ define(function(require) {
 	};
 	
 	function GamePage(game, user, parent) {
-		this._game = game;
-		this._user = user;
-		
 		this.PlayerClockTick = new Event(this);
+		this.Rematch = new Event(this);
 		
+		this._user = user;
 		this._viewingAs = Colour.white;
-		this._setupGame();
+		this._setupGame(game);
 		
 		this._template = new Ractive({
 			el: parent,
 			template: html,
-			data: {
-				players: {},
-				result: this._game.getResult(),
-				isInProgress: this._game.isInProgress(),
-				userIsPlaying: this._userIsPlaying(),
-				userIsActivePlayer: this._userIsActivePlayer(),
-				drawOffered: this._game.isDrawOffered(),
-				canClaimDraw: this._game.isDrawClaimable(),
-				timingDescription: this._game.getTimingStyle().getDescription()
-			}
+			data: {}
 		});
 		
+		this._updateTemplate();
 		this._setupChat();
 		this._setupBoard();
 		this._setupHistory();
 		this._setupControls();
-		
 		this._updateUserDependentElements();
 		this._handleUserEvents();
 	}
@@ -72,7 +62,9 @@ define(function(require) {
 		return this._game.getId();
 	}
 	
-	GamePage.prototype._setupGame = function() {
+	GamePage.prototype._setupGame = function(game) {
+		this._game = game;
+		
 		this._game.Move.addHandler(this, function(data) {
 			this._history.move(data.move);
 			this._board.setBoardArray(data.move.getPositionAfter().getBoardArray());
@@ -94,6 +86,14 @@ define(function(require) {
 			this._updateClocks(data.times);
 		});
 		
+		this._game.Rematch.addHandler(this, function(data) {
+			this._setupGame(data.game);
+			this._updateTemplate();
+			this._updateBoard();
+			this._updateHistory();
+			this._updateUserDependentElements();
+		});
+		
 		this._game.GameOver.addHandler(this, function(data) {
 			this._template.set("result", data.result);
 			this._template.set("isInProgress", false);
@@ -106,7 +106,6 @@ define(function(require) {
 	
 	GamePage.prototype._setupBoard = function() {
 		this._board = new Board(this._template.nodes.board);
-		this._board.setBoardArray(this._game.getPosition().getBoardArray());
 		
 		this._board.SelectPiece.addHandler(this, function(data) {
 			if(!this._userIsActivePlayer() || data.piece.colour !== this.getPlayerColour() || !this._game.isInProgress()) {
@@ -126,6 +125,7 @@ define(function(require) {
 			}
 		});
 		
+		this._updateBoard();
 		this._setBoardPrefs();
 	}
 	
@@ -176,14 +176,37 @@ define(function(require) {
 	GamePage.prototype._setupHistory = function() {
 		this._history = new History(this._template.nodes.history);
 		
+		this._updateHistory();
+		
+		this._history.UserSelect.addHandler(this, function(data) {
+			this._board.setBoardArray(data.move.getPositionAfter().getBoardArray());
+		});
+	}
+	
+	GamePage.prototype._updateHistory = function() {
+		this._history.clear();
+		
 		this._game.getHistory().forEach((function(move) {
 			this._history.move(move);
 		}).bind(this));
 		
 		this._history.select(this._game.getLastMove());
-		
-		this._history.UserSelect.addHandler(this, function(data) {
-			this._board.setBoardArray(data.move.getPositionAfter().getBoardArray());
+	}
+	
+	GamePage.prototype._updateBoard = function() {
+		this._board.setBoardArray(this._game.getPosition().getBoardArray());
+	}
+	
+	GamePage.prototype._updateTemplate = function() {
+		this._template.set({
+			players: {},
+			result: this._game.getResult(),
+			isInProgress: this._game.isInProgress(),
+			userIsPlaying: this._userIsPlaying(),
+			userIsActivePlayer: this._userIsActivePlayer(),
+			drawOffered: this._game.isDrawOffered(),
+			canClaimDraw: this._game.isDrawClaimable(),
+			timingDescription: this._game.getTimingStyle().getDescription()
 		});
 	}
 	
