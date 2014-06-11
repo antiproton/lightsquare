@@ -27,6 +27,12 @@ define(function(require) {
 		return (url in this._pages);
 	}
 	
+	Pages.prototype.changeUrl = function(oldUrl, newUrl) {
+		this._pages[newUrl] = this._pages[oldUrl];
+		
+		delete this._pages[oldUrl];
+	}
+	
 	Pages.prototype.showPage = function(currentUrl) {
 		for(var url in this._pages) {
 			style(this._pages[url], {
