@@ -165,7 +165,7 @@ define(function(require) {
 		}).bind(this));
 		
 		this._template.on("rematch", function() {
-			this._game.offerRematch();
+			this._game.offerOrAcceptRematch();
 		});
 		
 		this._template.on("new_game", (function() {
