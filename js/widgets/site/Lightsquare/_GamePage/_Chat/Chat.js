@@ -47,14 +47,14 @@ define(function(require) {
 		});
 		
 		this._game.RematchOffered.addHandler(this, function() {
-			
+			this._addMessage(this._game.getPlayer(this._game.getUserColour().opposite).username + " has offered you a rematch.");
 		});
 		
 		this._game.RematchDeclined.addHandler(this, function() {
-			
+			this._addMessage(this._game.getPlayer(this._game.getUserColour().opposite).username + " has declined a rematch.");
 		});
 		
-		this._game.Rematch.addHandler(this, function() {
+		this._game.Rematch.addHandler(this, function(data) {
 			this._setupGame(data.game);
 		});
 		
