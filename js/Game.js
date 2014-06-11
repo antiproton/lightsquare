@@ -24,6 +24,7 @@ define(function(require) {
 		this.Rematch = new Event(this);
 		
 		this._user = user;
+		this._userColour = this._getUserColour();
 		this._server = server;
 		
 		this._startTime = gameDetails.startTime;
@@ -192,19 +193,26 @@ define(function(require) {
 		return this._history.getShallowCopy();
 	}
 	
-	Game.prototype.getUserColour = function(user) {
+	Game.prototype._getUserColour = function() {
 		var player;
 		var userColour = null;
 		
 		Colour.forEach(function(colour) {
 			player = this._players[colour];
 			
-			if((user.isLoggedIn() && user.getUsername() === player.username) || user.getId() === player.id) {
+			if(
+				(this._user.isLoggedIn() && this._user.getUsername() === player.username)
+				|| this._user.getId() === player.id
+			) {
 				userColour = colour;
 			}
 		}, this);
 		
 		return userColour;
+	}
+	
+	Game.prototype.getUserColour = function() {
+		return this._userColour;
 	}
 	
 	Game.prototype.getPlayer = function(colour) {
