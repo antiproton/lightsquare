@@ -92,6 +92,10 @@ define(function(require) {
 			this._updateBoard();
 			this._updateHistory();
 			this._updateUserDependentElements();
+			
+			this.Rematch.fire({
+				game: data.game
+			});
 		});
 		
 		this._game.GameOver.addHandler(this, function(data) {

@@ -53,11 +53,23 @@ define(function(require) {
 			this._header.get("gamePages").push(gamePage);
 			
 			gamePage.PlayerClockTick.addHandler(this, function() {
-				var index = this._header.get("gamePages").indexOf(gamePage);
+				this._updateHeaderGamePage(gamePage);
+			});
+			
+			gamePage.Rematch.addHandler(this, function(data) {
+				var newUrl = "/game/" + data.game.getId();
 				
-				this._header.update("gamePages." + index);
+				this._pages.changeUrl(url, newUrl);
+				this._router.navigate(newUrl);
+				this._updateHeaderGamePage(gamePage);
+				
+				url = newUrl;
 			});
 		}
+	}
+	
+	Lightsquare.prototype._updateHeaderGamePage = function(gamePage) {
+		this._header.update("gamePages." + this._header.get("gamePages").indexOf(gamePage));
 	}
 	
 	Lightsquare.prototype._setupRouter = function() {
