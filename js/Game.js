@@ -286,10 +286,7 @@ define(function(require) {
 				move.setTime(serverMove.time);
 				
 				this._history.push(move);
-				
-				this.Move.fire({
-					move: move
-				});
+				this.Move.fire(move);
 			}
 		}
 	}
