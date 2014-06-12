@@ -204,12 +204,12 @@ define(function(require) {
 		ChessSquare.forEach((function(chessSquare) {
 			square = new Square(this._template.board, chessSquare, this._squareSize);
 
-			square.MouseDown.addHandler(this, function(data, sender) {
-				this._boardMouseDown(data.event, sender);
+			square.MouseDown.addHandler(this, function(event, sender) {
+				this._boardMouseDown(event, sender);
 			});
 
-			square.MouseUp.addHandler(this, function(data, sender) {
-				this._boardMouseUp(data.event, sender);
+			square.MouseUp.addHandler(this, function(event, sender) {
+				this._boardMouseUp(event, sender);
 			});
 
 			this._squares[chessSquare.squareNo] = square;
@@ -220,12 +220,12 @@ define(function(require) {
 		this._promotionDialogPieceSize = 45;
 		this._promotionDialog = new PromotionDialog(this._promotionDialogPieceSize, this._template.promotion_dialog);
 		
-		this._promotionDialog.PieceSelected.addHandler(this, function(data) {
+		this._promotionDialog.PieceSelected.addHandler(this, function(type) {
 			this.Move.fire({
 				from: this._pendingPromotion.from,
 				to: this._pendingPromotion.to,
 				piece: this._pendingPromotion.piece,
-				promoteTo: data.type,
+				promoteTo: type,
 				event: this._pendingPromotion.event
 			});
 			

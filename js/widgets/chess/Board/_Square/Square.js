@@ -112,15 +112,11 @@ define(function(require) {
 		this._template.root.classList.add("board_square_" + this._squareStyle);
 
 		this._template.piece.addEventListener("mousedown", (function(event) {
-			this.MouseDown.fire({
-				event: event
-			});
+			this.MouseDown.fire(event);
 		}).bind(this));
 
 		this._template.piece.addEventListener("mouseup", (function(event) {
-			this.MouseUp.fire({
-				event: event
-			});
+			this.MouseUp.fire(event);
 		}).bind(this));
 
 		this._piece = new Piece(this._template.piece);

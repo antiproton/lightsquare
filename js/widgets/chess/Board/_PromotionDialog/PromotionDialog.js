@@ -29,9 +29,7 @@ define(function(require) {
 			this._pieces.push(piece);
 			
 			pieceButton.addEventListener("click", (function() {
-				this.PieceSelected.fire({
-					type: type
-				});
+				this.PieceSelected.fire(type);
 			}).bind(this));
 		}).bind(this));
 	}
