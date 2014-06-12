@@ -58,8 +58,8 @@ define(function(require) {
 		this._clock = new Clock(this._server, this, this._timingStyle);
 		
 		if(this._isInProgress) {
-			this._game.GameOver.addHandler(this, function(data) {
-				this._gameOver(data.result);
+			this._game.GameOver.addHandler(this, function(result) {
+				this._gameOver(result);
 			});
 			
 			this._requestLatestMoves();
