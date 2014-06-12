@@ -35,10 +35,6 @@ define(function(require) {
 		
 		this._game.ChatMessageReceived.addHandler(this, function(message) {
 			this._addMessage(message.body, message.from);
-			
-			if(this._scrollOnNewMessages) {
-				this._historyNode.scrollTop = this._historyNode.scrollHeight;
-			}
 		});
 		
 		this._game.DrawOffered.addHandler(this, function() {
@@ -71,6 +67,10 @@ define(function(require) {
 			from: from,
 			body: body
 		});
+			
+		if(this._scrollOnNewMessages) {
+			this._historyNode.scrollTop = this._historyNode.scrollHeight;
+		}
 	}
 	
 	return Chat;
