@@ -67,7 +67,7 @@ define(function(require) {
 		
 		this._game.Move.addHandler(this, function(move) {
 			this._history.move(move);
-			this._board.setBoardArray(data.move.getPositionAfter().getBoardArray());
+			this._board.setBoardArray(move.getPositionAfter().getBoardArray());
 			this._template.set("userIsActivePlayer", this._userIsActivePlayer());
 			this._template.set("drawOffered", false);
 			this._template.set("canClaimDraw", this._game.isDrawClaimable());
