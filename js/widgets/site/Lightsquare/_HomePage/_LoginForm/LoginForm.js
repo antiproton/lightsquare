@@ -46,16 +46,16 @@ define(function(require) {
 			this._clearForm();
 		});
 		
-		this._user.LoginFailed.addHandler(this, function(data) {
-			this._setError(data.reason);
+		this._user.LoginFailed.addHandler(this, function(reason) {
+			this._setError(reason);
 		});
 		
 		this._user.Registered.addHandler(this, function() {
 			this._clearForm();
 		});
 		
-		this._user.RegistrationFailed.addHandler(this, function(data) {
-			this._setError(data.reason);
+		this._user.RegistrationFailed.addHandler(this, function(reason) {
+			this._setError(reason);
 		});
 	}
 	

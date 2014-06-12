@@ -143,10 +143,8 @@ define(function(require) {
 			this.DetailsChanged.fire();
 		}).bind(this));
 		
-		this._server.subscribe("/user/login/failure", (function(data) {
-			this.LoginFailed.fire({
-				reason: data.reason
-			});
+		this._server.subscribe("/user/login/failure", (function(reason) {
+			this.LoginFailed.fire(reason);
 		}).bind(this));
 		
 		this._server.subscribe("/user/logout", (function() {
@@ -157,10 +155,8 @@ define(function(require) {
 			this.Registered.fire();
 		}).bind(this));
 		
-		this._server.subscribe("/user/register/failure", (function(data) {
-			this.RegistrationFailed.fire({
-				reason: data.reason
-			});
+		this._server.subscribe("/user/register/failure", (function(reason) {
+			this.RegistrationFailed.fire(reason);
 		}).bind(this));
 		
 		this._server.subscribe("/user/replaced", (function(data) {
@@ -174,21 +170,14 @@ define(function(require) {
 				newGames.push(this._addGame(gameDetails));
 			}).bind(this));
 			
-			this.GamesReceived.fire({
-				games: newGames
-			});
+			this.GamesReceived.fire(newGames);
 		}).bind(this));
 		
 		this._server.subscribe("/game", (function(gameDetails) {
 			var game = this._addGame(gameDetails);
 			
-			this.GamesReceived.fire({
-				games: [game]
-			});
-			
-			this.NeededInGame.fire({
-				id: game.getId()
-			});
+			this.GamesReceived.fire([game]);
+			this.NeededInGame.fire(game.getId());
 		}).bind(this));
 		
 		this._server.subscribe("/user", (function(userDetails) {
@@ -198,10 +187,7 @@ define(function(require) {
 		
 		this._server.subscribe("/current_challenge", (function(challengeDetails) {
 			this._currentChallenge = challengeDetails;
-			
-			this.ChallengeCreated.fire({
-				details: challengeDetails
-			});
+			this.ChallengeCreated.fire();
 		}).bind(this));
 		
 		this._server.subscribe("/current_challenge/expired", (function() {

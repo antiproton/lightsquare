@@ -102,7 +102,7 @@ define(function(require) {
 			this._updateCurrentChallenge();
 		});
 		
-		this._user.ChallengeCreated.addHandler(this, function(data) {
+		this._user.ChallengeCreated.addHandler(this, function() {
 			this._updateCurrentChallenge();
 		});
 		

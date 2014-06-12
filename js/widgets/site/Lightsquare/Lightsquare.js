@@ -56,8 +56,8 @@ define(function(require) {
 				this._updateHeaderGamePage(gamePage);
 			});
 			
-			gamePage.Rematch.addHandler(this, function(data) {
-				var newUrl = "/game/" + data.game.getId();
+			gamePage.Rematch.addHandler(this, function(game) {
+				var newUrl = "/game/" + game.getId();
 				
 				this._pages.changeUrl(url, newUrl);
 				this._router.navigate(newUrl);
@@ -75,8 +75,8 @@ define(function(require) {
 	Lightsquare.prototype._setupRouter = function() {
 		this._router = new Router();
 		
-		this._router.UrlChanged.addHandler(this, function(data) {
-			this._header.set("currentPath", data.path);
+		this._router.UrlChanged.addHandler(this, function(path) {
+			this._header.set("currentPath", path);
 		});
 		
 		this._router.addRoute("/", (function(params, url) {
@@ -229,8 +229,8 @@ define(function(require) {
 			this._header.set("username", this._user.getUsername());
 		});
 		
-		this._user.GamesReceived.addHandler(this, function(data) {
-			data.games.forEach((function(game) {
+		this._user.GamesReceived.addHandler(this, function(games) {
+			games.forEach((function(game) {
 				this._addGamePage(game);
 			}).bind(this));
 			
@@ -238,8 +238,8 @@ define(function(require) {
 			this._header.set("currentPath", this._router.getCurrentPath());
 		});
 		
-		this._user.NeededInGame.addHandler(this, function(data) {
-			this._router.navigate("/game/" + data.id);
+		this._user.NeededInGame.addHandler(this, function(id) {
+			this._router.navigate("/game/" + id);
 		});
 		
 		this._user.LoggedIn.addHandler(this, function() {

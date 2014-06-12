@@ -65,41 +65,38 @@ define(function(require) {
 	GamePage.prototype._setupGame = function(game) {
 		this._game = game;
 		
-		this._game.Move.addHandler(this, function(data) {
-			this._history.move(data.move);
+		this._game.Move.addHandler(this, function(move) {
+			this._history.move(move);
 			this._board.setBoardArray(data.move.getPositionAfter().getBoardArray());
 			this._template.set("userIsActivePlayer", this._userIsActivePlayer());
 			this._template.set("drawOffered", false);
 			this._template.set("canClaimDraw", this._game.isDrawClaimable());
-			this._history.select(data.move);
+			this._history.select(move);
 		});
 		
 		this._game.DrawOffered.addHandler(this, function() {
 			this._template.set("drawOffered", true);
 		});
 		
-		this._game.ClockTick.addHandler(this, function(data) {
+		this._game.ClockTick.addHandler(this, function(times) {
 			if(this.getPlayerColour() === this._game.getActiveColour()) {
 				this.PlayerClockTick.fire();
 			}
 			
-			this._updateClocks(data.times);
+			this._updateClocks(times);
 		});
 		
-		this._game.Rematch.addHandler(this, function(data) {
-			this._setupGame(data.game);
+		this._game.Rematch.addHandler(this, function(game) {
+			this._setupGame(game);
 			this._updateTemplate();
 			this._updateBoard();
 			this._updateHistory();
 			this._updateUserDependentElements();
-			
-			this.Rematch.fire({
-				game: data.game
-			});
+			this.Rematch.fire(game);
 		});
 		
-		this._game.GameOver.addHandler(this, function(data) {
-			this._template.set("result", data.result);
+		this._game.GameOver.addHandler(this, function(result) {
+			this._template.set("result", result);
 			this._template.set("isInProgress", false);
 		});
 		
@@ -182,8 +179,8 @@ define(function(require) {
 		
 		this._updateHistory();
 		
-		this._history.UserSelect.addHandler(this, function(data) {
-			this._board.setBoardArray(data.move.getPositionAfter().getBoardArray());
+		this._history.UserSelect.addHandler(this, function(move) {
+			this._board.setBoardArray(move.getPositionAfter().getBoardArray());
 		});
 	}
 	

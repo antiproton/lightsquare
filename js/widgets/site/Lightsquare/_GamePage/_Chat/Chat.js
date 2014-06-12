@@ -54,12 +54,12 @@ define(function(require) {
 			this._addMessage(this._game.getPlayer(this._game.getUserColour().opposite).username + " has declined a rematch.");
 		});
 		
-		this._game.Rematch.addHandler(this, function(data) {
-			this._setupGame(data.game);
+		this._game.Rematch.addHandler(this, function(game) {
+			this._setupGame(game);
 		});
 		
-		this._game.GameOver.addHandler(this, function(data) {
-			this._addMessage("Game over: " + data.result.description + ".");
+		this._game.GameOver.addHandler(this, function(result) {
+			this._addMessage("Game over: " + result.description + ".");
 		});
 		
 		this._game.Aborted.addHandler(this, function() {

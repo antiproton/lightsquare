@@ -23,10 +23,7 @@ define(function(require) {
 		
 		this._template.on("select", (function(event, move) {
 			this.select(move);
-			
-			this.UserSelect.fire({
-				move: move
-			});
+			this.UserSelect.fire(move);
 		}).bind(this));
 		
 		this._historyNode = this._template.nodes.history;

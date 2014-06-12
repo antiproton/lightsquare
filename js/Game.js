@@ -132,9 +132,7 @@ define(function(require) {
 					promoteTo: (promoteTo ? promoteTo.sanString : undefined)
 				});
 				
-				this.Move.fire({
-					move: move
-				});
+				this.Move.fire(move);
 			}
 		}
 	}
@@ -172,9 +170,7 @@ define(function(require) {
 	}
 	
 	Game.prototype._rematch = function(gameDetails) {
-		this.Rematch.fire({
-			game: new Game(this._user, this._server, gameDetails)
-		});
+		this.Rematch.fire(new Game(this._user, this._server, gameDetails));
 	}
 	
 	Game.prototype.getPosition = function() {
@@ -305,9 +301,7 @@ define(function(require) {
 			times[colour] = this._clock.getTimeLeft(colour);
 		}, this);
 		
-		this.ClockTick.fire({
-			times: times
-		});
+		this.ClockTick.fire(times);
 		
 		if(this._isInProgress) {
 			setTimeout((function() {
@@ -325,9 +319,7 @@ define(function(require) {
 		this._isInProgress = false;
 		this._result = result;
 		
-		this.GameOver.fire({
-			result: result
-		});
+		this.GameOver.fire(result);
 	}
 	
 	return Game;
