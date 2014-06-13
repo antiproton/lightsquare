@@ -36,30 +36,26 @@ define(function(require) {
 		this._router.loadFromUrl();
 	}
 	
-	Lightsquare.prototype._addGamePage = function(game) {
-		var id = game.getId();
+	Lightsquare.prototype._addGamePage = function(id) {
 		var url = "/game/" + id;
+		var page = this._pages.createPage(url);
+		var gamePage = new GamePage(id, this._user, page);
 		
-		if(!this._pages.hasPage(url)) {
-			var page = this._pages.createPage(url);
-			var gamePage = new GamePage(game, this._user, page);
+		this._template.get("gamePages").push(gamePage);
+		
+		gamePage.PlayerClockTick.addHandler(this, function() {
+			this._updateHeaderGamePage(gamePage);
+		});
+		
+		gamePage.Rematch.addHandler(this, function(game) {
+			var newUrl = "/game/" + game.getId();
 			
-			this._template.get("gamePages").push(gamePage);
+			this._pages.changeUrl(url, newUrl);
+			this._router.navigate(newUrl);
+			this._updateHeaderGamePage(gamePage);
 			
-			gamePage.PlayerClockTick.addHandler(this, function() {
-				this._updateHeaderGamePage(gamePage);
-			});
-			
-			gamePage.Rematch.addHandler(this, function(game) {
-				var newUrl = "/game/" + game.getId();
-				
-				this._pages.changeUrl(url, newUrl);
-				this._router.navigate(newUrl);
-				this._updateHeaderGamePage(gamePage);
-				
-				url = newUrl;
-			});
-		}
+			url = newUrl;
+		});
 	}
 	
 	Lightsquare.prototype._updateHeaderGamePage = function(gamePage) {
@@ -85,16 +81,12 @@ define(function(require) {
 		}).bind(this));
 		
 		this._router.addRoute("/game/:id", (function(params, url) {
-			if(this._pages.hasPage(url)) {
-				this._pages.showPage(url);
-				this._app.stopUpdatingChallengeList();
+			if(!this._pages.hasPage(url)) {
+				this._addGamePage(id);
 			}
 			
-			else {
-				this._router.setCurrentPath("/");
-				this._template.set("currentPath", "/");
-				this._user.spectateGame(params["id"]);
-			}
+			this._pages.showPage(url);
+			this._app.stopUpdatingChallengeList();
 		}).bind(this));
 		
 		this._router.addRoute("/user/profile", (function(params, url) {
@@ -225,16 +217,7 @@ define(function(require) {
 			this._template.set("username", this._user.getUsername());
 		});
 		
-		this._user.GamesReceived.addHandler(this, function(games) {
-			games.forEach((function(game) {
-				this._addGamePage(game);
-			}).bind(this));
-			
-			this._router.loadFromUrl();
-			this._template.set("currentPath", this._router.getCurrentPath());
-		});
-		
-		this._user.NeededInGame.addHandler(this, function(id) {
+		this._user.NewGame.addHandler(this, function(id) {
 			this._router.navigate("/game/" + id);
 		});
 		
