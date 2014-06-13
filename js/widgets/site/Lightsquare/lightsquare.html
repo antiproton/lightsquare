@@ -1,11 +1,13 @@
-<div data-id="root" class="root">
-	<div class="message" data-id="message">
-		
+<div class="root">
+	{{#showMessage}}
+		<div class="message" id="message">
+			
+		</div>
+	{{/showMessage}}
+	<div class="header" id="header">
+		{{>header}}
 	</div>
-	<div class="header" data-id="header">
-		
-	</div>
-	<div class="main" data-id="main">
+	<div class="main" id="main">
 		
 	</div>
 </div>

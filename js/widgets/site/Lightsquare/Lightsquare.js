@@ -24,19 +24,13 @@ define(function(require) {
 	function Lightsquare(app, user, parent) {
 		this._app = app;
 		this._user = user;
-		this._gamePages = {};
 		
 		this._app.ServerDisconnected.addHandler(this, function() {
 			this._displayServerDisconnectMessage();
 		});
 		
-		this._template = new Template(html, parent);
-		this._pages = new Pages(this._template.main);
-		
 		this._setupRouter();
-		this._setupHeader();
-		this._setupMessage();
-		
+		this._setupTemplate(parent);
 		this._handleUserEvents();
 		
 		this._router.loadFromUrl();
@@ -50,7 +44,7 @@ define(function(require) {
 			var page = this._pages.createPage(url);
 			var gamePage = new GamePage(game, this._user, page);
 			
-			this._header.get("gamePages").push(gamePage);
+			this._template.get("gamePages").push(gamePage);
 			
 			gamePage.PlayerClockTick.addHandler(this, function() {
 				this._updateHeaderGamePage(gamePage);
@@ -69,14 +63,14 @@ define(function(require) {
 	}
 	
 	Lightsquare.prototype._updateHeaderGamePage = function(gamePage) {
-		this._header.update("gamePages." + this._header.get("gamePages").indexOf(gamePage));
+		this._template.update("gamePages." + this._template.get("gamePages").indexOf(gamePage));
 	}
 	
 	Lightsquare.prototype._setupRouter = function() {
 		this._router = new Router();
 		
 		this._router.UrlChanged.addHandler(this, function(path) {
-			this._header.set("currentPath", path);
+			this._template.set("currentPath", path);
 		});
 		
 		this._router.addRoute("/", (function(params, url) {
@@ -98,7 +92,7 @@ define(function(require) {
 			
 			else {
 				this._router.setCurrentPath("/");
-				this._header.set("currentPath", "/");
+				this._template.set("currentPath", "/");
 				this._user.spectateGame(params["id"]);
 			}
 		}).bind(this));
@@ -115,11 +109,12 @@ define(function(require) {
 		}).bind(this));
 	}
 	
-	Lightsquare.prototype._setupHeader = function() {
-		this._header = new Ractive({
-			template: headerHtml,
-			el: this._template.header,
+	Lightsquare.prototype._setupTemplate = function(parent) {
+		this._template = new Ractive({
+			el: parent,
+			template: html,
 			data: {
+				showMessage: false,
 				username: this._user.getUsername(),
 				userIsLoggedIn: false,
 				gamePages: [],
@@ -146,10 +141,13 @@ define(function(require) {
 						return title;
 					}
 				}
+			},
+			partials: {
+				header: headerHtml
 			}
 		});
 		
-		this._header.on("navigate", (function(event) {
+		this._template.on("navigate", (function(event) {
 			if(event.original.button !== MouseButtons.middle) {
 				event.original.preventDefault();
 			
@@ -157,7 +155,7 @@ define(function(require) {
 			}
 		}).bind(this));
 		
-		this._header.on("logout", (function() {
+		this._template.on("logout", (function() {
 			if(this._user.hasGamesInProgress()) {
 				this._displayLogoutConfirmation();
 			}
@@ -166,6 +164,8 @@ define(function(require) {
 				this._user.logout();
 			}
 		}).bind(this));
+		
+		this._pages = new Pages(this._template.nodes.main);
 	}
 	
 	Lightsquare.prototype._displayLogoutConfirmation = function() {
@@ -199,13 +199,9 @@ define(function(require) {
 		this._showMessage();
 	}
 	
-	Lightsquare.prototype._setupMessage = function() {
-		this._hideMessageTimer = null;
-		this._template.message.style.display = "none";
-	}
-	
 	Lightsquare.prototype._showMessage = function(durationInSeconds) {
-		this._template.message.style.display = "";
+		this._hideMessageTimer = null;
+		this._template.set("showMessage", true);
 		
 		if(durationInSeconds) {
 			this._hideMessageTimer = setTimeout((function() {
@@ -215,7 +211,7 @@ define(function(require) {
 	}
 	
 	Lightsquare.prototype._hideMessage = function() {
-		this._template.message.style.display = "none";
+		this._template.set("showMessage", false);
 		
 		if(this._hideMessageTimer !== null) {
 			clearTimeout(this._hideMessageTimer);
@@ -226,7 +222,7 @@ define(function(require) {
 	
 	Lightsquare.prototype._handleUserEvents = function() {
 		this._user.DetailsChanged.addHandler(this, function() {
-			this._header.set("username", this._user.getUsername());
+			this._template.set("username", this._user.getUsername());
 		});
 		
 		this._user.GamesReceived.addHandler(this, function(games) {
@@ -235,7 +231,7 @@ define(function(require) {
 			}).bind(this));
 			
 			this._router.loadFromUrl();
-			this._header.set("currentPath", this._router.getCurrentPath());
+			this._template.set("currentPath", this._router.getCurrentPath());
 		});
 		
 		this._user.NeededInGame.addHandler(this, function(id) {
@@ -256,7 +252,7 @@ define(function(require) {
 	}
 	
 	Lightsquare.prototype._updateLoginDependentUiElements = function() {
-		this._header.set("userIsLoggedIn", this._user.isLoggedIn());
+		this._template.set("userIsLoggedIn", this._user.isLoggedIn());
 	}
 	
 	return Lightsquare;
