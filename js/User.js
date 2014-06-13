@@ -1,11 +1,14 @@
 define(function(require) {
 	var Game = require("./Game");
 	var Event = require("lib/Event");
+	var Promise = require("lib/Promise");
 	var Glicko = require("chess/Glicko");
 	
 	function User(server) {
 		this._id = null;
-		this._games = [];
+		this._games = null;
+		this._pendingPromises = {};
+		
 		this._server = server;
 		this._username = "Anonymous";
 		this._isLoggedIn = false;
@@ -26,8 +29,7 @@ define(function(require) {
 		this.LoggedOut = new Event(this);
 		this.Registered = new Event(this);
 		this.RegistrationFailed = new Event(this);
-		this.GamesReceived = new Event(this);
-		this.NeededInGame = new Event(this);
+		this.NewGame = new Event(this);
 		this.DetailsChanged = new Event(this);
 		this.HasIdentity = new Event(this);
 		this.PrefsChanged = new Event(this);
@@ -37,7 +39,6 @@ define(function(require) {
 		this._subscribeToServerMessages();
 		
 		this._server.send("/request/user");
-		this._server.send("/request/games");
 	}
 	
 	User.prototype.register = function(username, password) {
@@ -132,8 +133,58 @@ define(function(require) {
 		return game;
 	}
 	
-	User.prototype.spectateGame = function(id) {
-		this._server.send("/game/spectate", id);
+	User.prototype.getGame = function(id) {
+		var promiseId = "/game/" + id;
+		
+		if(promiseId in this._pendingPromises) {
+			return this._pendingPromises[promiseId];
+		}
+		
+		else {
+			var promise = new Promise();
+			
+			this._games.some(function(game) {
+				if(game.getId() === id) {
+					promise.resolve(game);
+					
+					return true;
+				}
+			});
+			
+			if(!promise.isResolved()) {
+				this._server.send("/game/spectate", id);
+				this._pendingPromises[promiseId] = promise;
+				
+				setTimeout(function() {
+					promise.fail();
+				}, 1000);
+			}
+			
+			return promise;
+		}
+	}
+	
+	User.prototype.getGames = function() {
+		var promiseId = "/games";
+		
+		if(promiseId in this._pendingPromises) {
+			return this._pendingPromises[promiseId];
+		}
+		
+		else {
+			var promise = new Promise();
+			
+			if(this._games === null) {
+				this._server.send("/request/games");
+				this._pendingPromises[promiseId] = promise;
+			}
+			
+			else {
+				promise.resolve(this._games);
+			}
+			
+			return promise;
+		}
 	}
 	
 	User.prototype._subscribeToServerMessages = function() {
@@ -164,20 +215,23 @@ define(function(require) {
 		}).bind(this));
 		
 		this._server.subscribe("/games", (function(games) {
-			var newGames = [];
+			var promiseId = "/games";
 			
 			games.forEach((function(gameDetails) {
-				newGames.push(this._addGame(gameDetails));
+				this._addGame(gameDetails);
 			}).bind(this));
 			
-			this.GamesReceived.fire(newGames);
+			if(promiseId in this._pendingPromises) {
+				this._pendingPromises[promiseId].resolve(this._games);
+				
+				delete this._pendingPromises[promiseId];
+			}
 		}).bind(this));
 		
 		this._server.subscribe("/game", (function(gameDetails) {
 			var game = this._addGame(gameDetails);
 			
-			this.GamesReceived.fire([game]);
-			this.NeededInGame.fire(game.getId());
+			this.NewGame.fire(game.getId());
 		}).bind(this));
 		
 		this._server.subscribe("/user", (function(userDetails) {
