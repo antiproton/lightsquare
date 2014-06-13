@@ -2,6 +2,7 @@ define(function(require) {
 	require("css!./chat.css");
 	var html = require("file!./chat.html");
 	var Ractive = require("lib/dom/Ractive");
+	var Colour = require("chess/Colour");
 	
 	function Chat(game, parent) {
 		this._template = new Ractive({
@@ -32,6 +33,8 @@ define(function(require) {
 	
 	Chat.prototype._setupGame = function(game) {
 		this._game = game;
+		
+		this._addMessage(game.getPlayer(Colour.white).username + " vs. " + game.getPlayer(Colour.black).username + " " + game.getTimingStyle().getDescription());
 		
 		this._game.ChatMessageReceived.addHandler(this, function(message) {
 			this._addMessage(message.body, message.from);
