@@ -143,13 +143,15 @@ define(function(require) {
 		else {
 			var promise = new Promise();
 			
-			this._games.some(function(game) {
-				if(game.getId() === id) {
-					promise.resolve(game);
-					
-					return true;
-				}
-			});
+			if(this._games !== null) {
+				this._games.some(function(game) {
+					if(game.getId() === id) {
+						promise.resolve(game);
+						
+						return true;
+					}
+				});
+			}
 			
 			if(!promise.isResolved()) {
 				this._server.send("/game/spectate", id);
