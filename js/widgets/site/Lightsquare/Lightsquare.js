@@ -36,10 +36,10 @@ define(function(require) {
 		this._router.loadFromUrl();
 	}
 	
-	Lightsquare.prototype._addGamePage = function(id) {
-		var url = "/game/" + id;
+	Lightsquare.prototype._addGamePage = function(game) {
+		var url = "/game/" + game.getId();
 		var page = this._pages.createPage(url);
-		var gamePage = new GamePage(id, this._user, page);
+		var gamePage = new GamePage(game, this._user, page);
 		
 		this._template.get("gamePages").push(gamePage);
 		
@@ -81,12 +81,16 @@ define(function(require) {
 		}).bind(this));
 		
 		this._router.addRoute("/game/:id", (function(params, url) {
-			if(!this._pages.hasPage(url)) {
-				this._addGamePage(id);
-			}
-			
-			this._pages.showPage(url);
-			this._app.stopUpdatingChallengeList();
+			this._user.getGame(params.id).then((function(game) {
+				if(!this._pages.hasPage(url)) {
+					this._addGamePage(game);
+				}
+				
+				this._pages.showPage(url);
+				this._app.stopUpdatingChallengeList();
+			}).bind(this), (function() {
+				//display game not found message
+			}).bind(this));
 		}).bind(this));
 		
 		this._router.addRoute("/user/profile", (function(params, url) {
