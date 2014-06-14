@@ -221,8 +221,8 @@ define(function(require) {
 			this._template.set("username", this._user.getUsername());
 		});
 		
-		this._user.NewGame.addHandler(this, function(id) {
-			this._router.navigate("/game/" + id);
+		this._user.NewGame.addHandler(this, function(game) {
+			this._router.navigate("/game/" + game.getId());
 		});
 		
 		this._user.LoggedIn.addHandler(this, function() {
