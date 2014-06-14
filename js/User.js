@@ -231,9 +231,7 @@ define(function(require) {
 		}).bind(this));
 		
 		this._server.subscribe("/game", (function(gameDetails) {
-			var game = this._addGame(gameDetails);
-			
-			this.NewGame.fire(game.getId());
+			this.NewGame.fire(this._addGame(gameDetails));
 		}).bind(this));
 		
 		this._server.subscribe("/user", (function(userDetails) {
