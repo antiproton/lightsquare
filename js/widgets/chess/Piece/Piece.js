@@ -26,7 +26,7 @@ define(function(require) {
 		"Extra large": 90
 	};
 
-	Piece.DEFAULT_SIZE = 60;
+	Piece.DEFAULT_SIZE = 75;
 	Piece.DEFAULT_STYLE = "Classic";
 
 	Piece.prototype.setPiece = function(piece) {
