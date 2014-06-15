@@ -218,7 +218,7 @@ define(function(require) {
 	}
 	
 	Lightsquare.prototype._displayGameNotFoundMessage = function() {
-		this._showMessage(3);
+		this._showMessage(5);
 		
 		new Ractive({
 			el: this._template.nodes.message,
