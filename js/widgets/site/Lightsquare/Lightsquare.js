@@ -1,19 +1,24 @@
 define(function(require) {
 	require("css!./lightsquare.css");
 	require("css!./header.css");
-	require("css!./logoutConfirmation.css");
-	require("css!./serverDisconnectMessage.css");
+	require("css!./messages/logoutConfirmation.css");
+	require("css!./messages/serverDisconnect.css");
+	require("css!./messages/gameNotFound.css");
+	
 	var html = require("file!./lightsquare.html");
 	var headerHtml = require("file!./header.html");
-	var logoutConfirmationHtml = require("file!./logoutConfirmation.html");
-	var serverDisconnectMessageHtml = require("file!./serverDisconnectMessage.html");
-	var Template = require("lib/dom/Template");
+	var logoutConfirmationHtml = require("file!./messages/logoutConfirmation.html");
+	var serverDisconnectHtml = require("file!./messages/serverDisconnect.html");
+	var gameNotFoundHtml = require("file!./messages/gameNotFound.html");
+	
 	var Ractive = require("lib/dom/Ractive");
 	var Router = require("lib/Router");
-	var Pages = require("./_Pages");
+	var Pages = require("lib/Pages");
+	
 	var HomePage = require("./_HomePage/HomePage");
 	var GamePage = require("./_GamePage/GamePage");
 	var ProfilePage = require("./_ProfilePage/ProfilePage");
+	
 	var Colour = require("chess/Colour");
 	
 	var MouseButtons = {
@@ -30,11 +35,11 @@ define(function(require) {
 		});
 		
 		this._gamePages = [];
-		this._setupRouter();
+		this._router = new Router();
+		this._addRoutes();
 		this._setupTemplate(parent);
-		this._handleUserEvents();
 		this._addGamePages();
-		
+		this._handleUserEvents();
 		this._router.loadFromUrl();
 	}
 	
@@ -72,13 +77,7 @@ define(function(require) {
 		}).bind(this));
 	}
 	
-	Lightsquare.prototype._setupRouter = function() {
-		this._router = new Router();
-		
-		this._router.UrlChanged.addHandler(this, function(path) {
-			this._template.set("currentPath", path);
-		});
-		
+	Lightsquare.prototype._addRoutes = function() {
 		this._router.addRoute("/", (function(params, url) {
 			if(!this._pages.hasPage(url)) {
 				var page = this._pages.createPage(url);
@@ -91,16 +90,29 @@ define(function(require) {
 		}).bind(this));
 		
 		this._router.addRoute("/game/:id", (function(params, url) {
-			this._user.getGame(params.id).then((function(game) {
-				if(!this._pages.hasPage(url)) {
-					this._addGamePage(game);
-				}
-				
+			if(this._pages.hasPage(url)) {
 				this._pages.showPage(url);
 				this._app.stopUpdatingChallengeList();
-			}).bind(this), (function() {
-				//display game not found message
-			}).bind(this));
+			}
+			
+			else {
+				this._template.set("loadingGame", true);
+				this._template.set("loadingGameId", params.id);
+				
+				this._user.getGame(params.id).then((function(game) {
+					if(!this._pages.hasPage(url)) {
+						this._addGamePage(game);
+					}
+					
+					this._pages.showPage(url);
+					this._app.stopUpdatingChallengeList();
+				}).bind(this), (function() {
+					this._displayGameNotFoundMessage();
+					this._router.navigate("/");
+				}).bind(this), (function() {
+					this._template.set("loadingGame", false);
+				}).bind(this));
+			}
 		}).bind(this));
 		
 		this._router.addRoute("/user/profile", (function(params, url) {
@@ -171,14 +183,18 @@ define(function(require) {
 			}
 		}).bind(this));
 		
+		this._router.UrlChanged.addHandler(this, function(path) {
+			this._template.set("currentPath", path);
+		});
+		
 		this._pages = new Pages(this._template.nodes.main);
 	}
 	
 	Lightsquare.prototype._displayLogoutConfirmation = function() {
-		this._template.message.innerHTML = "";
+		this._showMessage(5);
 		
 		this._logoutConfirmation = new Ractive({
-			el: this._template.message,
+			el: this._template.nodes.message,
 			template: logoutConfirmationHtml
 		});
 		
@@ -190,24 +206,30 @@ define(function(require) {
 		this._logoutConfirmation.on("cancel", (function() {
 			this._hideMessage();
 		}).bind(this));
-		
-		this._showMessage(5);
 	}
 	
 	Lightsquare.prototype._displayServerDisconnectMessage = function() {
-		this._template.message.innerHTML = "";
+		this._showMessage();
 		
 		new Ractive({
-			el: this._template.message,
-			template: serverDisconnectMessageHtml
+			el: this._template.nodes.message,
+			template: serverDisconnectHtml
 		});
+	}
+	
+	Lightsquare.prototype._displayGameNotFoundMessage = function() {
+		this._showMessage(3);
 		
-		this._showMessage();
+		new Ractive({
+			el: this._template.nodes.message,
+			template: gameNotFoundHtml
+		});
 	}
 	
 	Lightsquare.prototype._showMessage = function(durationInSeconds) {
 		this._hideMessageTimer = null;
 		this._template.set("showMessage", true);
+		this._template.nodes.message.innerHTML = "";
 		
 		if(durationInSeconds) {
 			this._hideMessageTimer = setTimeout((function() {

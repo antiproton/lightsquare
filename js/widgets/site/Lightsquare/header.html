@@ -10,6 +10,13 @@
 	   class="{{'/game/' + this.getId() === currentPath ? 'on' : ''}}"
 	>{{getGameTitle(this, currentPath)}}</a>
 {{/gamePages}}
+{{#loadingGame}}
+	<a
+	   on-click="navigate"
+	   href="/game/{{loadingGameId}}"
+	   class="{{'/game/' + loadingGameId === currentPath ? 'on' : ''}}"
+	>Loading game...</a>
+{{/loadingGame}}
 <div class="header_spacer">
 	
 </div>
