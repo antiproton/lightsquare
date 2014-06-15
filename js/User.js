@@ -240,6 +240,14 @@ define(function(require) {
 			this.NewGame.fire(game);
 		}).bind(this));
 		
+		this._server.subscribe("/game/not_found", (function(id) {
+			var promiseId = "/game/" + id;
+			
+			if(promiseId in this._promises) {
+				this._promises[promiseId].fail();
+			}
+		}).bind(this));
+		
 		this._server.subscribe("/user", (function(userDetails) {
 			this._loadDetails(userDetails);
 			this.HasIdentity.fire();
