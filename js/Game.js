@@ -109,9 +109,7 @@ define(function(require) {
 	}
 	
 	Game.prototype._requestLatestMoves = function() {
-		this._server.send("/game/" + this._id + "/request/moves", {
-			startingIndex: this._history.length
-		});
+		this._server.send("/game/" + this._id + "/request/moves", this._history.length);
 	}
 	
 	Game.prototype.getId = function() {
