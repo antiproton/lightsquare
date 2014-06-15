@@ -1,8 +1,10 @@
 define(function(require) {
 	var time = require("lib/time");
+	var id = require("lib/id");
 	var ChessClock = require("chess/Clock");
 	
 	function Clock(server, game, timingStyle) {
+		this._id = id();
 		this._server = server;
 		this._serverTimeDifference = 0;
 		this._estimateTimeDifference();
@@ -22,7 +24,7 @@ define(function(require) {
 		var timeLastRequestSent;
 		var recordedLatencies = [];
 		
-		this._server.subscribe("/time", (function(serverTime) {
+		this._server.subscribe("/time/" + this._id, (function(serverTime) {
 			var now = time();
 			var latency = now - timeLastRequestSent;
 			
@@ -42,7 +44,7 @@ define(function(require) {
 		}).bind(this));
 		
 		var requestTime = (function() {
-			this._server.send("/request/time");
+			this._server.send("/request/time", this._id);
 			
 			timeLastRequestSent = time();
 		}).bind(this);
