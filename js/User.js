@@ -125,12 +125,16 @@ define(function(require) {
 		}).bind(this));
 	}
 	
-	User.prototype._addGame = function(gameDetails) {
-		var game = new Game(this, this._server, gameDetails);
+	User.prototype._createGame = function(gameDetails) {
+		return new Game(this, this._server, gameDetails);
+	}
 	
+	User.prototype._addGame = function(game) {
 		this._games.push(game);
 		
-		return game;
+		game.Rematch.addHandler(this, function(game) {
+			this._addGame(game);
+		});
 	}
 	
 	User.prototype.getGame = function(id) {
@@ -216,7 +220,7 @@ define(function(require) {
 			var promiseId = "/games";
 			
 			games.forEach((function(gameDetails) {
-				this._addGame(gameDetails);
+				this._addGame(this._createGame(gameDetails));
 			}).bind(this));
 			
 			if(promiseId in this._promises) {
@@ -225,13 +229,14 @@ define(function(require) {
 		}).bind(this));
 		
 		this._server.subscribe("/game", (function(gameDetails) {
-			var game = this._addGame(gameDetails);
+			var game = this._createGame(gameDetails);
 			var promiseId = "/game/" + game.getId();
 			
 			if(promiseId in this._promises) {
 				this._promises[promiseId].resolve(game);
 			}
 			
+			this._addGame(game);
 			this.NewGame.fire(game);
 		}).bind(this));
 		
