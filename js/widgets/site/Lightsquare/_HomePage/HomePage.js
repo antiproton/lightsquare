@@ -15,6 +15,7 @@ define(function(require) {
 		this._handleUserEvents();
 		this._setupCreateChallengeForm();
 		this._setupChallengeGraph();
+		this._updateLoginDependentUiElements();
 	}
 	
 	HomePage.prototype._setupLoginForm = function() {
