@@ -258,10 +258,12 @@ define(function(require) {
 		
 		this._user.LoggedIn.addHandler(this, function() {
 			this._updateUserDependentElements();
+			this._setBoardPrefs();
 		});
 		
 		this._user.LoggedOut.addHandler(this, function() {
 			this._updateUserDependentElements();
+			this._setBoardPrefs();
 		});
 	}
 	
