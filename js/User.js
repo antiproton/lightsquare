@@ -6,8 +6,8 @@ define(function(require) {
 	
 	function User(server) {
 		this._id = null;
-		this._games = null;
-		this._pendingPromises = {};
+		this._games = [];
+		this._promises = {};
 		
 		this._server = server;
 		this._username = "Anonymous";
@@ -136,26 +136,28 @@ define(function(require) {
 	User.prototype.getGame = function(id) {
 		var promiseId = "/game/" + id;
 		
-		if(promiseId in this._pendingPromises) {
-			return this._pendingPromises[promiseId];
+		if(promiseId in this._promises) {
+			return this._promises[promiseId];
 		}
 		
 		else {
 			var promise = new Promise();
 			
-			if(this._games !== null) {
-				this._games.some(function(game) {
-					if(game.getId() === id) {
-						promise.resolve(game);
-						
-						return true;
-					}
-				});
-			}
+			promise.then(null, null, (function() {
+				delete this._promises[promiseId];
+			}).bind(this));
+			
+			this._games.some(function(game) {
+				if(game.getId() === id) {
+					promise.resolve(game);
+					
+					return true;
+				}
+			});
 			
 			if(!promise.isResolved()) {
 				this._server.send("/game/spectate", id);
-				this._pendingPromises[promiseId] = promise;
+				this._promises[promiseId] = promise;
 				
 				setTimeout(function() {
 					promise.fail();
@@ -168,25 +170,19 @@ define(function(require) {
 	
 	User.prototype.getGames = function() {
 		var promiseId = "/games";
+		var promise;
 		
-		if(promiseId in this._pendingPromises) {
-			return this._pendingPromises[promiseId];
+		if(promiseId in this._promises) {
+			promise = this._promises[promiseId];
 		}
 		
 		else {
-			var promise = new Promise();
-			
-			if(this._games === null) {
-				this._server.send("/request/games");
-				this._pendingPromises[promiseId] = promise;
-			}
-			
-			else {
-				promise.resolve(this._games);
-			}
-			
-			return promise;
+			promise = this._promises[promiseId] = new Promise();
+		
+			this._server.send("/request/games");
 		}
+		
+		return promise;
 	}
 	
 	User.prototype._subscribeToServerMessages = function() {
@@ -223,15 +219,20 @@ define(function(require) {
 				this._addGame(gameDetails);
 			}).bind(this));
 			
-			if(promiseId in this._pendingPromises) {
-				this._pendingPromises[promiseId].resolve(this._games);
-				
-				delete this._pendingPromises[promiseId];
+			if(promiseId in this._promises) {
+				this._promises[promiseId].resolve(this._games);
 			}
 		}).bind(this));
 		
 		this._server.subscribe("/game", (function(gameDetails) {
-			this.NewGame.fire(this._addGame(gameDetails));
+			var game = this._addGame(gameDetails);
+			var promiseId = "/game/" + game.getId();
+			
+			if(promiseId in this._promises) {
+				this._promises[promiseId].resolve(game);
+			}
+			
+			this.NewGame.fire(game);
 		}).bind(this));
 		
 		this._server.subscribe("/user", (function(userDetails) {
