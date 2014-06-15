@@ -12,6 +12,7 @@ define(function(require) {
 			var page = create("div", this._container);
 			
 			page.className = "page";
+			page.style.display = "none";
 			
 			this._pages[url] = page;
 			
