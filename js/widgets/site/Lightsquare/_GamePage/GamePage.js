@@ -62,6 +62,10 @@ define(function(require) {
 		return this._game.getId();
 	}
 	
+	GamePage.prototype.gameIsInProgress = function() {
+		return this._game.isInProgress();
+	}
+	
 	GamePage.prototype._setupGame = function(game) {
 		this._game = game;
 		

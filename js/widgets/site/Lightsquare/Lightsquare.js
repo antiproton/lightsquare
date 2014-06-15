@@ -57,7 +57,7 @@ define(function(require) {
 		gamePage.Rematch.addHandler(this, function(game) {
 			var newUrl = "/game/" + game.getId();
 			
-			this._pages.changeUrl(url, newUrl);
+			this._pages.changeId(url, newUrl);
 			this._router.navigate(newUrl);
 			this._updateGamePage(gamePage);
 			
@@ -152,7 +152,7 @@ define(function(require) {
 						var timeLeft = gamePage.getTimeLeft(playerColour);
 						var title = opponentName + " | " + timingStyle;
 						
-						if(currentPath !== "/game/" + gamePage.getId()) {
+						if(gamePage.gameIsInProgress() && currentPath !== "/game/" + gamePage.getId()) {
 							title += " | " + timeLeft.getColonDisplay();
 						}
 						
