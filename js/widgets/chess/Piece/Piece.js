@@ -56,18 +56,10 @@ define(function(require) {
 			offset = -"PNBRQKpnbrqk".indexOf(this._piece) * this._size;
 		}
 		
-		var path = [
-			".",
-			"pieces",
-			this._style,
-			this._size,
-			"sprite.png"
-		];
-		
 		style(this._template.root, {
 			width: this._size,
 			height: this._size,
-			backgroundImage: "url('" + require.toUrl(path.join("/")) + "')",
+			backgroundImage: "url('" + require.toUrl("./pieces/" + this._style + "/" + this._size + ".png") + "')",
 			backgroundPosition: offset + "px 0",
 			backgroundRepeat: "no-repeat"
 		});
