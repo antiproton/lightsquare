@@ -71,6 +71,7 @@ define(function(require) {
 		}
 		
 		this._setupTemplate(parent);
+		this._updateTemplate();
 	}
 	
 	ChallengeGraph.prototype._setupTemplate = function(parent) {
