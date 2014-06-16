@@ -21,12 +21,13 @@ define(function(require) {
 		"Tiny": 20,
 		"Extra small": 30,
 		"Small": 45,
-		"Standard": 60,
+		"Medium": 60,
+		"Standard": 67,
 		"Large": 75,
 		"Extra large": 90
 	};
 
-	Piece.DEFAULT_SIZE = 75;
+	Piece.DEFAULT_SIZE = 67;
 	Piece.DEFAULT_STYLE = "Classic";
 
 	Piece.prototype.setPiece = function(piece) {
