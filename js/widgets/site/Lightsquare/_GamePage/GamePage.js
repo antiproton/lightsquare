@@ -29,7 +29,7 @@ define(function(require) {
 			data: {}
 		});
 		
-		this._updateTemplate();
+		this._initialiseTemplate();
 		this._setupChat();
 		this._setupBoard();
 		this._setupHistory();
@@ -96,7 +96,7 @@ define(function(require) {
 		
 		this._game.Rematch.addHandler(this, function(game) {
 			this._setupGame(game);
-			this._updateTemplate();
+			this._initialiseTemplate();
 			this._updateBoard();
 			this._updateHistory();
 			this._updateUserDependentElements();
@@ -206,7 +206,7 @@ define(function(require) {
 		this._board.setBoardArray(this._game.getPosition().getBoardArray());
 	}
 	
-	GamePage.prototype._updateTemplate = function() {
+	GamePage.prototype._initialiseTemplate = function() {
 		this._template.set({
 			players: {},
 			result: this._game.getResult(),
