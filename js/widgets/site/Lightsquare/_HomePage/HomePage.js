@@ -17,7 +17,7 @@ define(function(require) {
 		this._setupChallengeGraph();
 		
 		this._user.getDetails().then((function() {
-			this._updateLoginDependentUiElements();
+			this._updateUserDependentElements();
 		}).bind(this));
 	}
 	
@@ -35,15 +35,15 @@ define(function(require) {
 	
 	HomePage.prototype._handleUserEvents = function() {
 		this._user.LoggedIn.addHandler(this, function() {
-			this._updateLoginDependentUiElements();
+			this._updateUserDependentElements();
 		});
 		
 		this._user.LoggedOut.addHandler(this, function() {
-			this._updateLoginDependentUiElements();
+			this._updateUserDependentElements();
 		});
 	}
 	
-	HomePage.prototype._updateLoginDependentUiElements = function() {
+	HomePage.prototype._updateUserDependentElements = function() {
 		this._template.login_form.style.display = (this._user.isLoggedIn() ? "none" : "");
 	}
 	
