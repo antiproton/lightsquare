@@ -36,7 +36,6 @@ define(function(require) {
 		this._players = {};
 		this._players[Colour.white] = gameDetails.white;
 		this._players[Colour.black] = gameDetails.black;
-		this._userColour = this._getUserColour();
 		
 		this._history = [];
 		this._moveQueue = [];
@@ -187,7 +186,7 @@ define(function(require) {
 		return this._history.getShallowCopy();
 	}
 	
-	Game.prototype._getUserColour = function() {
+	Game.prototype.getUserColour = function() {
 		var player;
 		var userColour = null;
 		
@@ -203,10 +202,6 @@ define(function(require) {
 		}, this);
 		
 		return userColour;
-	}
-	
-	Game.prototype.getUserColour = function() {
-		return this._userColour;
 	}
 	
 	Game.prototype.getPlayer = function(colour) {
