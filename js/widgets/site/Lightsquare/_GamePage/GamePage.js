@@ -34,8 +34,12 @@ define(function(require) {
 		this._setupBoard();
 		this._setupHistory();
 		this._setupControls();
-		this._updateUserDependentElements();
 		this._handleUserEvents();
+		
+		this._user.getDetails().then((function() {
+			this._updateUserDependentElements();
+			this._setBoardPrefs();
+		}).bind(this));
 	}
 	
 	GamePage.prototype.getPlayerColour = function() {
@@ -251,11 +255,6 @@ define(function(require) {
 	}
 	
 	GamePage.prototype._handleUserEvents = function() {
-		this._user.HasIdentity.addHandler(this, function() {
-			this._updateUserDependentElements();
-			this._setBoardPrefs();
-		});
-		
 		this._user.PrefsChanged.addHandler(this, function() {
 			this._setBoardPrefs();
 		});

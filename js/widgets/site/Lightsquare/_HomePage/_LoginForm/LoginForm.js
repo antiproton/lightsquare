@@ -24,11 +24,19 @@ define(function(require) {
 			var password = (this._template.get("password") || "").toString();
 			
 			if(this._template.get("register")) {
-				this._user.register(username, password);
+				this._user.register(username, password).then((function() {
+					this._clearForm();
+				}).bind(this), (function(reason) {
+					this._setError(reason);
+				}).bind(this));
 			}
 			
 			else {
-				this._user.login(username, password);
+				this._user.login(username, password).then((function() {
+					this._clearForm();
+				}).bind(this), (function(reason) {
+					this._setError(reason);
+				}).bind(this));
 			}
 		}).bind(this));
 		
@@ -41,22 +49,6 @@ define(function(require) {
 			this._template.set("register", true);
 			this._clearError();
 		}).bind(this));
-		
-		this._user.LoggedIn.addHandler(this, function() {
-			this._clearForm();
-		});
-		
-		this._user.LoginFailed.addHandler(this, function(reason) {
-			this._setError(reason);
-		});
-		
-		this._user.Registered.addHandler(this, function() {
-			this._clearForm();
-		});
-		
-		this._user.RegistrationFailed.addHandler(this, function(reason) {
-			this._setError(reason);
-		});
 	}
 	
 	LoginForm.prototype._clearForm = function() {

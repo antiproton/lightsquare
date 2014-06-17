@@ -15,7 +15,10 @@ define(function(require) {
 		this._handleUserEvents();
 		this._setupCreateChallengeForm();
 		this._setupChallengeGraph();
-		this._updateLoginDependentUiElements();
+		
+		this._user.getDetails().then((function() {
+			this._updateLoginDependentUiElements();
+		}).bind(this));
 	}
 	
 	HomePage.prototype._setupLoginForm = function() {
@@ -36,10 +39,6 @@ define(function(require) {
 		});
 		
 		this._user.LoggedOut.addHandler(this, function() {
-			this._updateLoginDependentUiElements();
-		});
-		
-		this._user.HasIdentity.addHandler(this, function() {
 			this._updateLoginDependentUiElements();
 		});
 	}

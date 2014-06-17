@@ -41,6 +41,10 @@ define(function(require) {
 		this._addGamePages();
 		this._handleUserEvents();
 		this._router.loadFromUrl();
+		
+		this._user.getDetails().then((function() {
+			this._updateUserDependentElements();
+		}).bind(this));
 	}
 	
 	Lightsquare.prototype._addGamePage = function(game) {
@@ -249,29 +253,23 @@ define(function(require) {
 	}
 	
 	Lightsquare.prototype._handleUserEvents = function() {
-		this._user.DetailsChanged.addHandler(this, function() {
-			this._template.set("username", this._user.getUsername());
-		});
-		
 		this._user.NewGame.addHandler(this, function(game) {
 			this._router.navigate("/game/" + game.getId());
 		});
 		
 		this._user.LoggedIn.addHandler(this, function() {
-			this._updateLoginDependentUiElements();
+			this._updateUserDependentElements();
 		});
 		
 		this._user.LoggedOut.addHandler(this, function() {
-			this._updateLoginDependentUiElements();
-		});
-		
-		this._user.HasIdentity.addHandler(this, function() {
-			this._updateLoginDependentUiElements();
+			this._updateUserDependentElements();
 		});
 	}
 	
-	Lightsquare.prototype._updateLoginDependentUiElements = function() {
+	Lightsquare.prototype._updateUserDependentElements = function() {
 		this._template.set("userIsLoggedIn", this._user.isLoggedIn());
+		this._template.set("username", this._user.getUsername());
+		this._template.update("gamePages");
 	}
 	
 	return Lightsquare;

@@ -12,14 +12,18 @@ define(function(require) {
 		
 		this._setupTemplate(parent);
 		
-		this._user.DetailsChanged.addHandler(this, function() {
+		this._user.LoggedIn.addHandler(this, function() {
 			this._updateUserDetails();
 		});
 		
-		this._user.HasIdentity.addHandler(this, function() {
+		this._user.LoggedOut.addHandler(this, function() {
+			this._updateUserDetails();
+		});
+		
+		this._user.getDetails().then((function() {
 			this._updateUserDetails();
 			this._updatePrefs();
-		});
+		}).bind(this));
 	}
 	
 	ProfilePage.prototype._setupTemplate = function(parent) {

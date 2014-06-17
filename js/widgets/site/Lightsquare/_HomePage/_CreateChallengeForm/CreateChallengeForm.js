@@ -39,10 +39,10 @@ define(function(require) {
 		this._fillInLastChallengeOptions();
 		this._setWaiting(this._user.getCurrentChallenge() !== null);
 		
-		this._user.HasIdentity.addHandler(this, function() {
+		this._user.getDetails().then((function() {
 			this._setWaiting(this._user.getCurrentChallenge() !== null);
 			this._fillInLastChallengeOptions();
-		});
+		}).bind(this));
 		
 		this._user.LoggedIn.addHandler(this, function() {
 			this._fillInLastChallengeOptions();

@@ -72,6 +72,10 @@ define(function(require) {
 		
 		this._setupTemplate(parent);
 		this._updateTemplate();
+		
+		this._user.getDetails().then((function() {
+			this._updateCurrentChallenge();
+		}).bind(this));
 	}
 	
 	ChallengeGraph.prototype._setupTemplate = function(parent) {
@@ -97,10 +101,6 @@ define(function(require) {
 		
 		this._app.ChallengeListUpdated.addHandler(this, function() {
 			this._updateTemplate();
-		});
-		
-		this._user.HasIdentity.addHandler(this, function() {
-			this._updateCurrentChallenge();
 		});
 		
 		this._user.ChallengeCreated.addHandler(this, function() {

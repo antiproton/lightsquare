@@ -25,20 +25,30 @@ define(function(require) {
 		
 		this.Replaced = new Event(this);
 		this.LoggedIn = new Event(this);
-		this.LoginFailed = new Event(this);
 		this.LoggedOut = new Event(this);
-		this.Registered = new Event(this);
-		this.RegistrationFailed = new Event(this);
 		this.NewGame = new Event(this);
-		this.DetailsChanged = new Event(this);
-		this.HasIdentity = new Event(this);
 		this.PrefsChanged = new Event(this);
 		this.ChallengeCreated = new Event(this);
 		this.ChallengeExpired = new Event(this);
 		
 		this._subscribeToServerMessages();
+	}
+	
+	User.prototype.getDetails = function() {
+		var promiseId = "/details";
+		var promise;
 		
-		this._server.send("/request/user");
+		if(promiseId in this._promises) {
+			return this._promises[promiseId];
+		}
+		
+		else {
+			promise = this._promises[promiseId] = new Promise();
+			
+			this._server.send("/request/user");
+		}
+		
+		return promise;
 	}
 	
 	User.prototype.register = function(username, password) {
@@ -49,23 +59,55 @@ define(function(require) {
 	}
 	
 	User.prototype.login = function(username, password) {
-		this._server.send("/user/login", {
-			username: username,
-			password: password
-		});
+		var promiseId = "/login";
+		var promise;
+		
+		if(promiseId in this._promises) {
+			return this._promises[promiseId];
+		}
+		
+		else {
+			promise = this._promises[promiseId] = new Promise();
+			
+			promise.then(null, null, (function() {
+				delete this._promises[promiseId];
+			}).bind(this));
+		
+			this._server.send("/user/login", {
+				username: username,
+				password: password
+			});
+		}
+		
+		return promise;
 	}
 	
 	User.prototype.logout = function() {
-		this._server.send("/user/logout");
+		var promiseId = "/logout";
+		var promise;
+		
+		if(promiseId in this._promises) {
+			return this._promises[promiseId];
+		}
+		
+		else {
+			promise = this._promises[promiseId] = new Promise();
+			
+			promise.then(null, null, (function() {
+				delete this._promises[promiseId];
+			}).bind(this));
+		
+			this._server.send("/user/logout");
+		}
+		
+		return promise;
 	}
 	
 	User.prototype._logout = function() {
 		this._username = "Anonymous";
 		this._isLoggedIn = false;
 		this._rating = Glicko.INITIAL_RATING;
-		
 		this.LoggedOut.fire();
-		this.DetailsChanged.fire();
 	}
 	
 	User.prototype.getUsername = function() {
@@ -192,24 +234,31 @@ define(function(require) {
 	User.prototype._subscribeToServerMessages = function() {
 		this._server.subscribe("/user/login/success", (function(userDetails) {
 			this._loadDetails(userDetails);
+			this._promises["/login"].resolve();
 			this.LoggedIn.fire();
-			this.DetailsChanged.fire();
 		}).bind(this));
 		
 		this._server.subscribe("/user/login/failure", (function(reason) {
-			this.LoginFailed.fire(reason);
+			this._promises["/login"].fail(reason);
 		}).bind(this));
 		
 		this._server.subscribe("/user/logout", (function() {
 			this._logout();
+			
+			var promiseId = "/logout";
+			
+			if(promiseId in this._promises) {
+				this._promises[promiseId].resolve();
+			}
 		}).bind(this));
 		
 		this._server.subscribe("/user/register/success", (function() {
+			this._promises["/register"].resolve();
 			this.Registered.fire();
 		}).bind(this));
 		
 		this._server.subscribe("/user/register/failure", (function(reason) {
-			this.RegistrationFailed.fire(reason);
+			this._promises["/register"].fail(reason);
 		}).bind(this));
 		
 		this._server.subscribe("/user/replaced", (function(data) {
@@ -250,7 +299,12 @@ define(function(require) {
 		
 		this._server.subscribe("/user", (function(userDetails) {
 			this._loadDetails(userDetails);
-			this.HasIdentity.fire();
+			
+			var promiseId = "/details";
+			
+			if(promiseId in this._promises) {
+				this._promises[promiseId].resolve();
+			}
 		}).bind(this));
 		
 		this._server.subscribe("/current_challenge", (function(challengeDetails) {
@@ -272,8 +326,6 @@ define(function(require) {
 		this._currentChallenge = userDetails.currentChallenge;
 		this._lastChallengeOptions = userDetails.lastChallengeOptions;
 		this._prefs = userDetails.prefs;
-		
-		this.DetailsChanged.fire();
 	}
 	
 	return User;
