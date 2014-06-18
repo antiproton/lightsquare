@@ -251,7 +251,13 @@ define(function(require) {
 	User.prototype._subscribeToServerMessages = function() {
 		this._server.subscribe("/user/login/success", (function(userDetails) {
 			this._loadDetails(userDetails);
-			this._promises["/login"].resolve();
+			
+			var promiseId = "/login";
+			
+			if(promiseId in this._promises) {
+				this._promises[promiseId].resolve();
+			}
+			
 			this.LoggedIn.fire();
 		}).bind(this));
 		
