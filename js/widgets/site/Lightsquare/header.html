@@ -1,28 +1,34 @@
-<a
-	on-click="navigate"
-	href="/"
-	class="{{'/' === currentPath ? 'on' : ''}}"
->Lightsquare</a>
-{{#gamePages}}
+<div class="header_home_link">
 	<a
-	   on-click="navigate"
-	   href="/game/{{this.getId()}}"
-	   class="{{'/game/' + this.getId() === currentPath ? 'on' : ''}}"
-	>{{getGameTitle(this, currentPath)}}</a>
-{{/gamePages}}
-{{#loadingGame}}
-	<a
-	   on-click="navigate"
-	   href="/game/{{loadingGameId}}"
-	   class="{{'/game/' + loadingGameId === currentPath ? 'on' : ''}}"
-	>Loading game...</a>
-{{/loadingGame}}
-<div class="header_spacer">
-	
+		on-click="navigate"
+		href="/"
+		class="{{'/' === currentPath ? 'on' : ''}}"
+	>Lightsquare</a>
 </div>
-<a class="user_link" href="/user/profile" on-click="navigate">{{username}}</a>
-{{#userIsLoggedIn}}
-	<div class="logout">
-		<a class="logout" title="Log out" href="javascript:void(0)" on-click="logout">Log out</a>
+<div class="header_game_links">
+	{{#gamePages}}
+		<a
+		   on-click="navigate"
+		   href="/game/{{this.getId()}}"
+		   class="{{'/game/' + this.getId() === currentPath ? 'on' : ''}}"
+		>{{getGameTitle(this, currentPath)}}</a>
+	{{/gamePages}}
+	{{#loadingGame}}
+		<a
+		   on-click="navigate"
+		   href="/game/{{loadingGameId}}"
+		   class="{{'/game/' + loadingGameId === currentPath ? 'on' : ''}}"
+		>Loading game...</a>
+	{{/loadingGame}}
+	<div class="header_spacer">
+		
 	</div>
-{{/userIsLoggedIn}}
+</div>
+<div class="header_user_links">
+	<a class="user_link" href="/user/profile" on-click="navigate">{{username}}</a>
+	{{#userIsLoggedIn}}
+		<div class="logout">
+			<a class="logout" title="Log out" href="javascript:void(0)" on-click="logout">Log out</a>
+		</div>
+	{{/userIsLoggedIn}}
+</div>

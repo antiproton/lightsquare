@@ -1,18 +1,32 @@
 div.header {
 	display: flex;
-	flex-wrap: wrap;
 	background-color: #F4F4F4;
 }
 
-div.header > * {
+div.header > div {
+	display: flex;
+	align-items: flex-end;
+}
+
+div.header > div > * {
 	border-bottom: 2px solid #CECECE;
 }
 
-div.header > a {
+div.header > div > a {
 	color: #2f2f2f;
 	text-decoration: none;
 	display: block;
 	padding: .5em .7em;
+}
+
+div.header_home_link, div.header_user_links {
+	flex-shrink: 0;
+}
+
+div.header_game_links {
+	flex-grow: 1;
+	flex-shrink: 1;
+	flex-wrap: wrap;
 }
 
 div.header a.on, div.header a.on:hover {
