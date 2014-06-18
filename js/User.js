@@ -52,10 +52,27 @@ define(function(require) {
 	}
 	
 	User.prototype.register = function(username, password) {
-		this._server.send("/user/register", {
-			username: username,
-			password: password
-		});
+		var promiseId = "/register";
+		var promise;
+		
+		if(promiseId in this._promises) {
+			promise = this._promises[promiseId];
+		}
+		
+		else {
+			promise = this._promises[promiseId] = new Promise();
+			
+			promise.then(null, null, (function() {
+				delete this._promises[promiseId];
+			}).bind(this));
+			
+			this._server.send("/user/register", {
+				username: username,
+				password: password
+			});
+		}
+		
+		return promise;
 	}
 	
 	User.prototype.login = function(username, password) {
