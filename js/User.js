@@ -2,7 +2,7 @@ define(function(require) {
 	var Game = require("./Game");
 	var Event = require("lib/Event");
 	var Promise = require("lib/Promise");
-	var Glicko = require("chess/Glicko");
+	var glicko2Defaults = require("jsonchess/glicko2Defaults");
 	
 	function User(server) {
 		this._id = null;
@@ -12,7 +12,7 @@ define(function(require) {
 		this._server = server;
 		this._username = "Anonymous";
 		this._isLoggedIn = false;
-		this._rating = Glicko.INITIAL_RATING;
+		this._rating = glicko2Defaults.RATING;
 		this._currentChallenge = null;
 		this._lastChallengeOptions = null;
 		
