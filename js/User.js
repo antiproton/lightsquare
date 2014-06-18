@@ -277,7 +277,6 @@ define(function(require) {
 		
 		this._server.subscribe("/user/register/success", (function() {
 			this._promises["/register"].resolve();
-			this.Registered.fire();
 		}).bind(this));
 		
 		this._server.subscribe("/user/register/failure", (function(reason) {
