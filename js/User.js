@@ -63,7 +63,7 @@ define(function(require) {
 		var promise;
 		
 		if(promiseId in this._promises) {
-			return this._promises[promiseId];
+			promise = this._promises[promiseId];
 		}
 		
 		else {
@@ -87,7 +87,7 @@ define(function(require) {
 		var promise;
 		
 		if(promiseId in this._promises) {
-			return this._promises[promiseId];
+			promise = this._promises[promiseId];
 		}
 		
 		else {
