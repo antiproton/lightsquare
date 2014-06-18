@@ -1,49 +1,46 @@
 div.game {
 	display: flex;
 	flex-grow: 1;
-	box-shadow: inset 0 3px 8px rgba(0, 0, 0, .05);
 }
 
 div.game_main {
 	display: flex;
-	justify-content: center;
-	margin-left: 1em;
+	flex-direction: column;
+	flex-grow: 1;
+	background: white;
 }
 
 div.game_details {
-	margin: 0 1em;
+	flex-grow: 1;
+	padding: .7em;
+	background: #474747;
+}
+
+div.game_board_and_controls {
+	display: flex;
+	align-items: center;
+	justify-content: center;
 	flex-grow: 1;
 }
 
-div.game_board_and_players {
-	display: flex;
-	flex-direction: column;
-}
-
-div.game_player, div.game_result {
-	font-size: 1.2em;
-	padding: .5em 0 .5em .5em;
-}
-
 div.game_player {
+	color: white;
+	font-size: 1.2em;
 	display: flex;
 	justify-content: space-between;
+	padding: .5em;
+	background: #939393;
 }
 
 div.game_result {
 	text-align: right;
 }
 
-div.game_history_and_controls {
-	display: flex;
-}
-
 div.game_controls {
 	display: flex;
 	flex-direction: column;
-	justify-content: flex-end;
 	min-width: 8em;
-	margin-right: .3em;
+	margin-left: .6em;
 }
 
 div.game_controls input {

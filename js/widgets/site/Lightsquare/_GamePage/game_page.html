@@ -1,77 +1,72 @@
 <div class="game">
 	<div class="game_main">
-		<div class="game_board_and_players">
-			<div class="game_player">
-				<div class="player_username">
-					{{players.opponent.username}} ({{players.opponent.rating}})
-				</div>
-				<div class="player_clock">
-					{{players.opponent.time.getColonDisplay(players.opponent.time < 10000)}}
-				</div>
+		<div class="game_player">
+			<div class="player_username">
+				{{players.opponent.username}} ({{players.opponent.rating}})
 			</div>
+			<div class="player_clock">
+				{{players.opponent.time.getColonDisplay(players.opponent.time < 10000)}}
+			</div>
+		</div>
+		<div class="game_board_and_controls">
 			<div class="game_board" id="board">
 				
 			</div>
-			<div class="game_player">
-				<div class="player_username">
-					{{players.player.username}} ({{players.player.rating}})
+			{{#userIsPlaying}}
+				<div class="game_controls">
+					{{#isInProgress}}
+						<input
+							type="button"
+							on-click="resign"
+							value="Resign"
+						>
+						<input
+							type="button"
+							on-click="offer_or_accept_draw"
+							value="{{(drawOffered && userIsActivePlayer) ? 'Accept' : 'Offer'}} draw"
+							class="{{
+								(
+									(!drawOffered && !userIsActivePlayer)
+									|| (drawOffered && userIsActivePlayer)
+								) ? '' : 'disabled'
+							}}"
+						>
+						{{#canClaimDraw}}
+							<input type="button" on-click="claim_draw" value="Claim draw">
+						{{/canClaimDraw}}
+					{{/isInProgress}}
+					{{^isInProgress}}
+						<input
+							type="button"
+							on-click="rematch"
+							value="Rematch"
+							class="{{userHasOfferedRematch ? 'disabled' : ''}}"
+						>
+						<input type="button" on-click="new_game" value="New {{timingDescription}}">
+					{{/isInProgress}}
 				</div>
-				<div class="player_clock">
-					{{players.player.time.getColonDisplay(players.player.time < 10000)}}
-				</div>
+			{{/userIsPlaying}}
+		</div>
+		<div class="game_player">
+			<div class="player_username">
+				{{players.player.username}} ({{players.player.rating}})
+			</div>
+			<div class="player_clock">
+				{{players.player.time.getColonDisplay(players.player.time < 10000)}}
 			</div>
 		</div>
 	</div>
 	<div class="game_details">
-		<div class="game_history_chat_and_controls">
+		{{^isInProgress}}
 			<div class="game_result">
-				&nbsp;
-				{{^isInProgress}}
 					{{result.summary}}
-				{{/isInProgress}}
 			</div>
-			<div class="game_history_and_controls">
-				{{#userIsPlaying}}
-					<div class="game_controls">
-						{{#isInProgress}}
-							<input
-								type="button"
-								on-click="resign"
-								value="Resign"
-							>
-							<input
-								type="button"
-								on-click="offer_or_accept_draw"
-								value="{{(drawOffered && userIsActivePlayer) ? 'Accept' : 'Offer'}} draw"
-								class="{{
-									(
-										(!drawOffered && !userIsActivePlayer)
-										|| (drawOffered && userIsActivePlayer)
-									) ? '' : 'disabled'
-								}}"
-							>
-							{{#canClaimDraw}}
-								<input type="button" on-click="claim_draw" value="Claim draw">
-							{{/canClaimDraw}}
-						{{/isInProgress}}
-						{{^isInProgress}}
-							<input
-								type="button"
-								on-click="rematch"
-								value="Rematch"
-								class="{{userHasOfferedRematch ? 'disabled' : ''}}"
-							>
-							<input type="button" on-click="new_game" value="New {{timingDescription}}">
-						{{/isInProgress}}
-					</div>
-				{{/userIsPlaying}}
-				<div class="game_history" id="history">
-					
-				</div>
-			</div>
-			<div class="game_chat" id="chat">
-				
-			</div>
+		{{/isInProgress}}
+		<div class="game_history" id="history">
+			
+		</div>
+		<div class="game_chat" id="chat">
+			
 		</div>
 	</div>
 </div>
