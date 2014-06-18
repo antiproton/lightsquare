@@ -174,7 +174,10 @@ define(function(require) {
 		}).bind(this));
 		
 		this._template.on("rematch", (function() {
-			this._game.offerOrAcceptRematch();
+			if(!this._template.get("userHasOfferedRematch")) {
+				this._game.offerOrAcceptRematch();
+				this._template.set("userHasOfferedRematch", true);
+			}
 		}).bind(this));
 		
 		this._template.on("new_game", (function() {
@@ -212,6 +215,7 @@ define(function(require) {
 			result: this._game.getResult(),
 			isInProgress: this._game.isInProgress(),
 			userIsPlaying: this._userIsPlaying(),
+			userHasOfferedRematch: false,
 			userIsActivePlayer: this._userIsActivePlayer(),
 			drawOffered: this._game.isDrawOffered(),
 			canClaimDraw: this._game.isDrawClaimable(),

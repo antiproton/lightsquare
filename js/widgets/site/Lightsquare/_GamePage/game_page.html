@@ -55,7 +55,12 @@
 							{{/canClaimDraw}}
 						{{/isInProgress}}
 						{{^isInProgress}}
-							<input type="button" on-click="rematch" value="Rematch">
+							<input
+								type="button"
+								on-click="rematch"
+								value="Rematch"
+								class="{{userHasOfferedRematch ? 'disabled' : ''}}"
+							>
 							<input type="button" on-click="new_game" value="New {{timingDescription}}">
 						{{/isInProgress}}
 					</div>
