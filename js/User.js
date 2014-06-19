@@ -31,6 +31,7 @@ define(function(require) {
 		this.ChallengeCreated = new Event(this);
 		this.ChallengeExpired = new Event(this);
 		
+		this._handleServerEvents();
 		this._subscribeToServerMessages();
 	}
 	
@@ -246,6 +247,17 @@ define(function(require) {
 		}
 		
 		return promise;
+	}
+	
+	User.prototype._handleServerEvents = function() {
+		this._server.ConnectionOpened.addHandler(this, function() {
+			this._resetSession();
+		});
+	}
+	
+	User.prototype._resetSession = function() {
+		this._promises = {};
+		this._games = [];
 	}
 	
 	User.prototype._subscribeToServerMessages = function() {
