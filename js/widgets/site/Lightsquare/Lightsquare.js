@@ -1,24 +1,22 @@
 define(function(require) {
+	require("lib/Array.empty");
 	require("css!./lightsquare.css");
 	require("css!./header.css");
 	require("css!./messages/logoutConfirmation.css");
 	require("css!./messages/serverDisconnect.css");
 	require("css!./messages/gameNotFound.css");
-	
 	var html = require("file!./lightsquare.html");
 	var headerHtml = require("file!./header.html");
 	var logoutConfirmationHtml = require("file!./messages/logoutConfirmation.html");
 	var serverDisconnectHtml = require("file!./messages/serverDisconnect.html");
 	var gameNotFoundHtml = require("file!./messages/gameNotFound.html");
-	
 	var Ractive = require("lib/dom/Ractive");
 	var Router = require("lib/Router");
 	var Pages = require("lib/Pages");
-	
+	var LoadingPage = require("./_LoadingPage/LoadingPage");
 	var HomePage = require("./_HomePage/HomePage");
 	var GamePage = require("./_GamePage/GamePage");
-	var ProfilePage = require("./_ProfilePage/ProfilePage");
-	
+	var ProfilePage = require("./_ProfilePage/ProfilePage");	
 	var Colour = require("chess/Colour");
 	
 	var MouseButtons = {
@@ -26,21 +24,36 @@ define(function(require) {
 		middle: 1
 	};
 	
-	function Lightsquare(app, user, parent) {
+	function Lightsquare(server, app, user, parent) {
+		this._server = server;
 		this._app = app;
 		this._user = user;
 		
-		this._app.ServerDisconnected.addHandler(this, function() {
-			this._displayServerDisconnectMessage();
+		this._gamePages = [];
+		this._handleServerEvents();
+		this._handleUserEvents();
+		
+		this._setupTemplate(parent);
+		this._setupRouter();
+	}
+	
+	Lightsquare.prototype._handleServerEvents = function() {
+		this._server.ConnectionOpened.addHandler(this, function() {
+			console.log("open");
+			this._initialise();
+			this._router.loadFromUrl();
 		});
 		
-		this._gamePages = [];
-		this._router = new Router();
-		this._addRoutes();
-		this._setupTemplate(parent);
+		this._server.ConnectionLost.addHandler(this, function() {
+			console.log("lost");
+			this._displayServerDisconnectMessage();
+		});
+	}
+	
+	Lightsquare.prototype._initialise = function() {
+		this._pages.clear();
+		this._gamePages.empty();
 		this._addGamePages();
-		this._handleUserEvents();
-		this._router.loadFromUrl();
 		
 		this._user.getDetails().then((function() {
 			this._updateUserDependentElements();
@@ -81,7 +94,15 @@ define(function(require) {
 		}).bind(this));
 	}
 	
-	Lightsquare.prototype._addRoutes = function() {
+	Lightsquare.prototype._setupRouter = function() {
+		this._router = new Router();
+		
+		this._template.set("currentPath", this._router.getCurrentPath());
+		
+		this._router.UrlChanged.addHandler(this, function(path) {
+			this._template.set("currentPath", path);
+		});
+		
 		this._router.addRoute("/", (function(params, url) {
 			if(!this._pages.hasPage(url)) {
 				var page = this._pages.createPage(url);
@@ -140,7 +161,7 @@ define(function(require) {
 				username: this._user.getUsername(),
 				userIsLoggedIn: false,
 				gamePages: this._gamePages,
-				currentPath: this._router.getCurrentPath(),
+				currentPath: "/",
 				getGameTitle: function(gamePage, currentPath) {
 					var timingStyle = gamePage.getTimingStyle().getDescription();
 					var playerColour = gamePage.getPlayerColour();
@@ -187,11 +208,11 @@ define(function(require) {
 			}
 		}).bind(this));
 		
-		this._router.UrlChanged.addHandler(this, function(path) {
-			this._template.set("currentPath", path);
-		});
-		
 		this._pages = new Pages(this._template.nodes.main);
+		
+		new LoadingPage(this._pages.createPage("/loading"), 3);
+		
+		this._pages.showPage("/loading");
 	}
 	
 	Lightsquare.prototype._displayLogoutConfirmation = function() {
@@ -263,6 +284,11 @@ define(function(require) {
 		
 		this._user.LoggedOut.addHandler(this, function() {
 			this._updateUserDependentElements();
+		});
+		
+		this._user.Replaced.addHandler(this, function() {
+			this._initialise();
+			this._router.loadPath("/");
 		});
 	}
 	

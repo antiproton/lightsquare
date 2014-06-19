@@ -1,9 +1,9 @@
 define(function(require) {
-	require("css!./loadingIndicator.css");
-	var html = require("file!./loadingIndicator.html");
+	require("css!./loadingPage.css");
+	var html = require("file!./loadingPage.html");
 	var Ractive = require("lib/dom/Ractive");
 	
-	function LoadingIndicator(parent, secondsToWait) {
+	function LoadingPage(parent, secondsToWait) {
 		this._template = new Ractive({
 			el: parent,
 			template: html,
@@ -20,9 +20,5 @@ define(function(require) {
 		}).bind(this), secondsToWait * 1000);
 	}
 	
-	LoadingIndicator.prototype.remove = function() {
-		this._template.detach();
-	}
-	
-	return LoadingIndicator;
+	return LoadingPage;
 });

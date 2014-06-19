@@ -1,7 +1,7 @@
-<div class="loading_indicator_container">
-	<div class="loading_indicator_dialog">
+<div class="loading_page_container">
+	<div class="loading_page_dialog">
 		{{^troubleConnecting}}
-			<div class="loading_indicator_body">
+			<div class="loading_page_body">
 				<p>
 					<img src="{{getAbsolutePath('./loading.gif')}}">
 				</p>
@@ -11,10 +11,10 @@
 			</div>
 		{{/troubleConnecting}}
 		{{#troubleConnecting}}
-			<div class="loading_indicator_header">
+			<div class="loading_page_header">
 				Connection problem
 			</div>
-			<div class="loading_indicator_body">
+			<div class="loading_page_body">
 				<h3>It's taking longer than usual to establish a connection to the server.</h3>
 				<p>
 					If reloading the page doesn't work, the server has probably crashed and
