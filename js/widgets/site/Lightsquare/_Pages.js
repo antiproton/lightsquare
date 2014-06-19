@@ -46,5 +46,19 @@ define(function(require) {
 		});
 	}
 	
+	Pages.prototype.removePage = function(url) {
+		if(url in this._pages) {
+			this._container.removeChild(this._pages[url]);
+			
+			delete this._pages[url];
+		}
+	}
+	
+	Pages.prototype.clear = function() {
+		for(var url in this._pages) {
+			this.removePage(url);
+		}
+	}
+	
 	return Pages;
 });
