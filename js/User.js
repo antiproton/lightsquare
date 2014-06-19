@@ -181,7 +181,7 @@ define(function(require) {
 	
 	User.prototype.hasGamesInProgress = function() {
 		return this._games.some((function(game) {
-			return (game.getUserColour(this) !== null && game.isInProgress());
+			return (game.getUserColour() !== null && game.isInProgress());
 		}).bind(this));
 	}
 	
