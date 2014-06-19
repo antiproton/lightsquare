@@ -39,13 +39,11 @@ define(function(require) {
 	
 	Lightsquare.prototype._handleServerEvents = function() {
 		this._server.ConnectionOpened.addHandler(this, function() {
-			console.log("open");
 			this._initialise();
 			this._router.loadFromUrl();
 		});
 		
 		this._server.ConnectionLost.addHandler(this, function() {
-			console.log("lost");
 			this._displayServerDisconnectMessage();
 		});
 	}
