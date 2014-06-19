@@ -7,29 +7,38 @@ div.game_main {
 	display: flex;
 	flex-direction: column;
 	flex-grow: 1;
-	background: white;
 }
 
 div.game_details {
 	flex-grow: 1;
+	border-left: 1px solid #ababab;
 	padding: .7em;
-	background: #474747;
 }
 
 div.game_board_and_controls {
 	display: flex;
 	align-items: center;
 	justify-content: center;
-	flex-grow: 1;
+}
+
+div.game_board {
+	padding: 1.2em 0;
 }
 
 div.game_player {
-	color: white;
+	color: #3F3F3F;
 	font-size: 1.2em;
 	display: flex;
 	justify-content: space-between;
 	padding: .5em;
-	background: #939393;
+}
+
+div.game_player.player {
+	border-top: 1px solid #ababab;
+}
+
+div.game_player.opponent {
+	border-bottom: 1px solid #ababab;
 }
 
 div.game_result {
