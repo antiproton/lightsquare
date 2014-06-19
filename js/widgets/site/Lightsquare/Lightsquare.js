@@ -51,6 +51,7 @@ define(function(require) {
 	Lightsquare.prototype._initialise = function() {
 		this._pages.clear();
 		this._gamePages.empty();
+		this._hideMessage();
 		this._addGamePages();
 		
 		this._user.getDetails().then((function() {
