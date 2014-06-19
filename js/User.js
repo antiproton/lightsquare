@@ -125,6 +125,7 @@ define(function(require) {
 		this._username = "Anonymous";
 		this._isLoggedIn = false;
 		this._rating = glicko2.defaults.RATING;
+		this._games = [];
 		this.LoggedOut.fire();
 	}
 	

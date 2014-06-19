@@ -282,6 +282,8 @@ define(function(require) {
 		});
 		
 		this._user.LoggedOut.addHandler(this, function() {
+			this._gamePages.empty();
+			this._router.navigate("/");
 			this._updateUserDependentElements();
 		});
 		
