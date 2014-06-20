@@ -1,6 +1,6 @@
 define(function(require) {
-	require("css!./loadingPage.css");
-	var html = require("file!./loadingPage.html");
+	require("css!./loading_page.css");
+	var html = require("file!./loading_page.html");
 	var Ractive = require("lib/dom/Ractive");
 	
 	function LoadingPage(parent, secondsToWait) {
