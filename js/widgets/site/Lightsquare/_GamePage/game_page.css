@@ -7,6 +7,7 @@ div.game_main {
 	display: flex;
 	flex-direction: column;
 	flex-grow: 1;
+	background: #636363;
 }
 
 div.game_details {
@@ -19,6 +20,7 @@ div.game_board_and_controls {
 	display: flex;
 	align-items: center;
 	justify-content: center;
+	background: #fafafa;
 }
 
 div.game_board {
@@ -31,6 +33,7 @@ div.game_player {
 	display: flex;
 	justify-content: space-between;
 	padding: .5em;
+	background: #BDC4B4;
 }
 
 div.game_player.player {
