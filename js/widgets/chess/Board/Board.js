@@ -95,16 +95,24 @@ define(function(require) {
 		this._highlightedSquares[highlightType] = this._highlightedSquares[highlightType].concat(squares);
 
 		for(var i = 0; i < squares.length; i++) {
-			this._squares[squares[i]].setHighlight(highlightType);
+			this._squares[squares[i].squareNo].setHighlight(highlightType);
 		}
 	}
 
 	Board.prototype.unhighlightSquares = function(highlightType) {
-		for(var i = 0; i < this._highlightedSquares[highlightType].length; i++) {
-			this._squares[this._highlightedSquares[highlightType][i]].setHighlight(Square.HIGHLIGHT_NONE);
+		if(highlightType in this._highlightedSquares) {
+			for(var i = 0; i < this._highlightedSquares[highlightType].length; i++) {
+				this._squares[this._highlightedSquares[highlightType][i].squareNo].setHighlight(Square.HIGHLIGHT_NONE);
+			}
+	
+			this._highlightedSquares[highlightType] = [];
 		}
-
-		this._highlightedSquares[highlightType] = [];
+	}
+	
+	Board.prototype.clearSquareHighlights = function() {
+		for(var highlightType in Board.squareHighlightTypes) {
+			this.unhighlightSquares(Board.squareHighlightTypes[highlightType]);
+		}
 	}
 
 	Board.prototype.enableHtmlUpdates = function() {
