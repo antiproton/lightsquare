@@ -7,7 +7,7 @@ div.game_main {
 	display: flex;
 	flex-direction: column;
 	flex-grow: 1;
-	background: #636363;
+	background: #424242;
 }
 
 div.game_details {
@@ -33,7 +33,7 @@ div.game_player {
 	display: flex;
 	justify-content: space-between;
 	padding: .5em;
-	background: #BDC4B4;
+	background: #FFFFFF;
 }
 
 div.game_player.player {
