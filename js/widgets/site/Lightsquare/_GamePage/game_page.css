@@ -42,7 +42,9 @@ div.game_player.opponent {
 }
 
 div.game_result {
+	font-size: 1.2em;
 	text-align: right;
+	margin-bottom: .5em;
 }
 
 div.game_controls {
