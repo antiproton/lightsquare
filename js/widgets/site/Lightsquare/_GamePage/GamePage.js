@@ -26,7 +26,11 @@ define(function(require) {
 		this._template = new Ractive({
 			el: parent,
 			template: html,
-			data: {}
+			data: {
+				getTime: function(time) {
+					return time.getColonDisplay(time < 10 * 1000);
+				}
+			}
 		});
 		
 		this._initialiseTemplate();

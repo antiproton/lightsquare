@@ -5,7 +5,7 @@
 				{{players.opponent.username}} ({{players.opponent.rating}})
 			</div>
 			<div class="player_clock">
-				{{players.opponent.time.getColonDisplay(players.opponent.time < 10000)}}
+				{{getTime(players.opponent.time)}}
 			</div>
 		</div>
 		<div class="game_board_and_controls">
@@ -52,7 +52,7 @@
 				{{players.player.username}} ({{players.player.rating}})
 			</div>
 			<div class="player_clock">
-				{{players.player.time.getColonDisplay(players.player.time < 10000)}}
+				{{getTime(players.player.time)}}
 			</div>
 		</div>
 	</div>
