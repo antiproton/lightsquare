@@ -20,7 +20,7 @@ div.game_board_and_controls {
 	display: flex;
 	align-items: center;
 	justify-content: center;
-	background: #fafafa;
+	background: #F4F4F4;
 }
 
 div.game_board {
@@ -33,7 +33,7 @@ div.game_player {
 	display: flex;
 	justify-content: space-between;
 	padding: .5em;
-	background: #FFFFFF;
+	background: #efefef;
 }
 
 div.game_player.player {
