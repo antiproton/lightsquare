@@ -42,11 +42,11 @@
 }
 
 .board_square_highlight_last_move_from {
-	background: #62c1fe;
+	background: #FFFED6;
 }
 
 .board_square_highlight_last_move_to {
-	background: #62c1fe;
+	background: #FFFAA5;
 }
 
 .board_square_highlight_premove_from {
