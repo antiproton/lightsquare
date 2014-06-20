@@ -214,6 +214,7 @@ define(function(require) {
 	}
 	
 	GamePage.prototype._updateBoard = function() {
+		this._board.clearSquareHighlights();
 		this._board.setBoardArray(this._game.getPosition().getBoardArray());
 		
 		var lastMove = this._game.getLastMove();
