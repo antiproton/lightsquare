@@ -80,6 +80,7 @@ define(function(require) {
 			this._template.set("drawOffered", false);
 			this._template.set("canClaimDraw", this._game.isDrawClaimable());
 			this._history.select(move);
+			this._highlightMove(move);
 		});
 		
 		this._game.DrawOffered.addHandler(this, function() {
@@ -154,6 +155,13 @@ define(function(require) {
 		}
 	}
 	
+	GamePage.prototype._highlightMove = function(move) {
+		this._board.unhighlightSquares(Board.squareHighlightTypes.LAST_MOVE_FROM);
+		this._board.unhighlightSquares(Board.squareHighlightTypes.LAST_MOVE_TO);
+		this._board.highlightSquares(move.getFrom(), Board.squareHighlightTypes.LAST_MOVE_FROM);
+		this._board.highlightSquares(move.getTo(), Board.squareHighlightTypes.LAST_MOVE_TO);
+	}
+	
 	GamePage.prototype._setupControls = function() {
 		this._template.on("resign", (function() {
 			this._game.resign();
@@ -207,6 +215,12 @@ define(function(require) {
 	
 	GamePage.prototype._updateBoard = function() {
 		this._board.setBoardArray(this._game.getPosition().getBoardArray());
+		
+		var lastMove = this._game.getLastMove();
+		
+		if(lastMove) {
+			this._highlightMove(lastMove);
+		}
 	}
 	
 	GamePage.prototype._initialiseTemplate = function() {
