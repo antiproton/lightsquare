@@ -29,6 +29,9 @@ define(function(require) {
 			data: {
 				getTime: function(time) {
 					return time.getColonDisplay(time < 10 * 1000);
+				},
+				timeIsCritical: function(time) {
+					return (time < 10 * 1000);
 				}
 			}
 		});
@@ -80,6 +83,7 @@ define(function(require) {
 		this._game.Move.addHandler(this, function(move) {
 			this._history.move(move);
 			this._board.setBoardArray(move.getPositionAfter().getBoardArray());
+			this._template.set("viewingActivePlayer", (this._game.getActiveColour() === this._viewingAs));
 			this._template.set("userIsActivePlayer", this._userIsActivePlayer());
 			this._template.set("drawOffered", false);
 			this._template.set("canClaimDraw", this._game.isDrawClaimable());
@@ -234,6 +238,7 @@ define(function(require) {
 			result: this._game.getResult(),
 			isInProgress: this._game.isInProgress(),
 			userIsPlaying: this._userIsPlaying(),
+			viewingActivePlayer: (this._game.getActiveColour() === this._viewingAs),
 			userHasOfferedRematch: false,
 			userIsActivePlayer: this._userIsActivePlayer(),
 			drawOffered: this._game.isDrawOffered(),
@@ -259,6 +264,7 @@ define(function(require) {
 		this._board.setViewingAs(this._viewingAs);
 		this._updatePlayerInfo();
 		this._template.set("userIsPlaying", this._userIsPlaying());
+		this._template.set("viewingActivePlayer", (this._game.getActiveColour() === this._viewingAs));
 	}
 	
 	GamePage.prototype._updatePlayerInfo = function() {
