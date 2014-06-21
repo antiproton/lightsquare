@@ -22,7 +22,9 @@ define(function(require) {
 			this.ChallengeListUpdated.fire();
 		}).bind(this));
 		
-		this._server.send("/request/challenges");
+		this._server.ConnectionOpened.addHandler(this, function() {
+			this._server.send("/request/challenges");
+		});
 	}
 	
 	Application.prototype.getChallenges = function() {
