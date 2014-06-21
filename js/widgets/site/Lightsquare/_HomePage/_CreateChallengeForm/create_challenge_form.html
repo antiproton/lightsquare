@@ -1,11 +1,11 @@
 <form class="single_column create_challenge" on-submit="create_or_cancel">
-	<label for="initialTime">Initial time</label>
+	<label for="initialTime" title="The number of minutes players start with, or numbers followed by y/w/d/h/m/s">Initial time</label>
 	<input id="initialTime" type="text" value="{{initialTime}}">
-	<label for="increment">Increment</label>
+	<label for="increment" title="Seconds added to players' time after each move, or numbers followed by y/w/d/h/m/s">Increment</label>
 	<input id="increment" type="text" value="{{timeIncrement}}">
-	<label for="acceptRatingMin">Min. opponent rating</label>
+	<label for="acceptRatingMin" title="Minimum rating of players who can see and accept the challenge">Min. opponent rating</label>
 	<input id="acceptRatingMin" type="text" value="{{ratingMin}}">
-	<label for="acceptRatingMax">Max. opponent rating</label>
+	<label for="acceptRatingMax" title="Maximum rating of players who can see and accept the challenge">Max. opponent rating</label>
 	<input id="acceptRatingMax" type="text" value="{{ratingMax}}">
 	<input
 		class="create_challenge {{waiting ? 'waiting' : ''}}"
