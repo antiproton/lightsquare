@@ -10,11 +10,8 @@ define(function(require) {
 		this.ChallengeListUpdated = new Event(this);
 		
 		this._server.subscribe("/challenges", (function(challenges) {
-			challenges.forEach((function(challenge) {
-				this._challenges.push(challenge);
-				
-				this.ChallengeListUpdated.fire();
-			}).bind(this));
+			this._challenges = this._challenges.concat(challenges);
+			this.ChallengeListUpdated.fire();
 		}).bind(this));
 		
 		this._server.subscribe("/challenge/expired", (function(id) {
