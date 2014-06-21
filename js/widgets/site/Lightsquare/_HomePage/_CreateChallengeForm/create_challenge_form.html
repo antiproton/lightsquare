@@ -1,12 +1,12 @@
 <form class="single_column create_challenge" on-submit="create_or_cancel">
-	<label>Initial time</label>
-	<input type="text" value="{{initialTime}}">
-	<label>Increment</label>
-	<input type="text" value="{{timeIncrement}}">
-	<label>Min. opponent rating</label>
-	<input type="text" value="{{ratingMin}}">
-	<label>Max. opponent rating</label>
-	<input type="text" value="{{ratingMax}}">
+	<label for="initialTime">Initial time</label>
+	<input id="initialTime" type="text" value="{{initialTime}}">
+	<label for="increment">Increment</label>
+	<input id="increment" type="text" value="{{timeIncrement}}">
+	<label for="acceptRatingMin">Min. opponent rating</label>
+	<input id="acceptRatingMin" type="text" value="{{ratingMin}}">
+	<label for="acceptRatingMax">Max. opponent rating</label>
+	<input id="acceptRatingMax" type="text" value="{{ratingMax}}">
 	<input
 		class="create_challenge {{waiting ? 'waiting' : ''}}"
 		type="submit"
