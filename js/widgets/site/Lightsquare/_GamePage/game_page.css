@@ -11,7 +11,8 @@ div.game_main {
 }
 
 div.game_details {
-	flex-grow: 1;
+	flex-basis: 20em;
+	max-width: 20em;
 	border-left: 1px solid #ababab;
 	padding: .7em;
 }
