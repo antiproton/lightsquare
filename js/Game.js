@@ -27,6 +27,7 @@ define(function(require) {
 		this._server = server;
 		
 		this._startTime = gameDetails.startTime;
+		this._endTime = gameDetails.endTime;
 		this._id = gameDetails.id;
 		this._isInProgress = (gameDetails.result === null);
 		this._result = gameDetails.result;
@@ -178,6 +179,16 @@ define(function(require) {
 		return this._game.getActiveColour();
 	}
 	
+	Game.prototype.getClockTimes = function() {
+		var times = {};
+		
+		Colour.forEach((function(colour) {
+			times[colour] = this._clock.getTimeLeft(colour);
+		}).bind(this));
+		
+		return times;
+	}
+	
 	Game.prototype.getResult = function() {
 		return this._result;
 	}
@@ -222,6 +233,10 @@ define(function(require) {
 	
 	Game.prototype.getStartTime = function() {
 		return this._startTime;
+	}
+	
+	Game.prototype.getEndTime = function() {
+		return this._endTime;
 	}
 	
 	Game.prototype.isInProgress = function() {
