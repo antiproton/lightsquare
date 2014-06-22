@@ -263,6 +263,7 @@ define(function(require) {
 		this._viewingAs = this.getPlayerColour() || Colour.white;
 		this._board.setViewingAs(this._viewingAs);
 		this._updatePlayerInfo();
+		this._updateClocks(this._game.getClockTimes());
 		this._template.set("userIsPlaying", this._userIsPlaying());
 		this._template.set("viewingActivePlayer", (this._game.getActiveColour() === this._viewingAs));
 	}
