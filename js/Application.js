@@ -25,6 +25,11 @@ define(function(require) {
 		this._server.ConnectionOpened.addHandler(this, function() {
 			this._server.send("/request/challenges");
 		});
+		
+		this._server.ConnectionLost.addHandler(this, function() {
+			this._challenges = [];
+			this.ChallengeListUpdated.fire();
+		});
 	}
 	
 	Application.prototype.getChallenges = function() {
