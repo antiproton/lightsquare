@@ -221,7 +221,7 @@ define(function(require) {
 			});
 			
 			if(!promise.isResolved()) {
-				this._server.send("/game/spectate", id);
+				this._server.send("/request/game", id);
 				this._promises[promiseId] = promise;
 				
 				setTimeout(function() {
