@@ -326,6 +326,10 @@ define(function(require) {
 			}
 		}).bind(this));
 		
+		this._server.subscribe("/challenge/accepted", (function(gameDetails) {
+			this.NewGame.fire(this._addGame(this._createGame(gameDetails)));
+		}).bind(this));
+		
 		this._server.subscribe("/game/not_found", (function(id) {
 			var promiseId = "/game/" + id;
 			
