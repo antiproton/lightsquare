@@ -8,9 +8,13 @@ define(function(require) {
 		this._id = null;
 		this._games = [];
 		this._promises = {};
-		
+		user = this;
 		this._server = server;
 		this._db = db;
+		
+		if(!this._db.get("games")) {
+			this._db.set("games", []);
+		}
 		
 		this._username = "Anonymous";
 		this._isLoggedIn = false;
@@ -129,6 +133,45 @@ define(function(require) {
 		this._rating = glicko2.defaults.RATING;
 		this._games = [];
 		this.LoggedOut.fire();
+	}
+	
+	User.prototype.getSavedGames = function() {
+		return this._db.get("games");
+	}
+	
+	User.prototype.restoreGame = function(gameDetails) {
+		var promiseId = "/game/restore/" + gameDetails.id;
+		var promise;
+		
+		if(promiseId in this._promises) {
+			promise = this._promises[promiseId];
+		}
+		
+		else {
+			promise = this._promises[promiseId] = new Promise();
+			
+			promise.then(null, null, (function() {
+				delete this._promises[promiseId];
+			}).bind(this));
+			
+			this._server.send("/game/restore", gameDetails);
+		}
+		
+		return promise;
+	}
+	
+	User.prototype.cancelGameRestoration = function(id) {
+		
+	}
+	
+	User.prototype._saveGameToDb = function(gameDetails) {
+		this._db.set("games",  this._db.get("games").concat([gameDetails]));
+	}
+	
+	User.prototype._removeGameFromDb = function(id) {
+		this._db.set("games", this._db.get("games").filter(function(gameDetails) {
+			return (gameDetails.id !== id);
+		}));
 	}
 	
 	User.prototype.getUsername = function() {
@@ -329,7 +372,26 @@ define(function(require) {
 		}).bind(this));
 		
 		this._server.subscribe("/challenge/accepted", (function(gameDetails) {
-			this.NewGame.fire(this._addGame(this._createGame(gameDetails)));
+			this._saveGameToDb(gameDetails);
+			
+			var game = this._addGame(this._createGame(gameDetails));
+			
+			game.GameOver.addHandler(this, function() {
+				this._removeGameFromDb(gameDetails.id);
+			});
+			
+			this.NewGame.fire(game);
+		}).bind(this));
+		
+		this._server.subscribe("/game/restore/success", (function(gameDetails) {
+			var game = this._addGame(this._createGame(gameDetails));
+			var promiseId = "/game/restore/" + game.getId();
+			
+			if(promiseId in this._promises) {
+				this._promises[promiseId].resolve(game);
+			}
+			
+			this.NewGame.fire(game);
 		}).bind(this));
 		
 		this._server.subscribe("/game/not_found", (function(id) {
