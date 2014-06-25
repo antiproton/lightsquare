@@ -315,15 +315,15 @@ define(function(require) {
 		}).bind(this));
 		
 		this._server.subscribe("/game", (function(gameDetails) {
-			var game = this._createGame(gameDetails);
+			var game = this._games.filter(function(existingGame) {
+				return (existingGame.getId() === gameDetails.id);
+			})[0] || this._addGame(this._createGame(gameDetails));
+						
 			var promiseId = "/game/" + game.getId();
 			
 			if(promiseId in this._promises) {
 				this._promises[promiseId].resolve(game);
 			}
-			
-			this._addGame(game);
-			this.NewGame.fire(game);
 		}).bind(this));
 		
 		this._server.subscribe("/game/not_found", (function(id) {
