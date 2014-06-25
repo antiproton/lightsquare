@@ -196,6 +196,8 @@ define(function(require) {
 		game.Rematch.addHandler(this, function(game) {
 			this._addGame(game);
 		});
+		
+		return game;
 	}
 	
 	User.prototype.getGame = function(id) {
