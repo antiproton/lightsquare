@@ -4,12 +4,14 @@ define(function(require) {
 	var Promise = require("lib/Promise");
 	var glicko2 = require("jsonchess/glicko2");
 	
-	function User(server) {
+	function User(server, db) {
 		this._id = null;
 		this._games = [];
 		this._promises = {};
 		
 		this._server = server;
+		this._db = db;
+		
 		this._username = "Anonymous";
 		this._isLoggedIn = false;
 		this._rating = glicko2.defaults.RATING;

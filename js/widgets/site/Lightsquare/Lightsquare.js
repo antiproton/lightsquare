@@ -24,11 +24,10 @@ define(function(require) {
 		middle: 1
 	};
 	
-	function Lightsquare(server, app, user, db, parent) {
+	function Lightsquare(server, app, user, parent) {
 		this._server = server;
 		this._app = app;
 		this._user = user;
-		this._db = db;
 		
 		this._gamePages = [];
 		this._handleServerEvents();
