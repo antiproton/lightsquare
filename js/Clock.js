@@ -18,6 +18,10 @@ define(function(require) {
 		return this._clock.getTimeLeft(colour);
 	}
 	
+	Clock.prototype.calculateTimes = function() {
+		this._clock.calculateTimes();
+	}
+	
 	Clock.prototype._estimateTimeDifference = function() {
 		var numberOfRequestsToSend = 3;
 		var timeBetweenRequests = 500;

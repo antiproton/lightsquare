@@ -279,6 +279,7 @@ define(function(require) {
 	Game.prototype._applyServerMove = function(serverMove) {
 		if(serverMove.index in this._history) {
 			this._history[serverMove.index].setTime(serverMove.time);
+			this._clock.calculateTimes();
 		}
 		
 		else {
