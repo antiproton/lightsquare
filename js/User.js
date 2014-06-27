@@ -8,7 +8,7 @@ define(function(require) {
 		this._id = null;
 		this._games = [];
 		this._promises = {};
-		user = this;
+		
 		this._server = server;
 		this._db = db;
 		
