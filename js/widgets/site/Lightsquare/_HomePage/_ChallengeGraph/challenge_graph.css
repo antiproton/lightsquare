@@ -62,6 +62,7 @@ div.no_challenges_message > div {
 div.challenge {
 	display: flex;
 	align-items: center;
+	flex-shrink: 0;
 	position: relative;
 	z-index: 1;
 	box-sizing: border-box;
