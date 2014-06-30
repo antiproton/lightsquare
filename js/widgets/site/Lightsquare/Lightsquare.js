@@ -2,11 +2,13 @@ define(function(require) {
 	require("lib/Array.empty");
 	require("css!./lightsquare.css");
 	require("css!./header.css");
+	require("css!./profile.css");
 	require("css!./messages/logout_confirmation.css");
 	require("css!./messages/server_disconnect.css");
 	require("css!./messages/game_not_found.css");
 	var html = require("file!./lightsquare.html");
 	var headerHtml = require("file!./header.html");
+	var profileHtml = require("file!./profile.html");
 	var logoutConfirmationHtml = require("file!./messages/logout_confirmation.html");
 	var serverDisconnectHtml = require("file!./messages/server_disconnect.html");
 	var gameNotFoundHtml = require("file!./messages/game_not_found.html");
@@ -16,7 +18,6 @@ define(function(require) {
 	var LoadingPage = require("./_LoadingPage/LoadingPage");
 	var HomePage = require("./_HomePage/HomePage");
 	var GamePage = require("./_GamePage/GamePage");
-	var ProfilePage = require("./_ProfilePage/ProfilePage");	
 	var Colour = require("chess/Colour");
 	
 	var MouseButtons = {
@@ -138,17 +139,6 @@ define(function(require) {
 				}).bind(this));
 			}
 		}).bind(this));
-		
-		this._router.addRoute("/user/profile", (function(params, url) {
-			if(!this._pages.hasPage(url)) {
-				var page = this._pages.createPage(url);
-				
-				new ProfilePage(this._user, page);
-			}
-			
-			this._pages.showPage(url);
-			this._app.stopUpdatingChallengeList();
-		}).bind(this));
 	}
 	
 	Lightsquare.prototype._setupTemplate = function(parent) {
@@ -157,6 +147,7 @@ define(function(require) {
 			template: html,
 			data: {
 				showMessage: false,
+				showProfile: false,
 				username: this._user.getUsername(),
 				userIsLoggedIn: false,
 				gamePages: this._gamePages,
@@ -185,7 +176,8 @@ define(function(require) {
 				}
 			},
 			partials: {
-				header: headerHtml
+				header: headerHtml,
+				profile: profileHtml
 			}
 		});
 		
@@ -195,6 +187,25 @@ define(function(require) {
 			
 				this._router.navigate(event.node.getAttribute("href"));
 			}
+		}).bind(this));
+		
+		var lastClickWasOnProfile = false;
+		
+		this._template.on("rootclick", (function() {
+			if(!lastClickWasOnProfile) {
+				this._template.set("showProfile", false);
+			}
+			
+			lastClickWasOnProfile = false;
+		}).bind(this));
+		
+		this._template.on("profileclick", (function() {
+			lastClickWasOnProfile = true;
+		}).bind(this));
+		
+		this._template.on("show_or_hide_profile", (function() {
+			this._template.set("showProfile", !this._template.get("showProfile"));
+			lastClickWasOnProfile = true;
 		}).bind(this));
 		
 		this._template.on("logout", (function() {

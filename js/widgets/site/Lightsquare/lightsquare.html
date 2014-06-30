@@ -1,4 +1,4 @@
-<div class="root">
+<div class="root" on-click="rootclick">
 	{{#showMessage}}
 		<div class="message" id="message">
 			
@@ -6,6 +6,9 @@
 	{{/showMessage}}
 	<div class="header" id="header">
 		{{>header}}
+	</div>
+	<div class="profile" on-click="profileclick" style="display: {{showProfile ? '' : 'none'}}">
+		{{>profile}}
 	</div>
 	<div class="main" id="main">
 		

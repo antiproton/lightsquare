@@ -1,0 +1,10 @@
+div.profile {
+	position: absolute;
+	z-index: 2;
+	right: 0;
+	margin-top: -2px;
+	border-top: 2px solid #494949;
+	padding: .5em;
+	box-shadow: 0 3px 7px rgba(0, 0, 0, .3);
+	background: white;
+}

@@ -39,6 +39,11 @@ div.header a:hover {
 	border-color: #BABABA;
 }
 
+div.header a.user_link.on {
+	color: white;
+	background: #636363;
+}
+
 div.header_spacer {
 	flex-grow: 1;
 }
