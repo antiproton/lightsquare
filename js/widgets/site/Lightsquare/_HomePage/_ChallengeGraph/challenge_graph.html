@@ -25,22 +25,20 @@
 			</div>
 			<div class="challenge_graph_challenges" style="height: {{graphHeightInEm}}em; top: -{{graphHeightInEm}}em">
 				{{#challenges:index}}
-					{{#(userRating >= challenge.acceptsRating.min && userRating <= challenge.acceptsRating.max) || challenge.id === currentChallengeId}}
-						<div
-							class="challenge {{challenge.id === currentChallengeId ? 'current_challenge' : 'not_current_challenge'}}"
-							style="top: {{topOffsetInEm}}em; left: {{leftOffsetInPercent}}%; height: {{challengeHeightInEm}}em"
-							on-click="accept:'{{challenge.id}}'"
-						>
-							<div class="challenge_label">
-								<div class="challenge_owner">
-									{{challenge.owner}}
-								</div>
-								<div class="challenge_time">
-									{{challenge.initialTime}} / {{challenge.timeIncrement}}
-								</div>
+					<div
+						class="challenge {{challenge.id === currentChallengeId ? 'current_challenge' : 'not_current_challenge'}}"
+						style="top: {{topOffsetInEm}}em; left: {{leftOffsetInPercent}}%; height: {{challengeHeightInEm}}em"
+						on-click="accept:'{{challenge.id}}'"
+					>
+						<div class="challenge_label">
+							<div class="challenge_owner">
+								{{challenge.owner}}
+							</div>
+							<div class="challenge_time">
+								{{challenge.initialTime}} / {{challenge.timeIncrement}}
 							</div>
 						</div>
-					{{/within rating range or current challenge}}
+					</div>
 				{{/challenges}}
 			</div>
 			{{^challenges}}

@@ -75,7 +75,6 @@ define(function(require) {
 		
 		this._user.getDetails().then((function() {
 			this._updateCurrentChallenge();
-			this._updateUserRating();
 		}).bind(this));
 	}
 	
@@ -107,10 +106,12 @@ define(function(require) {
 		
 		this._user.ChallengeCreated.addHandler(this, function() {
 			this._updateCurrentChallenge();
+			this._updateTemplate();
 		});
 		
 		this._user.ChallengeExpired.addHandler(this, function() {
 			this._updateCurrentChallenge();
+			this._updateTemplate();
 		});
 	}
 	
@@ -170,25 +171,29 @@ define(function(require) {
 				max: getAbsoluteRating(rating, challenge.options.acceptRatingMax)
 			};
 			
-			if(!(gridSquare in occupiedGridSquares) && gridSquaresMoved <= maxGridSquaresToMove) {
-				topOffset -= this._challengeHeightInEm * index;
-				
-				graphChallenges.push({
-					leftOffsetInPercent: leftOffset,
-					topOffsetInEm: topOffset,
-					challenge: {
-						id: challenge.id,
-						owner: challenge.owner.username,
-						initialTime: Time.fromUnitString(challenge.options.initialTime, Time.minutes).getUnitString(Time.minutes),
-						timeIncrement: Time.fromUnitString(challenge.options.timeIncrement, Time.seconds).getUnitString(Time.seconds),
-						acceptsRating: {
-							min: getAbsoluteRating(rating, challenge.options.acceptRatingMin),
-							max: getAbsoluteRating(rating, challenge.options.acceptRatingMax)
+			var userRating = this._user.getRating();
+			var currentChallenge = this._user.getCurrentChallenge();
+			
+			if(
+				(currentChallenge !== null && challenge.id === currentChallenge.id)
+				|| (userRating >= acceptsRating.min && userRating <= acceptsRating.max)
+			) {
+				if(!(gridSquare in occupiedGridSquares) && gridSquaresMoved <= maxGridSquaresToMove) {
+					topOffset -= this._challengeHeightInEm * index;
+					
+					graphChallenges.push({
+						leftOffsetInPercent: leftOffset,
+						topOffsetInEm: topOffset,
+						challenge: {
+							id: challenge.id,
+							owner: challenge.owner.username,
+							initialTime: Time.fromUnitString(challenge.options.initialTime, Time.minutes).getUnitString(Time.minutes),
+							timeIncrement: Time.fromUnitString(challenge.options.timeIncrement, Time.seconds).getUnitString(Time.seconds)
 						}
-					}
-				});
-				
-				occupiedGridSquares[gridSquare] = true;
+					});
+					
+					occupiedGridSquares[gridSquare] = true;
+				}
 			}
 		}).bind(this));
 		
@@ -199,10 +204,6 @@ define(function(require) {
 		var currentChallenge = this._user.getCurrentChallenge();
 		
 		this._template.set("currentChallengeId", (currentChallenge ? currentChallenge.id : null));
-	}
-	
-	ChallengeGraph.prototype._updateUserRating = function() {
-		this._template.set("userRating", this._user.getRating());
 	}
 	
 	return ChallengeGraph;
