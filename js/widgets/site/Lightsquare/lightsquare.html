@@ -1,13 +1,13 @@
-<div class="root" on-click="rootclick">
-	{{#showMessage}}
+<div class="root" on-click="hide_popups">
+	{{#showPopups.message}}
 		<div class="message" id="message">
 			
 		</div>
-	{{/showMessage}}
+	{{/showPopups.message}}
 	<div class="header" id="header">
 		{{>header}}
 	</div>
-	<div class="profile" on-click="profileclick" style="display: {{showProfile ? '' : 'none'}}">
+	<div class="profile" on-click="click_popup:'profile'" style="display: {{showPopups.profile ? '' : 'none'}}">
 		{{>profile}}
 	</div>
 	<div class="main" id="main">

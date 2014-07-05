@@ -146,8 +146,10 @@ define(function(require) {
 			el: parent,
 			template: html,
 			data: {
-				showMessage: false,
-				showProfile: false,
+				showPopups: {
+					profile: false,
+					message: false
+				},
 				username: this._user.getUsername(),
 				userIsLoggedIn: false,
 				gamePages: this._gamePages,
@@ -189,23 +191,28 @@ define(function(require) {
 			}
 		}).bind(this));
 		
-		var lastClickWasOnProfile = false;
+		var lastPopupClicked = null;
 		
-		this._template.on("rootclick", (function() {
-			if(!lastClickWasOnProfile) {
-				this._template.set("showProfile", false);
+		this._template.on("hide_popups", (function() {
+			var showPopups = this._template.get("showPopups");
+			
+			for(var popup in showPopups) {
+				if(lastPopupClicked !== popup) {
+					this._template.set("showPopups." + popup, false);
+				}
 			}
 			
-			lastClickWasOnProfile = false;
+			lastPopupClicked = null;
 		}).bind(this));
 		
-		this._template.on("profileclick", (function() {
-			lastClickWasOnProfile = true;
+		this._template.on("click_popup", (function(event, popup) {
+			lastPopupClicked = popup;
 		}).bind(this));
 		
 		this._template.on("show_or_hide_profile", (function() {
-			this._template.set("showProfile", !this._template.get("showProfile"));
-			lastClickWasOnProfile = true;
+			this._template.set("showPopups.profile", !this._template.get("showPopups.profile"));
+			
+			lastPopupClicked = "profile";
 		}).bind(this));
 		
 		this._template.on("logout", (function() {
@@ -263,7 +270,7 @@ define(function(require) {
 	
 	Lightsquare.prototype._showMessage = function(durationInSeconds) {
 		this._hideMessageTimer = null;
-		this._template.set("showMessage", true);
+		this._template.set("showPopups.message", true);
 		this._template.nodes.message.innerHTML = "";
 		
 		if(durationInSeconds) {
@@ -274,7 +281,7 @@ define(function(require) {
 	}
 	
 	Lightsquare.prototype._hideMessage = function() {
-		this._template.set("showMessage", false);
+		this._template.set("showPopups.message", false);
 		
 		if(this._hideMessageTimer !== null) {
 			clearTimeout(this._hideMessageTimer);
