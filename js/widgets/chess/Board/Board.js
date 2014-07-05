@@ -99,11 +99,19 @@ define(function(require) {
 		}
 	}
 
-	Board.prototype.unhighlightSquares = function(/*highlightType...*/) {
+	Board.prototype.unhighlightSquares = function() {
+		var highlightTypes = Array.prototype.slice.call(arguments);
+		
+		if(highlightTypes.length === 0) {
+			for(var type in Board.squareHighlightTypes) {
+				highlightTypes.push(Board.squareHighlightTypes[type]);
+			}
+		}
+		
 		var highlightType;
 		
-		for(var i = 0; i < arguments.length; i++) {
-			highlightType = arguments[i];
+		for(var i = 0; i < highlightTypes.length; i++) {
+			highlightType = highlightTypes[i];
 			
 			if(highlightType in this._highlightedSquares) {
 				for(var j = 0; j < this._highlightedSquares[highlightType].length; j++) {
@@ -112,12 +120,6 @@ define(function(require) {
 		
 				this._highlightedSquares[highlightType] = [];
 			}
-		}
-	}
-	
-	Board.prototype.clearSquareHighlights = function() {
-		for(var highlightType in Board.squareHighlightTypes) {
-			this.unhighlightSquares(Board.squareHighlightTypes[highlightType]);
 		}
 	}
 
