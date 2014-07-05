@@ -2,13 +2,13 @@ define(function(require) {
 	require("lib/Array.empty");
 	require("css!./lightsquare.css");
 	require("css!./header.css");
-	require("css!./profile.css");
+	require("css!./control_panel.css");
 	require("css!./messages/logout_confirmation.css");
 	require("css!./messages/server_disconnect.css");
 	require("css!./messages/game_not_found.css");
 	var html = require("file!./lightsquare.html");
 	var headerHtml = require("file!./header.html");
-	var profileHtml = require("file!./profile.html");
+	var controlPanelHtml = require("file!./control_panel.html");
 	var logoutConfirmationHtml = require("file!./messages/logout_confirmation.html");
 	var serverDisconnectHtml = require("file!./messages/server_disconnect.html");
 	var gameNotFoundHtml = require("file!./messages/game_not_found.html");
@@ -147,7 +147,7 @@ define(function(require) {
 			template: html,
 			data: {
 				showPopups: {
-					profile: false,
+					controlPanel: false,
 					message: false
 				},
 				username: this._user.getUsername(),
@@ -179,7 +179,7 @@ define(function(require) {
 			},
 			partials: {
 				header: headerHtml,
-				profile: profileHtml
+				controlPanel: controlPanelHtml
 			}
 		});
 		
@@ -209,10 +209,10 @@ define(function(require) {
 			lastPopupClicked = popup;
 		}).bind(this));
 		
-		this._template.on("show_or_hide_profile", (function() {
-			this._template.set("showPopups.profile", !this._template.get("showPopups.profile"));
+		this._template.on("toggle_control_panel", (function() {
+			this._template.set("showPopups.controlPanel", !this._template.get("showPopups.controlPanel"));
 			
-			lastPopupClicked = "profile";
+			lastPopupClicked = "controlPanel";
 		}).bind(this));
 		
 		this._template.on("logout", (function() {
