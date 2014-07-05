@@ -115,7 +115,7 @@ define(function(require) {
 			
 			if(highlightType in this._highlightedSquares) {
 				for(var j = 0; j < this._highlightedSquares[highlightType].length; j++) {
-					this._squares[this._highlightedSquares[highlightType][j].squareNo].setHighlight(Square.HIGHLIGHT_NONE);
+					this._squares[this._highlightedSquares[highlightType][j].squareNo].setHighlight(Board.squareHighlightTypes.NONE);
 				}
 		
 				this._highlightedSquares[highlightType] = [];
