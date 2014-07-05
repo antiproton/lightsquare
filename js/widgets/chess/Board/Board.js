@@ -99,13 +99,19 @@ define(function(require) {
 		}
 	}
 
-	Board.prototype.unhighlightSquares = function(highlightType) {
-		if(highlightType in this._highlightedSquares) {
-			for(var i = 0; i < this._highlightedSquares[highlightType].length; i++) {
-				this._squares[this._highlightedSquares[highlightType][i].squareNo].setHighlight(Square.HIGHLIGHT_NONE);
+	Board.prototype.unhighlightSquares = function(/*highlightType...*/) {
+		var highlightType;
+		
+		for(var i = 0; i < arguments.length; i++) {
+			highlightType = arguments[i];
+			
+			if(highlightType in this._highlightedSquares) {
+				for(var j = 0; j < this._highlightedSquares[highlightType].length; j++) {
+					this._squares[this._highlightedSquares[highlightType][j].squareNo].setHighlight(Square.HIGHLIGHT_NONE);
+				}
+		
+				this._highlightedSquares[highlightType] = [];
 			}
-	
-			this._highlightedSquares[highlightType] = [];
 		}
 	}
 	
