@@ -41,7 +41,7 @@ define(function(require) {
 		});
 		
 		this._game.DrawOffered.addHandler(this, function() {
-			this._addMessage(this._game.getActivePlayer().username + " has offered a draw.");
+			this._addMessage(this._game.getPlayer(this._game.getActiveColour().opposite).username + " has offered a draw.");
 		});
 		
 		this._game.RematchOffered.addHandler(this, function() {
