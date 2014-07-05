@@ -126,7 +126,7 @@ define(function(require) {
 		this._board = new Board(this._template.nodes.board);
 		
 		this._board.SelectPiece.addHandler(this, function(data) {
-			if(!this._userIsActivePlayer() || data.piece.colour !== this.getPlayerColour() || !this._game.isInProgress()) {
+			if(!this._userIsPlaying() || data.piece.colour !== this.getPlayerColour() || !this._game.isInProgress()) {
 				data.cancel = true;
 			}
 		});
