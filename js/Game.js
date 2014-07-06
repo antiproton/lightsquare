@@ -3,6 +3,7 @@ define(function(require) {
 	var Colour = require("chess/Colour");
 	var ChessMove = require("chess/Move");
 	var Move = require("jsonchess/Move");
+	var Premove = require("jsonchess/Premove");
 	var Event = require("lib/Event");
 	var Square = require("chess/Square");
 	var PieceType = require("chess/PieceType");
@@ -129,6 +130,16 @@ define(function(require) {
 				this.Move.fire(move);
 			}
 		}
+	}
+	
+	Game.prototype.premove = function(from, to, promoteTo) {
+		var premove = new Premove(this.getPosition(), from, to, promoteTo);
+			
+		if(premove.isValid()) {
+			this._server.send("/game/" + this._id + "/premove", premove);
+		}
+		
+		return premove;
 	}
 	
 	Game.prototype.resign = function() {
