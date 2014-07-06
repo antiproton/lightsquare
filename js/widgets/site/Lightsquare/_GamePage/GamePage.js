@@ -132,6 +132,8 @@ define(function(require) {
 		});
 		
 		this._template.on("cancel_premove", (function(event) {
+			event.original.preventDefault();
+			
 			this._game.cancelPremove();
 		}).bind(this));
 		
