@@ -23,7 +23,7 @@ define(function(require) {
 		this._viewingAs = Colour.white;
 		this._setupGame(game);
 		
-		this._setupTemplate();
+		this._setupTemplate(parent);
 		this._populateTemplate();
 		this._setupChat();
 		this._setupBoard();
@@ -220,7 +220,7 @@ define(function(require) {
 		}
 	}
 	
-	GamePage.prototype._setupTemplate = function() {
+	GamePage.prototype._setupTemplate = function(parent) {
 		this._template = new Ractive({
 			el: parent,
 			template: html,
