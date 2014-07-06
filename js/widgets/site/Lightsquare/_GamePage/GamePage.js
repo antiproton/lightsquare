@@ -131,6 +131,10 @@ define(function(require) {
 			}
 		});
 		
+		this._template.on("cancel_premove", (function(event) {
+			this._game.cancelPremove();
+		}).bind(this));
+		
 		this._updateBoard();
 		this._setBoardPrefs();
 	}
@@ -233,10 +237,6 @@ define(function(require) {
 				}
 			}
 		});
-		
-		this._template.on("board_click", (function(event) {
-			console.log(event.original.button);
-		}).bind(this));
 	}
 	
 	GamePage.prototype._populateTemplate = function() {
