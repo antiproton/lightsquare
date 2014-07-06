@@ -76,6 +76,7 @@ define(function(require) {
 			this._template.set("drawOffered", false);
 			this._template.set("canClaimDraw", this._game.isDrawClaimable());
 			this._history.select(move);
+			this._board.unhighlightSquares();
 			this._highlightMove(move);
 		});
 		
