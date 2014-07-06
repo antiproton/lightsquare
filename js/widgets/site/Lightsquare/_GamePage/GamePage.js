@@ -23,8 +23,8 @@ define(function(require) {
 		this._viewingAs = Colour.white;
 		this._setupGame(game);
 		
-		this._initialiseTemplate();
 		this._setupTemplate();
+		this._populateTemplate();
 		this._setupChat();
 		this._setupBoard();
 		this._setupHistory();
@@ -93,7 +93,7 @@ define(function(require) {
 		
 		this._game.Rematch.addHandler(this, function(game) {
 			this._setupGame(game);
-			this._initialiseTemplate();
+			this._populateTemplate();
 			this._updateBoard();
 			this._updateHistory();
 			this._updateUserDependentElements();
@@ -239,7 +239,7 @@ define(function(require) {
 		}).bind(this));
 	}
 	
-	GamePage.prototype._initialiseTemplate = function() {
+	GamePage.prototype._populateTemplate = function() {
 		this._template.set({
 			players: {},
 			result: this._game.getResult(),
