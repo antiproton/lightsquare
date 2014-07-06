@@ -142,6 +142,10 @@ define(function(require) {
 		return premove;
 	}
 	
+	Game.prototype.cancelPremove = function() {
+		this._server.send("/game/" + this._id + "/premove/cancel");
+	}
+	
 	Game.prototype.resign = function() {
 		if(this._isInProgress) {
 			this._server.send("/game/" + this._id + "/resign");
