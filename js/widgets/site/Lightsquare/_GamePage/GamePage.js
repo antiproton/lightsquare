@@ -110,6 +110,17 @@ define(function(require) {
 		});
 	}
 	
+	GamePage.prototype._applyPremove = function(premove) {
+		this._board.setBoardArray(premove.getBoardArray());
+		this._board.highlightSquares(premove.getFrom(), Board.squareHighlightTypes.PREMOVE_FROM);
+		this._board.highlightSquares(premove.getTo(), Board.squareHighlightTypes.PREMOVE_TO);
+	}
+	
+	GamePage.prototype._clearPremove = function() {
+		this._board.setBoardArray(this._game.getPosition().getBoardArray());
+		this._board.unhighlightSquares(Board.squareHighlightTypes.PREMOVE_FROM, Board.squareHighlightTypes.PREMOVE_TO);
+	}
+	
 	GamePage.prototype._setupBoard = function() {
 		this._board = new Board(this._template.nodes.board);
 		
@@ -120,14 +131,28 @@ define(function(require) {
 		});
 		
 		this._board.Move.addHandler(this, function(moveEvent) {
+			var allowPremove = this._user.getPrefs().premove;
+			var userIsActive = this._userIsActivePlayer();
 			var promoteTo = (this._user.getPrefs().alwaysQueen ? PieceType.queen : moveEvent.promoteTo);
 			
-			if(promoteTo === null && (new Move(this._game.getPosition(), moveEvent.from, moveEvent.to)).isPromotion()) {
-				moveEvent.promptForPromotionPiece();
-			}
-			
-			else {
-				this._game.move(moveEvent.from, moveEvent.to, promoteTo);
+			if(userIsActive || allowPremove) {
+				if(promoteTo === null && (new Move(this._game.getPosition(), moveEvent.from, moveEvent.to)).isPromotion()) {
+					moveEvent.promptForPromotionPiece();
+				}
+				
+				else {
+					if(userIsActive) {
+						this._game.move(moveEvent.from, moveEvent.to, promoteTo);
+					}
+					
+					else {
+						var premove = this._game.premove(moveEvent.from, moveEvent.to, moveEvent.promoteTo);
+						
+						if(premove.isValid()) {
+							this._applyPremove(premove);
+						}
+					}
+				}
 			}
 		});
 		
