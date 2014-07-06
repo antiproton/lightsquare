@@ -23,6 +23,7 @@ define(function(require) {
 		this._lastChallengeOptions = null;
 		
 		this._prefs = {
+			premove: null,
 			alwaysQueen: null,
 			pieceStyle: null,
 			boardSize: null,
