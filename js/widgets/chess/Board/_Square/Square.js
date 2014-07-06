@@ -6,6 +6,8 @@ define(function(require) {
 	var getOffsets = require("lib/dom/getOffsets");
 	var html = require("file!./square.html");
 	require("css!./square.css");
+	
+	var LEFT_MOUSE_BUTTON = 0;
 
 	function Square(parent, square, size) {
 		this._template = new Template(html, parent);
@@ -112,11 +114,15 @@ define(function(require) {
 		this._template.root.classList.add("board_square_" + this._squareStyle);
 
 		this._template.piece.addEventListener("mousedown", (function(event) {
-			this.MouseDown.fire(event);
+			if(event.button === LEFT_MOUSE_BUTTON) {
+				this.MouseDown.fire(event);
+			}
 		}).bind(this));
 
 		this._template.piece.addEventListener("mouseup", (function(event) {
-			this.MouseUp.fire(event);
+			if(event.button === LEFT_MOUSE_BUTTON) {
+				this.MouseUp.fire(event);
+			}
 		}).bind(this));
 
 		this._piece = new Piece(this._template.piece);
