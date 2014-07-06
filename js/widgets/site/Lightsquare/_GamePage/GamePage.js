@@ -161,6 +161,7 @@ define(function(require) {
 			event.original.preventDefault();
 			
 			this._game.cancelPremove();
+			this._clearPremove();
 		}).bind(this));
 		
 		this._updateBoard();
