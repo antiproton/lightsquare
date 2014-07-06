@@ -23,20 +23,8 @@ define(function(require) {
 		this._viewingAs = Colour.white;
 		this._setupGame(game);
 		
-		this._template = new Ractive({
-			el: parent,
-			template: html,
-			data: {
-				getTime: function(time) {
-					return time.getColonDisplay(time < 10 * 1000);
-				},
-				timeIsCritical: function(time) {
-					return (time < 10 * 1000);
-				}
-			}
-		});
-		
 		this._initialiseTemplate();
+		this._setupTemplate();
 		this._setupChat();
 		this._setupBoard();
 		this._setupHistory();
@@ -230,6 +218,25 @@ define(function(require) {
 		if(lastMove) {
 			this._highlightMove(lastMove);
 		}
+	}
+	
+	GamePage.prototype._setupTemplate = function() {
+		this._template = new Ractive({
+			el: parent,
+			template: html,
+			data: {
+				getTime: function(time) {
+					return time.getColonDisplay(time < 10 * 1000);
+				},
+				timeIsCritical: function(time) {
+					return (time < 10 * 1000);
+				}
+			}
+		});
+		
+		this._template.on("board_click", (function(event) {
+			console.log(event.original.button);
+		}).bind(this));
 	}
 	
 	GamePage.prototype._initialiseTemplate = function() {
