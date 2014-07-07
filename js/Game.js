@@ -56,6 +56,14 @@ define(function(require) {
 			isTimed: false
 		});
 		
+		this._game.Move.addHandler(this, function() {
+			var promiseId = "/request/premove";
+			
+			if(promiseId in this._promises) {
+				this._promises[promiseId].resolve(null);
+			}
+		});
+		
 		this._clock = new Clock(this._server, this, this._timingStyle);
 		
 		if(this._isInProgress) {
@@ -103,6 +111,14 @@ define(function(require) {
 		this._server.subscribe("/game/" + this._id + "/rematch", (function(gameDetails) {
 			this._rematch(gameDetails);
 		}).bind(this));
+		
+		this._server.subscribe("/game/" + this._id + "/premove", (function(premove) {
+			var promiseId = "/request/premove";
+			
+			if(promiseId in this._promises) {
+				this._promises[promiseId].resolve(premove ? Premove.fromJSON(premove) : null);
+			}
+		}).bind(this));
 	}
 	
 	Game.prototype._requestLatestMoves = function() {
@@ -144,6 +160,27 @@ define(function(require) {
 	
 	Game.prototype.cancelPremove = function() {
 		this._server.send("/game/" + this._id + "/premove/cancel");
+	}
+	
+	Game.prototype.getPendingPremove = function() {
+		var promise;
+		var promiseId = "/request/premove";
+		
+		if(promiseId in this._promises) {
+			promise = this._promises[promiseId];
+		}
+		
+		else {
+			promise = this._promises[promiseId] = new Promise();
+			
+			promise.then(null, null, (function() {
+				delete this._promises[promiseId];
+			}).bind(this));
+			
+			this._server.send("/game/" + this._id + "/request/premove");
+		}
+		
+		return promise;
 	}
 	
 	Game.prototype.resign = function() {
