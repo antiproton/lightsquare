@@ -29,6 +29,7 @@ define(function(require) {
 		this._setupBoard();
 		this._setupHistory();
 		this._setupControls();
+		this._checkForPendingPremove();
 		this._handleUserEvents();
 		
 		this._user.getDetails().then((function() {
@@ -104,11 +105,21 @@ define(function(require) {
 		this._game.GameOver.addHandler(this, function(result) {
 			this._template.set("result", result);
 			this._template.set("isInProgress", false);
+			this._clearPremove();
 		});
 		
 		this._game.Aborted.addHandler(this, function() {
 			this._template.set("isInProgress", false);
+			this._clearPremove();
 		});
+	}
+	
+	GamePage.prototype._checkForPendingPremove = function() {
+		this._game.getPendingPremove().then((function(premove) {
+			if(premove !== null) {
+				this._applyPremove(premove);
+			}
+		}).bind(this));
 	}
 	
 	GamePage.prototype._applyPremove = function(premove) {
