@@ -11,9 +11,12 @@ define(function(require) {
 	var Clock = require("./Clock");
 	var TimingStyle = require("chess/TimingStyle");
 	var Time = require("chess/Time");
+	var Promise = require("lib/Promise");
 	require("lib/Array.getShallowCopy");
 
 	function Game(user, server, gameDetails) {
+		this._promises = {};
+		
 		this.Move = new Event(this);
 		this.ClockTick = new Event(this);
 		this.GameOver = new Event(this);
@@ -116,7 +119,7 @@ define(function(require) {
 			var promiseId = "/request/premove";
 			
 			if(promiseId in this._promises) {
-				this._promises[promiseId].resolve(premove ? Premove.fromJSON(premove) : null);
+				this._promises[promiseId].resolve(premove ? Premove.fromJSON(premove, this.getPosition()) : null);
 			}
 		}).bind(this));
 	}
@@ -177,7 +180,13 @@ define(function(require) {
 				delete this._promises[promiseId];
 			}).bind(this));
 			
-			this._server.send("/game/" + this._id + "/request/premove");
+			if(this._isInProgress) {
+				this._server.send("/game/" + this._id + "/request/premove");
+			}
+			
+			else {
+				promise.resolve(null);
+			}
 		}
 		
 		return promise;
