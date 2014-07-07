@@ -185,8 +185,7 @@ define(function(require) {
 	}
 	
 	GamePage.prototype._highlightMove = function(move) {
-		this._board.unhighlightSquares(Board.squareHighlightTypes.LAST_MOVE_FROM);
-		this._board.unhighlightSquares(Board.squareHighlightTypes.LAST_MOVE_TO);
+		this._board.unhighlightSquares(Board.squareHighlightTypes.LAST_MOVE_FROM, Board.squareHighlightTypes.LAST_MOVE_TO);
 		this._board.highlightSquares(move.getFrom(), Board.squareHighlightTypes.LAST_MOVE_FROM);
 		this._board.highlightSquares(move.getTo(), Board.squareHighlightTypes.LAST_MOVE_TO);
 	}
