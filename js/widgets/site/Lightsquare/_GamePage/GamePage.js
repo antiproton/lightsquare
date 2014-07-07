@@ -21,6 +21,7 @@ define(function(require) {
 		
 		this._user = user;
 		this._viewingAs = Colour.white;
+		this._pendingPremove = null;
 		this._setupGame(game);
 		
 		this._setupTemplate(parent);
@@ -117,20 +118,22 @@ define(function(require) {
 	GamePage.prototype._checkForPendingPremove = function() {
 		this._game.getPendingPremove().then((function(premove) {
 			if(premove !== null) {
-				this._applyPremove(premove);
+				this._setPremove(premove);
 			}
 		}).bind(this));
 	}
 	
-	GamePage.prototype._applyPremove = function(premove) {
+	GamePage.prototype._setPremove = function(premove) {
 		this._board.setBoardArray(premove.getBoardArray());
 		this._board.highlightSquares(premove.getFrom(), Board.squareHighlightTypes.PREMOVE_FROM);
 		this._board.highlightSquares(premove.getTo(), Board.squareHighlightTypes.PREMOVE_TO);
+		this._pendingPremove = premove;
 	}
 	
 	GamePage.prototype._clearPremove = function() {
 		this._board.setBoardArray(this._game.getPosition().getBoardArray());
 		this._board.unhighlightSquares(Board.squareHighlightTypes.PREMOVE_FROM, Board.squareHighlightTypes.PREMOVE_TO);
+		this._pendingPremove = null;
 	}
 	
 	GamePage.prototype._setupBoard = function() {
@@ -157,11 +160,11 @@ define(function(require) {
 						this._game.move(moveEvent.from, moveEvent.to, promoteTo);
 					}
 					
-					else {
+					else if(this._pendingPremove === null) {
 						var premove = this._game.premove(moveEvent.from, moveEvent.to, moveEvent.promoteTo);
 						
 						if(premove.isValid()) {
-							this._applyPremove(premove);
+							this._setPremove(premove);
 						}
 					}
 				}
