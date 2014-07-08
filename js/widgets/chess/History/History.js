@@ -83,13 +83,7 @@ define(function(require) {
 	History.prototype._getLastMove = function() {
 		var fullmove = this._getLastFullmove();
 
-		if(fullmove !== null) {
-			return fullmove.getLastMove();
-		}
-
-		else {
-			return null;
-		}
+		return (fullmove ? fullmove.getLastMove() : null);
 	}
 	
 	History.prototype._getLastFullmove = function() {
