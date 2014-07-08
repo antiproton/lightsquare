@@ -3,17 +3,10 @@
 	<input type="text" value="{{username}}">
 	<label>Password</label>
 	<input type="password" value="{{password}}">
-	{{#register}}
-		<input class="register" type="submit" value="Create account">
-		<a class="login" href="javascript:void(0)" on-click="login">Log in</a>
-	{{/register}}
-	{{^register}}
-		<input class="login" type="submit" value="Log in">
-		<a class="register" href="javascript:void(0)" on-click="register">Create account</a>
-	{{/register}}
+	<input class="login" type="submit" value="Log in">
 	{{#error}}
-	<div class="login_form_error">
-		{{error}}
-	</div>
+		<div class="login_form_error">
+			{{error}}
+		</div>
 	{{/error}}
 </form>

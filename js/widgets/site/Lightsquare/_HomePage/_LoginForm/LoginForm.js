@@ -10,7 +10,6 @@ define(function(require) {
 			el: parent,
 			template: html,
 			data: {
-				register: false,
 				error: ""
 			}
 		});
@@ -23,31 +22,11 @@ define(function(require) {
 			var username = (this._template.get("username") || "").toString();
 			var password = (this._template.get("password") || "").toString();
 			
-			if(this._template.get("register")) {
-				this._user.register(username, password).then((function() {
-					this._clearForm();
-				}).bind(this), (function(reason) {
-					this._setError(reason);
-				}).bind(this));
-			}
-			
-			else {
-				this._user.login(username, password).then((function() {
-					this._clearForm();
-				}).bind(this), (function(reason) {
-					this._setError(reason);
-				}).bind(this));
-			}
-		}).bind(this));
-		
-		this._template.on("login", (function(event) {
-			this._template.set("register", false);
-			this._clearError();
-		}).bind(this));
-		
-		this._template.on("register", (function(event) {
-			this._template.set("register", true);
-			this._clearError();
+			this._user.login(username, password).then((function() {
+				this._clearForm();
+			}).bind(this), (function(reason) {
+				this._setError(reason);
+			}).bind(this));
 		}).bind(this));
 	}
 	
