@@ -3,6 +3,9 @@ define(function(require) {
 	var Event = require("lib/Event");
 	var Promise = require("lib/Promise");
 	var glicko2 = require("jsonchess/glicko2");
+	var time = require("lib/time");
+	
+	var GAME_BACKUP_MAX_AGE = 1000 * 60 * 60 * 24;
 	
 	function User(server, db) {
 		this._id = null;
@@ -12,9 +15,12 @@ define(function(require) {
 		this._server = server;
 		this._db = db;
 		
-		if(!this._db.get("games")) {
-			this._db.set("games", []);
+		if(!this._db.get("gameBackups")) {
+			this._db.set("gameBackups", []);
 		}
+		
+		this._cleanupOldGameBackups();
+		this._markGameBackupsForCleanup();
 		
 		this._username = "Anonymous";
 		this._isLoggedIn = false;
@@ -37,6 +43,18 @@ define(function(require) {
 		this.PrefsChanged = new Event(this);
 		this.ChallengeCreated = new Event(this);
 		this.ChallengeExpired = new Event(this);
+		
+		this.NewGame.addHandler(this, function(game) {
+			this._saveGameBackup(game);
+			
+			game.Move.addHandler(this, function() {
+				this._saveGameBackup(game);
+			});
+			
+			game.GameOver.addHandler(this, function() {
+				this._removeGameBackup(game.getId());
+			});
+		});
 		
 		this._handleServerEvents();
 		this._subscribeToServerMessages();
@@ -136,11 +154,49 @@ define(function(require) {
 		this.LoggedOut.fire();
 	}
 	
-	User.prototype.getSavedGames = function() {
-		return this._db.get("games");
+	User.prototype.getGameBackups = function() {
+		return this._db.get("gameBackups");
 	}
 	
-	User.prototype.restoreGame = function(gameDetails) {
+	User.prototype._cleanupOldGameBackups = function() {
+		this._filterGameBackups(function(backup) {
+			return (backup.expiryTime === null || time() < backup.expiryTime);
+		});
+	}
+	
+	User.prototype._markGameBackupsForCleanup = function() {
+		this._filterGameBackups(function(backup) {
+			if(backup.expiryTime === null) {
+				backup.expiryTime = time() + GAME_BACKUP_MAX_AGE;
+			}
+		});
+	}
+	
+	User.prototype._filterGameBackups = function(callback) {
+		var backups = this._db.get("gameBackups");
+		
+		for(var id in backups) {
+			if(callback(backups[id]) === false) {
+				delete backups[id];
+			}
+		}
+		
+		this._db.set("gameBackups", backups);
+	}
+	
+	User.prototype._modifyGameBackup = function(id, modifications) {
+		var backups = this._db.get("gameBackups");
+		
+		if(id in backups) {
+			for(var p in modifications) {
+				backups[id][p] = modifications[p];
+			}
+		}
+		
+		this._db.set("gameBackups", backups);
+	}
+	
+	User.prototype.restoreGameFromBackup = function(gameDetails) {
 		var promiseId = "/game/restore/" + gameDetails.id;
 		var promise;
 		
@@ -162,17 +218,56 @@ define(function(require) {
 	}
 	
 	User.prototype.cancelGameRestoration = function(id) {
+		var promiseId = "/game/restore/cancel/" + id;
+		var promise;
 		
+		if(promiseId in this._promises) {
+			promise = this._promises[promiseId];
+		}
+		
+		else {
+			promise = this._promises[promiseId] = new Promise();
+			
+			promise.then(null, null, (function() {
+				delete this._promises[promiseId];
+			}).bind(this));
+			
+			this._server.send("/game/restore/cancel", id);
+		}
+		
+		return promise;
 	}
 	
-	User.prototype._saveGameToDb = function(gameDetails) {
-		this._db.set("games",  this._db.get("games").concat([gameDetails]));
+	User.prototype._saveGameBackup = function(gameDetails) {
+		var id = gameDetails.id;
+		var backups = this._db.get("gameBackups");
+		var backup;
+		
+		if(id in backups) {
+			backup = backups[id];
+			backup.game = gameDetails;
+			backup.expiryTime = null;
+		}
+		
+		else {
+			backup = {
+				expiryTime: null,
+				restorationRequestSubmitted: false,
+				game: gameDetails
+			};
+		}
+		
+		backups[id] = backup;
+		
+		this._db.set("gameBackups", backups);
 	}
 	
-	User.prototype._removeGameFromDb = function(id) {
-		this._db.set("games", this._db.get("games").filter(function(gameDetails) {
-			return (gameDetails.id !== id);
-		}));
+	User.prototype._removeGameBackup = function(id) {
+		var backups = this._db.get("gameBackups");
+		
+		delete backups[id];
+		
+		this._db.set("gameBackups", backups);
 	}
 	
 	User.prototype.getUsername = function() {
@@ -373,8 +468,6 @@ define(function(require) {
 		}).bind(this));
 		
 		this._server.subscribe("/challenge/accepted", (function(gameDetails) {
-			this._saveGameToDb(gameDetails);
-			
 			var game = this._addGame(this._createGame(gameDetails));
 			
 			game.GameOver.addHandler(this, function() {
@@ -386,13 +479,47 @@ define(function(require) {
 		
 		this._server.subscribe("/game/restore/success", (function(gameDetails) {
 			var game = this._addGame(this._createGame(gameDetails));
-			var promiseId = "/game/restore/" + game.getId();
+			var id = game.getId();
+			var promiseId = "/game/restore/" + id;
 			
 			if(promiseId in this._promises) {
 				this._promises[promiseId].resolve(game);
 			}
 			
+			this._removeGameBackup(id);
 			this.NewGame.fire(game);
+		}).bind(this));
+		
+		this._server.subscribe("/game/restore/canceled", (function(id) {
+			var promiseId = "/game/restore/cancel/" + id;
+			
+			if(promiseId in this._promises) {
+				this._promises[promiseId].resolve();
+			}
+		}).bind(this));
+		
+		this._server.subscribe("/game/restore/pending", (function(id) {
+			var promiseId = "/game/restore/cancel/" + id;
+			
+			if(promiseId in this._promises) {
+				//this._promises[promiseId].progress();
+				/*
+				TODO implement progress in Promise so that the ui can add a progress handler
+				and update the 'restorationRequestSubmitted' property in the template
+				*/
+			}
+			
+			this._modifyGameBackup(id, {
+				restorationRequestSubmitted: true
+			});
+		}).bind(this));
+		
+		this._server.subscribe("/game/restore/failure", (function(data) {
+			var promiseId = "/game/restore/" + data.id;
+			
+			if(promiseId in this._promises) {
+				this._promises[promiseId].fail(data.reason);
+			}
 		}).bind(this));
 		
 		this._server.subscribe("/game/not_found", (function(id) {
