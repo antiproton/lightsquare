@@ -23,6 +23,9 @@ define(function(require) {
 			el: parent,
 			template: html,
 			data: {
+				showModalDialog: {
+					restoreGame: false
+				},
 				userIsLoggedIn: this._user.isLoggedIn()
 			}
 		});
@@ -30,6 +33,27 @@ define(function(require) {
 		this._loginForm = new LoginForm(this._user, this._template.nodes.login_form);
 		this._createChallengeForm = new CreateChallengeForm(this._user, this._template.nodes.create_challenge);
 		this._challengeGraph = new ChallengeGraph(this._app, this._user, this._template.nodes.challenge_graph);
+		
+		this._template.on("restore_game", (function() {
+			this._showModalDialog("restoreGame");
+		}).bind(this));
+		
+		this._template.on("hide_modal_dialog", (function() {
+			this._hideModalDialog();
+		}).bind(this));
+	}
+	
+	HomePage.prototype._showModalDialog = function(dialog) {
+		this._template.set("showModalDialog." + dialog, true);
+		this._template.set("showModalOverlay", true);
+	}
+	
+	HomePage.prototype._hideModalDialog = function() {
+		for(var dialog in this._template.get("showModalDialog")) {
+			this._template.set("showModalDialog." + dialog, false);
+		}
+		
+		this._template.set("showModalOverlay", false);
 	}
 	
 	HomePage.prototype._handleUserEvents = function() {

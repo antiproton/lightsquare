@@ -1,11 +1,37 @@
 <div class="home">
-	<div id="create_challenge">
-		
+	{{#showModalOverlay}}
+		<div class="home_page_modal_overlay" on-click="hide_modal_dialog">
+			
+		</div>
+	{{/showModalOverlay}}
+	<div class="home_page_modal_dialog_container">
+		{{#showModalDialog.restoreGame}}
+			<div class="restore_game_modal_dialog">
+				test
+			</div>
+		{{/showModalDialog.restoreGame}}
 	</div>
-	<div class="challenges" id="challenge_graph">
-		
-	</div>
-	<div class="login_form" id="login_form" style="display: {{userIsLoggedIn ? 'none' : ''}}">
-		
+	<div class="play">
+		<div id="create_challenge">
+			
+		</div>
+		<div class="challenges" id="challenge_graph">
+			
+		</div>
+		<div class="sidebar">
+			<div class="login_form" id="login_form" style="display: {{userIsLoggedIn ? 'none' : ''}}">
+				
+			</div>
+			<hr>
+			<div class="utilities">
+				<p>
+					<a
+						href="javascript:void(0)"
+						on-click="restore_game"
+						title="If a game is interrupted by a server crash, it can be restored by both players submitting their local copies"
+					>Restore game</a>
+				</p>
+			</div>
+		</div>
 	</div>
 </div>
