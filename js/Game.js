@@ -33,7 +33,7 @@ define(function(require) {
 		this._startTime = gameDetails.startTime;
 		this._endTime = gameDetails.endTime;
 		this._id = gameDetails.id;
-		this._isInProgress = (gameDetails.result === null);
+		this._isInProgress = gameDetails.isInProgress;
 		this._result = gameDetails.result;
 		this._isDrawOffered = gameDetails.isDrawOffered;
 		this._isUndoRequested = gameDetails.isUndoRequested;
