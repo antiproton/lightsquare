@@ -16,6 +16,12 @@ div.home_page_modal_overlay {
 	background: rgba(0, 0, 0, .45);
 }
 
+div.game_backup_list_container {
+	height: 25em;
+	position: relative;
+	overflow-y: scroll;
+}
+
 div.home_page_modal_dialog_container {
 	position: relative;
 	z-index: 11;
