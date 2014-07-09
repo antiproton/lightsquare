@@ -238,7 +238,8 @@ define(function(require) {
 		return promise;
 	}
 	
-	User.prototype._saveGameBackup = function(gameDetails) {
+	User.prototype._saveGameBackup = function(game) {
+		var gameDetails = game.getBackupDetails();
 		var id = gameDetails.id;
 		var backups = this._db.get("gameBackups");
 		var backup;
