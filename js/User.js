@@ -44,18 +44,6 @@ define(function(require) {
 		this.ChallengeCreated = new Event(this);
 		this.ChallengeExpired = new Event(this);
 		
-		this.NewGame.addHandler(this, function(game) {
-			this._saveGameBackup(game);
-			
-			game.Move.addHandler(this, function() {
-				this._saveGameBackup(game);
-			});
-			
-			game.GameOver.addHandler(this, function() {
-				this._removeGameBackup(game.getId());
-			});
-		});
-		
 		this._handleServerEvents();
 		this._subscribeToServerMessages();
 	}
@@ -334,6 +322,15 @@ define(function(require) {
 	
 	User.prototype._addGame = function(game) {
 		this._games.push(game);
+		this._saveGameBackup(game);
+		
+		game.Move.addHandler(this, function() {
+			this._saveGameBackup(game);
+		});
+		
+		game.GameOver.addHandler(this, function() {
+			this._removeGameBackup(game);
+		});
 		
 		game.Rematch.addHandler(this, function(game) {
 			this._addGame(game);
@@ -469,13 +466,7 @@ define(function(require) {
 		}).bind(this));
 		
 		this._server.subscribe("/challenge/accepted", (function(gameDetails) {
-			var game = this._addGame(this._createGame(gameDetails));
-			
-			game.GameOver.addHandler(this, function() {
-				this._removeGameFromDb(gameDetails.id);
-			});
-			
-			this.NewGame.fire(game);
+			this.NewGame.fire(this._addGame(this._createGame(gameDetails)));
 		}).bind(this));
 		
 		this._server.subscribe("/game/restore/success", (function(gameDetails) {
@@ -487,7 +478,6 @@ define(function(require) {
 				this._promises[promiseId].resolve(game);
 			}
 			
-			this._removeGameBackup(id);
 			this.NewGame.fire(game);
 		}).bind(this));
 		
