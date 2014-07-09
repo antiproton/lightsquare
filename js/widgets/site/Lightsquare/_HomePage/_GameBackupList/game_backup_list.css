@@ -14,3 +14,14 @@ div.game_backup_title {
 	border-bottom: 1px solid #bababa;
 	padding: .5em;
 }
+
+div.game_backup_history {
+	padding: .5em;
+}
+
+div.game_backup_controls {
+	border-style: solid;
+	border-color: #bababa;
+	border-width: 1px 0 0 1px;
+	border-top-left-radius: 3px;
+}
