@@ -1,11 +1,9 @@
 <div class="home">
-	{{#showModalOverlay}}
-		<div class="home_page_modal_overlay" on-click="hide_modal_dialog">
-			
-		</div>
-	{{/showModalOverlay}}
+	<div class="home_page_modal_overlay" on-click="hide_modal_dialog" style="display: {{showModalDialog ? '' : 'none'}}">
+		
+	</div>
 	<div class="home_page_modal_dialog_container">
-		<div class="restore_game_modal_dialog" style="display: {{showModalDialog.restoreGame ? '' : 'none'}}">
+		<div class="restore_game_modal_dialog" style="display: {{showModalDialog === 'restoreGame' ? '' : 'none'}}" on-click="dialog_click">
 			<h1>Restore game from local backup</h1>
 			<p>
 				Select a game to submit to the server for restoration.  If both of the original

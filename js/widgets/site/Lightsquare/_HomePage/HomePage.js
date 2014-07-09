@@ -24,9 +24,7 @@ define(function(require) {
 			el: parent,
 			template: html,
 			data: {
-				showModalDialog: {
-					restoreGame: false
-				},
+				showModalDialog: null,
 				userIsLoggedIn: this._user.isLoggedIn()
 			}
 		});
@@ -47,16 +45,11 @@ define(function(require) {
 	}
 	
 	HomePage.prototype._showModalDialog = function(dialog) {
-		this._template.set("showModalDialog." + dialog, true);
-		this._template.set("showModalOverlay", true);
+		this._template.set("showModalDialog", dialog);
 	}
 	
 	HomePage.prototype._hideModalDialog = function() {
-		for(var dialog in this._template.get("showModalDialog")) {
-			this._template.set("showModalDialog." + dialog, false);
-		}
-		
-		this._template.set("showModalOverlay", false);
+		this._template.set("showModalDialog", null);
 	}
 	
 	HomePage.prototype._handleUserEvents = function() {
