@@ -30,6 +30,7 @@ define(function(require) {
 		this._user = user;
 		this._server = server;
 		
+		this._options = gameDetails.options;
 		this._startTime = gameDetails.startTime;
 		this._endTime = gameDetails.endTime;
 		this._id = gameDetails.id;
@@ -49,8 +50,8 @@ define(function(require) {
 		this._moveQueue = [];
 		
 		this._timingStyle = new TimingStyle({
-			initialTime: Time.fromUnitString(gameDetails.options.initialTime, Time.minutes),
-			increment: Time.fromUnitString(gameDetails.options.timeIncrement, Time.seconds)
+			initialTime: Time.fromUnitString(this._options.initialTime, Time.minutes),
+			increment: Time.fromUnitString(this._options.timeIncrement, Time.seconds)
 		});
 		
 		this._game = new ChessGame({
