@@ -1,5 +1,5 @@
 define(function(require) {
-	var Ractive = require("lib/dom/Ractive");
+	require("css!./game_backup_list.css");
 	var html = require("file!./game_backup_list.html");
 	
 	function GameBackupList(user, parent) {

@@ -6,7 +6,13 @@
 	{{/showModalOverlay}}
 	<div class="home_page_modal_dialog_container">
 		<div class="restore_game_modal_dialog" style="display: {{showModalDialog.restoreGame ? '' : 'none'}}">
-			<h1>Restore game</h1>
+			<h1>Restore game from local backup</h1>
+			<p>
+				Select a game to submit to the server for restoration.  If both of the original
+				logged-in players submit the same game details, the game will be restored and
+				the active player will have as much time on their clock as they would if the last
+				move had only just been played.
+			</p>
 			<div id="game_backup_list">
 				
 			</div>

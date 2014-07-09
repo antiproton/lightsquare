@@ -1,0 +1,9 @@
+div.game_backup {
+	border: 1px solid #bababa;
+	border-radius: 3px;
+}
+
+div.game_backup_title {
+	border-bottom: 1px solid #bababa;
+	padding: .5em;
+}

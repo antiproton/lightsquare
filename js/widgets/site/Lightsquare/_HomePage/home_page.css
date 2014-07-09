@@ -20,13 +20,24 @@ div.home_page_modal_dialog_container {
 }
 
 div.restore_game_modal_dialog {
-	display: flex;
 	width: 65%;
 	margin: 3em auto 0 auto;
 	border-bottom: 2px solid #303030;
 	padding: .8em;
 	box-shadow: 2px 2px 8px rgba(0, 0, 0, .3);
 	background: white;
+}
+
+div.restore_game_modal_dialog h1 {
+	font-weight: normal;
+	color: #808080;
+	font-size: 1.2em;
+	margin-top: 0;
+}
+
+
+div.restore_game_modal_dialog p {
+	font-size: .9em;
 }
 
 div.play {
