@@ -14,6 +14,11 @@ define(function(require) {
 			template: html,
 			data: {
 				gameBackups: {},
+				formatDate: function(time) {
+					var date = new Date(time);
+					
+					return date.toLocaleString();
+				}
 			}
 		});
 	}
