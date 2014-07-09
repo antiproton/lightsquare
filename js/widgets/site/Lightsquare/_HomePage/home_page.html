@@ -5,14 +5,12 @@
 		</div>
 	{{/showModalOverlay}}
 	<div class="home_page_modal_dialog_container">
-		{{#showModalDialog.restoreGame}}
-			<div class="restore_game_modal_dialog">
-				<h1>Restore game</h1>
-				<div id="game_backup_list">
-					
-				</div>
+		<div class="restore_game_modal_dialog" style="display: {{showModalDialog.restoreGame ? '' : 'none'}}">
+			<h1>Restore game</h1>
+			<div id="game_backup_list">
+				
 			</div>
-		{{/showModalDialog.restoreGame}}
+		</div>
 	</div>
 	<div class="play">
 		<div id="create_challenge">
