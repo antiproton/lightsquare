@@ -8,6 +8,7 @@ div.home {
 div.home_page_modal_overlay {
 	position: fixed;
 	z-index: 10;
+	display: flex;
 	top: 0;
 	left: 0;
 	right: 0;
@@ -16,7 +17,7 @@ div.home_page_modal_overlay {
 }
 
 div.game_backup_list_container {
-	height: 25em;
+	flex-grow: 1;
 	position: relative;
 	overflow-y: scroll;
 }
@@ -28,8 +29,9 @@ div.home_page_modal_dialog_container {
 }
 
 div.restore_game_modal_dialog {
+	display: flex;
 	width: 65%;
-	margin: 3em auto 0 auto;
+	margin: 5% auto;
 	border-bottom: 2px solid #303030;
 	padding: .8em;
 	box-shadow: 2px 2px 8px rgba(0, 0, 0, .3);
