@@ -14,7 +14,9 @@
 							<span
 								class="game_backup_move"
 								on-click="select_move:{{game.id}}"
-							>{{fullLabel}}</span>
+							>
+								{{colour === 'w' ? fullLabel : label}}
+							</span>
 						{{/game.history}}
 					</div>
 					<div class="game_backup_controls">
