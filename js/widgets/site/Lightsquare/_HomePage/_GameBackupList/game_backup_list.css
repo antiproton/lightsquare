@@ -4,6 +4,8 @@ div.game_backup {
 }
 
 div.game_backup_title {
+	display: flex;
+	justify-content: space-between;
 	border-bottom: 1px solid #bababa;
 	padding: .5em;
 }

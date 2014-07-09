@@ -2,7 +2,12 @@
 	{{#gameBackups:id}}
 		<div class="game_backup">
 			<div class="game_backup_title">
-				{{game.white.username}} vs {{game.black.username}}
+				<div>
+					{{game.white.username}} vs {{game.black.username}}
+				</div>
+				<div>
+					{{formatDate(game.startTime)}}
+				</div>
 			</div>
 			<div class="game_backup_body">
 				<div class="game_backup_board" id="board_{{game.id}}">
