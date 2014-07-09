@@ -42,12 +42,11 @@ define(function(require) {
 		this._players[Colour.white] = gameDetails.white;
 		this._players[Colour.black] = gameDetails.black;
 		
-		this._history = [];
-		this._moveQueue = [];
+		this._history = gameDetails.history.map(function(move) {
+			return Move.fromJSON(move);
+		});
 		
-		gameDetails.history.forEach((function(move) {
-			this._history.push(Move.fromJSON(move));
-		}).bind(this));
+		this._moveQueue = [];
 		
 		this._timingStyle = new TimingStyle({
 			initialTime: Time.fromUnitString(gameDetails.options.initialTime, Time.minutes),
