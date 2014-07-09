@@ -39,9 +39,19 @@ define(function(require) {
 			this._gameBackupList.refresh();
 		}).bind(this));
 		
+		var lastClickWasOnDialog = false;
+		
 		this._template.on("hide_modal_dialog", (function() {
-			this._hideModalDialog();
+			if(!lastClickWasOnDialog) {
+				this._hideModalDialog();
+			}
+			
+			lastClickWasOnDialog = false;
 		}).bind(this));
+		
+		this._template.on("dialog_click", function() {
+			lastClickWasOnDialog = true;
+		});
 	}
 	
 	HomePage.prototype._showModalDialog = function(dialog) {
