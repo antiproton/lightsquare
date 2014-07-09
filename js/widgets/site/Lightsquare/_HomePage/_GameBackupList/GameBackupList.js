@@ -9,7 +9,7 @@ define(function(require) {
 			el: parent,
 			template: html,
 			data: {
-				backups: this._user.getGameBackups()
+				gameBackups: this._user.getGameBackups()
 			}
 		});
 	}
