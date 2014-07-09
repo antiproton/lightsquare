@@ -16,7 +16,7 @@ define(function(require) {
 		this._db = db;
 		
 		if(!this._db.get("gameBackups")) {
-			this._db.set("gameBackups", []);
+			this._db.set("gameBackups", {});
 		}
 		
 		this._cleanupOldGameBackups();
