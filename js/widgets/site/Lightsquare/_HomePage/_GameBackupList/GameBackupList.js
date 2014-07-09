@@ -14,5 +14,9 @@ define(function(require) {
 		});
 	}
 	
+	GameBackupList.prototype.refresh = function() {
+		this._template.set("gameBackups", this._user.getGameBackups());
+	}
+	
 	return GameBackupList;
 });
