@@ -10,12 +10,12 @@
 				</div>
 				<div class="game_restoration_details">
 					<div class="game_restoration_history">
-						{{#history}}
+						{{#game.history}}
 							<span
 								class="game_restoration_move"
 								on-click="select_move:{{game.id}}"
 							>{{fullLabel}}</span>
-						{{/history}}
+						{{/game.history}}
 					</div>
 					<div class="game_restoration_controls">
 						
