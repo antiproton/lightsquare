@@ -1,23 +1,23 @@
-<div class="game_restoration_list">
-	{{#gameBackups}}
-		<div class="game_restoration">
-			<div class="game_restoration_title">
+<div class="game_backup_list">
+	{{#gameBackups:id}}
+		<div class="game_backup">
+			<div class="game_backup_title">
 				{{game.white.username}} vs {{game.black.username}} {{game.timingDescription}}
 			</div>
-			<div class="game_restoration_body">
-				<div class="game_restoration_board" id="board_{{game.id}}">
+			<div class="game_backup_body">
+				<div class="game_backup_board" id="board_{{game.id}}">
 					
 				</div>
-				<div class="game_restoration_details">
-					<div class="game_restoration_history">
+				<div class="game_backup_details">
+					<div class="game_backup_history">
 						{{#game.history}}
 							<span
-								class="game_restoration_move"
+								class="game_backup_move"
 								on-click="select_move:{{game.id}}"
 							>{{fullLabel}}</span>
 						{{/game.history}}
 					</div>
-					<div class="game_restoration_controls">
+					<div class="game_backup_controls">
 						
 					</div>
 				</div>
