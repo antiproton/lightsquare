@@ -385,5 +385,18 @@ define(function(require) {
 		this.GameOver.fire(result);
 	}
 	
+	Game.prototype.getBackupDetails = function() {
+		return {
+			white: this._players[Colour.white],
+			black: this._players[Colour.black],
+			history: this._history.map(function(move) {
+				return Move.fromMove(move);
+			}),
+			startTime: this._startTime,
+			options: this._options,
+			id: this._id
+		};
+	}
+	
 	return Game;
 });
