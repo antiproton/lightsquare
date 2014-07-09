@@ -30,9 +30,9 @@ define(function(require) {
 			}
 		});
 		
-		this._loginForm = new LoginForm(this._user, this._template.nodes.login_form);
-		this._createChallengeForm = new CreateChallengeForm(this._user, this._template.nodes.create_challenge);
-		this._challengeGraph = new ChallengeGraph(this._app, this._user, this._template.nodes.challenge_graph);
+		new LoginForm(this._user, this._template.nodes.login_form);
+		new CreateChallengeForm(this._user, this._template.nodes.create_challenge);
+		new ChallengeGraph(this._app, this._user, this._template.nodes.challenge_graph);
 		
 		this._template.on("restore_game", (function() {
 			this._showModalDialog("restoreGame");
