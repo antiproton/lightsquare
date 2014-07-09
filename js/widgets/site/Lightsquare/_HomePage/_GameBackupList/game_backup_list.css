@@ -1,6 +1,11 @@
 div.game_backup {
+	margin-top: .7em;
 	border: 1px solid #bababa;
 	border-radius: 3px;
+}
+
+div.game_backup:first-child {
+	margin-top: 0;
 }
 
 div.game_backup_title {
