@@ -21,6 +21,10 @@ define(function(require) {
 				}
 			}
 		});
+		
+		this._template.on("select_move", (function(event, id) {
+			this._boards[id].setBoardArray(new Position(event.context.resultingFen).getBoardArray());
+		}).bind(this));
 	}
 	
 	GameBackupList.prototype.refresh = function() {
