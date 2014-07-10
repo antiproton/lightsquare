@@ -238,7 +238,7 @@ define(function(require) {
 		
 		if(id in backups) {
 			backup = backups[id];
-			backup.game = gameDetails;
+			backup.gameDetails = gameDetails;
 			backup.expiryTime = null;
 		}
 		
@@ -246,7 +246,7 @@ define(function(require) {
 			backup = {
 				expiryTime: null,
 				restorationRequestSubmitted: false,
-				game: gameDetails,
+				gameDetails: gameDetails,
 				playingAs: game.getUserColour()
 			};
 		}
