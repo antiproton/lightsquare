@@ -251,10 +251,10 @@ define(function(require) {
 		this._db.set("gameBackups", backups);
 	}
 	
-	User.prototype._removeGameBackup = function(id) {
+	User.prototype._removeGameBackup = function(game) {
 		var backups = this._db.get("gameBackups");
 		
-		delete backups[id];
+		delete backups[game.getId()];
 		
 		this._db.set("gameBackups", backups);
 	}
