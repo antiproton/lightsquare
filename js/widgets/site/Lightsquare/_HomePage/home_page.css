@@ -20,6 +20,8 @@ div.game_backup_list_container {
 	flex-grow: 1;
 	position: relative;
 	overflow-y: scroll;
+	border: 1px solid #afafaf;
+	padding: .3em;
 }
 
 div.restore_game_modal_dialog {
