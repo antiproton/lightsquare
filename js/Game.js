@@ -397,7 +397,6 @@ define(function(require) {
 				return Move.fromMove(move);
 			}),
 			startTime: this._startTime,
-			isInProgress: this._isInProgress,
 			options: this._options,
 			id: this._id
 		};
