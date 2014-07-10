@@ -247,7 +247,9 @@ define(function(require) {
 				expiryTime: null,
 				restorationRequestSubmitted: false,
 				gameDetails: gameDetails,
-				playingAs: game.getUserColour()
+				opponent: game.getPlayer(game.getUserColour().opposite).username,
+				timingDescription: game.getTimingStyle().getDescription(),
+				playingAs: game.getUserColour().fenString
 			};
 		}
 		
