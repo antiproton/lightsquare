@@ -32,11 +32,7 @@ define(function(require) {
 		this._setupControls();
 		this._checkForPendingPremove();
 		this._handleUserEvents();
-		
-		this._user.getDetails().then((function() {
-			this._updateUserDependentElements();
-			this._setBoardPrefs();
-		}).bind(this));
+		this._updateUserDependentElements();
 	}
 	
 	GamePage.prototype.getPlayerColour = function() {

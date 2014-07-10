@@ -40,8 +40,10 @@ define(function(require) {
 	
 	Lightsquare.prototype._handleServerEvents = function() {
 		this._server.ConnectionOpened.addHandler(this, function() {
-			this._initialise();
-			this._router.loadFromUrl();
+			this._user.getDetails().then((function() {
+				this._initialise();
+				this._router.loadFromUrl();
+			}).bind(this));
 		});
 		
 		this._server.ConnectionLost.addHandler(this, function() {
@@ -54,10 +56,7 @@ define(function(require) {
 		this._gamePages.empty();
 		this._hideMessage();
 		this._addGamePages();
-		
-		this._user.getDetails().then((function() {
-			this._updateUserDependentElements();
-		}).bind(this));
+		this._updateUserDependentElements();
 	}
 	
 	Lightsquare.prototype._addGamePage = function(game) {

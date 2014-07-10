@@ -13,10 +13,6 @@ define(function(require) {
 		
 		this._setupTemplate(parent);
 		this._handleUserEvents();
-
-		this._user.getDetails().then((function() {
-			this._updateUserDependentElements();
-		}).bind(this));
 	}
 	
 	HomePage.prototype._setupTemplate = function(parent) {
