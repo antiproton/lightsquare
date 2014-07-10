@@ -185,8 +185,8 @@ define(function(require) {
 		this._db.set("gameBackups", backups);
 	}
 	
-	User.prototype.restoreGameFromBackup = function(gameDetails) {
-		var promiseId = "/game/restore/" + gameDetails.id;
+	User.prototype.restoreGameFromBackup = function(backup) {
+		var promiseId = "/game/restore/" + backup.gameDetails.id;
 		var promise;
 		
 		if(promiseId in this._promises) {
@@ -200,7 +200,10 @@ define(function(require) {
 				delete this._promises[promiseId];
 			}).bind(this));
 			
-			this._server.send("/game/restore", gameDetails);
+			this._server.send("/game/restore", {
+				gameDetails: backup.gameDetails,
+				playingAs: backup.playingAs
+			});
 		}
 		
 		return promise;
@@ -243,7 +246,8 @@ define(function(require) {
 			backup = {
 				expiryTime: null,
 				restorationRequestSubmitted: false,
-				game: gameDetails
+				game: gameDetails,
+				playingAs: game.getUserColour()
 			};
 		}
 		
