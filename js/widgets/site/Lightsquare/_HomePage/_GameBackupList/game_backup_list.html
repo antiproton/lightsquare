@@ -25,7 +25,12 @@
 						{{/gameDetails.history}}
 					</div>
 					<div class="game_backup_controls">
-						
+						<input
+							class="restore_game"
+							type="button"
+							on-click="restore_or_cancel"
+							value="{{restorationRequestSubmitted ? 'Cancel request' : 'Submit for restoration'}}"
+						>
 					</div>
 				</div>
 			</div>
