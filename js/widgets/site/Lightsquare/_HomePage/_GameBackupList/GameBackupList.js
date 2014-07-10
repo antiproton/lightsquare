@@ -29,18 +29,23 @@ define(function(require) {
 	
 	GameBackupList.prototype.refresh = function() {
 		var backups = this._user.getGameBackups();
+		var backup;
 		
 		this._boards = {};
 		this._template.set("gameBackups", {});
 		
 		for(var id in backups) {
+			backup = backups[id];
 			
-			this._template.set("gameBackups." + id, backups[id]);
+			this._template.set("gameBackups." + id, backup);
 			
 			var board  = new Board(this._template.nodes["board_" + id]);
+			var history = backup.gameDetails.history;
 			
-			board.setSquareSize(20);
+			board.setSquareSize(Board.sizes["Tiny"]);
 			board.setShowCoords(false);
+			board.setBoardArray(new Position(history[history.length - 1].resultingFen).getBoardArray());
+			
 			this._boards[id] = board;
 			
 		}
