@@ -391,8 +391,6 @@ define(function(require) {
 	
 	Game.prototype.getBackupDetails = function() {
 		return {
-			white: this._players[Colour.white],
-			black: this._players[Colour.black],
 			history: this._history.map(function(move) {
 				return Move.fromMove(move);
 			}),
