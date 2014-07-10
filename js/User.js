@@ -324,15 +324,17 @@ define(function(require) {
 	User.prototype._addGame = function(game) {
 		this._games.push(game);
 		
-		game.Move.addHandler(this, function() {
-			if(game.getHistory().length >= gameRestoration.MIN_MOVES) {
-				this._saveGameBackup(game);
-			}
-		});
-		
-		game.GameOver.addHandler(this, function() {
-			this._removeGameBackup(game);
-		});
+		if(game.userIsPlaying()) {
+			game.Move.addHandler(this, function() {
+				if(game.getHistory().length >= gameRestoration.MIN_MOVES) {
+					this._saveGameBackup(game);
+				}
+			});
+			
+			game.GameOver.addHandler(this, function() {
+				this._removeGameBackup(game);
+			});
+		}
 		
 		game.Rematch.addHandler(this, function(game) {
 			this._addGame(game);
