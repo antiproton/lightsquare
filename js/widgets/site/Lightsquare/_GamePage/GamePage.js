@@ -44,7 +44,7 @@ define(function(require) {
 	}
 	
 	GamePage.prototype._userIsPlaying = function() {
-		return (this.getPlayerColour() !== null);
+		return this._game.userIsPlaying();
 	}
 	
 	GamePage.prototype.getTimingStyle = function() {
