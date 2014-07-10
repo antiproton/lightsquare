@@ -3,6 +3,7 @@ define(function(require) {
 	var html = require("file!./game_backup_list.html");
 	var Board = require("widgets/chess/Board/Board");
 	var Position = require("chess/Position");
+	var Colour = require("chess/Colour");
 	
 	function GameBackupList(user, parent) {
 		this._user = user;
@@ -49,6 +50,7 @@ define(function(require) {
 			board.setSquareSize(Board.sizes["Tiny"]);
 			board.setShowCoords(false);
 			board.setBoardArray(new Position(lastMove.resultingFen).getBoardArray());
+			board.setViewingAs(Colour.fromFenString(backup.playingAs));
 			
 			this._boards[id] = board;
 			
