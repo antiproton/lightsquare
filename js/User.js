@@ -327,11 +327,11 @@ define(function(require) {
 		game.Move.addHandler(this, function() {
 			if(game.getHistory().length >= gameRestoration.MIN_MOVES) {
 				this._saveGameBackup(game);
-		
-				game.GameOver.addHandler(this, function() {
-					this._removeGameBackup(game);
-				});
 			}
+		});
+		
+		game.GameOver.addHandler(this, function() {
+			this._removeGameBackup(game);
 		});
 		
 		game.Rematch.addHandler(this, function(game) {
