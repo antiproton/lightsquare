@@ -3,6 +3,7 @@ define(function(require) {
 	var Event = require("lib/Event");
 	var Promise = require("lib/Promise");
 	var glicko2 = require("jsonchess/glicko2");
+	var gameRestoration = require("jsonchess/gameRestoration");
 	var time = require("lib/time");
 	
 	var GAME_BACKUP_MAX_AGE = 1000 * 60 * 60 * 24;
@@ -322,14 +323,15 @@ define(function(require) {
 	
 	User.prototype._addGame = function(game) {
 		this._games.push(game);
-		this._saveGameBackup(game);
 		
 		game.Move.addHandler(this, function() {
-			this._saveGameBackup(game);
-		});
+			if(game.getHistory().length >= gameRestoration.MIN_MOVES) {
+				this._saveGameBackup(game);
 		
-		game.GameOver.addHandler(this, function() {
-			this._removeGameBackup(game);
+				game.GameOver.addHandler(this, function() {
+					this._removeGameBackup(game);
+				});
+			}
 		});
 		
 		game.Rematch.addHandler(this, function(game) {
