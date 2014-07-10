@@ -17,7 +17,7 @@
 					<div class="game_backup_history">
 						{{#gameDetails.history}}
 							<span
-								class="game_backup_move"
+								class="game_backup_move {{selectedMove[gameDetails.id] === this ? 'selected_move' : ''}}"
 								on-click="select_move:{{gameDetails.id}}"
 							>
 								{{colour === 'w' ? fullLabel : label}}

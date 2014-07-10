@@ -15,8 +15,28 @@ div.game_backup_title {
 	padding: .5em;
 }
 
+div.game_backup_body {
+	display: flex;
+}
+
+div.game_backup_board {
+	padding: .4em;
+}
+
+div.game_backup_details {
+	flex-grow: 1;
+}
+
 div.game_backup_history {
 	padding: .5em;
+}
+
+span.game_backup_move {
+	cursor: pointer;
+}
+
+span.game_backup_move.selected_move {
+	font-weight: bold;
 }
 
 div.game_backup_controls {

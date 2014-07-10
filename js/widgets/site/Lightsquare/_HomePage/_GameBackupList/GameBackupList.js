@@ -24,6 +24,7 @@ define(function(require) {
 		
 		this._template.on("select_move", (function(event, id) {
 			this._boards[id].setBoardArray(new Position(event.context.resultingFen).getBoardArray());
+			this._template.set("selectedMove." + id, event.context);
 		}).bind(this));
 	}
 	
@@ -37,14 +38,17 @@ define(function(require) {
 		for(var id in backups) {
 			backup = backups[id];
 			
+			var history = backup.gameDetails.history;
+			var lastMove = history[history.length - 1];
+			
 			this._template.set("gameBackups." + id, backup);
+			this._template.set("selectedMove." + id, lastMove);
 			
 			var board  = new Board(this._template.nodes["board_" + id]);
-			var history = backup.gameDetails.history;
 			
 			board.setSquareSize(Board.sizes["Tiny"]);
 			board.setShowCoords(false);
-			board.setBoardArray(new Position(history[history.length - 1].resultingFen).getBoardArray());
+			board.setBoardArray(new Position(lastMove.resultingFen).getBoardArray());
 			
 			this._boards[id] = board;
 			
