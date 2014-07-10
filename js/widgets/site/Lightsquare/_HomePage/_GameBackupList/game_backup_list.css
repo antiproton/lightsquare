@@ -1,34 +1,28 @@
 div.game_backup {
-	margin-top: .7em;
-	border: 1px solid #bababa;
-	border-radius: 3px;
+	border-bottom: 1px solid #c0c0c0;
+	padding: .5em;
 }
 
-div.game_backup:first-child {
-	margin-top: 0;
+div.game_backup:nth-child(even) {
+	background: #efefef;
 }
 
 div.game_backup_title {
 	display: flex;
 	justify-content: space-between;
-	border-bottom: 1px solid #bababa;
-	padding: .5em;
 }
 
 div.game_backup_body {
 	display: flex;
-}
-
-div.game_backup_board {
-	padding: .4em;
+	margin-top: .5em;
 }
 
 div.game_backup_details {
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
 	flex-grow: 1;
-}
-
-div.game_backup_history {
-	padding: .5em;
+	margin-left: .4em;
 }
 
 span.game_backup_move {
@@ -40,8 +34,11 @@ span.game_backup_move.selected_move {
 }
 
 div.game_backup_controls {
-	border-style: solid;
-	border-color: #bababa;
-	border-width: 1px 0 0 1px;
-	border-top-left-radius: 3px;
+	text-align: right;
+}
+
+input.restore_game {
+	color: #2A4F82;
+	text-shadow: 1px 1px 0 rgba(0, 0, 0, .2);
+	background: #2F668E;
 }
