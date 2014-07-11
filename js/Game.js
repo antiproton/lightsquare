@@ -89,8 +89,8 @@ define(function(require) {
 			});
 		}).bind(this));
 		
-		this._server.subscribe("/game/" + this._id + "/game_over", (function(data) {
-			this._gameOver(data.result);
+		this._server.subscribe("/game/" + this._id + "/game_over", (function(result) {
+			this._gameOver(result);
 		}).bind(this));
 		
 		this._server.subscribe("/game/" + this._id + "/aborted", (function() {
