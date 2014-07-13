@@ -1,5 +1,5 @@
 div.game_backup {
-	border-bottom: 1px solid #c0c0c0;
+	border-bottom: 1px solid #bababa;
 	padding: .5em;
 }
 
@@ -8,6 +8,8 @@ div.game_backup:nth-child(even) {
 }
 
 div.game_backup_title {
+	font-size: 1.2em;
+	color: #595959;
 	display: flex;
 	justify-content: space-between;
 }
@@ -25,6 +27,10 @@ div.game_backup_details {
 	margin-left: .4em;
 }
 
+div.game_backup_history {
+	font-size: .9em;
+}
+
 span.game_backup_move {
 	cursor: pointer;
 }
@@ -34,11 +40,18 @@ span.game_backup_move.selected_move {
 }
 
 div.game_backup_controls {
-	text-align: right;
+	display: flex;
+	justify-content: space-between;
 }
 
 input.restore_game {
-	color: #2A4F82;
-	text-shadow: 1px 1px 0 rgba(0, 0, 0, .2);
-	background: #2F668E;
+	color: #424242;
+	text-shadow: none;
+	border-color: #969696;
+	padding: .3em 1em;
+	background: #F4F4F4;
+}
+
+input.restore_game.submitted {
+	
 }
