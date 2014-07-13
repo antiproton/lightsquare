@@ -37,7 +37,6 @@ define(function(require) {
 			boardStyle: null
 		};
 		
-		this.Replaced = new Event(this);
 		this.LoggedIn = new Event(this);
 		this.LoggedOut = new Event(this);
 		this.NewGame = new Event(this);
@@ -445,10 +444,6 @@ define(function(require) {
 		
 		this._server.subscribe("/user/register/failure", (function(reason) {
 			this._promises["/register"].fail(reason);
-		}).bind(this));
-		
-		this._server.subscribe("/user/replaced", (function(data) {
-			this.Replaced.fire();
 		}).bind(this));
 		
 		this._server.subscribe("/games", (function(games) {

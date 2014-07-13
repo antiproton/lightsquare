@@ -303,11 +303,6 @@ define(function(require) {
 			this._router.navigate("/");
 			this._updateUserDependentElements();
 		});
-		
-		this._user.Replaced.addHandler(this, function() {
-			this._initialise();
-			this._router.loadPath("/");
-		});
 	}
 	
 	Lightsquare.prototype._updateUserDependentElements = function() {
