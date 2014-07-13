@@ -190,7 +190,7 @@ define(function(require) {
 		this._db.set("gameBackups", backups);
 	}
 	
-	User.prototype.restoreGameFromBackup = function(backup) {
+	User.prototype.restoreGame = function(backup) {
 		var promiseId = "/game/restore/" + backup.gameDetails.id;
 		var promise;
 		
