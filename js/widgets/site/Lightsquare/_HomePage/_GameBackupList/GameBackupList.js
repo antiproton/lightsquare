@@ -27,6 +27,24 @@ define(function(require) {
 			this._boards[id].setBoardArray(new Position(event.context.resultingFen).getBoardArray());
 			this._template.set("selectedMove." + id, event.context);
 		}).bind(this));
+		
+		this._template.on("restore_or_cancel", (function(event, id) {
+			var backup = event.context;
+			
+			if(backup.restorationRequestSubmitted) {
+				this._user.cancelGameRestoration(id).then((function() {
+					this._template.set("gameBackups." + id + ".restorationRequestSubmitted", false);
+				}).bind(this));
+			}
+			
+			else {
+				this._user.requestGameRestoration(backup).then((function() {
+					this._template.set("gameBackups." + id + ".restorationRequestSubmitted", true);
+				}).bind(this), (function(error) {
+					this._template.set("error." + id, error);
+				}).bind(this));
+			}
+		}).bind(this));
 	}
 	
 	GameBackupList.prototype.refresh = function() {
@@ -53,7 +71,6 @@ define(function(require) {
 			board.setViewingAs(Colour.fromFenString(backup.playingAs));
 			
 			this._boards[id] = board;
-			
 		}
 	}
 	
