@@ -10,27 +10,41 @@
 				</div>
 			</div>
 			<div class="game_backup_body">
-				<div class="game_backup_board" id="board_{{gameDetails.id}}">
+				<div class="game_backup_board" id="board_{{id}}">
 					
 				</div>
 				<div class="game_backup_details">
 					<div class="game_backup_history">
 						{{#gameDetails.history}}
 							<span
-								class="game_backup_move {{selectedMove[gameDetails.id] === this ? 'selected_move' : ''}}"
-								on-click="select_move:{{gameDetails.id}}"
+								class="game_backup_move {{selectedMove[id] === this ? 'selected_move' : ''}}"
+								on-click="select_move:{{id}}"
 							>
 								{{colour === 'w' ? fullLabel : label}}
 							</span>
 						{{/gameDetails.history}}
 					</div>
 					<div class="game_backup_controls">
-						<input
-							class="restore_game"
-							type="button"
-							on-click="restore_or_cancel"
-							value="{{restorationRequestSubmitted ? 'Cancel request' : 'Submit for restoration'}}"
-						>
+						<div>
+							{{#restorationRequestSubmitted}}
+								<span class="game_backup_restoration_submitted">
+									Game details submitted for restoration.  Waiting for opponent...
+								</span>
+							{{/restorationRequestSubmitted}}
+							{{#error[id]}}
+								<span class="game_restoration_error">
+									{{error[id]}}
+								</span>
+							{{/error[id]}}
+						</div>
+						<div>
+							<input
+								class="restore_game"
+								type="button"
+								on-click="restore_or_cancel:{{id}}"
+								value="{{restorationRequestSubmitted ? 'Cancel request' : 'Submit for restoration'}}"
+							>
+						</div>
 					</div>
 				</div>
 			</div>
