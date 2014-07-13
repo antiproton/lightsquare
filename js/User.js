@@ -501,14 +501,10 @@ define(function(require) {
 		}).bind(this));
 		
 		this._server.subscribe("/game/restore/pending", (function(id) {
-			var promiseId = "/game/restore/cancel/" + id;
+			var promiseId = "/game/restore/" + id;
 			
 			if(promiseId in this._promises) {
-				//this._promises[promiseId].progress();
-				/*
-				TODO implement progress in Promise so that the ui can add a progress handler
-				and update the 'restorationRequestSubmitted' property in the template
-				*/
+				this._promises[promiseId].progress();
 			}
 			
 			this._modifyGameBackup(id, {
