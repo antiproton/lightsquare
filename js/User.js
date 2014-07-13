@@ -113,6 +113,12 @@ define(function(require) {
 		return promise;
 	}
 	
+	User.prototype._login = function(userDetails) {
+		this._loadDetails(userDetails);
+		
+		delete this._promises["/games"];
+	}
+	
 	User.prototype.logout = function() {
 		var promiseId = "/logout";
 		var promise;
@@ -413,7 +419,7 @@ define(function(require) {
 	
 	User.prototype._subscribeToServerMessages = function() {
 		this._server.subscribe("/user/login/success", (function(userDetails) {
-			this._loadDetails(userDetails);
+			this._login(userDetails);
 			
 			var promiseId = "/login";
 			

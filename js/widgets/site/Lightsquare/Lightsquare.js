@@ -61,24 +61,27 @@ define(function(require) {
 	
 	Lightsquare.prototype._addGamePage = function(game) {
 		var url = "/game/" + game.getId();
-		var page = this._pages.createPage(url);
-		var gamePage = new GamePage(game, this._user, page);
 		
-		this._gamePages.push(gamePage);
-		
-		gamePage.PlayerClockTick.addHandler(this, function() {
-			this._updateGamePage(gamePage);
-		});
-		
-		gamePage.Rematch.addHandler(this, function(game) {
-			var newUrl = "/game/" + game.getId();
+		if(!this._pages.hasPage(url)) {
+			var page = this._pages.createPage(url);
+			var gamePage = new GamePage(game, this._user, page);
 			
-			this._pages.changeId(url, newUrl);
-			this._router.navigate(newUrl);
-			this._updateGamePage(gamePage);
+			this._gamePages.push(gamePage);
 			
-			url = newUrl;
-		});
+			gamePage.PlayerClockTick.addHandler(this, function() {
+				this._updateGamePage(gamePage);
+			});
+			
+			gamePage.Rematch.addHandler(this, function(game) {
+				var newUrl = "/game/" + game.getId();
+				
+				this._pages.changeId(url, newUrl);
+				this._router.navigate(newUrl);
+				this._updateGamePage(gamePage);
+				
+				url = newUrl;
+			});
+		}
 	}
 	
 	Lightsquare.prototype._updateGamePage = function(gamePage) {
@@ -295,6 +298,7 @@ define(function(require) {
 		});
 		
 		this._user.LoggedIn.addHandler(this, function() {
+			this._addGamePages();
 			this._updateUserDependentElements();
 		});
 		
