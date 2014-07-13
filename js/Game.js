@@ -176,7 +176,7 @@ define(function(require) {
 		else {
 			promise = this._promises[promiseId] = new Promise();
 			
-			promise.then(null, null, (function() {
+			promise.onFinish((function() {
 				delete this._promises[promiseId];
 			}).bind(this));
 			
