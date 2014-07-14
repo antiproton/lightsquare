@@ -503,13 +503,13 @@ define(function(require) {
 		this._server.subscribe("/game/restore/pending", (function(id) {
 			var promiseId = "/game/restore/" + id;
 			
-			if(promiseId in this._promises) {
-				this._promises[promiseId].progress();
-			}
-			
 			this._modifyGameBackup(id, {
 				restorationRequestSubmitted: true
 			});
+			
+			if(promiseId in this._promises) {
+				this._promises[promiseId].progress();
+			}
 		}).bind(this));
 		
 		this._server.subscribe("/game/restore/failure", (function(data) {
