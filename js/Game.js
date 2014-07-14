@@ -236,6 +236,14 @@ define(function(require) {
 		return this._game.getActiveColour();
 	}
 	
+	Game.prototype.addTimeToClock = function(time) {
+		this._clock.addTime(time);
+	}
+	
+	Game.prototype.getCurrentTime = function() {
+		return this._clock.getCurrentTime();
+	}
+	
 	Game.prototype.getClockTimes = function() {
 		var times = {};
 		
