@@ -23,6 +23,10 @@ define(function(require) {
 		return this._clock.getTimeLeft(colour);
 	}
 	
+	Clock.prototype.timingHasStarted = function() {
+		return this._clock.timingHasStarted();
+	}
+	
 	Clock.prototype.calculateTimes = function() {
 		this._clock.calculateTimes();
 	}

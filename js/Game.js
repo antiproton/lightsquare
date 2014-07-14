@@ -254,6 +254,10 @@ define(function(require) {
 		return times;
 	}
 	
+	Game.prototype.timingHasStarted = function() {
+		return this._clock.timingHasStarted();
+	}
+	
 	Game.prototype.getResult = function() {
 		return this._result;
 	}
