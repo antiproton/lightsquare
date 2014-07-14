@@ -38,8 +38,14 @@ define(function(require) {
 			}
 			
 			else {
-				this._user.requestGameRestoration(backup).then((function() {
+				var request = this._user.requestGameRestoration(backup);
+				
+				request.onProgress((function() {
 					this._template.set("gameBackups." + id + ".restorationRequestSubmitted", true);
+				}).bind(this));
+				
+				request.then((function() {
+					this._template.set("gameBackups." + id, undefined);
 				}).bind(this), (function(error) {
 					this._template.set("error." + id, error);
 				}).bind(this));
