@@ -2,13 +2,21 @@ define(function(require) {
 	var time = require("lib/time");
 	var id = require("lib/id");
 	var ChessClock = require("chess/Clock");
+	var Colour = require("chess/Colour");
+	var Time = require("chess/Time");
 	
 	function Clock(server, game, timingStyle) {
 		this._id = id();
 		this._server = server;
 		this._serverTimeDifference = 0;
 		this._estimateTimeDifference();
+		this._game = game;
+		
 		this._clock = new ChessClock(game, timingStyle, this.getCurrentTime.bind(this));
+		
+		this._addedTime = {};
+		this._addedTime[Colour.white] = 0;
+		this._addedTime[Colour.black] = 0;
 	}
 	
 	Clock.prototype.getCurrentTime = function() {
@@ -16,11 +24,11 @@ define(function(require) {
 	}
 	
 	Clock.prototype.addTime = function(time) {
-		this._clock.addTime(time);
+		this._addedTime[this._game.getActiveColour()] += time;
 	}
 	
 	Clock.prototype.getTimeLeft = function(colour) {
-		return this._clock.getTimeLeft(colour);
+		return Time.fromMilliseconds(this._clock.getTimeLeft(colour) + this._addedTime[colour]);
 	}
 	
 	Clock.prototype.timingHasStarted = function() {
