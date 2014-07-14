@@ -16,9 +16,7 @@ define(function(require) {
 			data: {
 				gameBackups: {},
 				formatDate: function(time) {
-					var date = new Date(time);
-					
-					return date.toLocaleString();
+					return new Date(time).toLocaleString();
 				}
 			}
 		});
