@@ -8,10 +8,15 @@ define(function(require) {
 		this._server = server;
 		this._serverTimeDifference = 0;
 		this._estimateTimeDifference();
-		
-		this._clock = new ChessClock(game, timingStyle, (function() {
-			return time() + this._serverTimeDifference;
-		}).bind(this));
+		this._clock = new ChessClock(game, timingStyle, this.getCurrentTime.bind(this));
+	}
+	
+	Clock.prototype.getCurrentTime = function() {
+		return time() + this._serverTimeDifference;
+	}
+	
+	Clock.prototype.addTime = function(time) {
+		this._clock.addTime(time);
 	}
 	
 	Clock.prototype.getTimeLeft = function(colour) {
