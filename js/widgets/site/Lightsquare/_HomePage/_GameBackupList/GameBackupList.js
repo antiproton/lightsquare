@@ -45,7 +45,7 @@ define(function(require) {
 				}).bind(this));
 				
 				request.then((function() {
-					this._template.set("gameBackups." + id, undefined);
+					this.refresh();
 				}).bind(this), (function(error) {
 					this._template.set("error." + id, error);
 				}).bind(this));
