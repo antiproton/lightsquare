@@ -499,6 +499,10 @@ define(function(require) {
 		this._server.subscribe("/game/restore/canceled", (function(id) {
 			var promiseId = "/game/restore/cancel/" + id;
 			
+			this._modifyGameBackup(id, {
+				restorationRequestSubmitted: false
+			});
+			
 			if(promiseId in this._promises) {
 				this._promises[promiseId].resolve();
 			}
