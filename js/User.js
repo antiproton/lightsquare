@@ -240,6 +240,7 @@ define(function(require) {
 		var id = gameDetails.id;
 		var backups = this._db.get("gameBackups");
 		var backup;
+		var playingAs = game.getUserColour();
 		
 		if(id in backups) {
 			backup = backups[id];
@@ -252,9 +253,9 @@ define(function(require) {
 				expiryTime: null,
 				restorationRequestSubmitted: false,
 				gameDetails: gameDetails,
-				opponent: game.getPlayer(game.getUserColour().opposite).username,
+				opponent: game.getPlayer(playingAs.opposite),
 				timingDescription: game.getTimingStyle().getDescription(),
-				playingAs: game.getUserColour().fenString
+				playingAs: playingAs.fenString
 			};
 		}
 		
