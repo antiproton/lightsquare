@@ -25,9 +25,9 @@ define(function(require) {
 		middle: 1
 	};
 	
-	function Lightsquare(server, app, user, parent) {
+	function Lightsquare(server, challengeList, user, parent) {
 		this._server = server;
-		this._app = app;
+		this._challengeList = challengeList;
 		this._user = user;
 		
 		this._gamePages = [];
@@ -109,17 +109,17 @@ define(function(require) {
 			if(!this._pages.hasPage(url)) {
 				var page = this._pages.createPage(url);
 				
-				new HomePage(this._app, this._user, page);
+				new HomePage(this._challengeList, this._user, page);
 			}
 			
 			this._pages.showPage(url);
-			this._app.startUpdatingChallengeList();
+			this._challengeList.startUpdating();
 		}).bind(this));
 		
 		this._router.addRoute("/game/:id", (function(params, url) {
 			if(this._pages.hasPage(url)) {
 				this._pages.showPage(url);
-				this._app.stopUpdatingChallengeList();
+				this._challengeList.stopUpdating();
 			}
 			
 			else {
@@ -132,7 +132,7 @@ define(function(require) {
 					}
 					
 					this._pages.showPage(url);
-					this._app.stopUpdatingChallengeList();
+					this._challengeList.stopUpdating();
 				}).bind(this), (function() {
 					this._displayGameNotFoundMessage();
 					this._router.navigate("/");

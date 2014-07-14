@@ -2,16 +2,16 @@ define(function(require) {
 	var Event = require("lib/Event");
 	require("lib/Array.getShallowCopy");
 	
-	function Application(server) {
+	function ChallengeList(server) {
 		this._server = server;
 		this._challenges = [];
-		this._isUpdatingChallengeList = true;
+		this._isUpdating = true;
 		
-		this.ChallengeListUpdated = new Event(this);
+		this.Updated = new Event(this);
 		
 		this._server.subscribe("/challenges", (function(challenges) {
 			this._challenges = this._challenges.concat(challenges);
-			this.ChallengeListUpdated.fire();
+			this.Updated.fire();
 		}).bind(this));
 		
 		this._server.subscribe("/challenge/expired", (function(id) {
@@ -19,7 +19,7 @@ define(function(require) {
 				return (challenge.id !== id);
 			});
 			
-			this.ChallengeListUpdated.fire();
+			this.Updated.fire();
 		}).bind(this));
 		
 		this._server.ConnectionOpened.addHandler(this, function() {
@@ -28,36 +28,36 @@ define(function(require) {
 		
 		this._server.ConnectionLost.addHandler(this, function() {
 			this._challenges = [];
-			this.ChallengeListUpdated.fire();
+			this.Updated.fire();
 		});
 	}
 	
-	Application.prototype.getChallenges = function() {
+	ChallengeList.prototype.getChallenges = function() {
 		return this._challenges.getShallowCopy();
 	}
 	
-	Application.prototype.startUpdatingChallengeList = function() {
-		if(!this._isUpdatingChallengeList) {
+	ChallengeList.prototype.startUpdating = function() {
+		if(!this._isUpdating) {
 			this._server.send("/unignore", "/challenges");
 			this._server.send("/unignore", "/challenge/expired");
 			this._server.send("/request/challenges");
 			
-			this._isUpdatingChallengeList = true;
+			this._isUpdating = true;
 		}
 	}
 	
-	Application.prototype.stopUpdatingChallengeList = function() {
-		if(this._isUpdatingChallengeList) {
+	ChallengeList.prototype.stopUpdating = function() {
+		if(this._isUpdating) {
 			this._challenges = [];
 			
-			this.ChallengeListUpdated.fire();
+			this.Updated.fire();
 			
 			this._server.send("/ignore", "/challenges");
 			this._server.send("/ignore", "/challenge/expired");
 			
-			this._isUpdatingChallengeList = false;
+			this._isUpdating = false;
 		}
 	}
 	
-	return Application;
+	return ChallengeList;
 });

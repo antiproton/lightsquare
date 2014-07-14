@@ -7,8 +7,8 @@ define(function(require) {
 	var LoginForm = require("./_LoginForm/LoginForm");
 	var GameBackupList = require("./_GameBackupList/GameBackupList");
 	
-	function HomePage(app, user, parent) {
-		this._app = app;
+	function HomePage(challengeList, user, parent) {
+		this._challengeList = challengeList;
 		this._user = user;
 		
 		this._setupTemplate(parent);
@@ -27,7 +27,7 @@ define(function(require) {
 		
 		new LoginForm(this._user, this._template.nodes.login_form);
 		new CreateChallengeForm(this._user, this._template.nodes.create_challenge);
-		new ChallengeGraph(this._app, this._user, this._template.nodes.challenge_graph);
+		new ChallengeGraph(this._challengeList, this._user, this._template.nodes.challenge_graph);
 		this._gameBackupList = new GameBackupList(this._user, this._template.nodes.game_backup_list);
 		
 		this._template.on("restore_game", (function() {

@@ -19,8 +19,8 @@ define(function(require) {
 		}
 	}
 	
-	function ChallengeGraph(app, user, parent) {
-		this._app = app;
+	function ChallengeGraph(challengeList, user, parent) {
+		this._challengeList = challengeList;
 		this._user = user;
 		
 		this._graphHeightInEm = 30;
@@ -97,7 +97,7 @@ define(function(require) {
 			this._user.acceptChallenge(id);
 		}).bind(this));
 		
-		this._app.ChallengeListUpdated.addHandler(this, function() {
+		this._challengeList.Updated.addHandler(this, function() {
 			this._updateTemplate();
 		});
 		
@@ -114,7 +114,7 @@ define(function(require) {
 	
 	ChallengeGraph.prototype._updateTemplate = function() {
 		var occupiedGridSquares = {};
-		var challenges = this._app.getChallenges();
+		var challenges = this._challengeList.getChallenges();
 		var graphRangeInEm = this._graphHeightInEm - this._challengeHeightInEm;
 		var ratingRange = this._maxRating - this._minRating;
 		var graphChallenges = [];
