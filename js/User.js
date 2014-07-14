@@ -481,10 +481,9 @@ define(function(require) {
 			this.NewGame.fire(this._addGame(this._createGame(gameDetails)));
 		}).bind(this));
 		
-		this._server.subscribe("/game/restore/success", (function(gameDetails) {
-			var game = this._addGame(this._createGame(gameDetails));
-			var id = game.getId();
-			var promiseId = "/game/restore/" + id;
+		this._server.subscribe("/game/restore/success", (function(data) {
+			var game = this._addGame(this._createGame(data.newGame));
+			var promiseId = "/game/restore/" + data.oldId;
 			
 			if(game.timingHasStarted() && game.getLastMove()) {
 				game.addTimeToClock(game.getCurrentTime() - game.getLastMove().getTime());
