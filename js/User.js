@@ -485,6 +485,10 @@ define(function(require) {
 			var id = game.getId();
 			var promiseId = "/game/restore/" + id;
 			
+			if(game.timingHasStarted() && game.getLastMove()) {
+				game.addTimeToClock(game.getCurrentTime() - game.getLastMove().getTime());
+			}
+			
 			if(promiseId in this._promises) {
 				this._promises[promiseId].resolve(game);
 			}
