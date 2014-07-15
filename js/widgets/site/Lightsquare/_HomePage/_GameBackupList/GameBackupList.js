@@ -113,6 +113,8 @@ define(function(require) {
 				this.GameRestored.fire();
 			});
 		}
+		
+		return request;
 	}
 	
 	return GameBackupList;
