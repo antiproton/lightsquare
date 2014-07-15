@@ -30,6 +30,12 @@ define(function(require) {
 		new ChallengeGraph(this._challengeList, this._user, this._template.nodes.challenge_graph);
 		this._gameBackupList = new GameBackupList(this._user, this._template.nodes.game_backup_list);
 		
+		this._gameBackupList.GameRestored.addHandler(this, function() {
+			if(this._template.get("showModalDialog") === "restoreGame") {
+				this._hideModalDialog();
+			}
+		});
+		
 		this._template.on("restore_game", (function() {
 			this._showModalDialog("restoreGame");
 			this._gameBackupList.refresh();
