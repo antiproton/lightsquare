@@ -48,6 +48,7 @@ span.game_backup_move.selected_move {
 div.game_backup_controls {
 	display: flex;
 	justify-content: space-between;
+	align-items: center;
 }
 
 input.restore_game {
