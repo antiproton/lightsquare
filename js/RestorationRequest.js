@@ -9,6 +9,7 @@ define(function(require) {
 		this._server = server;
 		this._backup = backup;
 		this._promisor = new Promisor(this);
+		this._handleServerMessages();
 		
 		this.GameRestored = new Event(this);
 	}
