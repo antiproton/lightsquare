@@ -46,15 +46,13 @@ define(function(require) {
 			var backup = event.context;
 			
 			if(this._template.get("restorationRequestSubmitted." + id)) {
-				this._createRestorationRequest(backup).cancel();
-				
-				this._user.cancelGameRestoration(id).then((function() {
+				this._getRestorationRequest(backup).cancel().then((function() {
 					this._template.set("restorationRequestSubmitted." + id, false);
 				}).bind(this));
 			}
 			
 			else {
-				var request = this._createRestorationRequest(backup).submit();
+				var request = this._getRestorationRequest(backup).submit();
 				
 				request.onProgress((function() {
 					this._template.set("restorationRequestSubmitted." + id, true);
@@ -98,7 +96,7 @@ define(function(require) {
 		}
 	}
 	
-	GameBackupList.prototype._createRestorationRequest = function(backup) {
+	GameBackupList.prototype._getRestorationRequest = function(backup) {
 		var id = backup.gameDetails.id;
 		var request;
 		
