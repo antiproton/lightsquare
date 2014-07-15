@@ -32,6 +32,7 @@ define(function(require) {
 		
 		this._server.subscribe("/game/restore/" + this._id + "/canceled", (function() {
 			this._promisor.resolve("/cancel");
+			this._promisor.fail("/submit", "Request canceled");
 		}).bind(this));
 		
 		this._server.subscribe("/game/restore/" + this._id + "/pending", (function() {
