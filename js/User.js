@@ -157,6 +157,12 @@ define(function(require) {
 		this._db.set("gameBackups", backups);
 	}
 	
+	User.prototype.getPendingRestorationRequests = function() {
+		return this._promisor.get("/restoration_requests", function() {
+			this._server.send("/request/restoration_requests");
+		});
+	}
+	
 	User.prototype.getUsername = function() {
 		return this._username;
 	}
@@ -338,6 +344,10 @@ define(function(require) {
 		this._server.subscribe("/current_challenge/expired", (function() {
 			this._currentChallenge = null;
 			this.ChallengeExpired.fire();
+		}).bind(this));
+		
+		this._server.subscribe("/restoration_requests", (function(ids) {
+			this._promisor.resolve("/restoration_requests", ids);
 		}).bind(this));
 	}
 	
