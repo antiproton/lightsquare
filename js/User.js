@@ -290,7 +290,7 @@ define(function(require) {
 	}
 	
 	User.prototype._resetSession = function() {
-		this._promises = {};
+		this._promisor = new Promisor(this);
 		this._games = [];
 	}
 	
