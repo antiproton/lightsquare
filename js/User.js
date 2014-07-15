@@ -284,71 +284,77 @@ define(function(require) {
 	}
 	
 	User.prototype._subscribeToServerMessages = function() {
-		this._server.subscribe("/user/login/success", (function(userDetails) {
-			this._login(userDetails);
-			this._promisor.resolve("/login");
-			this.LoggedIn.fire();
-		}).bind(this));
-		
-		this._server.subscribe("/user/login/failure", (function(reason) {
-			this._promisor.fail("/login", reason);
-		}).bind(this));
-		
-		this._server.subscribe("/user/logout", (function() {
-			this._logout();
-			this._promisor.resolve("/logout");
-		}).bind(this));
-		
-		this._server.subscribe("/user/register/success", (function() {
-			this._promisor.resolve("/register");
-		}).bind(this));
-		
-		this._server.subscribe("/user/register/failure", (function(reason) {
-			this._promisor.resolve("/register", reason);
-		}).bind(this));
-		
-		this._server.subscribe("/games", (function(games) {
-			games.forEach((function(gameDetails) {
-				this._addGame(this._createGame(gameDetails));
-			}).bind(this));
+		var subscriptions = {
+			"/user/login/success": function(userDetails) {
+				this._login(userDetails);
+				this._promisor.resolve("/login");
+				this.LoggedIn.fire();
+			},
 			
-			this._promisor.resolve("/games", this._games);
-		}).bind(this));
+			"/user/login/failure": function(reason) {
+				this._promisor.fail("/login", reason);
+			},
+			
+			"/user/logout": function() {
+				this._logout();
+				this._promisor.resolve("/logout");
+			},
+			
+			"/user/register/success": function() {
+				this._promisor.resolve("/register");
+			},
+			
+			"/user/register/failure": function(reason) {
+				this._promisor.resolve("/register", reason);
+			},
+			
+			"/games": function(games) {
+				games.forEach((function(gameDetails) {
+					this._addGame(this._createGame(gameDetails));
+				}).bind(this));
+				
+				this._promisor.resolve("/games", this._games);
+			},
+			
+			"/game": function(gameDetails) {
+				var game = this._games.filter(function(existingGame) {
+					return (existingGame.getId() === gameDetails.id);
+				})[0] || this._addGame(this._createGame(gameDetails));
+							
+				this._promisor.resolve("/game/" + game.getId(), game);
+			},
+			
+			"/challenge/accepted": function(gameDetails) {
+				this.NewGame.fire(this._addGame(this._createGame(gameDetails)));
+			},
+			
+			"/game/not_found": function(id) {
+				this._promisor.fail("/game/" + id);
+			},
+			
+			"/user": function(userDetails) {
+				this._loadDetails(userDetails);
+				this._promisor.resolve("/details");
+			},
+			
+			"/current_challenge": function(challengeDetails) {
+				this._currentChallenge = challengeDetails;
+				this.ChallengeCreated.fire();
+			},
+			
+			"/current_challenge/expired": function() {
+				this._currentChallenge = null;
+				this.ChallengeExpired.fire();
+			},
+			
+			"/restoration_requests": function(ids) {
+				this._promisor.resolve("/restoration_requests", ids);
+			}
+		};
 		
-		this._server.subscribe("/game", (function(gameDetails) {
-			var game = this._games.filter(function(existingGame) {
-				return (existingGame.getId() === gameDetails.id);
-			})[0] || this._addGame(this._createGame(gameDetails));
-						
-			this._promisor.resolve("/game/" + game.getId(), game);
-		}).bind(this));
-		
-		this._server.subscribe("/challenge/accepted", (function(gameDetails) {
-			this.NewGame.fire(this._addGame(this._createGame(gameDetails)));
-		}).bind(this));
-		
-		this._server.subscribe("/game/not_found", (function(id) {
-			this._promisor.fail("/game/" + id);
-		}).bind(this));
-		
-		this._server.subscribe("/user", (function(userDetails) {
-			this._loadDetails(userDetails);
-			this._promisor.resolve("/details");
-		}).bind(this));
-		
-		this._server.subscribe("/current_challenge", (function(challengeDetails) {
-			this._currentChallenge = challengeDetails;
-			this.ChallengeCreated.fire();
-		}).bind(this));
-		
-		this._server.subscribe("/current_challenge/expired", (function() {
-			this._currentChallenge = null;
-			this.ChallengeExpired.fire();
-		}).bind(this));
-		
-		this._server.subscribe("/restoration_requests", (function(ids) {
-			this._promisor.resolve("/restoration_requests", ids);
-		}).bind(this));
+		for(var url in subscriptions) {
+			this._server.subscribe(url, subscriptions[url].bind(this));
+		}
 	}
 	
 	User.prototype._loadDetails = function(userDetails) {
