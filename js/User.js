@@ -190,51 +190,6 @@ define(function(require) {
 		this._db.set("gameBackups", backups);
 	}
 	
-	User.prototype.requestGameRestoration = function(backup) {
-		var promiseId = "/game/restore/" + backup.gameDetails.id;
-		var promise;
-		
-		if(promiseId in this._promises) {
-			promise = this._promises[promiseId];
-		}
-		
-		else {
-			promise = this._promises[promiseId] = new Promise();
-			
-			promise.onFinish((function() {
-				delete this._promises[promiseId];
-			}).bind(this));
-			
-			this._server.send("/game/restore", {
-				gameDetails: backup.gameDetails,
-				playingAs: backup.playingAs
-			});
-		}
-		
-		return promise;
-	}
-	
-	User.prototype.cancelGameRestoration = function(id) {
-		var promiseId = "/game/restore/cancel/" + id;
-		var promise;
-		
-		if(promiseId in this._promises) {
-			promise = this._promises[promiseId];
-		}
-		
-		else {
-			promise = this._promises[promiseId] = new Promise();
-			
-			promise.onFinish((function() {
-				delete this._promises[promiseId];
-			}).bind(this));
-			
-			this._server.send("/game/restore/cancel", id);
-		}
-		
-		return promise;
-	}
-	
 	User.prototype._saveGameBackup = function(game) {
 		var gameDetails = game.getBackupDetails();
 		var id = gameDetails.id;
@@ -479,53 +434,6 @@ define(function(require) {
 		
 		this._server.subscribe("/challenge/accepted", (function(gameDetails) {
 			this.NewGame.fire(this._addGame(this._createGame(gameDetails)));
-		}).bind(this));
-		
-		this._server.subscribe("/game/restore/success", (function(data) {
-			var game = this._addGame(this._createGame(data.newGame));
-			var promiseId = "/game/restore/" + data.oldId;
-			
-			if(game.timingHasStarted() && game.getLastMove()) {
-				game.addTimeToClock(game.getCurrentTime() - game.getLastMove().getTime());
-			}
-			
-			if(promiseId in this._promises) {
-				this._promises[promiseId].resolve(game);
-			}
-			
-			this.NewGame.fire(game);
-		}).bind(this));
-		
-		this._server.subscribe("/game/restore/canceled", (function(id) {
-			var promiseId = "/game/restore/cancel/" + id;
-			
-			this._modifyGameBackup(id, {
-				restorationRequestSubmitted: false
-			});
-			
-			if(promiseId in this._promises) {
-				this._promises[promiseId].resolve();
-			}
-		}).bind(this));
-		
-		this._server.subscribe("/game/restore/pending", (function(id) {
-			var promiseId = "/game/restore/" + id;
-			
-			this._modifyGameBackup(id, {
-				restorationRequestSubmitted: true
-			});
-			
-			if(promiseId in this._promises) {
-				this._promises[promiseId].progress();
-			}
-		}).bind(this));
-		
-		this._server.subscribe("/game/restore/failure", (function(data) {
-			var promiseId = "/game/restore/" + data.id;
-			
-			if(promiseId in this._promises) {
-				this._promises[promiseId].fail(data.reason);
-			}
 		}).bind(this));
 		
 		this._server.subscribe("/game/not_found", (function(id) {
