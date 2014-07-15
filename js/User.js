@@ -157,7 +157,7 @@ define(function(require) {
 		this._db.set("gameBackups", backups);
 	}
 	
-	User.prototype.getPendingRestorationRequests = function() {
+	User.prototype.getPendingRestorations = function() {
 		return this._promisor.get("/restoration_requests", function() {
 			this._server.send("/request/restoration_requests");
 		});
