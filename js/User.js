@@ -163,6 +163,16 @@ define(function(require) {
 		});
 	}
 	
+	User.prototype.createRestorationRequest = function(backup) {
+		var request = new RestorationRequest(this, this._server, backup);
+		
+		request.GameRestored.addHandler(this, function(game) {
+			this.NewGame.fire(this._addGame(game));
+		});
+		
+		return request;
+	}
+	
 	User.prototype.getUsername = function() {
 		return this._username;
 	}
