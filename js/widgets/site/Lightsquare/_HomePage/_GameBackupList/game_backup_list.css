@@ -1,5 +1,6 @@
 div.game_backup_list {
 	display: flex;
+	flex-direction: column;
 	flex-grow: 1;
 }
 
