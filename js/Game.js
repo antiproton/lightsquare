@@ -217,7 +217,7 @@ define(function(require) {
 	}
 	
 	Game.prototype.offerOrAcceptRematch = function() {
-		this._server.send("/game/" + this._id + "/offer_or_accept_rematch");
+		this._server.send("/game/" + this._id + "/rematch");
 	}
 	
 	Game.prototype.declineRematch = function() {
