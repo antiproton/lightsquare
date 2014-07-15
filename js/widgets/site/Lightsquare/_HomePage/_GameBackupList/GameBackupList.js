@@ -29,6 +29,7 @@ define(function(require) {
 				selectedMove: {},
 				restorationRequestSubmitted: {},
 				gameBackups: {},
+				hasBackups: false,
 				formatDate: function(time) {
 					return new Date(time).toLocaleString();
 				}
@@ -71,10 +72,18 @@ define(function(require) {
 	
 	GameBackupList.prototype.refresh = function() {
 		var backups = this._user.getGameBackups();
+		var hasBackups = false;
 		var backup;
+		
+		for(var id in backups) {
+			hasBackups = true;
+			
+			break;
+		}
 		
 		this._boards = {};
 		this._template.set("gameBackups", {});
+		this._template.set("hasBackups", hasBackups);
 		
 		for(var id in backups) {
 			backup = backups[id];

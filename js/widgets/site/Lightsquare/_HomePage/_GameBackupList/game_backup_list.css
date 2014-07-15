@@ -55,3 +55,7 @@ input.restore_game {
 input.restore_game.submitted {
 	
 }
+
+div.no_game_backups {
+	margin: auto;
+}

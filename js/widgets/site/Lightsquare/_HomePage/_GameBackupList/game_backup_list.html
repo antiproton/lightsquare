@@ -1,53 +1,63 @@
 <div class="game_backup_list">
-	{{#gameBackups:id}}
-		<div class="game_backup">
-			<div class="game_backup_title">
-				<div>
-					{{opponent.username}} ({{opponent.rating}}) {{timingDescription}}
-				</div>
-				<div>
-					Started {{formatDate(gameDetails.startTime)}}
-				</div>
-			</div>
-			<div class="game_backup_body">
-				<div class="game_backup_board" id="board_{{id}}">
-					
-				</div>
-				<div class="game_backup_details">
-					<div class="game_backup_history">
-						{{#gameDetails.history}}
-							<span
-								class="game_backup_move {{selectedMove[id] === this ? 'selected_move' : ''}}"
-								on-click="select_move:{{id}}"
-							>
-								{{colour === 'w' ? fullLabel : label}}
-							</span>
-						{{/gameDetails.history}}
-					</div>
-					<div class="game_backup_controls">
-						<div>
-							{{#restorationRequestSubmitted[id]}}
-								<span class="game_backup_restoration_submitted">
-									Game details submitted for restoration.  Waiting for opponent...
-								</span>
-							{{/restorationRequestSubmitted[id]}}
-							{{#error[id]}}
-								<span class="game_restoration_error">
-									{{error[id]}}
-								</span>
-							{{/error[id]}}
-						</div>
-						<div>
-							<input
-								class="restore_game"
-								type="button"
-								on-click="restore_or_cancel:{{id}}"
-								value="{{restorationRequestSubmitted[id] ? 'Cancel request' : 'Submit for restoration'}}"
-							>
-						</div>
-					</div>
-				</div>
-			</div>
+	{{^hasBackups}}
+		<div class="no_game_backups">
+			<h1>You currently have no game backups to restore.</h1>
+			<p>
+				Game backups are stored on the device you used to play the game.
+			</p>
 		</div>
-	{{/gameBackups}}
+	{{/hasBackups}}
+	{{#hasBackups}}
+		{{#gameBackups:id}}
+			<div class="game_backup">
+				<div class="game_backup_title">
+					<div>
+						{{opponent.username}} ({{opponent.rating}}) {{timingDescription}}
+					</div>
+					<div>
+						Started {{formatDate(gameDetails.startTime)}}
+					</div>
+				</div>
+				<div class="game_backup_body">
+					<div class="game_backup_board" id="board_{{id}}">
+						
+					</div>
+					<div class="game_backup_details">
+						<div class="game_backup_history">
+							{{#gameDetails.history}}
+								<span
+									class="game_backup_move {{selectedMove[id] === this ? 'selected_move' : ''}}"
+									on-click="select_move:{{id}}"
+								>
+									{{colour === 'w' ? fullLabel : label}}
+								</span>
+							{{/gameDetails.history}}
+						</div>
+						<div class="game_backup_controls">
+							<div>
+								{{#restorationRequestSubmitted[id]}}
+									<span class="game_backup_restoration_submitted">
+										Game details submitted for restoration.  Waiting for opponent...
+									</span>
+								{{/restorationRequestSubmitted[id]}}
+								{{#error[id]}}
+									<span class="game_restoration_error">
+										{{error[id]}}
+									</span>
+								{{/error[id]}}
+							</div>
+							<div>
+								<input
+									class="restore_game"
+									type="button"
+									on-click="restore_or_cancel:{{id}}"
+									value="{{restorationRequestSubmitted[id] ? 'Cancel request' : 'Submit for restoration'}}"
+								>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		{{/gameBackups}}
+	{{/hasBackups}}
 </div>
