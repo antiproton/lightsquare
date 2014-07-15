@@ -5,6 +5,7 @@ div.game_backup_list {
 }
 
 div.game_backup {
+	flex-shrink: 0;
 	border-bottom: 1px solid #bababa;
 	padding: .5em;
 }
