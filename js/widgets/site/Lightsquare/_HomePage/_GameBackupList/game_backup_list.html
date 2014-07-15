@@ -1,10 +1,12 @@
 <div class="game_backup_list">
 	{{^hasBackups}}
 		<div class="no_game_backups">
-			<h1>You currently have no game backups to restore.</h1>
-			<p>
-				Game backups are stored on the device you used to play the game.
-			</p>
+			<div class="no_game_backups_message">
+				<h1>You currently have no game backups to restore.</h1>
+				<p>
+					Game backups are stored on the device you used to play the game.
+				</p>
+			</div>
 		</div>
 	{{/hasBackups}}
 	{{#hasBackups}}
