@@ -121,18 +121,6 @@ define(function(require) {
 		this._db.set("gameBackups", backups);
 	}
 	
-	User.prototype._modifyGameBackup = function(id, modifications) {
-		var backups = this._db.get("gameBackups");
-		
-		if(id in backups) {
-			for(var p in modifications) {
-				backups[id][p] = modifications[p];
-			}
-		}
-		
-		this._db.set("gameBackups", backups);
-	}
-	
 	User.prototype._saveGameBackup = function(game) {
 		var gameDetails = game.getBackupDetails();
 		var id = gameDetails.id;
