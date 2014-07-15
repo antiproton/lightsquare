@@ -73,6 +73,10 @@ div.no_game_backups {
 	flex-grow: 1;
 }
 
+div.no_game_backups_message {
+	padding: 1em;
+}
+
 div.no_game_backups h1 {
 	font-size: 1.3em;
 	font-weight: normal;
