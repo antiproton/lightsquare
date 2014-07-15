@@ -1,7 +1,7 @@
 define(function(require) {
 	var Game = require("./Game");
 	var Event = require("lib/Event");
-	var Promise = require("lib/Promise");
+	var Promisor = require("lib/Promisor");
 	var glicko2 = require("jsonchess/glicko2");
 	var gameRestoration = require("jsonchess/gameRestoration");
 	var time = require("lib/time");
@@ -11,7 +11,7 @@ define(function(require) {
 	function User(server, db) {
 		this._id = null;
 		this._games = [];
-		this._promises = {};
+		this._promisor = new Promisor(this);
 		
 		this._server = server;
 		this._db = db;
@@ -49,95 +49,38 @@ define(function(require) {
 	}
 	
 	User.prototype.getDetails = function() {
-		var promiseId = "/details";
-		var promise;
-		
-		if(promiseId in this._promises) {
-			return this._promises[promiseId];
-		}
-		
-		else {
-			promise = this._promises[promiseId] = new Promise();
-			
+		return this._promisor.getPersistent("/details", function() {
 			this._server.send("/request/user");
-		}
-		
-		return promise;
+		});
 	}
 	
 	User.prototype.register = function(username, password) {
-		var promiseId = "/register";
-		var promise;
-		
-		if(promiseId in this._promises) {
-			promise = this._promises[promiseId];
-		}
-		
-		else {
-			promise = this._promises[promiseId] = new Promise();
-			
-			promise.onFinish((function() {
-				delete this._promises[promiseId];
-			}).bind(this));
-			
+		return this._promisor.get("/register", function() {
 			this._server.send("/user/register", {
 				username: username,
 				password: password
 			});
-		}
-		
-		return promise;
+		});
 	}
 	
 	User.prototype.login = function(username, password) {
-		var promiseId = "/login";
-		var promise;
-		
-		if(promiseId in this._promises) {
-			promise = this._promises[promiseId];
-		}
-		
-		else {
-			promise = this._promises[promiseId] = new Promise();
-			
-			promise.onFinish((function() {
-				delete this._promises[promiseId];
-			}).bind(this));
-		
+		return this._promisor.get("/login", function() {
 			this._server.send("/user/login", {
 				username: username,
 				password: password
 			});
-		}
-		
-		return promise;
+		});
 	}
 	
 	User.prototype._login = function(userDetails) {
 		this._loadDetails(userDetails);
-		
-		delete this._promises["/games"];
+		this._promisor.remove("/games");
 	}
 	
 	User.prototype.logout = function() {
-		var promiseId = "/logout";
-		var promise;
-		
-		if(promiseId in this._promises) {
-			promise = this._promises[promiseId];
-		}
-		
-		else {
-			promise = this._promises[promiseId] = new Promise();
-			
-			promise.onFinish((function() {
-				delete this._promises[promiseId];
-			}).bind(this));
-		
+		return this._promisor.get("/logout", function() {
 			this._server.send("/user/logout");
-		}
-		
-		return promise;
+		});
 	}
 	
 	User.prototype._logout = function() {
@@ -310,19 +253,7 @@ define(function(require) {
 	}
 	
 	User.prototype.getGame = function(id) {
-		var promiseId = "/game/" + id;
-		
-		if(promiseId in this._promises) {
-			return this._promises[promiseId];
-		}
-		
-		else {
-			var promise = new Promise();
-			
-			promise.onFinish((function() {
-				delete this._promises[promiseId];
-			}).bind(this));
-			
+		return this._promisor.get("/game/" + id, function(promise) {
 			this._games.some(function(game) {
 				if(game.getId() === id) {
 					promise.resolve(game);
@@ -333,32 +264,18 @@ define(function(require) {
 			
 			if(!promise.isResolved()) {
 				this._server.send("/request/game", id);
-				this._promises[promiseId] = promise;
 				
 				setTimeout(function() {
 					promise.fail();
 				}, 1000);
 			}
-			
-			return promise;
-		}
+		});
 	}
 	
 	User.prototype.getGames = function() {
-		var promiseId = "/games";
-		var promise;
-		
-		if(promiseId in this._promises) {
-			promise = this._promises[promiseId];
-		}
-		
-		else {
-			promise = this._promises[promiseId] = new Promise();
-		
+		return this._promisor.getPersistent("/games", function() {
 			this._server.send("/request/games");
-		}
-		
-		return promise;
+		});
 	}
 	
 	User.prototype._handleServerEvents = function() {
@@ -375,48 +292,33 @@ define(function(require) {
 	User.prototype._subscribeToServerMessages = function() {
 		this._server.subscribe("/user/login/success", (function(userDetails) {
 			this._login(userDetails);
-			
-			var promiseId = "/login";
-			
-			if(promiseId in this._promises) {
-				this._promises[promiseId].resolve();
-			}
-			
+			this._promisor.resolve("/login");
 			this.LoggedIn.fire();
 		}).bind(this));
 		
 		this._server.subscribe("/user/login/failure", (function(reason) {
-			this._promises["/login"].fail(reason);
+			this._promisor.fail("/login", reason);
 		}).bind(this));
 		
 		this._server.subscribe("/user/logout", (function() {
 			this._logout();
-			
-			var promiseId = "/logout";
-			
-			if(promiseId in this._promises) {
-				this._promises[promiseId].resolve();
-			}
+			this._promisor.resolve("/logout");
 		}).bind(this));
 		
 		this._server.subscribe("/user/register/success", (function() {
-			this._promises["/register"].resolve();
+			this._promisor.resolve("/register");
 		}).bind(this));
 		
 		this._server.subscribe("/user/register/failure", (function(reason) {
-			this._promises["/register"].fail(reason);
+			this._promisor.resolve("/register", reason);
 		}).bind(this));
 		
 		this._server.subscribe("/games", (function(games) {
-			var promiseId = "/games";
-			
 			games.forEach((function(gameDetails) {
 				this._addGame(this._createGame(gameDetails));
 			}).bind(this));
 			
-			if(promiseId in this._promises) {
-				this._promises[promiseId].resolve(this._games);
-			}
+			this._promisor.resolve("/games", this._games);
 		}).bind(this));
 		
 		this._server.subscribe("/game", (function(gameDetails) {
@@ -424,11 +326,7 @@ define(function(require) {
 				return (existingGame.getId() === gameDetails.id);
 			})[0] || this._addGame(this._createGame(gameDetails));
 						
-			var promiseId = "/game/" + game.getId();
-			
-			if(promiseId in this._promises) {
-				this._promises[promiseId].resolve(game);
-			}
+			this._promisor.resolve("/game/" + game.getId(), game);
 		}).bind(this));
 		
 		this._server.subscribe("/challenge/accepted", (function(gameDetails) {
@@ -436,21 +334,12 @@ define(function(require) {
 		}).bind(this));
 		
 		this._server.subscribe("/game/not_found", (function(id) {
-			var promiseId = "/game/" + id;
-			
-			if(promiseId in this._promises) {
-				this._promises[promiseId].fail();
-			}
+			this._promisor.fail("/game/" + id);
 		}).bind(this));
 		
 		this._server.subscribe("/user", (function(userDetails) {
 			this._loadDetails(userDetails);
-			
-			var promiseId = "/details";
-			
-			if(promiseId in this._promises) {
-				this._promises[promiseId].resolve();
-			}
+			this._promisor.resolve("/details");
 		}).bind(this));
 		
 		this._server.subscribe("/current_challenge", (function(challengeDetails) {
