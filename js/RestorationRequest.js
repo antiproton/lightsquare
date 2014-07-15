@@ -14,6 +14,10 @@ define(function(require) {
 		this.GameRestored = new Event(this);
 	}
 	
+	RestorationRequest.prototype.getId = function() {
+		return this._id;
+	}
+	
 	RestorationRequest.prototype._handleServerMessages = function() {
 		this._server.subscribe("/game/restore/" + this._id + "/success", (function(gameDetails) {
 			var game = new Game(this._user, this._server, gameDetails);
