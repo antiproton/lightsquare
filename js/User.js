@@ -206,7 +206,6 @@ define(function(require) {
 		else {
 			backup = {
 				expiryTime: null,
-				restorationRequestSubmitted: false,
 				gameDetails: gameDetails,
 				opponent: game.getPlayer(playingAs.opposite),
 				timingDescription: game.getTimingStyle().getDescription(),
