@@ -26,11 +26,11 @@
 					</div>
 					<div class="game_backup_controls">
 						<div>
-							{{#restorationRequestSubmitted}}
+							{{#restorationRequestSubmitted[id]}}
 								<span class="game_backup_restoration_submitted">
 									Game details submitted for restoration.  Waiting for opponent...
 								</span>
-							{{/restorationRequestSubmitted}}
+							{{/restorationRequestSubmitted[id]}}
 							{{#error[id]}}
 								<span class="game_restoration_error">
 									{{error[id]}}
@@ -42,7 +42,7 @@
 								class="restore_game"
 								type="button"
 								on-click="restore_or_cancel:{{id}}"
-								value="{{restorationRequestSubmitted ? 'Cancel request' : 'Submit for restoration'}}"
+								value="{{restorationRequestSubmitted[id] ? 'Cancel request' : 'Submit for restoration'}}"
 							>
 						</div>
 					</div>
