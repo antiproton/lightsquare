@@ -150,10 +150,10 @@ define(function(require) {
 		this._db.set("gameBackups", backups);
 	}
 	
-	User.prototype._removeGameBackup = function(game) {
+	User.prototype._removeGameBackup = function(id) {
 		var backups = this._db.get("gameBackups");
 		
-		delete backups[game.getId()];
+		delete backups[id];
 		
 		this._db.set("gameBackups", backups);
 	}
@@ -168,6 +168,7 @@ define(function(require) {
 		var request = new RestorationRequest(this, this._server, backup);
 		
 		request.GameRestored.addHandler(this, function(game) {
+			this._removeGameBackup(request.getId());
 			this.NewGame.fire(this._addGame(game));
 		});
 		
@@ -246,7 +247,7 @@ define(function(require) {
 			});
 			
 			game.GameOver.addHandler(this, function() {
-				this._removeGameBackup(game);
+				this._removeGameBackup(game.getId());
 			});
 		}
 		
