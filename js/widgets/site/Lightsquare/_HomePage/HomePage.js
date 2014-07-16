@@ -20,7 +20,7 @@ define(function(require) {
 			el: parent,
 			template: html,
 			data: {
-				showModalDialog: null,
+				dialog: null,
 				userIsLoggedIn: this._user.isLoggedIn()
 			}
 		});
@@ -31,21 +31,21 @@ define(function(require) {
 		this._gameBackupList = new GameBackupList(this._user, this._template.nodes.game_backup_list);
 		
 		this._gameBackupList.GameRestored.addHandler(this, function() {
-			if(this._template.get("showModalDialog") === "restoreGame") {
-				this._hideModalDialog();
+			if(this._template.get("showDialog") === "restoreGame") {
+				this._hideDialog();
 			}
 		});
 		
 		this._template.on("restore_game", (function() {
-			this._showModalDialog("restoreGame");
+			this._showDialog("restoreGame");
 			this._gameBackupList.refresh();
 		}).bind(this));
 		
 		var lastClickWasOnDialog = false;
 		
-		this._template.on("hide_modal_dialog", (function() {
+		this._template.on("hide_dialog", (function() {
 			if(!lastClickWasOnDialog) {
-				this._hideModalDialog();
+				this._hideDialog();
 			}
 			
 			lastClickWasOnDialog = false;
@@ -56,12 +56,12 @@ define(function(require) {
 		});
 	}
 	
-	HomePage.prototype._showModalDialog = function(dialog) {
-		this._template.set("showModalDialog", dialog);
+	HomePage.prototype._showDialog = function(dialog) {
+		this._template.set("dialog", dialog);
 	}
 	
-	HomePage.prototype._hideModalDialog = function() {
-		this._template.set("showModalDialog", null);
+	HomePage.prototype._hideDialog = function() {
+		this._template.set("dialog", null);
 	}
 	
 	HomePage.prototype._handleUserEvents = function() {
