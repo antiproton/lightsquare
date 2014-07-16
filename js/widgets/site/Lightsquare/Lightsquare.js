@@ -3,13 +3,11 @@ define(function(require) {
 	require("css!./lightsquare.css");
 	require("css!./header.css");
 	require("css!./control_panel.css");
-	require("css!./messages/logout_confirmation.css");
 	require("css!./messages/server_disconnect.css");
 	require("css!./messages/game_not_found.css");
 	var html = require("file!./lightsquare.html");
 	var headerHtml = require("file!./header.html");
 	var controlPanelHtml = require("file!./control_panel.html");
-	var logoutConfirmationHtml = require("file!./messages/logout_confirmation.html");
 	var serverDisconnectHtml = require("file!./messages/server_disconnect.html");
 	var gameNotFoundHtml = require("file!./messages/game_not_found.html");
 	var Ractive = require("lib/dom/Ractive");
@@ -241,24 +239,6 @@ define(function(require) {
 		new LoadingPage(this._pages.createPage("/loading"), 3);
 		
 		this._pages.showPage("/loading");
-	}
-	
-	Lightsquare.prototype._displayLogoutConfirmation = function() {
-		this._showMessage(5);
-		
-		this._logoutConfirmation = new Ractive({
-			el: this._template.nodes.message,
-			template: logoutConfirmationHtml
-		});
-		
-		this._logoutConfirmation.on("logout", (function() {
-			this._user.logout();
-			this._hideMessage();
-		}).bind(this));
-		
-		this._logoutConfirmation.on("cancel", (function() {
-			this._hideMessage();
-		}).bind(this));
 	}
 	
 	Lightsquare.prototype._displayServerDisconnectMessage = function() {
