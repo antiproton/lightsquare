@@ -46,6 +46,8 @@ define(function(require) {
 		this._template.on("restore_or_cancel", (function(event, id) {
 			var backup = event.context;
 			
+			this._template.set("error." + id, null);
+			
 			if(this._template.get("restorationRequestSubmitted." + id)) {
 				this._getRestorationRequest(backup).cancel().then((function() {
 					this._template.set("restorationRequestSubmitted." + id, false);
