@@ -30,11 +30,6 @@ define(function(require) {
 			this.GameRestored.fire(game);
 		}).bind(this));
 		
-		this._server.subscribe("/game/restore/" + this._id + "/canceled", (function() {
-			this._promisor.resolve("/cancel");
-			this._promisor.fail("/submit", "Request canceled");
-		}).bind(this));
-		
 		this._server.subscribe("/game/restore/" + this._id + "/pending", (function() {
 			this._promisor.progress("/submit");
 		}).bind(this));
@@ -54,9 +49,7 @@ define(function(require) {
 	}
 	
 	RestorationRequest.prototype.cancel = function() {
-		return this._promisor.get("/cancel", function() {
-			this._server.send("/game/restore/cancel", this._id);
-		});
+		this._server.send("/game/restore/cancel", this._id);
 	}
 	
 	return RestorationRequest;
