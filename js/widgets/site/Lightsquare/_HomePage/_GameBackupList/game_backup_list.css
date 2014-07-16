@@ -26,6 +26,10 @@ div.game_backup_body {
 	margin-top: .5em;
 }
 
+div.game_backup_board {
+	flex-shrink: 0;
+}
+
 div.game_backup_details {
 	display: flex;
 	flex-direction: column;
