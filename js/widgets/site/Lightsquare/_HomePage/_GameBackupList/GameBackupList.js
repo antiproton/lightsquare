@@ -49,9 +49,7 @@ define(function(require) {
 			this._template.set("error." + id, null);
 			
 			if(this._template.get("restorationRequestSubmitted." + id)) {
-				this._getRestorationRequest(backup).cancel().then((function() {
-					this._template.set("restorationRequestSubmitted." + id, false);
-				}).bind(this));
+				this._getRestorationRequest(backup).cancel();
 			}
 			
 			else {
@@ -66,6 +64,8 @@ define(function(require) {
 				}).bind(this), (function(error) {
 					this._template.set("error." + id, error);
 				}).bind(this), (function() {
+					this._template.set("restorationRequestSubmitted." + id, false);
+					
 					delete this._restorationRequests[id];
 				}).bind(this));
 			}
