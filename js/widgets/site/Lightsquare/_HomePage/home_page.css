@@ -36,6 +36,24 @@ div.challenges, div.sidebar {
 	margin-left: .8em;
 }
 
-div.utilities p {
+div.utilities {
 	font-size: .9em;
+	border-radius: 2px;
+	margin-top: .7em;
+	box-shadow: 1px 1px 0 rgba(0, 0, 0, .25);
+	background: #E2E2E2;
+}
+
+div.utilities h1 {
+	font-size: .8em;
+	font-weight: normal;
+	margin: 0;
+	padding: .3em;
+	border-top-left-radius: 2px;
+	border-top-right-radius: 2px;
+	background: #cfcfcf;
+}
+
+div.utility_links {
+	padding: .5em;
 }
