@@ -13,7 +13,7 @@ div.game_backup_list_container {
 	border: 1px solid #afafaf;
 }
 
-div.restore_game_modal_dialog {
+div.restore_game_dialog {
 	display: flex;
 	width: 65%;
 	margin: 5% auto;
