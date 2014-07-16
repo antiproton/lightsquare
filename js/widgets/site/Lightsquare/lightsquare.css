@@ -114,3 +114,14 @@ div.message {
 	top: 3em;
 	right: .5em;
 }
+
+div.modal_overlay {
+	position: fixed;
+	z-index: 10;
+	display: flex;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	background: rgba(0, 0, 0, .45);
+}
