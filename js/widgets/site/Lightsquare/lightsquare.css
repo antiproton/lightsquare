@@ -47,16 +47,24 @@ div.modal_overlay {
 	background: rgba(0, 0, 0, .45);
 }
 
-div.modal_overlay.light {
-	background: rgba(255, 255, 255, .2);
-}
-
-div.waiting_for_server_dialog {
-	display: flex;
+div.connecting_dialog {
+	color: #323232;
 	align-self: center;
 	width: 65%;
+	margin: 0 auto;
 	padding: .8em;
+	box-shadow: 2px 2px 8px rgba(0, 0, 0, .3);
 	background: white;
+}
+
+div.waiting_for_server {
+	text-align: center;
+}
+
+div.connecting_dialog h1 {
+	text-align: center;
+	font-weight: normal;
+	font-size: 1.5em;
 }
 
 div.footer {

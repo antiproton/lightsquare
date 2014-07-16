@@ -1,30 +1,31 @@
 {{^serverConnected}}
-	<div class="modal_overlay light">
-		<div class="waiting_for_server_dialog">
+	<div class="modal_overlay">
+		<div class="connecting_dialog">
 			{{#waitingForServer}}
-				<p>
-					<img src="{{getAbsolutePath('./loading.gif')}}">
-				</p>
-				<p>
-					Connecting to the server...
-				</p>
+				<div class="waiting_for_server">
+					<p>
+						<img src="{{getAbsolutePath('./loading.gif')}}">
+					</p>
+					<p>
+						Connecting to the server...
+					</p>
+				</div>
 			{{/waitingForServer}}
 			{{^waitingForServer}}
-				<h1>Connection problem</h1>
-				<p>
-					Unable to establish a connection with the server.
-				</p>
-				<p>
-					If reloading the page doesn't work, the server has probably crashed and
-					will be back online soon.
-				</p>
-				<p>
-					Your games are stored locally &ndash; if you have a game in progress,
-					click 'Restore game' on the homepage when the server comes back online.
-				</p>
-				<p>
-					<a target="_blank" href="http://twitter.com/lightsquaredev">Check the status on twitter.</a>
-				</p>
+				<div class="connection_problem">
+					<h1>Connection problem</h1>
+					<p>
+						If reloading the page doesn't work, the server has probably crashed and
+						will be back online soon.
+					</p>
+					<p>
+						Your games are backed up locally.  If you have a game in progress,
+						click 'Restore game' on the homepage when the server comes back online.
+					</p>
+					<p>
+						<a target="_blank" href="http://twitter.com/lightsquaredev">Check the latest status updates on Twitter.</a>
+					</p>
+				</div>
 			{{/waitingForServer}}
 		</div>
 	</div>
