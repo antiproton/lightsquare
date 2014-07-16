@@ -8,3 +8,32 @@ div.control_panel {
 	box-shadow: 0 3px 7px rgba(0, 0, 0, .3);
 	background: white;
 }
+
+div.logout_confirmation {
+	border: 1px solid rgba(127, 127, 127, .5);
+	padding: .5em;
+	background: rgba(255, 255, 255, .5);
+}
+
+div.logout_confirmation input {
+	padding: .3em .5em;
+}
+
+div.logout_confirmation_buttons {
+	display: flex;
+	justify-content: space-between;
+}
+
+input.logout_confirm {
+	color: #FFFFFF;
+	text-shadow: 1px 1px 0 rgba(255, 255, 255, .3);
+	border: 1px solid #262626;
+	background: #595959;
+}
+
+input.logout_cancel {
+	color: #212121;
+	text-shadow: 1px 1px 0 rgba(0, 0, 0, .1);
+	border: 1px solid #A0A0A0;
+	background: #F7F7F7;
+}

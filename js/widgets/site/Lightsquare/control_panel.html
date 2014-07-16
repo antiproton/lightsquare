@@ -1,1 +1,14 @@
-TODO prefs, login/out etc
+{{#showLogoutConfirmation}}
+	<div class="logout_confirmation">
+		<div class="logout_confirmation_message">
+			You must finish all games before logging out.
+		</div>
+		<div class="logout_confirmation_buttons">
+			<input type="button" class="logout_confirm_logout" on-click="logout_confirm" value="Resign all games and log out">
+			<input type="button" class="logout_confirm_cancel" on-click="logout_cancel" value="Cancel">
+		</div>
+	</div>
+{{/showLogoutConfirmation}}
+{{#userIsLoggedIn}}
+	<a href="javascript:void(0)" on-click="logout">Log out</a>
+{{/userIsLoggedIn}}

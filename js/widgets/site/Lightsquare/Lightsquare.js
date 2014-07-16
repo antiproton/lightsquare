@@ -219,12 +219,21 @@ define(function(require) {
 		
 		this._template.on("logout", (function() {
 			if(this._user.hasGamesInProgress()) {
-				this._displayLogoutConfirmation();
+				this._template.set("showLogoutConfirmation", true);
 			}
 			
 			else {
 				this._user.logout();
 			}
+		}).bind(this));
+		
+		this._template.on("logout_confirm", (function() {
+			this._user.logout();
+			this._template.set("showLogoutConfirmation", false);
+		}).bind(this));
+		
+		this._template.on("logout_cancel", (function() {
+			this._template.set("showLogoutConfirmation", false);
 		}).bind(this));
 		
 		this._pages = new Pages(this._template.nodes.main);
