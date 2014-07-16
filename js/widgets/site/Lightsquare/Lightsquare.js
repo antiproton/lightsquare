@@ -1,19 +1,15 @@
 define(function(require) {
 	require("lib/Array.empty");
 	require("css!./lightsquare.css");
+	require("css!./forms.css");
 	require("css!./header.css");
 	require("css!./control_panel.css");
-	require("css!./messages/server_disconnect.css");
-	require("css!./messages/game_not_found.css");
 	var html = require("file!./lightsquare.html");
 	var headerHtml = require("file!./header.html");
 	var controlPanelHtml = require("file!./control_panel.html");
-	var serverDisconnectHtml = require("file!./messages/server_disconnect.html");
-	var gameNotFoundHtml = require("file!./messages/game_not_found.html");
 	var Ractive = require("lib/dom/Ractive");
 	var Router = require("lib/Router");
 	var Pages = require("lib/Pages");
-	var LoadingPage = require("./_LoadingPage/LoadingPage");
 	var HomePage = require("./_HomePage/HomePage");
 	var GamePage = require("./_GamePage/GamePage");
 	var Colour = require("chess/Colour");
@@ -45,16 +41,23 @@ define(function(require) {
 		});
 		
 		this._server.ConnectionLost.addHandler(this, function() {
-			this._displayServerDisconnectMessage();
+			this._template.set("serverConnected", false);
 		});
 	}
 	
 	Lightsquare.prototype._initialise = function() {
 		this._pages.clear();
 		this._gamePages.empty();
-		this._hideMessage();
 		this._addGamePages();
 		this._updateUserDependentElements();
+		
+		this._template.set({
+			message: null,
+			dialog: null,
+			serverConnected: true,
+			waitingForServer: false,
+			showControlPanel: false
+		});
 	}
 	
 	Lightsquare.prototype._addGamePage = function(game) {
@@ -132,7 +135,12 @@ define(function(require) {
 					this._pages.showPage(url);
 					this._challengeList.stopUpdating();
 				}).bind(this), (function() {
-					this._displayGameNotFoundMessage();
+					this._showMessage(
+						"The requested game could not be found &ndash; if you had a game in"
+						+ " progress, you may be able to restore it by clicking \"Restore game\"",
+						5
+					);
+					
 					this._router.navigate("/");
 				}).bind(this), (function() {
 					this._template.set("loadingGame", false);
@@ -146,10 +154,11 @@ define(function(require) {
 			el: parent,
 			template: html,
 			data: {
-				showPopups: {
-					controlPanel: false,
-					message: false
-				},
+				message: null,
+				dialog: null,
+				serverConnected: false,
+				waitingForServer: true,
+				showControlPanel: false,
 				username: this._user.getUsername(),
 				userIsLoggedIn: false,
 				gamePages: this._gamePages,
@@ -175,6 +184,9 @@ define(function(require) {
 						
 						return title;
 					}
+				},
+				getAbsolutePath: function(path) {
+					return require.toUrl(path);
 				}
 			},
 			partials: {
@@ -191,28 +203,38 @@ define(function(require) {
 			}
 		}).bind(this));
 		
-		var lastPopupClicked = null;
+		var lastClickTarget = null;
 		
 		this._template.on("hide_popups", (function() {
-			var showPopups = this._template.get("showPopups");
+			this._hideMessage();
 			
-			for(var popup in showPopups) {
-				if(lastPopupClicked !== popup) {
-					this._template.set("showPopups." + popup, false);
-				}
+			if(lastClickTarget !== "controlPanel") {
+				this._template.set("showControlPanel", false);
 			}
 			
-			lastPopupClicked = null;
+			lastClickTarget = null;
 		}).bind(this));
 		
-		this._template.on("click_popup", (function(event, popup) {
-			lastPopupClicked = popup;
+		this._template.on("hide_dialog", (function() {
+			if(lastClickTarget !== "dialog") {
+				this._template.set("showControlPanel", false);
+			}
+			
+			lastClickTarget = null;
+		}).bind(this));
+		
+		this._template.on("register_click", (function(event, target) {
+			lastClickTarget = target;
+		}).bind(this));
+		
+		this._template.on("dialog_click", (function(event, target) {
+			lastClickTarget = "dialog";
 		}).bind(this));
 		
 		this._template.on("toggle_control_panel", (function() {
-			this._template.set("showPopups.controlPanel", !this._template.get("showPopups.controlPanel"));
+			this._template.set("showControlPanel", !this._template.get("showControlPanel"));
 			
-			lastPopupClicked = "controlPanel";
+			lastClickTarget = "controlPanel";
 		}).bind(this));
 		
 		this._template.on("logout", (function() {
@@ -236,33 +258,14 @@ define(function(require) {
 		
 		this._pages = new Pages(this._template.nodes.main);
 		
-		new LoadingPage(this._pages.createPage("/loading"), 3);
-		
-		this._pages.showPage("/loading");
+		setTimeout((function() {
+			this._template.set("waitingForServer", false);
+		}).bind(this), 3000);
 	}
 	
-	Lightsquare.prototype._displayServerDisconnectMessage = function() {
-		this._showMessage();
-		
-		new Ractive({
-			el: this._template.nodes.message,
-			template: serverDisconnectHtml
-		});
-	}
-	
-	Lightsquare.prototype._displayGameNotFoundMessage = function() {
-		this._showMessage(5);
-		
-		new Ractive({
-			el: this._template.nodes.message,
-			template: gameNotFoundHtml
-		});
-	}
-	
-	Lightsquare.prototype._showMessage = function(durationInSeconds) {
-		this._hideMessageTimer = null;
-		this._template.set("showPopups.message", true);
-		this._template.nodes.message.innerHTML = "";
+	Lightsquare.prototype._showMessage = function(message, durationInSeconds) {
+		this._hideMessage();
+		this._template.set("message", message);
 		
 		if(durationInSeconds) {
 			this._hideMessageTimer = setTimeout((function() {
@@ -272,7 +275,7 @@ define(function(require) {
 	}
 	
 	Lightsquare.prototype._hideMessage = function() {
-		this._template.set("showPopups.message", false);
+		this._template.set("message", null);
 		
 		if(this._hideMessageTimer !== null) {
 			clearTimeout(this._hideMessageTimer);

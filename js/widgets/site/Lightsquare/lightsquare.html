@@ -1,13 +1,47 @@
-<div class="root" on-click="hide_popups">
-	{{#showPopups.message}}
-		<div class="message" id="message">
-			
+{{^serverConnected}}
+	<div class="modal_overlay light">
+		<div class="waiting_for_server_dialog">
+			{{#waitingForServer}}
+				<p>
+					<img src="{{getAbsolutePath('./loading.gif')}}">
+				</p>
+				<p>
+					Connecting to the server...
+				</p>
+			{{/waitingForServer}}
+			{{^waitingForServer}}
+				<h1>Connection problem</h1>
+				<p>
+					Unable to establish a connection with the server.
+				</p>
+				<p>
+					If reloading the page doesn't work, the server has probably crashed and
+					will be back online soon.
+				</p>
+				<p>
+					Your games are stored locally &ndash; if you have a game in progress,
+					click 'Restore game' on the homepage when the server comes back online.
+				</p>
+				<p>
+					<a target="_blank" href="http://twitter.com/lightsquaredev">Check the status on twitter.</a>
+				</p>
+			{{/waitingForServer}}
 		</div>
-	{{/showPopups.message}}
+	</div>
+{{/serverConnected}}
+<div class="modal_overlay" style="display: {{dialog ? '' : 'none'}}" on-click="hide_dialog">
+	
+</div>
+<div class="root" on-click="hide_popups">
+	{{#message}}
+		<div class="message" id="message">
+			{{{message}}}
+		</div>
+	{{/message}}
 	<div class="header" id="header">
 		{{>header}}
 	</div>
-	<div class="control_panel" on-click="click_popup:'controlPanel'" style="display: {{showPopups.controlPanel ? '' : 'none'}}">
+	<div class="control_panel" on-click="register_click:'controlPanel'" style="display: {{showControlPanel ? '' : 'none'}}">
 		{{>controlPanel}}
 	</div>
 	<div class="main" id="main">
