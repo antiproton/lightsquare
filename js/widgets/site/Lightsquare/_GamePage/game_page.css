@@ -7,7 +7,6 @@ div.game_main {
 	display: flex;
 	flex-direction: column;
 	flex-grow: 1;
-	background: #424242;
 }
 
 div.game_details {
@@ -15,13 +14,14 @@ div.game_details {
 	max-width: 20em;
 	border-left: 1px solid #ababab;
 	padding: .7em;
+	box-shadow: inset 4px 0 7px rgba(0, 0, 0, .06);
 }
 
 div.game_board_and_controls {
 	display: flex;
 	align-items: center;
 	justify-content: center;
-	background: #F4F4F4;
+	background: #99A5AA;
 }
 
 div.game_board {
@@ -29,12 +29,12 @@ div.game_board {
 }
 
 div.game_player {
-	color: #3F3F3F;
+	color: #EFFCFF;
 	font-size: 1.2em;
 	display: flex;
 	justify-content: space-between;
 	padding: .5em;
-	background: #efefef;
+	background: #5C6D75;
 }
 
 div.game_player.player {
