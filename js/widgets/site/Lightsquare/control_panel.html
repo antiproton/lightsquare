@@ -1,24 +1,5 @@
-<div class="prefs">
-	<h1>Preferences</h1>
-	<h2>Gameplay</h2>
-	<div class="pref_row">
-		<input type="checkbox" id="prefs_always_queen" checked="{{prefs.alwaysQueen}}">
-		<label for="prefs_always_queen">Always queen</label>
-	</div>
-	<div class="pref_row">
-		<input type="checkbox" id="prefs_premove" checked="{{prefs.premove}}">
-		<label for="prefs_premove">Premove</label>
-	</div>
-	<h2>Appearance</h2>
-	<div class="pref_row">
-		Board colour
-	</div>
-	<div class="pref_row">
-		{{#boardColours}}
-			<input type="radio" checked="{{prefs.boardColour === this}}" id="prefs_board_colour_{{this}}">
-			<label for="prefs_board_colour_{{this}}">{{.}}</label>
-		{{/boardColours}}
-	</div>
+<div class="prefs" id="prefs">
+	
 </div>
 {{#showLogoutConfirmation}}
 	<div class="logout_confirmation">

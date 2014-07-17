@@ -1,0 +1,29 @@
+form.prefs {
+	min-width: 13em;
+	border-radius: 4px;
+	background: #e8e8e8;
+}
+
+form.prefs h1 {
+	font-weight: normal;
+	font-size: 1em;
+	color: white;
+	margin: 0;
+	border-top-left-radius: 4px;
+	border-top-right-radius: 4px;
+	padding: .3em;
+	background: #434343;
+}
+
+form.prefs h2 {
+	font-weight: normal;
+	font-size: .8em;
+	color: #202020;
+	margin: 0;
+	padding: .3em;
+	background: #e0e0e0;
+}
+
+div.pref_row {
+	padding: .3em;
+}
