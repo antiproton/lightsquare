@@ -103,8 +103,14 @@ define(function(require) {
 	Lightsquare.prototype._clearPages = function() {
 		this._tabContainer.clear();
 		
+		var page;
+		
 		for(var url in this._pages) {
-			this._pages[url].remove();
+			page = this._pages[url];
+			
+			if(page.remove) {
+				page.remove();
+			}
 		}
 		
 		this._pages = {};
@@ -114,11 +120,13 @@ define(function(require) {
 		var page = this._pages[url];
 		
 		if(this._currentPage !== page) {
-			if(this._currentPage !== null) {
+			if(this._currentPage !== null && this._currentPage.hide) {
 				this._currentPage.hide();
 			}
 			
-			page.show();
+			if(page.show) {
+				page.show();
+			}
 		}
 		
 		this._currentPage = page;
