@@ -5,7 +5,7 @@ define(function(require) {
 	function ChallengeList(server) {
 		this._server = server;
 		this._challenges = [];
-		this._isUpdating = true;
+		this._isUpdating = false;
 		
 		this.Updated = new Event(this);
 		
