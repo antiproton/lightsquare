@@ -6,11 +6,11 @@ define(function(require) {
 	var ChallengeGraph = require("./_ChallengeGraph/ChallengeGraph");
 	var LoginForm = require("./_LoginForm/LoginForm");
 	var GameBackupList = require("./_GameBackupList/GameBackupList");
+	var ChallengeList = require("ChallengeList");
 	
-	function HomePage(challengeList, user, parent) {
-		this._challengeList = challengeList;
+	function HomePage(user, server, parent) {
+		this._challengeList = new ChallengeList(server);
 		this._user = user;
-		
 		this._setupTemplate(parent);
 		this._handleUserEvents();
 	}

@@ -19,9 +19,8 @@ define(function(require) {
 		middle: 1
 	};
 	
-	function Lightsquare(server, challengeList, user, parent) {
+	function Lightsquare(server, user, parent) {
 		this._server = server;
-		this._challengeList = challengeList;
 		this._user = user;
 		
 		this._pages = {};
@@ -141,7 +140,7 @@ define(function(require) {
 		
 		this._router.addRoute("/", (function(params, url) {
 			if(!this._hasPage(url)) {
-				this._pages[url] = new HomePage(this._challengeList, this._user, this._tabContainer.createTab(url));
+				this._pages[url] = new HomePage(this._user, this._server, this._tabContainer.createTab(url));
 			}
 			
 			this._showPage(url);
