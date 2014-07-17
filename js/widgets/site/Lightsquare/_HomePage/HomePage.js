@@ -86,9 +86,5 @@ define(function(require) {
 		this._challengeList.stopUpdating();
 	}
 	
-	HomePage.prototype.remove = function() {
-		
-	}
-	
 	return HomePage;
 });
