@@ -9,7 +9,6 @@ define(function(require) {
 	var controlPanelHtml = require("file!./control_panel.html");
 	var Ractive = require("lib/dom/Ractive");
 	var Router = require("lib/Router");
-	var PrefsForm = require("./_PrefsForm/PrefsForm");
 	var TabContainer = require("lib/dom/TabContainer");
 	var HomePage = require("./_HomePage/HomePage");
 	var GamePage = require("./_GamePage/GamePage");
@@ -302,8 +301,6 @@ define(function(require) {
 		setTimeout((function() {
 			this._template.set("waitingForServer", false);
 		}).bind(this), 3000);
-		
-		new PrefsForm(this._user, this._template.nodes.prefs);
 	}
 	
 	Lightsquare.prototype._showMessage = function(message, durationInSeconds) {
