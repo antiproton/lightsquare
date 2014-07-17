@@ -9,7 +9,7 @@ define(function(require) {
 	var controlPanelHtml = require("file!./control_panel.html");
 	var Ractive = require("lib/dom/Ractive");
 	var Router = require("lib/Router");
-	var Pages = require("lib/Pages");
+	var TabContainer = require("lib/dom/TabContainer");
 	var HomePage = require("./_HomePage/HomePage");
 	var GamePage = require("./_GamePage/GamePage");
 	var Colour = require("chess/Colour");
@@ -24,11 +24,15 @@ define(function(require) {
 		this._challengeList = challengeList;
 		this._user = user;
 		
+		this._pages = {};
 		this._gamePages = [];
+		this._currentPage = null;
+		
 		this._handleServerEvents();
 		this._handleUserEvents();
 		
 		this._setupTemplate(parent);
+		this._tabContainer = new TabContainer(this._template.nodes.main, "page");
 		this._setupRouter();
 	}
 	
@@ -46,7 +50,7 @@ define(function(require) {
 	}
 	
 	Lightsquare.prototype._initialise = function() {
-		this._pages.clear();
+		this._clearPages();
 		this._gamePages.empty();
 		this._addGamePages();
 		this._updateUserDependentElements();
@@ -63,30 +67,30 @@ define(function(require) {
 	Lightsquare.prototype._addGamePage = function(game) {
 		var url = "/game/" + game.getId();
 		
-		if(!this._pages.hasPage(url)) {
-			var page = this._pages.createPage(url);
-			var gamePage = new GamePage(game, this._user, page);
+		if(!this._hasPage(url)) {
+			var page = new GamePage(game, this._user, this._tabContainer.createTab(url));
 			
-			this._gamePages.push(gamePage);
+			this._pages[url] = page;
+			this._gamePages.push(page);
 			
-			gamePage.PlayerClockTick.addHandler(this, function() {
-				this._updateGamePage(gamePage);
+			page.PlayerClockTick.addHandler(this, function() {
+				this._updateGamePage(page);
 			});
 			
-			gamePage.Rematch.addHandler(this, function(game) {
+			page.Rematch.addHandler(this, function(game) {
 				var newUrl = "/game/" + game.getId();
 				
-				this._pages.changeId(url, newUrl);
+				this._tabContainer.changeId(url, newUrl);
 				this._router.navigate(newUrl);
-				this._updateGamePage(gamePage);
+				this._updateGamePage(page);
 				
 				url = newUrl;
 			});
 		}
 	}
 	
-	Lightsquare.prototype._updateGamePage = function(gamePage) {
-		this._template.update("gamePages." + this._gamePages.indexOf(gamePage));
+	Lightsquare.prototype._updateGamePage = function(page) {
+		this._template.update("gamePages." + this._gamePages.indexOf(page));
 	}
 	
 	Lightsquare.prototype._addGamePages = function() {
@@ -95,6 +99,35 @@ define(function(require) {
 				this._addGamePage(game);
 			}).bind(this));
 		}).bind(this));
+	}
+	
+	Lightsquare.prototype._clearPages = function() {
+		this._tabContainer.clear();
+		
+		for(var url in this._pages) {
+			this._pages[url].remove();
+		}
+		
+		this._pages = {};
+	}
+	
+	Lightsquare.prototype._showPage = function(url) {
+		var page = this._pages[url];
+		
+		if(this._currentPage !== page) {
+			if(this._currentPage !== null) {
+				this._currentPage.hide();
+			}
+			
+			page.show();
+		}
+		
+		this._currentPage = page;
+		this._tabContainer.showTab(url);
+	}
+	
+	Lightsquare.prototype._hasPage = function(url) {
+		return (url in this._pages);
 	}
 	
 	Lightsquare.prototype._setupRouter = function() {
@@ -107,19 +140,17 @@ define(function(require) {
 		});
 		
 		this._router.addRoute("/", (function(params, url) {
-			if(!this._pages.hasPage(url)) {
-				var page = this._pages.createPage(url);
-				
-				new HomePage(this._challengeList, this._user, page);
+			if(!this._hasPage(url)) {
+				this._pages[url] = new HomePage(this._challengeList, this._user, this._tabContainer.createTab(url));
 			}
 			
-			this._pages.showPage(url);
+			this._showPage(url);
 			this._challengeList.startUpdating();
 		}).bind(this));
 		
 		this._router.addRoute("/game/:id", (function(params, url) {
-			if(this._pages.hasPage(url)) {
-				this._pages.showPage(url);
+			if(this._hasPage(url)) {
+				this._showPage(url);
 				this._challengeList.stopUpdating();
 			}
 			
@@ -128,11 +159,11 @@ define(function(require) {
 				this._template.set("loadingGameId", params.id);
 				
 				this._user.getGame(params.id).then((function(game) {
-					if(!this._pages.hasPage(url)) {
+					if(!this._hasPage(url)) {
 						this._addGamePage(game);
 					}
 					
-					this._pages.showPage(url);
+					this._showPage(url);
 					this._challengeList.stopUpdating();
 				}).bind(this), (function() {
 					this._showMessage(
@@ -255,8 +286,6 @@ define(function(require) {
 		this._template.on("logout_cancel", (function() {
 			this._template.set("showLogoutConfirmation", false);
 		}).bind(this));
-		
-		this._pages = new Pages(this._template.nodes.main);
 		
 		setTimeout((function() {
 			this._template.set("waitingForServer", false);
