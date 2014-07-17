@@ -9,10 +9,13 @@ div.control_panel {
 	background: white;
 }
 
+div.logout {
+	border-top: 1px solid #bababa;
+	padding-top: .2em;
+}
+
 div.logout_confirmation {
-	border: 1px solid rgba(127, 127, 127, .5);
-	padding: .5em;
-	background: rgba(255, 255, 255, .5);
+	font-size: .9em;
 }
 
 div.logout_confirmation input {
@@ -21,7 +24,7 @@ div.logout_confirmation input {
 
 div.logout_confirmation_buttons {
 	display: flex;
-	justify-content: space-between;
+	justify-content: flex-start;
 }
 
 input.logout_confirm {
