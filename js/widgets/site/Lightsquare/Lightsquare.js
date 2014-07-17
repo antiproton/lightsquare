@@ -145,13 +145,11 @@ define(function(require) {
 			}
 			
 			this._showPage(url);
-			this._challengeList.startUpdating();
 		}).bind(this));
 		
 		this._router.addRoute("/game/:id", (function(params, url) {
 			if(this._hasPage(url)) {
 				this._showPage(url);
-				this._challengeList.stopUpdating();
 			}
 			
 			else {
@@ -164,7 +162,6 @@ define(function(require) {
 					}
 					
 					this._showPage(url);
-					this._challengeList.stopUpdating();
 				}).bind(this), (function() {
 					this._showMessage(
 						"The requested game could not be found &ndash; if you had a game in"

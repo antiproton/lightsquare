@@ -78,5 +78,13 @@ define(function(require) {
 		this._template.set("userIsLoggedIn", this._user.isLoggedIn());
 	}
 	
+	HomePage.prototype.show = function() {
+		this._challengeList.startUpdating();
+	}
+	
+	HomePage.prototype.hide = function() {
+		this._challengeList.stopUpdating();
+	}
+	
 	return HomePage;
 });
