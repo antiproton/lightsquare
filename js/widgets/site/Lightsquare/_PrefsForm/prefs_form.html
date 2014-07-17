@@ -14,9 +14,28 @@
 		Board colour
 	</div>
 	<div class="pref_row">
-		{{#boardColours}}
-			<input type="radio" checked="{{prefs.boardColour === this}}" id="prefs_board_colour_{{this}}">
-			<label for="prefs_board_colour_{{this}}">{{.}}</label>
-		{{/boardColours}}
+		{{#boardStyles}}
+			<input type="radio" name="boardStyle" checked="{{prefs.boardStyle === code}}" id="prefs_board_style_{{code}}">
+			<label for="prefs_board_style_{{code}}">{{label}}</label>
+			<br>
+		{{/boardStyles}}
+	</div>
+	<div class="pref_row">
+		<label for="boardSize">Board size</label>
+		<select id="boardSize" value="{{prefs.boardSize}}">
+			{{#boardSizes}}
+				<option value="{{code}}">{{label}}</option>
+			{{/boardSizes}}
+		</select>
+	</div>
+	<div class="pref_row">
+		Piece style
+	</div>
+	<div class="pref_row">
+		{{#pieceStyles}}
+			<input type="radio" name="pieceStyle" checked="{{prefs.pieceStyle === this}}" id="prefs_piece_style_{{.}}">
+			<label for="prefs_piece_style_{{.}}">{{.}}</label>
+			<br>
+		{{/pieceStyles}}
 	</div>
 </form>
