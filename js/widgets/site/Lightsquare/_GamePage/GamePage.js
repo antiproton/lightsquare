@@ -346,5 +346,17 @@ define(function(require) {
 		});
 	}
 	
+	GamePage.prototype.show = function() {
+		
+	}
+	
+	GamePage.prototype.hide = function() {
+		
+	}
+	
+	GamePage.prototype.remove = function() {
+		
+	}
+	
 	return GamePage;
 });
