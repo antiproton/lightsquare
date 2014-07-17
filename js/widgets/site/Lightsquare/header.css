@@ -59,11 +59,3 @@ a.user_link {
 a.user_link:hover {
 	background: #EDEDED;
 }
-
-div.logout {
-	padding: .5em .7em;
-}
-
-div.logout a {
-	font-size: .9em;
-}
