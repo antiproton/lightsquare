@@ -80,6 +80,7 @@ define(function(require) {
 				var newUrl = "/game/" + game.getId();
 				
 				this._tabContainer.changeId(url, newUrl);
+				this._changePageUrl(url, newUrl);
 				this._router.navigate(newUrl);
 				this._updateGamePage(page);
 				
@@ -135,6 +136,12 @@ define(function(require) {
 	
 	Lightsquare.prototype._hasPage = function(url) {
 		return (url in this._pages);
+	}
+	
+	Lightsquare.prototype._changePageUrl = function(oldUrl, newUrl) {
+		this._pages[newUrl] = this._pages[oldUrl];
+		
+		delete this._pages[oldUrl];
 	}
 	
 	Lightsquare.prototype._setupRouter = function() {
