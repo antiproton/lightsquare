@@ -54,11 +54,11 @@ define(function(require) {
 		
 		this._template.on("save", (function() {
 			this._user.updatePrefs({
-				alwaysQueen: this._template.nodes.alwaysQueen.checked,
+				alwaysQueen: this._template.nodes.always_queen.checked,
 				premove: this._template.nodes.premove.checked,
-				boardStyle: this._template.nodes.boardStyle.value,
-				boardSize: parseInt(this._template.nodes.boardSize.value),
-				pieceStyle: this._template.nodes.pieceStyle.value
+				boardStyle: this._template.get("prefs.boardStyle"),
+				//boardSize: parseInt(this._template.nodes.boardSize.value),
+				//pieceStyle: this._template.nodes.pieceStyle.value
 			});
 		}).bind(this));
 		

@@ -2,12 +2,12 @@
 	<h1>Preferences</h1>
 	<h2>Gameplay</h2>
 	<div class="pref_row">
-		<input type="checkbox" id="prefs_always_queen" checked="{{prefs.alwaysQueen}}">
-		<label for="prefs_always_queen">Always queen</label>
+		<input type="checkbox" id="always_queen" checked="{{prefs.alwaysQueen}}" on-click="save">
+		<label for="always_queen">Always queen</label>
 	</div>
 	<div class="pref_row">
-		<input type="checkbox" id="prefs_premove" checked="{{prefs.premove}}">
-		<label for="prefs_premove">Premove</label>
+		<input type="checkbox" id="premove" checked="{{prefs.premove}}" on-click="save">
+		<label for="premove">Premove</label>
 	</div>
 	<h2>Appearance</h2>
 	<div class="pref_row">
@@ -15,14 +15,14 @@
 	</div>
 	<div class="pref_row">
 		{{#boardStyles}}
-			<input type="radio" name="boardStyle" checked="{{prefs.boardStyle === code}}" id="prefs_board_style_{{code}}">
-			<label for="prefs_board_style_{{code}}">{{label}}</label>
+			<input type="radio" name="{{prefs.boardStyle}}" id="board_style_{{code}}" on-click="save">
+			<label for="board_style_{{code}}">{{label}}</label>
 			<br>
 		{{/boardStyles}}
 	</div>
 	<div class="pref_row">
-		<label for="boardSize">Board size</label>
-		<select id="boardSize" value="{{prefs.boardSize}}">
+		<label for="board_size">Board size</label>
+		<select id="board_size" value="{{prefs.boardSize}}" on-change="save">
 			{{#boardSizes}}
 				<option value="{{code}}">{{label}}</option>
 			{{/boardSizes}}
@@ -33,8 +33,8 @@
 	</div>
 	<div class="pref_row">
 		{{#pieceStyles}}
-			<input type="radio" name="pieceStyle" checked="{{prefs.pieceStyle === this}}" id="prefs_piece_style_{{.}}">
-			<label for="prefs_piece_style_{{.}}">{{.}}</label>
+			<input type="radio" name="pieceStyle" checked="{{prefs.pieceStyle === this}}" id="piece_style_{{.}}" on-click="save">
+			<label for="piece_style_{{.}}">{{.}}</label>
 			<br>
 		{{/pieceStyles}}
 	</div>
