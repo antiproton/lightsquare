@@ -267,16 +267,10 @@ define(function(require) {
 	}
 	
 	Game.prototype.getUserColour = function() {
-		var player;
 		var userColour = null;
 		
 		Colour.forEach(function(colour) {
-			player = this._players[colour];
-			
-			if(
-				(this._user.isLoggedIn() && this._user.getUsername() === player.username)
-				|| this._user.getId() === player.id
-			) {
+			if(this._user.getPlayerId() === this._players[colour].id) {
 				userColour = colour;
 			}
 		}, this);
