@@ -11,11 +11,11 @@ define(function(require) {
 	var Clock = require("./Clock");
 	var TimingStyle = require("chess/TimingStyle");
 	var Time = require("chess/Time");
-	var Promise = require("lib/Promise");
+	var Promisor = require("lib/Promisor");
 	require("lib/Array.getShallowCopy");
 
 	function Game(user, server, gameDetails) {
-		this._promises = {};
+		this._promisor = new Promisor(this);
 		
 		this.Move = new Event(this);
 		this.ClockTick = new Event(this);
@@ -60,11 +60,7 @@ define(function(require) {
 		});
 		
 		this._game.Move.addHandler(this, function() {
-			var promiseId = "/request/premove";
-			
-			if(promiseId in this._promises) {
-				this._promises[promiseId].resolve(null);
-			}
+			this._promisor.resolve("/request/premove", null);
 		});
 		
 		this._clock = new Clock(this._server, this, this._timingStyle);
@@ -116,11 +112,7 @@ define(function(require) {
 		}).bind(this));
 		
 		this._server.subscribe("/game/" + this._id + "/premove", (function(premove) {
-			var promiseId = "/request/premove";
-			
-			if(promiseId in this._promises) {
-				this._promises[promiseId].resolve(premove ? Premove.fromJSON(premove, this.getPosition()) : null);
-			}
+			this._promisor.resolve("/request/premove", premove ? Premove.fromJSON(premove, this.getPosition()) : null);
 		}).bind(this));
 	}
 	
@@ -166,20 +158,7 @@ define(function(require) {
 	}
 	
 	Game.prototype.getPendingPremove = function() {
-		var promise;
-		var promiseId = "/request/premove";
-		
-		if(promiseId in this._promises) {
-			promise = this._promises[promiseId];
-		}
-		
-		else {
-			promise = this._promises[promiseId] = new Promise();
-			
-			promise.onFinish((function() {
-				delete this._promises[promiseId];
-			}).bind(this));
-			
+		return this._promisor.get("/request/premove", function(promise) {
 			if(this._isInProgress) {
 				this._server.send("/game/" + this._id + "/request/premove");
 			}
@@ -187,9 +166,7 @@ define(function(require) {
 			else {
 				promise.resolve(null);
 			}
-		}
-		
-		return promise;
+		});
 	}
 	
 	Game.prototype.resign = function() {
