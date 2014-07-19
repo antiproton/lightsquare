@@ -10,7 +10,7 @@ define(function(require) {
 	var GAME_BACKUP_MAX_AGE = 1000 * 60 * 60 * 24;
 	
 	function User(server, db) {
-		this._id = null;
+		this._playerId = null;
 		this._games = [];
 		this._promisor = new Promisor(this);
 		
@@ -84,7 +84,8 @@ define(function(require) {
 		});
 	}
 	
-	User.prototype._logout = function() {
+	User.prototype._logout = function(newPlayerId) {
+		this._playerId = newPlayerId;
 		this._username = "Anonymous";
 		this._isLoggedIn = false;
 		this._rating = glicko2.defaults.RATING;
@@ -179,6 +180,10 @@ define(function(require) {
 		return this._username;
 	}
 	
+	User.prototype.getPlayerId = function() {
+		return this._playerId;
+	}
+	
 	User.prototype.getPrefs = function() {
 		return this._prefs;
 	}
@@ -192,10 +197,6 @@ define(function(require) {
 		
 		this.PrefsChanged.fire();
 		this._server.send("/user/prefs/update", prefs);
-	}
-	
-	User.prototype.getId = function() {
-		return this._id;
 	}
 	
 	User.prototype.getRating = function() {
@@ -307,8 +308,8 @@ define(function(require) {
 				this._promisor.fail("/login", reason);
 			},
 			
-			"/user/logout": function() {
-				this._logout();
+			"/user/logout": function(newPlayerId) {
+				this._logout(newPlayerId);
 				this._promisor.resolve("/logout");
 			},
 			
@@ -370,7 +371,7 @@ define(function(require) {
 	}
 	
 	User.prototype._loadDetails = function(userDetails) {
-		this._id = userDetails.id;
+		this._playerId = userDetails.playerId;
 		this._username = userDetails.username;
 		this._isLoggedIn = userDetails.isLoggedIn;
 		this._rating = userDetails.rating;
