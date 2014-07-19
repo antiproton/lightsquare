@@ -39,3 +39,30 @@ div.challenges, div.sidebar {
 div.utilities p {
 	font-size: .9em;
 }
+
+div.home_page_tabs {
+	display: flex;
+	background: #565656;
+}
+
+div.home_page_tabs a {
+	color: #101010;
+	text-decoration: none;
+	display: block;
+	border-top-left-radius: 3px;
+	border-top-right-radius: 3px;
+	padding: 1.7em 3.4em;
+}
+
+div.home_page_tabs a.on {
+	background-image: linear-gradient(to top, #efefef 25%, #F4F4F4 60%, #fbfbfb 100%);
+}
+
+div.home_page_tabs a.off {
+	box-shadow: inset 3px 1px 5px rgba(0, 0, 0, .07);
+	background: #ADADAD;
+}
+
+div.home_page_tabs a.off:hover {
+	background: #B7B7B7;
+}

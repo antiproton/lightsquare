@@ -20,6 +20,7 @@ define(function(require) {
 			el: parent,
 			template: html,
 			data: {
+				tab: "games",
 				dialog: null,
 				userIsLoggedIn: this._user.isLoggedIn()
 			}
@@ -35,6 +36,10 @@ define(function(require) {
 				this._hideDialog();
 			}
 		});
+		
+		this._template.on("select_tab", (function(event, tab) {
+			this._template.set("tab", tab);
+		}).bind(this));
 		
 		this._template.on("restore_game", (function() {
 			this._showDialog("restoreGame");
