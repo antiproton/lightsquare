@@ -140,7 +140,10 @@ define(function(require) {
 			backup = {
 				expiryTime: null,
 				gameDetails: gameDetails,
-				opponent: game.getPlayer(playingAs.opposite),
+				opponent: {
+					name: game.getPlayerName(playingAs.opposite),
+					rating: game.getRating(playingAs.opposite)
+				},
 				timingDescription: game.getTimingStyle().getDescription(),
 				playingAs: playingAs.fenString
 			};
