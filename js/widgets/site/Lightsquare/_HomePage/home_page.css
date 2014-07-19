@@ -97,7 +97,8 @@ div.home_page_tabs a.off {
 }
 
 div.home_page_tabs a.off:hover {
-	background: #B7B7B7;
+	text-decoration: underline;
+	background: #AFAFAF;
 }
 
 div.tools {
