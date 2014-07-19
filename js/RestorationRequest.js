@@ -1,6 +1,6 @@
 define(function(require) {
 	var Event = require("lib/Event");
-	var Promisor = require("lib/Promisor");
+	var Promise = require("lib/Promise");
 	var Game = require("./Game");
 	
 	function RestorationRequest(user, server, backup) {
@@ -8,7 +8,7 @@ define(function(require) {
 		this._user = user;
 		this._server = server;
 		this._backup = backup;
-		this._promisor = new Promisor(this);
+		this._promise = new Promise();
 		this._handleServerMessages();
 		
 		this.GameRestored = new Event(this);
@@ -26,26 +26,34 @@ define(function(require) {
 				game.addTimeToClock(game.getCurrentTime() - game.getLastMove().getTime());
 			}
 			
-			this._promisor.resolve("/submit", game);
+			this._promise.resolve(game);
 			this.GameRestored.fire(game);
 		}).bind(this));
 		
 		this._server.subscribe("/game/restore/" + this._id + "/pending", (function() {
-			this._promisor.progress("/submit");
+			this._promise.progress();
 		}).bind(this));
 		
 		this._server.subscribe("/game/restore/" + this._id + "/failure", (function(reason) {
-			this._promisor.fail("/submit", reason);
+			this._promise.fail(reason);
 		}).bind(this));
 	}
 	
 	RestorationRequest.prototype.submit = function() {
-		return this._promisor.get("/submit", function() {
-			this._server.send("/game/restore", {
-				gameDetails: this._backup.gameDetails,
-				playingAs: this._backup.playingAs
-			});
+		this._server.send("/game/restore", {
+			gameDetails: this._backup.gameDetails,
+			playingAs: this._backup.playingAs
 		});
+		
+		return this._promise;
+	}
+	
+	RestorationRequest.prototype.then = function() {
+		this._promise.then.apply(this._promise, arguments);
+	}
+	
+	RestorationRequest.prototype.onProgress = function() {
+		this._promise.onProgress.apply(this._promise, arguments);
 	}
 	
 	RestorationRequest.prototype.cancel = function() {
