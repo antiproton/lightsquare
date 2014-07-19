@@ -111,8 +111,18 @@ define(function(require) {
 			this._rematch(gameDetails);
 		}).bind(this));
 		
-		this._server.subscribe("/game/" + this._id + "/premove", (function(premove) {
-			this._promisor.resolve("/request/premove", premove ? Premove.fromJSON(premove, this.getPosition()) : null);
+		this._server.subscribe("/game/" + this._id + "/premove", (function(data) {
+			var premove = null;
+			
+			if(data !== null) {
+				var promoteTo = (data.promoteTo ? PieceType.fromSanString(data.promoteTo) : PieceType.queen);
+				var from = Square.fromSquareNo(data.from);
+				var to = Square.fromSquareNo(data.to);
+				
+				premove = new Premove(this.getPosition(), from, to, promoteTo);
+			}
+			
+			this._promisor.resolve("/request/premove", premove);
 		}).bind(this));
 	}
 	
