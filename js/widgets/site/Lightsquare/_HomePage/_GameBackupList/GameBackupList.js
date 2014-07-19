@@ -45,29 +45,16 @@ define(function(require) {
 		
 		this._template.on("restore_or_cancel", (function(event, id) {
 			var backup = event.context;
+			var request = this._getRestorationRequest(backup);
 			
 			this._template.set("error." + id, null);
 			
 			if(this._template.get("restorationRequestSubmitted." + id)) {
-				this._getRestorationRequest(backup).cancel();
+				request.cancel();
 			}
 			
 			else {
-				var request = this._getRestorationRequest(backup).submit();
-				
-				request.onProgress((function() {
-					this._template.set("restorationRequestSubmitted." + id, true);
-				}).bind(this));
-				
-				request.then((function() {
-					this.refresh();
-				}).bind(this), (function(error) {
-					this._template.set("error." + id, error);
-				}).bind(this), (function() {
-					this._template.set("restorationRequestSubmitted." + id, false);
-					
-					delete this._restorationRequests[id];
-				}).bind(this));
+				request.submit();
 			}
 		}).bind(this));
 	}
@@ -117,6 +104,20 @@ define(function(require) {
 		
 		else {
 			request = this._restorationRequests[id] = this._user.createRestorationRequest(backup);
+			
+			request.onProgress((function() {
+				this._template.set("restorationRequestSubmitted." + id, true);
+			}).bind(this));
+			
+			request.then((function() {
+				this.refresh();
+			}).bind(this), (function(error) {
+				this._template.set("error." + id, error);
+			}).bind(this), (function() {
+				this._template.set("restorationRequestSubmitted." + id, false);
+				
+				delete this._restorationRequests[id];
+			}).bind(this));
 			
 			request.GameRestored.addHandler(this, function() {
 				this.GameRestored.fire();
