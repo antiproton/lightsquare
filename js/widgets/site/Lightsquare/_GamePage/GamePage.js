@@ -48,7 +48,7 @@ define(function(require) {
 	}
 	
 	GamePage.prototype.getPlayerName = function(colour) {
-		return this._game.getPlayer(colour).username;
+		return this._game.getPlayerName(colour);
 	}
 	
 	GamePage.prototype.getTimeLeft = function(colour) {
@@ -316,11 +316,10 @@ define(function(require) {
 	
 	GamePage.prototype._updatePlayerInfo = function() {
 		Colour.forEach((function(colour) {
-			var player = this._game.getPlayer(colour);
 			var relevance = this._relevanceFromColour(colour);
 			
-			this._template.set("players." + relevance + ".username", player.username);
-			this._template.set("players." + relevance + ".rating", player.rating);
+			this._template.set("players." + relevance + ".name", this._game.getPlayerName(colour));
+			this._template.set("players." + relevance + ".rating", this._game.getRating(colour));
 		}).bind(this));
 	}
 	

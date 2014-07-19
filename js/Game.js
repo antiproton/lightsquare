@@ -269,8 +269,12 @@ define(function(require) {
 		return (this.getUserColour() !== null);
 	}
 	
-	Game.prototype.getPlayer = function(colour) {
-		return this._players[colour];
+	Game.prototype.getPlayerName = function(colour) {
+		return this._players[colour].name;
+	}
+	
+	Game.prototype.getRating = function(colour) {
+		return this._players[colour].rating;
 	}
 	
 	Game.prototype.getActivePlayer = function() {

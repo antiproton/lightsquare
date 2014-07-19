@@ -2,7 +2,7 @@
 	<div class="game_main">
 		<div class="game_player opponent">
 			<div class="player_username">
-				{{players.opponent.username}} ({{players.opponent.rating}})
+				{{players.opponent.name}} ({{players.opponent.rating}})
 			</div>
 			<div class="player_clock {{isInProgress && !viewingActivePlayer ? ('active_clock' + (timeIsCritical(players.opponent.time) ? ' critical_clock' : '')) : ''}}">
 				{{getTime(players.opponent.time)}}
@@ -49,7 +49,7 @@
 		</div>
 		<div class="game_player player">
 			<div>
-				{{players.player.username}} ({{players.player.rating}})
+				{{players.player.name}} ({{players.player.rating}})
 			</div>
 			<div class="player_clock {{isInProgress && viewingActivePlayer ? ('active_clock' + (timeIsCritical(players.player.time) ? ' critical_clock' : '')) : ''}}">
 				{{getTime(players.player.time)}}

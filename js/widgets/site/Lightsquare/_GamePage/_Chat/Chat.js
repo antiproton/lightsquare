@@ -34,22 +34,22 @@ define(function(require) {
 	Chat.prototype._setupGame = function(game) {
 		this._game = game;
 		
-		this._addMessage(game.getPlayer(Colour.white).username + " vs. " + game.getPlayer(Colour.black).username + " " + game.getTimingStyle().getDescription());
+		this._addMessage(game.getPlayerName(Colour.white) + " vs. " + game.getPlayerName(Colour.black) + " " + game.getTimingStyle().getDescription());
 		
 		this._game.ChatMessageReceived.addHandler(this, function(message) {
 			this._addMessage(message.body, message.from);
 		});
 		
 		this._game.DrawOffered.addHandler(this, function() {
-			this._addMessage(this._game.getPlayer(this._game.getActiveColour().opposite).username + " has offered a draw.");
+			this._addMessage(this._game.getPlayerName(this._game.getActiveColour().opposite) + " has offered a draw.");
 		});
 		
 		this._game.RematchOffered.addHandler(this, function() {
-			this._addMessage(this._game.getPlayer(this._game.getUserColour().opposite).username + " has offered you a rematch.");
+			this._addMessage(this._game.getPlayerName(this._game.getUserColour().opposite) + " has offered you a rematch.");
 		});
 		
 		this._game.RematchDeclined.addHandler(this, function() {
-			this._addMessage(this._game.getPlayer(this._game.getUserColour().opposite).username + " has declined a rematch.");
+			this._addMessage(this._game.getPlayerName(this._game.getUserColour().opposite) + " has declined a rematch.");
 		});
 		
 		this._game.Rematch.addHandler(this, function(game) {
