@@ -26,8 +26,6 @@ define(function(require) {
 			var password = this._template.get("password") + "";
 			var password_confirm = this._template.get("password_confirm") + "";
 			
-			console.log(username, password, password_confirm);
-			
 			if(password_confirm.length > 0 && password !== password_confirm) {
 				this._setError("Password confirmation supplied and doesn't match password");
 			}
