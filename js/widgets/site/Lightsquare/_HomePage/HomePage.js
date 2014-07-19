@@ -42,7 +42,7 @@ define(function(require) {
 		this._gameBackupList = new GameBackupList(this._user, this._template.nodes.game_backup_list);
 		
 		this._gameBackupList.GameRestored.addHandler(this, function() {
-			if(this._template.get("showDialog") === "restoreGame") {
+			if(this._template.get("dialog") === "restoreGame") {
 				this._hideDialog();
 			}
 		});
