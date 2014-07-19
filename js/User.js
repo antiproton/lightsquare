@@ -321,7 +321,7 @@ define(function(require) {
 			},
 			
 			"/user/register/failure": function(reason) {
-				this._promisor.resolve("/register", reason);
+				this._promisor.fail("/register", reason);
 			},
 			
 			"/games": function(games) {
