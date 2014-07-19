@@ -33,7 +33,7 @@ div.message {
 	width: 33%;
 	border: 1px solid #AA8E58;
 	padding: .5em;
-	background: rgba(255, 254, 242, 0.9);
+	background: rgba(255, 254, 242, 0.95);
 }
 
 div.modal_overlay {
