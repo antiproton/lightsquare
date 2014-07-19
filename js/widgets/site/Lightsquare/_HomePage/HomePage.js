@@ -7,6 +7,7 @@ define(function(require) {
 	var LoginForm = require("./_LoginForm/LoginForm");
 	var GameBackupList = require("./_GameBackupList/GameBackupList");
 	var ChallengeList = require("ChallengeList");
+	var RegisterForm = require("./_RegisterForm/RegisterForm");
 	
 	function HomePage(user, server, parent) {
 		this._challengeList = new ChallengeList(server);
@@ -22,13 +23,22 @@ define(function(require) {
 			data: {
 				tab: "home",
 				dialog: null,
-				userIsLoggedIn: this._user.isLoggedIn()
+				username: this._user.getUsername(),
+				userIsLoggedIn: this._user.isLoggedIn(),
+				registered: false
 			}
 		});
 		
 		new LoginForm(this._user, this._template.nodes.login_form);
 		new CreateChallengeForm(this._user, this._template.nodes.create_challenge);
 		new ChallengeGraph(this._challengeList, this._user, this._template.nodes.challenge_graph);
+		
+		var registerForm = new RegisterForm(this._user, this._template.nodes.register_form);
+		
+		registerForm.Registered.addHandler(this, function() {
+			this._template.set("registered", true);
+		});
+		
 		this._gameBackupList = new GameBackupList(this._user, this._template.nodes.game_backup_list);
 		
 		this._gameBackupList.GameRestored.addHandler(this, function() {
@@ -63,6 +73,11 @@ define(function(require) {
 		this._template.on("register", (function() {
 			this._showDialog("register");
 		}).bind(this));
+		
+		this._template.on("register_done", (function() {
+			this._hideDialog();
+			this._template.set("registered", false);
+		}).bind(this));
 	}
 	
 	HomePage.prototype._showDialog = function(dialog) {
@@ -84,6 +99,7 @@ define(function(require) {
 	}
 	
 	HomePage.prototype._updateUserDependentElements = function() {
+		this._template.set("username", this._user.getUsername());
 		this._template.set("userIsLoggedIn", this._user.isLoggedIn());
 	}
 	

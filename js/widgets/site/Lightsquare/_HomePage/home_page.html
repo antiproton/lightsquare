@@ -5,9 +5,18 @@
 		</div>
 	</div>
 	<div class="register_dialog" style="display: {{dialog === 'register' ? '' : 'none'}}" on-click="dialog_click">
-		<div id="register">
+		<div id="register_form" style="display: {{registered ? 'none' : ''}}">
 			
 		</div>
+		{{#registered}}
+			<h1>Welcome to Lightsquare, {{username}}.</h1>
+			<div class="register_success">
+				Your account has been created.
+			</div>
+			<div class="register_done">
+				<input type="button" class="register_done" on-click="register_done" value="OK" autofocus>
+			</div>
+		{{/registered}}
 	</div>
 </div>
 <div class="home">
