@@ -20,7 +20,7 @@ define(function(require) {
 			el: parent,
 			template: html,
 			data: {
-				tab: "games",
+				tab: "home",
 				dialog: null,
 				userIsLoggedIn: this._user.isLoggedIn()
 			}
