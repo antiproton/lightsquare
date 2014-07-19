@@ -70,3 +70,8 @@ div.home_page_tabs a.off:hover {
 div.tools {
 	padding: .8em;
 }
+
+div.register_link {
+	text-align: center;
+	margin-top: .5em;
+}

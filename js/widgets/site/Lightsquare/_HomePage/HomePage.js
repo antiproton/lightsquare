@@ -59,6 +59,10 @@ define(function(require) {
 		this._template.on("dialog_click", function() {
 			lastClickWasOnDialog = true;
 		});
+		
+		this._template.on("register", (function() {
+			this._showDialog("register");
+		}).bind(this));
 	}
 	
 	HomePage.prototype._showDialog = function(dialog) {

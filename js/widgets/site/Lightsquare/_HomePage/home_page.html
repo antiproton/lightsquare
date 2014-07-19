@@ -4,6 +4,11 @@
 			
 		</div>
 	</div>
+	<div class="register_dialog" style="display: {{dialog === 'register' ? '' : 'none'}}" on-click="dialog_click">
+		<div id="register">
+			
+		</div>
+	</div>
 </div>
 <div class="home">
 	<div class="home_page_tabs">
@@ -22,6 +27,9 @@
 		<div class="sidebar" style="display: {{userIsLoggedIn ? 'none' : ''}}">
 			<div class="login_form" id="login_form">
 				
+			</div>
+			<div class="register_link">
+				<a href="javascript:void(0)" on-click="register">Create account</a>
 			</div>
 		</div>
 	</div>
