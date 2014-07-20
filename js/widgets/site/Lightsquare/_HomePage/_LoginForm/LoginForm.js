@@ -10,7 +10,9 @@ define(function(require) {
 			el: parent,
 			template: html,
 			data: {
-				error: ""
+				error: "",
+				username: "",
+				password: ""
 			}
 		});
 		
