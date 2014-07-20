@@ -8,10 +8,10 @@ define(function(require) {
 	var Square = require("chess/Square");
 	var PieceType = require("chess/PieceType");
 	var Fen = require("chess/Fen");
-	var Clock = require("./Clock");
 	var TimingStyle = require("chess/TimingStyle");
 	var Time = require("chess/Time");
 	var Promisor = require("lib/Promisor");
+	var Clock = require("chess/Clock");
 	require("lib/Array.getShallowCopy");
 
 	function Game(user, server, gameDetails) {
@@ -38,6 +38,7 @@ define(function(require) {
 		this._result = gameDetails.result;
 		this._isDrawOffered = gameDetails.isDrawOffered;
 		this._isUndoRequested = gameDetails.isUndoRequested;
+		this._addedTime = gameDetails.addedTime;
 		
 		this._players = {};
 		this._players[Colour.white] = gameDetails.white;
@@ -63,7 +64,9 @@ define(function(require) {
 			this._promisor.resolve("/request/premove", null);
 		});
 		
-		this._clock = new Clock(this._server, this, this._timingStyle);
+		this._clock = new Clock(this, this._timingStyle, function() {
+			return server.getServerTime();
+		});
 		
 		if(this._isInProgress) {
 			this._requestLatestMoves();
@@ -223,10 +226,6 @@ define(function(require) {
 		return this._game.getActiveColour();
 	}
 	
-	Game.prototype.addTimeToClock = function(time) {
-		this._clock.addTime(time);
-	}
-	
 	Game.prototype.getCurrentTime = function() {
 		return this._clock.getCurrentTime();
 	}
@@ -239,6 +238,10 @@ define(function(require) {
 		}).bind(this));
 		
 		return times;
+	}
+	
+	Game.prototype.getAddedTime = function(colour) {
+		return this._addedTime[colour];
 	}
 	
 	Game.prototype.timingHasStarted = function() {
