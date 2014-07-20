@@ -392,6 +392,7 @@ define(function(require) {
 			}),
 			startTime: this._startTime,
 			options: this._options,
+			addedTime: this._addedTime,
 			id: this._id
 		};
 	}
