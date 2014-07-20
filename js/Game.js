@@ -226,10 +226,6 @@ define(function(require) {
 		return this._game.getActiveColour();
 	}
 	
-	Game.prototype.getCurrentTime = function() {
-		return this._clock.getCurrentTime();
-	}
-	
 	Game.prototype.getClockTimes = function() {
 		var times = {};
 		
