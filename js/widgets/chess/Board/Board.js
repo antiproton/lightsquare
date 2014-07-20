@@ -465,7 +465,8 @@ define(function(require) {
 				this._move.isInProgress = true;
 
 				this.PieceSelected.fire({
-					square: from
+					square: from,
+					isDragging: true
 				});
 			}
 		}
@@ -569,7 +570,8 @@ define(function(require) {
 					this._move.isDragging = false;
 
 					this.PieceSelected.fire({
-						square: square
+						square: square,
+						isDragging: false
 					});
 				}
 
