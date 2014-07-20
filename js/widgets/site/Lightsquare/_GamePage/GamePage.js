@@ -142,6 +142,16 @@ define(function(require) {
 			}
 		});
 		
+		this._board.PieceSelected.addHandler(this, function(data) {
+			if(data.isDragging) {
+				this._board.highlightSquares(data.square, Board.squareHighlightTypes.SELECTED);
+			}
+		});
+		
+		this._board.Deselected.addHandler(this, function() {
+			this._board.unhighlightSquares(Board.squareHighlightTypes.SELECTED);
+		});
+		
 		this._board.Move.addHandler(this, function(moveEvent) {
 			var allowPremove = this._user.getPrefs().premove;
 			var userIsActive = this._userIsActivePlayer();
