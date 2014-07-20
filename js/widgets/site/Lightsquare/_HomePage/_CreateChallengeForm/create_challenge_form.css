@@ -4,9 +4,3 @@ form.create_challenge {
 	box-shadow: 1px 1px 0 rgba(0, 0, 0, .25);
 	background: #E2E2E2;
 }
-
-input.create_challenge.waiting {
-	color: #254F5E;
-	text-shadow: 1px 1px 0 rgba(255, 255, 255, .2);
-	border-color: #2F6B93;
-}
