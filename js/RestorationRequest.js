@@ -22,10 +22,6 @@ define(function(require) {
 		this._server.subscribe("/game/restore/" + this._id + "/success", (function(gameDetails) {
 			var game = new Game(this._user, this._server, gameDetails);
 			
-			if(game.timingHasStarted() && game.getLastMove()) {
-				game.addTimeToClock(game.getCurrentTime() - game.getLastMove().getTime());
-			}
-			
 			this._promise.resolve(game);
 			this.GameRestored.fire(game);
 		}).bind(this));
