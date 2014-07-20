@@ -143,7 +143,7 @@ define(function(require) {
 		});
 		
 		this._board.PieceSelected.addHandler(this, function(data) {
-			if(data.isDragging) {
+			if(!data.isDragging) {
 				this._board.highlightSquares(data.square, Board.squareHighlightTypes.SELECTED);
 			}
 		});
