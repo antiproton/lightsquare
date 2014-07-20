@@ -68,6 +68,10 @@ define(function(require) {
 			return server.getServerTime();
 		});
 		
+		for(var colour in this._addedTime) {
+			this._clock.addTime(this._addedTime[colour], colour);
+		}
+		
 		if(this._isInProgress) {
 			this._requestLatestMoves();
 			this._clockTick();
@@ -234,10 +238,6 @@ define(function(require) {
 		}).bind(this));
 		
 		return times;
-	}
-	
-	Game.prototype.getAddedTime = function(colour) {
-		return this._addedTime[colour];
 	}
 	
 	Game.prototype.timingHasStarted = function() {
