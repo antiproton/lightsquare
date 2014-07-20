@@ -4,20 +4,25 @@ define(function(require) {
 	var Ractive = require("lib/dom/Ractive");
 	var jsonChessConstants = require("jsonchess/constants");
 	
-	function CreateChallengeForm(user, parent) {
+	function CreateChallengeForm(user, server, parent) {
 		this._user = user;
+		this._server = server;
 		
 		this._template = new Ractive({
 			el: parent,
 			template: html,
 			data: {
-				waiting: (this._user.getCurrentChallenge() !== null),
+				waiting: false,
+				percentExpired: null,
 				initialTime: "10m",
 				timeIncrement: "5",
 				ratingMin: "-100",
 				ratingMax: "+100"
 			}
 		});
+		
+		this._timeoutAnimation = null;
+		this._updateCurrentChallenge();
 		
 		this._template.on("create_or_cancel", (function(event) {
 			event.original.preventDefault();
@@ -43,12 +48,36 @@ define(function(require) {
 		});
 		
 		this._user.ChallengeCreated.addHandler(this, function() {
-			this._template.set("waiting", true);
+			this._updateCurrentChallenge();
 		});
 		
 		this._user.ChallengeExpired.addHandler(this, function() {
-			this._template.set("waiting", false);
+			this._updateCurrentChallenge();
+			
+			if(this._timeoutAnimation) {
+				this._timeoutAnimation.stop();
+				this._timeoutAnimation = null;
+			}
 		});
+	}
+	
+	CreateChallengeForm.prototype._updateCurrentChallenge = function() {
+		var challenge = this._user.getCurrentChallenge();
+		
+		this._template.set("waiting", challenge !== null);
+		
+		if(challenge) {
+			var expiryTime = (challenge ? challenge.expiryTime : null);
+			var timeLeft = expiryTime - this._server.getServerTime();
+			var timeElapsed = jsonChessConstants.CHALLENGE_TIMEOUT - timeLeft;
+			var percentExpired = timeElapsed / (jsonChessConstants.CHALLENGE_TIMEOUT / 100);
+			
+			this._template.set("percentExpired", percentExpired);
+			
+			this._timeoutAnimation = this._template.animate("percentExpired", 100, {
+				duration: timeLeft
+			});
+		}
 	}
 	
 	CreateChallengeForm.prototype._fillInLastChallengeOptions = function() {

@@ -10,8 +10,9 @@ define(function(require) {
 	var RegisterForm = require("./_RegisterForm/RegisterForm");
 	
 	function HomePage(user, server, parent) {
-		this._challengeList = new ChallengeList(server);
 		this._user = user;
+		this._server = server;
+		this._challengeList = new ChallengeList(this._server);
 		this._setupTemplate(parent);
 		this._handleUserEvents();
 	}
@@ -30,7 +31,7 @@ define(function(require) {
 		});
 		
 		new LoginForm(this._user, this._template.nodes.login_form);
-		new CreateChallengeForm(this._user, this._template.nodes.create_challenge);
+		new CreateChallengeForm(this._user, this._server, this._template.nodes.create_challenge);
 		new ChallengeGraph(this._challengeList, this._user, this._template.nodes.challenge_graph);
 		
 		var registerForm = new RegisterForm(this._user, this._template.nodes.register_form);

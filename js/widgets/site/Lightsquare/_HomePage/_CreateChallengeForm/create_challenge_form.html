@@ -7,9 +7,21 @@
 	<input id="acceptRatingMin" type="text" value="{{ratingMin}}" title="Minimum rating of players who can see and accept the challenge">
 	<label for="acceptRatingMax" title="Maximum rating of players who can see and accept the challenge">Max. opponent rating</label>
 	<input id="acceptRatingMax" type="text" value="{{ratingMax}}" title="Maximum rating of players who can see and accept the challenge">
-	<input
-		class="create_challenge {{waiting ? 'waiting' : ''}}"
-		type="submit"
-		value="{{waiting ? 'Cancel' : 'Create challenge'}}"
-	>
+	{{#waiting}}
+		<input
+			class="create_challenge waiting"
+			style="background-image: linear-gradient(
+				to left,
+				#AEB2A0 0%,
+				#AEB2A0 {{percentExpired - .5}}%,
+				transparent {{percentExpired + .5}}%,
+				transparent 100%
+			)"
+			type="submit"
+			value="Cancel"
+		>
+	{{/waiting}}
+	{{^waiting}}
+		<input class="create_challenge" type="submit" value="Create challenge">
+	{{/waiting}}
 </form>
