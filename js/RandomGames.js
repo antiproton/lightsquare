@@ -5,6 +5,7 @@ define(function(require) {
 	function RandomGames(server) {
 		this._server = server;
 		this._games = {};
+		this._promisor = new Promisor(this);
 		
 		this.NewGame = new Event(this);
 		this.GameOver = new Event(this);
@@ -37,12 +38,15 @@ define(function(require) {
 		}).bind(this));
 		
 		this._server.subscribe("/random_game/move", (function(data) {
-			if(data.game in this._games) {
-				this._games[data.game].history.push(data.move);
+			var id = data.gameId;
+			var move = data.move;
+			
+			if(id in this._games) {
+				this._games[id].history.push(move);
 				
 				this.Move.fire({
-					gameId: data.gameId,
-					move: data.move
+					gameId: id,
+					move: move
 				});
 			}
 		}).bind(this));
