@@ -36,16 +36,16 @@ define(function(require) {
 	}
 	
 	Lightsquare.prototype._handleServerEvents = function() {
-		this._server.ConnectionOpened.addHandler(this, function() {
+		this._server.ConnectionOpened.addHandler(function() {
 			this._user.getDetails().then((function() {
 				this._initialise();
 				this._router.loadFromUrl();
 			}).bind(this));
-		});
+		}, this);
 		
-		this._server.ConnectionLost.addHandler(this, function() {
+		this._server.ConnectionLost.addHandler(function() {
 			this._template.set("serverConnected", false);
-		});
+		}, this);
 	}
 	
 	Lightsquare.prototype._initialise = function() {
@@ -72,11 +72,11 @@ define(function(require) {
 			this._pages[url] = page;
 			this._gamePages.push(page);
 			
-			page.PlayerClockTick.addHandler(this, function() {
+			page.PlayerClockTick.addHandler(function() {
 				this._updateGamePage(page);
-			});
+			}, this);
 			
-			page.Rematch.addHandler(this, function(game) {
+			page.Rematch.addHandler(function(game) {
 				var newUrl = "/game/" + game.getId();
 				
 				this._tabContainer.changeId(url, newUrl);
@@ -85,7 +85,7 @@ define(function(require) {
 				this._updateGamePage(page);
 				
 				url = newUrl;
-			});
+			}, this);
 		}
 	}
 	
@@ -149,9 +149,9 @@ define(function(require) {
 		
 		this._template.set("currentPath", this._router.getCurrentPath());
 		
-		this._router.UrlChanged.addHandler(this, function(path) {
+		this._router.UrlChanged.addHandler(function(path) {
 			this._template.set("currentPath", path);
-		});
+		}, this);
 		
 		this._router.addRoute("/", (function(params, url) {
 			if(!this._hasPage(url)) {
@@ -325,16 +325,16 @@ define(function(require) {
 	}
 	
 	Lightsquare.prototype._handleUserEvents = function() {
-		this._user.NewGame.addHandler(this, function(game) {
+		this._user.NewGame.addHandler(function(game) {
 			this._router.navigate("/game/" + game.getId());
 		});
 		
-		this._user.LoggedIn.addHandler(this, function() {
+		this._user.LoggedIn.addHandler(function() {
 			this._addGamePages();
 			this._updateUserDependentElements();
 		});
 		
-		this._user.LoggedOut.addHandler(this, function() {
+		this._user.LoggedOut.addHandler(function() {
 			this._initialise();
 			this._router.loadFromUrl();
 		});

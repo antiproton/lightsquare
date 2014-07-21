@@ -220,13 +220,13 @@ define(function(require) {
 		ChessSquare.forEach((function(chessSquare) {
 			square = new Square(this._template.board, chessSquare, this._squareSize);
 
-			square.MouseDown.addHandler(this, function(event, sender) {
+			square.MouseDown.addHandler(function(event, sender) {
 				this._boardMouseDown(event, sender);
-			});
+			}, this);
 
-			square.MouseUp.addHandler(this, function(event, sender) {
+			square.MouseUp.addHandler(function(event, sender) {
 				this._boardMouseUp(event, sender);
-			});
+			}, this);
 
 			this._squares[chessSquare.squareNo] = square;
 		}).bind(this));
@@ -236,7 +236,7 @@ define(function(require) {
 		this._promotionDialogPieceSize = 45;
 		this._promotionDialog = new PromotionDialog(this._promotionDialogPieceSize, this._template.promotion_dialog);
 		
-		this._promotionDialog.PieceSelected.addHandler(this, function(type) {
+		this._promotionDialog.PieceSelected.addHandler(function(type) {
 			this.Move.fire({
 				from: this._pendingPromotion.from,
 				to: this._pendingPromotion.to,
@@ -247,7 +247,7 @@ define(function(require) {
 			
 			this._pendingPromotion = null;
 			this._hidePromotionDialog();
-		});
+		}, this);
 	}
 
 	Board.prototype._updateHtml = function() {

@@ -119,9 +119,9 @@ define(function(require) {
 				delete this._restorationRequests[id];
 			}).bind(this));
 			
-			request.GameRestored.addHandler(this, function() {
+			request.GameRestored.addHandler(function() {
 				this.GameRestored.fire();
-			});
+			}, this);
 		}
 		
 		return request;

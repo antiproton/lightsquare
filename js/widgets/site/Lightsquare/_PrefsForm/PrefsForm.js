@@ -10,13 +10,13 @@ define(function(require) {
 		this._user = user;
 		this._setupTemplate(parent);
 		
-		this._user.LoggedIn.addHandler(this, function() {
+		this._user.LoggedIn.addHandler(function() {
 			this._updatePrefs();
-		});
+		}, this);
 		
-		this._user.LoggedOut.addHandler(this, function() {
+		this._user.LoggedOut.addHandler(function() {
 			this._updatePrefs();
-		});
+		}, this);
 	}
 	
 	PrefsForm.prototype._setupTemplate = function(parent) {

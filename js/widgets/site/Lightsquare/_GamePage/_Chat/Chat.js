@@ -36,33 +36,33 @@ define(function(require) {
 		
 		this._addMessage(game.getPlayerName(Colour.white) + " vs. " + game.getPlayerName(Colour.black) + " " + game.getTimingStyle().getDescription());
 		
-		this._game.ChatMessageReceived.addHandler(this, function(message) {
+		this._game.ChatMessageReceived.addHandler(function(message) {
 			this._addMessage(message.body, message.from);
-		});
+		}, this);
 		
-		this._game.DrawOffered.addHandler(this, function() {
+		this._game.DrawOffered.addHandler(function() {
 			this._addMessage(this._game.getPlayerName(this._game.getActiveColour().opposite) + " has offered a draw.");
-		});
+		}, this);
 		
-		this._game.RematchOffered.addHandler(this, function() {
+		this._game.RematchOffered.addHandler(function() {
 			this._addMessage(this._game.getPlayerName(this._game.getUserColour().opposite) + " has offered you a rematch.");
-		});
+		}, this);
 		
-		this._game.RematchDeclined.addHandler(this, function() {
+		this._game.RematchDeclined.addHandler(function() {
 			this._addMessage(this._game.getPlayerName(this._game.getUserColour().opposite) + " has declined a rematch.");
-		});
+		}, this);
 		
-		this._game.Rematch.addHandler(this, function(game) {
+		this._game.Rematch.addHandler(function(game) {
 			this._setupGame(game);
-		});
+		}, this);
 		
-		this._game.GameOver.addHandler(this, function(result) {
+		this._game.GameOver.addHandler(function(result) {
 			this._addMessage("Game over: " + result.description + ".");
-		});
+		}, this);
 		
-		this._game.Aborted.addHandler(this, function() {
+		this._game.Aborted.addHandler(function() {
 			this._addMessage("Game aborted by the server.");
-		});
+		}, this);
 	}
 	
 	Chat.prototype._addMessage = function(body, from) {

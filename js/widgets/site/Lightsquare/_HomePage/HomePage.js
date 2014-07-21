@@ -36,17 +36,17 @@ define(function(require) {
 		
 		var registerForm = new RegisterForm(this._user, this._template.nodes.register_form);
 		
-		registerForm.Registered.addHandler(this, function() {
+		registerForm.Registered.addHandler(function() {
 			this._template.set("registered", true);
-		});
+		}, this);
 		
 		this._gameBackupList = new GameBackupList(this._user, this._template.nodes.game_backup_list);
 		
-		this._gameBackupList.GameRestored.addHandler(this, function() {
+		this._gameBackupList.GameRestored.addHandler(function() {
 			if(this._template.get("dialog") === "restoreGame") {
 				this._hideDialog();
 			}
-		});
+		}, this);
 		
 		this._template.on("select_tab", (function(event, tab) {
 			this._template.set("tab", tab);
@@ -90,13 +90,13 @@ define(function(require) {
 	}
 	
 	HomePage.prototype._handleUserEvents = function() {
-		this._user.LoggedIn.addHandler(this, function() {
+		this._user.LoggedIn.addHandler(function() {
 			this._updateUserDependentElements();
-		});
+		}, this);
 		
-		this._user.LoggedOut.addHandler(this, function() {
+		this._user.LoggedOut.addHandler(function() {
 			this._updateUserDependentElements();
-		});
+		}, this);
 	}
 	
 	HomePage.prototype._updateUserDependentElements = function() {

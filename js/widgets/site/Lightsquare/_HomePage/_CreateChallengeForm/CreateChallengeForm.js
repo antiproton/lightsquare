@@ -43,22 +43,22 @@ define(function(require) {
 		
 		this._fillInLastChallengeOptions();
 		
-		this._user.LoggedIn.addHandler(this, function() {
+		this._user.LoggedIn.addHandler(function() {
 			this._fillInLastChallengeOptions();
-		});
+		}, this);
 		
-		this._user.ChallengeCreated.addHandler(this, function() {
+		this._user.ChallengeCreated.addHandler(function() {
 			this._updateCurrentChallenge();
-		});
+		}, this);
 		
-		this._user.ChallengeExpired.addHandler(this, function() {
+		this._user.ChallengeExpired.addHandler(function() {
 			this._updateCurrentChallenge();
 			
 			if(this._timeoutAnimation) {
 				this._timeoutAnimation.stop();
 				this._timeoutAnimation = null;
 			}
-		});
+		}, this);
 	}
 	
 	CreateChallengeForm.prototype._updateCurrentChallenge = function() {

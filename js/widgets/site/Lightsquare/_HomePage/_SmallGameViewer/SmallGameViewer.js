@@ -29,9 +29,9 @@ define(function(require) {
 		this._board.setShowCoords(false);
 		this._board.setViewingAs(this._viewingAs);
 		
-		this._board.SelectPiece.addHandler(this, function(data) {
+		this._board.SelectPiece.addHandler(function(data) {
 			data.cancel = true;
-		});
+		}, this);
 		
 		this._board.setBoardArray(this._game.getPosition().getBoardArray());
 		
@@ -51,19 +51,19 @@ define(function(require) {
 	}
 	
 	SmallGameViewer.prototype._setupGame = function() {
-		this._game.Move.addHandler(this, function(move) {
+		this._game.Move.addHandler(function(move) {
 			this._board.setBoardArray(move.getPositionAfter().getBoardArray());
 			this._board.unhighlightSquares();
 			this._highlightMove(move);
-		});
+		}, this);
 		
-		this._game.GameOver.addHandler(this, function(result) {
+		this._game.GameOver.addHandler(function(result) {
 			this.Inactive.fire();
-		});
+		}, this);
 		
-		this._game.Aborted.addHandler(this, function() {
+		this._game.Aborted.addHandler(function() {
 			this.Inactive.fire();
-		});
+		}, this);
 	}
 	
 	SmallGameViewer.prototype._relevanceFromColour = function(colour) {

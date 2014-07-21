@@ -97,19 +97,19 @@ define(function(require) {
 			this._user.acceptChallenge(id);
 		}).bind(this));
 		
-		this._challengeList.Updated.addHandler(this, function() {
+		this._challengeList.Updated.addHandler(function() {
 			this._updateTemplate();
-		});
+		}, this);
 		
-		this._user.ChallengeCreated.addHandler(this, function() {
+		this._user.ChallengeCreated.addHandler(function() {
 			this._updateCurrentChallenge();
 			this._updateTemplate();
-		});
+		}, this);
 		
-		this._user.ChallengeExpired.addHandler(this, function() {
+		this._user.ChallengeExpired.addHandler(function() {
 			this._updateCurrentChallenge();
 			this._updateTemplate();
-		});
+		}, this);
 	}
 	
 	ChallengeGraph.prototype._updateTemplate = function() {

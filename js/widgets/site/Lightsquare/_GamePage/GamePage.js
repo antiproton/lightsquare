@@ -66,7 +66,7 @@ define(function(require) {
 	GamePage.prototype._setupGame = function(game) {
 		this._game = game;
 		
-		this._game.Move.addHandler(this, function(move) {
+		this._game.Move.addHandler(function(move) {
 			this._history.move(move);
 			this._board.setBoardArray(move.getPositionAfter().getBoardArray());
 			this._template.set("viewingActivePlayer", (this._game.getActiveColour() === this._viewingAs));
@@ -77,39 +77,39 @@ define(function(require) {
 			this._clearPremove();
 			this._board.unhighlightSquares();
 			this._highlightMove(move);
-		});
+		}, this);
 		
-		this._game.DrawOffered.addHandler(this, function() {
+		this._game.DrawOffered.addHandler(function() {
 			this._template.set("drawOffered", true);
-		});
+		}, this);
 		
-		this._game.ClockTick.addHandler(this, function(times) {
+		this._game.ClockTick.addHandler(function(times) {
 			if(this.getPlayerColour() === this._game.getActiveColour()) {
 				this.PlayerClockTick.fire();
 			}
 			
 			this._updateClocks(times);
-		});
+		}, this);
 		
-		this._game.Rematch.addHandler(this, function(game) {
+		this._game.Rematch.addHandler(function(game) {
 			this._setupGame(game);
 			this._populateTemplate();
 			this._updateBoard();
 			this._updateHistory();
 			this._updateUserDependentElements();
 			this.Rematch.fire(game);
-		});
+		}, this);
 		
-		this._game.GameOver.addHandler(this, function(result) {
+		this._game.GameOver.addHandler(function(result) {
 			this._template.set("result", result);
 			this._template.set("isInProgress", false);
 			this._clearPremove();
-		});
+		}, this);
 		
-		this._game.Aborted.addHandler(this, function() {
+		this._game.Aborted.addHandler(function() {
 			this._template.set("isInProgress", false);
 			this._clearPremove();
-		});
+		}, this);
 	}
 	
 	GamePage.prototype._checkForPendingPremove = function() {
@@ -136,23 +136,23 @@ define(function(require) {
 	GamePage.prototype._setupBoard = function() {
 		this._board = new Board(this._template.nodes.board);
 		
-		this._board.SelectPiece.addHandler(this, function(data) {
+		this._board.SelectPiece.addHandler(function(data) {
 			if(!this._userIsPlaying() || data.piece.colour !== this.getPlayerColour() || !this._game.isInProgress()) {
 				data.cancel = true;
 			}
-		});
+		}, this);
 		
-		this._board.PieceSelected.addHandler(this, function(data) {
+		this._board.PieceSelected.addHandler(function(data) {
 			if(!data.isDragging) {
 				this._board.highlightSquares(data.square, Board.squareHighlightTypes.SELECTED);
 			}
-		});
+		}, this);
 		
-		this._board.Deselected.addHandler(this, function() {
+		this._board.Deselected.addHandler(function() {
 			this._board.unhighlightSquares(Board.squareHighlightTypes.SELECTED);
-		});
+		}, this);
 		
-		this._board.Move.addHandler(this, function(moveEvent) {
+		this._board.Move.addHandler(function(moveEvent) {
 			var allowPremove = this._user.getPrefs().premove;
 			var userIsActive = this._userIsActivePlayer();
 			var promoteTo = (this._user.getPrefs().alwaysQueen ? PieceType.queen : moveEvent.promoteTo);
@@ -176,7 +176,7 @@ define(function(require) {
 					}
 				}
 			}
-		});
+		}, this);
 		
 		this._template.on("cancel_premove", (function(event) {
 			event.original.preventDefault();
@@ -247,9 +247,9 @@ define(function(require) {
 		
 		this._updateHistory();
 		
-		this._history.UserSelect.addHandler(this, function(move) {
+		this._history.UserSelect.addHandler(function(move) {
 			this._board.setBoardArray(move.getPositionAfter().getBoardArray());
-		});
+		}, this);
 	}
 	
 	GamePage.prototype._updateHistory = function() {
@@ -340,16 +340,16 @@ define(function(require) {
 	}
 	
 	GamePage.prototype._handleUserEvents = function() {
-		this._user.PrefsChanged.addHandler(this, function() {
+		this._user.PrefsChanged.addHandler(function() {
 			this._setBoardPrefs();
 		});
 		
-		this._user.LoggedIn.addHandler(this, function() {
+		this._user.LoggedIn.addHandler(function() {
 			this._updateUserDependentElements();
 			this._setBoardPrefs();
 		});
 		
-		this._user.LoggedOut.addHandler(this, function() {
+		this._user.LoggedOut.addHandler(function() {
 			this._updateUserDependentElements();
 			this._setBoardPrefs();
 		});

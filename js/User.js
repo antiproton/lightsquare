@@ -171,10 +171,10 @@ define(function(require) {
 	User.prototype.createRestorationRequest = function(backup) {
 		var request = new RestorationRequest(this, this._server, backup);
 		
-		request.GameRestored.addHandler(this, function(game) {
+		request.GameRestored.addHandler(function(game) {
 			this._removeGameBackup(request.getId());
 			this.NewGame.fire(this._addGame(game));
-		});
+		}, this);
 		
 		return request;
 	}
@@ -244,20 +244,20 @@ define(function(require) {
 		this._games.push(game);
 		
 		if(game.userIsPlaying()) {
-			game.Move.addHandler(this, function() {
+			game.Move.addHandler(function() {
 				if(game.getHistory().length >= gameRestoration.MIN_MOVES) {
 					this._saveGameBackup(game);
 				}
-			});
+			}, this);
 			
-			game.GameOver.addHandler(this, function() {
+			game.GameOver.addHandler(function() {
 				this._removeGameBackup(game.getId());
-			});
+			}, this);
 		}
 		
-		game.Rematch.addHandler(this, function(game) {
+		game.Rematch.addHandler(function(game) {
 			this._addGame(game);
-		});
+		}, this);
 		
 		return game;
 	}
@@ -289,9 +289,9 @@ define(function(require) {
 	}
 	
 	User.prototype._handleServerEvents = function() {
-		this._server.ConnectionOpened.addHandler(this, function() {
+		this._server.ConnectionOpened.addHandler(function() {
 			this._resetSession();
-		});
+		}, this);
 	}
 	
 	User.prototype._resetSession = function() {

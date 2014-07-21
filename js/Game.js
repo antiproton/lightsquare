@@ -60,9 +60,9 @@ define(function(require) {
 			isTimed: false
 		});
 		
-		this._game.Move.addHandler(this, function() {
+		this._game.Move.addHandler(function() {
 			this._promisor.resolve("/request/premove", null);
-		});
+		}, this);
 		
 		this._clock = new Clock(this, this._timingStyle, function() {
 			return server.getServerTime();
