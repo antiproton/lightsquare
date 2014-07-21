@@ -7,9 +7,9 @@ define(function(require) {
 		this._games = {};
 		this._promisor = new Promisor(this);
 		
-		this.NewGame = new Event(this);
-		this.GameOver = new Event(this);
-		this.Move = new Event(this);
+		this.NewGame = new Event();
+		this.GameOver = new Event();
+		this.Move = new Event();
 		
 		this._subscribeToServerMessages();
 	}

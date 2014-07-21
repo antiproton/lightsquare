@@ -10,7 +10,7 @@ define(function(require) {
 	var Colour = require("chess/Colour");
 	
 	function PromotionDialog(pieceSize, parent) {
-		this.PieceSelected = new Event(this);
+		this.PieceSelected = new Event();
 		
 		this._template = new Template(html, parent);
 		this._pieces = [];

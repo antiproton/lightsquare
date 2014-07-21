@@ -7,7 +7,7 @@ define(function(require) {
 	require("css!./history.css");
 
 	function History(parent) {
-		this.UserSelect = new Event(this);
+		this.UserSelect = new Event();
 		
 		this._fullmoves = [];
 		this._scrollOnNewMoves = true;

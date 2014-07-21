@@ -11,7 +11,7 @@ define(function(require) {
 		this._promise = new Promise();
 		this._handleServerMessages();
 		
-		this.GameRestored = new Event(this);
+		this.GameRestored = new Event();
 	}
 	
 	RestorationRequest.prototype.getId = function() {

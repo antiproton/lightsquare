@@ -7,7 +7,7 @@ define(function(require) {
 		this._challenges = [];
 		this._isUpdating = false;
 		
-		this.Updated = new Event(this);
+		this.Updated = new Event();
 		
 		this._server.subscribe("/challenges", (function(challenges) {
 			this._challenges = this._challenges.concat(challenges);

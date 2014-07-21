@@ -16,14 +16,14 @@ define(function(require) {
 	function Board(parent) {
 		this._template = new Template(html, parent);
 
-		this.Move = new Event(this);
-		this.DragDrop = new Event(this);
-		this.DragPiece = new Event(this);
-		this.PieceDraggedOff = new Event(this);
-		this.SquareClicked = new Event(this);
-		this.SelectPiece = new Event(this);
-		this.PieceSelected = new Event(this);
-		this.Deselected = new Event(this);
+		this.Move = new Event();
+		this.DragDrop = new Event();
+		this.DragPiece = new Event();
+		this.PieceDraggedOff = new Event();
+		this.SquareClicked = new Event();
+		this.SelectPiece = new Event();
+		this.PieceSelected = new Event();
+		this.Deselected = new Event();
 
 		this._highlightedSquares = {};
 

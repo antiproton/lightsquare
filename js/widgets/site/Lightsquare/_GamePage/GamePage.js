@@ -16,8 +16,8 @@ define(function(require) {
 	};
 	
 	function GamePage(game, user, parent) {
-		this.PlayerClockTick = new Event(this);
-		this.Rematch = new Event(this);
+		this.PlayerClockTick = new Event();
+		this.Rematch = new Event();
 		
 		this._user = user;
 		this._viewingAs = Colour.white;

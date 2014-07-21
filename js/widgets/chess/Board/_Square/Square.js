@@ -17,8 +17,8 @@ define(function(require) {
 		this._highlightType = Square.highlightTypes.NONE;
 		this._colour = (this._square.coords.x % 2 === this._square.coords.y % 2 ? "black" : "white");
 
-		this.MouseDown = new Event(this);
-		this.MouseUp = new Event(this);
+		this.MouseDown = new Event();
+		this.MouseUp = new Event();
 
 		this._setupHtml();
 	}

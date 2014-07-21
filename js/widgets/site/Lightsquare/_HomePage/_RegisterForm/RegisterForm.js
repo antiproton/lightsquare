@@ -7,7 +7,7 @@ define(function(require) {
 	function RegisterForm(user, parent) {
 		this._user = user;
 		
-		this.Registered = new Event(this);
+		this.Registered = new Event();
 		
 		this._template = new Ractive({
 			el: parent,

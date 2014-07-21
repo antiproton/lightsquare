@@ -17,15 +17,15 @@ define(function(require) {
 	function Game(user, server, gameDetails) {
 		this._promisor = new Promisor(this);
 		
-		this.Move = new Event(this);
-		this.ClockTick = new Event(this);
-		this.GameOver = new Event(this);
-		this.Aborted = new Event(this);
-		this.DrawOffered = new Event(this);
-		this.ChatMessageReceived = new Event(this);
-		this.RematchOffered = new Event(this);
-		this.RematchDeclined = new Event(this);
-		this.Rematch = new Event(this);
+		this.Move = new Event();
+		this.ClockTick = new Event();
+		this.GameOver = new Event();
+		this.Aborted = new Event();
+		this.DrawOffered = new Event();
+		this.ChatMessageReceived = new Event();
+		this.RematchOffered = new Event();
+		this.RematchDeclined = new Event();
+		this.Rematch = new Event();
 		
 		this._user = user;
 		this._server = server;

@@ -12,7 +12,7 @@ define(function(require) {
 		this._setupTemplate(parent);
 		this._restorationRequests = {};
 		
-		this.GameRestored = new Event(this);
+		this.GameRestored = new Event();
 		
 		this._user.getPendingRestorations().then((function(ids) {
 			ids.forEach((function(id) {

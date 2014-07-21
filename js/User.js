@@ -38,12 +38,12 @@ define(function(require) {
 			boardStyle: null
 		};
 		
-		this.LoggedIn = new Event(this);
-		this.LoggedOut = new Event(this);
-		this.NewGame = new Event(this);
-		this.PrefsChanged = new Event(this);
-		this.ChallengeCreated = new Event(this);
-		this.ChallengeExpired = new Event(this);
+		this.LoggedIn = new Event();
+		this.LoggedOut = new Event();
+		this.NewGame = new Event();
+		this.PrefsChanged = new Event();
+		this.ChallengeCreated = new Event();
+		this.ChallengeExpired = new Event();
 		
 		this._handleServerEvents();
 		this._subscribeToServerMessages();
