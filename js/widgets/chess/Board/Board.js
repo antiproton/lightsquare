@@ -213,19 +213,17 @@ define(function(require) {
 	}
 
 	Board.prototype._setupHtmlSquares = function() {
-		var square;
-		
 		this._squares = [];
 
 		ChessSquare.forEach((function(chessSquare) {
-			square = new Square(this._template.board, chessSquare, this._squareSize);
+			var square = new Square(this._template.board, chessSquare, this._squareSize);
 
-			square.MouseDown.addHandler(function(event, sender) {
-				this._boardMouseDown(event, sender);
+			square.MouseDown.addHandler(function(event) {
+				this._boardMouseDown(event, square);
 			}, this);
 
-			square.MouseUp.addHandler(function(event, sender) {
-				this._boardMouseUp(event, sender);
+			square.MouseUp.addHandler(function(event) {
+				this._boardMouseUp(event, square);
 			}, this);
 
 			this._squares[chessSquare.squareNo] = square;
