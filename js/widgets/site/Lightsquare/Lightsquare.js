@@ -327,17 +327,17 @@ define(function(require) {
 	Lightsquare.prototype._handleUserEvents = function() {
 		this._user.NewGame.addHandler(function(game) {
 			this._router.navigate("/game/" + game.getId());
-		});
+		}, this);
 		
 		this._user.LoggedIn.addHandler(function() {
 			this._addGamePages();
 			this._updateUserDependentElements();
-		});
+		}, this);
 		
 		this._user.LoggedOut.addHandler(function() {
 			this._initialise();
 			this._router.loadFromUrl();
-		});
+		}, this);
 	}
 	
 	Lightsquare.prototype._updateUserDependentElements = function() {
