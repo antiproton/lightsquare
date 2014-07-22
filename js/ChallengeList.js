@@ -21,15 +21,6 @@ define(function(require) {
 			
 			this.Updated.fire();
 		}).bind(this));
-		
-		this._server.ConnectionOpened.addHandler(function() {
-			this._server.send("/request/challenges");
-		}, this);
-		
-		this._server.ConnectionLost.addHandler(function() {
-			this._challenges = [];
-			this.Updated.fire();
-		}, this);
 	}
 	
 	ChallengeList.prototype.getChallenges = function() {
