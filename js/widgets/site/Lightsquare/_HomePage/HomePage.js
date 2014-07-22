@@ -116,5 +116,9 @@ define(function(require) {
 		this._challengeList.stopUpdating();
 	}
 	
+	HomePage.prototype.remove = function() {
+		this._challengeList.stopUpdating();
+	}
+	
 	return HomePage;
 });
