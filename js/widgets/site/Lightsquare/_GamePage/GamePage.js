@@ -342,17 +342,17 @@ define(function(require) {
 	GamePage.prototype._handleUserEvents = function() {
 		this._user.PrefsChanged.addHandler(function() {
 			this._setBoardPrefs();
-		});
+		}, this);
 		
 		this._user.LoggedIn.addHandler(function() {
 			this._updateUserDependentElements();
 			this._setBoardPrefs();
-		});
+		}, this);
 		
 		this._user.LoggedOut.addHandler(function() {
 			this._updateUserDependentElements();
 			this._setBoardPrefs();
-		});
+		}, this);
 	}
 	
 	return GamePage;
