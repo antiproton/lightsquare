@@ -14,15 +14,17 @@ define(function(require) {
 		this._subscribeToServerMessages();
 	}
 	
+	RandomGames.prototype.startUpdating = function() {
+		this._server.send("/random_games/subscribe");
+	}
+	
 	RandomGames.prototype.stopUpdating = function() {
 		this._server.send("/random_games/unsubscribe");
 		this._promisor.remove("/games");
 	}
 	
 	RandomGames.prototype.getGames = function() {
-		return this._promisor.getPersistent("/games", function() {
-			this._server.send("/random_games/subscribe");
-		});
+		return this._promisor.getPersistent("/games");
 	}
 	
 	RandomGames.prototype._subscribeToServerMessages = function() {
