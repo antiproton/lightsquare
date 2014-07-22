@@ -56,6 +56,11 @@ input.register_done {
 	background: #BFBFBF;
 }
 
+div.games {
+	display: flex;
+	flex-direction: column;
+}
+
 div.play {
 	display: flex;
 	padding: .8em;

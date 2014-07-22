@@ -8,6 +8,8 @@ define(function(require) {
 	var GameBackupList = require("./_GameBackupList/GameBackupList");
 	var ChallengeList = require("ChallengeList");
 	var RegisterForm = require("./_RegisterForm/RegisterForm");
+	var RandomGames = require("RandomGames");
+	var CurrentGames = require("./_CurrentGames/CurrentGames");
 	
 	function HomePage(user, server, parent) {
 		this._user = user;
@@ -47,6 +49,8 @@ define(function(require) {
 				this._hideDialog();
 			}
 		}, this);
+		
+		new CurrentGames(new RandomGames(this._server), this._template.nodes.current_games);
 		
 		this._template.on("select_tab", (function(event, tab) {
 			this._template.set("tab", tab);
