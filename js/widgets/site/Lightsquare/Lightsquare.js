@@ -81,7 +81,11 @@ define(function(require) {
 				
 				this._tabContainer.changeId(url, newUrl);
 				this._changePageUrl(url, newUrl);
-				this._router.navigate(newUrl);
+				
+				if(this._router.getCurrentPath() === url) {
+					this._router.navigate(newUrl);
+				}
+				
 				this._updateGamePage(page);
 				
 				url = newUrl;
