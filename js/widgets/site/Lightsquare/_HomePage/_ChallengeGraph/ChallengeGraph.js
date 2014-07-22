@@ -184,8 +184,8 @@ define(function(require) {
 						challenge: {
 							id: challenge.id,
 							owner: challenge.owner.name,
-							initialTime: Time.fromUnitString(challenge.options.initialTime, Time.minutes).getUnitString(Time.minutes, " "),
-							timeIncrement: Time.fromUnitString(challenge.options.timeIncrement, Time.seconds).getUnitString(Time.seconds, " ")
+							initialTime: Time.fromUnitString(challenge.options.initialTime, Time.minutes).getUnitString(Time.minutes),
+							timeIncrement: Time.fromUnitString(challenge.options.timeIncrement, Time.seconds).getUnitString(Time.seconds)
 						}
 					});
 					
