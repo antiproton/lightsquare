@@ -1,0 +1,11 @@
+div.current_games {
+	display: flex;
+}
+
+div.current_game_board {
+	position: absolute;
+}
+
+div.square {
+	position: absolute;
+}
