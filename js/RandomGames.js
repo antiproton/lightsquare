@@ -58,7 +58,7 @@ define(function(require) {
 				this._games[gameDetails.id] = gameDetails;
 			}).bind(this));
 			
-			this._promisor.resolve("/games", this._games);
+			this._promisor.resolve("/games", games);
 		}).bind(this));
 	}
 	
