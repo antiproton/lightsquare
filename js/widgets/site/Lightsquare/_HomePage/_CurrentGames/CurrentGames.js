@@ -4,27 +4,32 @@ define(function(require) {
 	var Ractive = require("lib/dom/Ractive");
 	var Move = require("jsonchess/Move");
 	var Position = require("chess/Position");
+	var Square = require("chess/Square");
 	
 	function CurrentGames(gamesList, parent) {
 		this._gamesList = gamesList;
+		
+		var squareSize = 45;
 		
 		this._template = new Ractive({
 			el: parent,
 			template: html,
 			data: {
-				squareSize: 30,
+				squareSize: squareSize,
 				pieceUrl: require.toUrl("./piece_sprite.png"),
-				getSquareTopOffset: function(squareNo) {
-					
+				getSquareY: function(squareNo) {
+					return Square.fromSquareNo(squareNo).coords.y;
 				},
-				getSquareLeftOffset: function(squareNo) {
-					
+				getSquareX: function(squareNo) {
+					return Square.fromSquareNo(squareNo).coords.x;
 				},
 				getSquareColour: function(squareNo) {
+					var coords = Square.fromSquareNo(squareNo).coords;
 					
+					return (coords.x % 2 === coords.y % 2 ? 'w' : 'b');
 				},
 				getPieceOffset: function(piece) {
-					
+					return (piece ? -"PNBRQKpnbrqk".indexOf(piece) : 1) * squareSize;
 				},
 				games: {}
 			}
