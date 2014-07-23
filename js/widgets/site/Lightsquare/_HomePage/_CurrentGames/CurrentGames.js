@@ -5,9 +5,12 @@ define(function(require) {
 	var Move = require("jsonchess/Move");
 	var Position = require("chess/Position");
 	var Square = require("chess/Square");
+	var Event = require("lib/Event");
 	
 	function CurrentGames(gamesList, parent) {
 		this._gamesList = gamesList;
+		
+		this.ClickGame = new Event(this);
 		
 		var squareSize = 45;
 		
@@ -45,6 +48,10 @@ define(function(require) {
 		this._gamesList.GameOver.addHandler(function(id) {
 			this._template.set("games." + id, undefined);
 		}, this);
+		
+		this._template.on("click_game", (function(event, id) {
+			this.ClickGame.fire(id);
+		}).bind(this));
 	}
 	
 	CurrentGames.prototype.startUpdating = function() {

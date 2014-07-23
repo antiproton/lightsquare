@@ -159,7 +159,7 @@ define(function(require) {
 		
 		this._router.addRoute("/", (function(params, url) {
 			if(!this._hasPage(url)) {
-				this._pages[url] = new HomePage(this._user, this._server, this._tabContainer.createTab(url));
+				this._pages[url] = new HomePage(this._user, this._server, this._router, this._tabContainer.createTab(url));
 			}
 			
 			this._showPage(url);

@@ -11,9 +11,10 @@ define(function(require) {
 	var RandomGames = require("RandomGames");
 	var CurrentGames = require("./_CurrentGames/CurrentGames");
 	
-	function HomePage(user, server, parent) {
+	function HomePage(user, server, router, parent) {
 		this._user = user;
 		this._server = server;
+		this._router = router;
 		this._challengeList = new ChallengeList(this._server);
 		this._setupTemplate(parent);
 		this._handleUserEvents();
@@ -51,6 +52,10 @@ define(function(require) {
 		}, this);
 		
 		this._currentGames = new CurrentGames(new RandomGames(this._server), this._template.nodes.current_games);
+		
+		this._currentGames.ClickGame.addHandler(function(id) {
+			this._router.navigate("/game/" + id);
+		}, this);
 		
 		this._template.on("select_tab", (function(event, tab) {
 			this._template.set("tab", tab);
