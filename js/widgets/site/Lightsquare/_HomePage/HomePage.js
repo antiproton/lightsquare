@@ -50,7 +50,7 @@ define(function(require) {
 			}
 		}, this);
 		
-		new CurrentGames(new RandomGames(this._server), this._template.nodes.current_games);
+		this._currentGames = new CurrentGames(new RandomGames(this._server), this._template.nodes.current_games);
 		
 		this._template.on("select_tab", (function(event, tab) {
 			this._template.set("tab", tab);
@@ -109,15 +109,25 @@ define(function(require) {
 	}
 	
 	HomePage.prototype.show = function() {
-		this._challengeList.startUpdating();
+		this._startUpdating();
 	}
 	
 	HomePage.prototype.hide = function() {
-		this._challengeList.stopUpdating();
+		this._stopUpdating();
 	}
 	
 	HomePage.prototype.remove = function() {
+		this._stopUpdating();
+	}
+	
+	HomePage.prototype._startUpdating = function() {
+		this._challengeList.startUpdating();
+		this._currentGames.startUpdating();
+	}
+	
+	HomePage.prototype._stopUpdating = function() {
 		this._challengeList.stopUpdating();
+		this._currentGames.stopUpdating();
 	}
 	
 	return HomePage;
