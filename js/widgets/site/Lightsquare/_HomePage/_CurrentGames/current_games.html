@@ -1,4 +1,9 @@
 <div class="current_games">
+	<div
+		class="current_games_scroll_button"
+		on-click="scroll_left"
+		style="background-image: url('{{getAbsolutePath('./scroll_left.png')}}')"
+	></div>
 	<div class="current_games_scroll_outer">
 		<div class="current_games_scroll_inner">
 			{{#games:id}}
@@ -13,6 +18,7 @@
 						class="current_game_board"
 						style="
 							width: {{squareSize * 8}}px;
+							height: {{squareSize * 8}}px;
 						"
 					>
 						{{#board:squareNo}}
@@ -35,4 +41,9 @@
 			{{/games}}
 		</div>
 	</div>
+	<div
+		class="current_games_scroll_button"
+		on-click="scroll_right"
+		style="background-image: url('{{getAbsolutePath('./scroll_right.png')}}')"
+	></div>
 </div>

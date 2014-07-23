@@ -31,6 +31,9 @@ define(function(require) {
 				getPieceOffset: function(piece) {
 					return (piece ? -"PNBRQKpnbrqk".indexOf(piece) : 1) * squareSize;
 				},
+				getAbsolutePath: function(path) {
+					return require.toUrl(path);
+				},
 				games: {}
 			}
 		});

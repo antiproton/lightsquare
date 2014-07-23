@@ -1,6 +1,8 @@
 div.current_games {
 	display: flex;
-	background: #545454;
+	margin: .8em;
+	box-shadow: inset 8px 8px 32px rgba(0, 0, 0, .3);
+	background: #C6C6C6;
 }
 
 div.current_games_scroll_outer {
@@ -14,7 +16,6 @@ div.current_games_scroll_inner {
 	display: flex;
 	flex-grow: 1;
 	position: relative;
-	left: -100px;
 	padding: .8em;
 }
 
@@ -29,8 +30,21 @@ div.current_game:first-child {
 
 div.current_game_board {
 	position: absolute;
+	border: 1px solid #969696;
 }
 
 div.square {
 	position: absolute;
+}
+
+div.current_games_scroll_button {
+	width: 3.2em;
+	background-color: #323232;
+	background-position: center center;
+	background-repeat: no-repeat;
+	cursor: pointer;
+}
+
+div.current_games_scroll_button:hover {
+	background-color: #3D3D3D;
 }
