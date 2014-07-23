@@ -62,6 +62,7 @@ define(function(require) {
 	
 	CurrentGames.prototype.stopUpdating = function() {
 		this._gamesList.stopUpdating();
+		this._template.set("games", {});
 	}
 	
 	CurrentGames.prototype._updateGame = function(gameDetails) {
