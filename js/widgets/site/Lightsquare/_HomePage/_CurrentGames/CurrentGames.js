@@ -46,7 +46,9 @@ define(function(require) {
 		}, this);
 		
 		this._gamesList.GameOver.addHandler(function(id) {
-			this._template.set("games." + id, undefined);
+			delete this._template.get("games")[id];
+			
+			this._template.update("games");
 		}, this);
 		
 		this._template.on("click_game", (function(event, id) {
