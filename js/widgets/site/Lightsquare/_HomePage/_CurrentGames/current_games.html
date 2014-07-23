@@ -1,33 +1,36 @@
 <div class="current_games">
-	{{#games:id}}
-		<div
-			class="current_game"
-			style="
-				width: {{squareSize * 8}}px;
-			"
-		>
+	<div class="current_games_scroll_container">
+		{{#games:id}}
 			<div
-				class="current_game_board"
+				class="current_game"
 				style="
 					width: {{squareSize * 8}}px;
+					height: {{squareSize * 8}}px;
 				"
 			>
-				{{#board:squareNo}}
-					<div
-						class="square"
-						style="
-							top: {{getSquareY(squareNo) * squareSize}}px;
-							left: {{getSquareX(squareNo) * squareSize}}px;
-							width: {{squareSize}}px;
-							height: {{squareSize}}px;
-							background-color: {{getSquareColour(squareNo) === 'w' ? '#f0d9b5' : '#b58863'}};
-							background-image: url('{{pieceUrl}}');
-							background-position: {{getPieceOffset(this)}}px 0;
-							background-repeat: no-repeat;
-						"
-					></div>
-				{{/board}}
+				<div
+					class="current_game_board"
+					style="
+						width: {{squareSize * 8}}px;
+					"
+				>
+					{{#board:squareNo}}
+						<div
+							class="square"
+							style="
+								top: {{getSquareY(squareNo) * squareSize}}px;
+								left: {{getSquareX(squareNo) * squareSize}}px;
+								width: {{squareSize}}px;
+								height: {{squareSize}}px;
+								background-color: {{getSquareColour(squareNo) === 'w' ? '#f0d9b5' : '#b58863'}};
+								background-image: url('{{pieceUrl}}');
+								background-position: {{getPieceOffset(this)}}px 0;
+								background-repeat: no-repeat;
+							"
+						></div>
+					{{/board}}
+				</div>
 			</div>
-		</div>
-	{{/games}}
+		{{/games}}
+	</div>
 </div>
