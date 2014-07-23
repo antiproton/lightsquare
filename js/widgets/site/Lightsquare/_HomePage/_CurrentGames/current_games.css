@@ -1,14 +1,21 @@
 div.current_games {
 	display: flex;
-	padding: .8em;
 	background: #545454;
 }
 
-div.current_games_scroll_container {
+div.current_games_scroll_outer {
 	display: flex;
 	flex-grow: 1;
 	position: relative;
 	overflow: hidden;
+}
+
+div.current_games_scroll_inner {
+	display: flex;
+	flex-grow: 1;
+	position: relative;
+	left: -100px;
+	padding: .8em;
 }
 
 div.current_game {
