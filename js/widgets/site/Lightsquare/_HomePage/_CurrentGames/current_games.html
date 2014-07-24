@@ -35,8 +35,8 @@
 									{{lastMove.to === squareNo ? 'last_move_to' : ''}}
 								"
 								style="
-									top: {{getSquareY(squareNo) * squareSize}}px;
-									left: {{getSquareX(squareNo) * squareSize}}px;
+									top: {{getSquareY(squareNo, id) * squareSize}}px;
+									left: {{getSquareX(squareNo, id) * squareSize}}px;
 									width: {{squareSize}}px;
 									height: {{squareSize}}px;
 									background-image: url('{{pieceUrl}}');

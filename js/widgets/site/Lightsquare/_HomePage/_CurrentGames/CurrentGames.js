@@ -6,6 +6,7 @@ define(function(require) {
 	var Position = require("chess/Position");
 	var Square = require("chess/Square");
 	var Event = require("lib/Event");
+	var Colour = require("chess/Colour");
 	
 	function CurrentGames(gamesList, parent) {
 		this._gamesList = gamesList;
@@ -13,6 +14,7 @@ define(function(require) {
 		this.ClickGame = new Event(this);
 		
 		var squareSize = 45;
+		var viewingAs = {};
 		
 		this._template = new Ractive({
 			el: parent,
@@ -23,11 +25,11 @@ define(function(require) {
 				canScrollRight: true,
 				squareSize: squareSize,
 				pieceUrl: require.toUrl("./piece_sprite.png"),
-				getSquareY: function(squareNo) {
-					return Square.fromSquareNo(squareNo).coords.y;
+				getSquareY: function(squareNo, id) {
+					return 7 - Square.fromSquareNo(squareNo).adjusted[viewingAs[id]].coords.y;
 				},
-				getSquareX: function(squareNo) {
-					return Square.fromSquareNo(squareNo).coords.x;
+				getSquareX: function(squareNo, id) {
+					return Square.fromSquareNo(squareNo).adjusted[viewingAs[id]].coords.x;
 				},
 				getSquareColour: function(squareNo) {
 					var coords = Square.fromSquareNo(squareNo).coords;
@@ -45,11 +47,18 @@ define(function(require) {
 		});
 		
 		this._gamesList.Update.addHandler(function(gameDetails) {
+			var id = gameDetails.id;
+			
+			if(!(id in viewingAs)) {
+				viewingAs[id] = (Math.random() > .5 ? Colour.white : Colour.black);
+			}
+			
 			this._updateGame(gameDetails);
 		}, this);
 		
 		this._gamesList.GameOver.addHandler(function(id) {
 			delete this._template.get("games")[id];
+			delete viewingAs[id];
 			
 			this._template.update("games");
 		}, this);
