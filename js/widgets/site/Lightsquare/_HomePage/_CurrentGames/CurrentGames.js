@@ -18,6 +18,9 @@ define(function(require) {
 			el: parent,
 			template: html,
 			data: {
+				scrollOffset: 0,
+				canScrollLeft: true,
+				canScrollRight: true,
 				squareSize: squareSize,
 				pieceUrl: require.toUrl("./piece_sprite.png"),
 				getSquareY: function(squareNo) {
@@ -54,6 +57,17 @@ define(function(require) {
 		this._template.on("click_game", (function(event, id) {
 			this.ClickGame.fire(id);
 		}).bind(this));
+		
+		this._scrollAnimation = null;
+		this._scrollVelocity = 0;
+		
+		this._template.on("scroll_left", (function() {
+			this._scroll(1);
+		}).bind(this));
+		
+		this._template.on("scroll_right", (function() {
+			this._scroll(-1);
+		}).bind(this));
 	}
 	
 	CurrentGames.prototype.startUpdating = function() {
@@ -70,6 +84,37 @@ define(function(require) {
 		
 		this._template.set("games." + id + ".board", new Position(gameDetails.fen).getBoardArray());
 		this._template.set("games." + id + ".lastMove", gameDetails.lastMove);
+	}
+	
+	CurrentGames.prototype._scroll = function(velocity) {
+		if(this._scrollAnimation) {
+			this._scrollAnimation.stop();
+		}
+		
+		this._scrollVelocity += velocity;
+		
+		var containerWidth = this._template.nodes.scroll_outer.offsetWidth;
+		var scrollWidth = this._template.nodes.scroll_inner.scrollWidth;
+		var minOffset = -(scrollWidth - containerWidth);
+		var currentOffset = this._template.get("scrollOffset");
+		var moveBy = containerWidth * this._scrollVelocity;
+		var newOffset = currentOffset + moveBy;
+		
+		this._template.set("canScrollLeft", (newOffset < 0));
+		this._template.set("canScrollRight", (newOffset > minOffset));
+		
+		newOffset = Math.max(newOffset, minOffset);
+		newOffset = Math.min(0, newOffset);
+		
+
+		this._scrollAnimation = this._template.animate("scrollOffset", newOffset, {
+			duration: 700,
+			easing: "easeOut"
+		});
+		
+		this._scrollAnimation.then((function() {
+			this._scrollVelocity = 0;
+		}).bind(this));
 	}
 	
 	return CurrentGames;

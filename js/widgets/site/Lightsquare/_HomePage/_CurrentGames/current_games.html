@@ -1,11 +1,15 @@
 <div class="current_games">
 	<div
-		class="current_games_scroll_button"
+		class="current_games_scroll_button {{canScrollLeft ? '' : 'disabled'}}"
 		on-click="scroll_left"
 		style="background-image: url('{{getAbsolutePath('./scroll_left.png')}}')"
 	></div>
-	<div class="current_games_scroll_outer">
-		<div class="current_games_scroll_inner">
+	<div class="current_games_scroll_outer" id="scroll_outer">
+		<div
+			class="current_games_scroll_inner"
+			id="scroll_inner"
+			style="left: {{scrollOffset}}px"
+		>
 			{{#games:id}}
 				<div
 					class="current_game"
@@ -43,7 +47,7 @@
 		</div>
 	</div>
 	<div
-		class="current_games_scroll_button"
+		class="current_games_scroll_button {{canScrollRight ? '' : 'disabled'}}"
 		on-click="scroll_right"
 		style="background-image: url('{{getAbsolutePath('./scroll_right.png')}}')"
 	></div>
