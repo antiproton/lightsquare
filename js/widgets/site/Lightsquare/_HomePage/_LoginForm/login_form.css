@@ -8,13 +8,3 @@ input.login {
 	border-color: #9B9B9B;
 	background: #BFBFBF;
 }
-
-div.login_form_error {
-	font-size: .8em;
-	text-align: center;
-	color: #BA0000;
-	margin-top: .8em;
-	border: 1px solid #D1D1D1;
-	border-radius: 3px;
-	padding: .5em;
-}

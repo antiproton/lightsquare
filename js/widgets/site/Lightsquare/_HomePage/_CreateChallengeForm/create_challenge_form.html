@@ -7,6 +7,11 @@
 	<input id="acceptRatingMin" type="text" value="{{ratingMin}}" title="Minimum rating of players who can see and accept the challenge">
 	<label for="acceptRatingMax" title="Maximum rating of players who can see and accept the challenge">Max. opponent rating</label>
 	<input id="acceptRatingMax" type="text" value="{{ratingMax}}" title="Maximum rating of players who can see and accept the challenge">
+	{{#error}}
+		<div class="form_error">
+			{{error}}
+		</div>
+	{{/error}}
 	{{#waiting}}
 		<input
 			class="create_challenge waiting"
