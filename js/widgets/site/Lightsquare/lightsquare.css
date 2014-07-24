@@ -68,8 +68,9 @@ div.connecting_dialog h1 {
 }
 
 p.backedup {
-	border: 1px solid #dfdfdf;
+	border-radius: 3px;
 	padding: .2em .4em;
+	background: #eeeeee;
 }
 
 div.form_error {
