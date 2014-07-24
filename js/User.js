@@ -211,7 +211,9 @@ define(function(require) {
 	}
 	
 	User.prototype.createChallenge = function(options) {
-		this._server.send("/challenge/create", options);
+		return this._promisor.get("/challenge/create", function() {
+			this._server.send("/challenge/create", options);
+		});
 	}
 	
 	User.prototype.cancelChallenge = function() {
@@ -353,12 +355,17 @@ define(function(require) {
 				this._promisor.resolve("/details");
 			},
 			
-			"/current_challenge": function(challengeDetails) {
+			"/challenge/create/success": function(challengeDetails) {
 				this._currentChallenge = challengeDetails;
-				this.ChallengeCreated.fire();
+				this._promisor.resolve("/challenge/create", challengeDetails);
+				this.ChallengeCreated.fire(challengeDetails);
 			},
 			
-			"/current_challenge/expired": function() {
+			"/challenge/create/failure": function(reason) {
+				this._promisor.fail("/challenge/create", reason);
+			},
+			
+			"/current_challenge_expired": function() {
 				this._currentChallenge = null;
 				this.ChallengeExpired.fire();
 			},
