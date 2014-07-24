@@ -106,7 +106,6 @@ define(function(require) {
 		newOffset = Math.max(newOffset, minOffset);
 		newOffset = Math.min(0, newOffset);
 		
-
 		this._scrollAnimation = this._template.animate("scrollOffset", newOffset, {
 			duration: 700,
 			easing: "easeOut"

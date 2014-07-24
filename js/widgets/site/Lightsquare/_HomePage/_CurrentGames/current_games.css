@@ -39,6 +39,25 @@ div.square {
 	position: absolute;
 }
 
+div.square.light {
+	background-color: #f0d9b5;
+}
+
+div.square.dark {
+	background-color: #b58863;
+}
+
+div.square.light.last_move_to,
+div.square.light.last_move_from
+{
+	background-color: #FFF6D6;
+}
+
+div.square.dark.last_move_to,
+div.square.dark.last_move_from {
+	background-color: #D8C488;
+}
+
 div.current_games_scroll_button {
 	flex-shrink: 0;
 	width: 3.2em;

@@ -28,13 +28,17 @@
 					>
 						{{#board:squareNo}}
 							<div
-								class="square"
+								class="
+									square
+									{{getSquareColour(squareNo) === 'w' ? 'light' : 'dark'}}
+									{{lastMove.from === squareNo ? 'last_move_from' : ''}}
+									{{lastMove.to === squareNo ? 'last_move_to' : ''}}
+								"
 								style="
 									top: {{getSquareY(squareNo) * squareSize}}px;
 									left: {{getSquareX(squareNo) * squareSize}}px;
 									width: {{squareSize}}px;
 									height: {{squareSize}}px;
-									background-color: {{getSquareColour(squareNo) === 'w' ? '#f0d9b5' : '#b58863'}};
 									background-image: url('{{pieceUrl}}');
 									background-position: {{getPieceOffset(this)}}px 0;
 									background-repeat: no-repeat;
