@@ -55,6 +55,10 @@ define(function(require) {
 			this._fillInLastChallengeOptions();
 		}, this);
 		
+		this._user.ChallengeCreated.addHandler(function() {
+			this._updateCurrentChallenge();
+		}, this);
+		
 		this._user.ChallengeExpired.addHandler(function() {
 			this._updateCurrentChallenge();
 			
