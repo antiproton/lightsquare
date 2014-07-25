@@ -323,7 +323,7 @@ define(function(require) {
 					this._login(loginDetails);
 				}
 				
-				this._promisor.resolve("/register");
+				this._promisor.resolve("/register", !!loginDetails);
 			},
 			
 			"/user/register/failure": function(reason) {

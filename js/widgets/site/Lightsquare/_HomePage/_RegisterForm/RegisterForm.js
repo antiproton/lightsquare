@@ -34,9 +34,13 @@ define(function(require) {
 			}
 			
 			else {
-				this._user.register(username, password).then((function() {
+				this._user.register(username, password).then((function(loggedIn) {
 					this._clearForm();
-					this.Registered.fire();
+					
+					this.Registered.fire({
+						loggedIn: loggedIn,
+						registeredUsername: username
+					});
 				}).bind(this), (function(error) {
 					this._setError(error);
 				}).bind(this));

@@ -9,9 +9,17 @@
 			
 		</div>
 		{{#registered}}
-			<h1>Welcome to Lightsquare, {{username}}.</h1>
+			<h1>Welcome to Lightsquare, {{registeredUsername}}.</h1>
 			<div class="register_success">
-				Your account has been created.
+				<p>
+					Your account has been created.
+				</p>
+				{{^registerAutoLoggedIn}}
+					<p>
+						(You can log in to your account after completing any games and logging
+						out of any other accounts.)
+					</p>
+				{{/registerAutoLoggedIn}}
 			</div>
 			<div class="register_done">
 				<input type="button" class="register_done" on-click="register_done" value="OK" autofocus>

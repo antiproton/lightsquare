@@ -39,8 +39,10 @@ define(function(require) {
 		
 		var registerForm = new RegisterForm(this._user, this._template.nodes.register_form);
 		
-		registerForm.Registered.addHandler(function() {
+		registerForm.Registered.addHandler(function(data) {
 			this._template.set("registered", true);
+			this._template.set("registerAutoLoggedIn", data.loggedIn);
+			this._template.set("registeredUsername", data.registeredUsername);
 		}, this);
 		
 		this._gameBackupList = new GameBackupList(this._user, this._template.nodes.game_backup_list);
