@@ -3,6 +3,10 @@ div.game {
 	flex-grow: 1;
 }
 
+input.rematch.rematch_offered {
+	box-shadow: 0 0 3px rgba(255, 253, 234, .7);
+}
+
 div.game_main {
 	display: flex;
 	flex-direction: column;

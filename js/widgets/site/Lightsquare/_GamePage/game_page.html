@@ -40,7 +40,11 @@
 							type="button"
 							on-click="rematch"
 							value="Rematch"
-							class="{{userHasOfferedRematch ? 'disabled' : ''}}"
+							class="
+								rematch
+								{{userHasOfferedRematch ? 'disabled' : ''}}
+								{{opponentHasOfferedRematch ? 'rematch_offered' : ''}}
+							"
 						>
 						<input type="button" on-click="new_game" value="New {{timingDescription}}">
 					{{/isInProgress}}

@@ -91,6 +91,10 @@ define(function(require) {
 			this._updateClocks(times);
 		}, this);
 		
+		this._game.RematchOffered.addHandler(function() {
+			this._template.set("opponentHasOfferedRematch", true);
+		}, this);
+		
 		this._game.Rematch.addHandler(function(game) {
 			this._setupGame(game);
 			this._populateTemplate();
@@ -299,7 +303,8 @@ define(function(require) {
 			userIsActivePlayer: this._userIsActivePlayer(),
 			drawOffered: this._game.isDrawOffered(),
 			canClaimDraw: this._game.isDrawClaimable(),
-			timingDescription: this._game.getTimingStyle().getDescription()
+			timingDescription: this._game.getTimingStyle().getDescription(),
+			opponentHasOfferedRematch: false
 		});
 	}
 	
