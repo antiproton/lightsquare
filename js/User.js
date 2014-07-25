@@ -76,6 +76,7 @@ define(function(require) {
 	User.prototype._login = function(userDetails) {
 		this._loadDetails(userDetails);
 		this._promisor.remove("/games");
+		this.LoggedIn.fire();
 	}
 	
 	User.prototype.logout = function() {
@@ -306,7 +307,6 @@ define(function(require) {
 			"/user/login/success": function(userDetails) {
 				this._login(userDetails);
 				this._promisor.resolve("/login");
-				this.LoggedIn.fire();
 			},
 			
 			"/user/login/failure": function(reason) {
@@ -318,7 +318,11 @@ define(function(require) {
 				this._promisor.resolve("/logout");
 			},
 			
-			"/user/register/success": function() {
+			"/user/register/success": function(loginDetails) {
+				if(loginDetails) {
+					this._login(loginDetails);
+				}
+				
 				this._promisor.resolve("/register");
 			},
 			
