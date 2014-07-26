@@ -27,8 +27,8 @@ define(function(require) {
 		this._username = "Anonymous";
 		this._isLoggedIn = false;
 		this._rating = glicko2.defaults.RATING;
-		this._currentChallenge = null;
-		this._lastChallengeOptions = null;
+		this._currentSeek = null;
+		this._lastSeekOptions = null;
 		
 		this._prefs = {
 			premove: null,
@@ -40,10 +40,11 @@ define(function(require) {
 		
 		this.LoggedIn = new Event();
 		this.LoggedOut = new Event();
-		this.NewGame = new Event();
+		this.GameRestored = new Event();
 		this.PrefsChanged = new Event();
-		this.ChallengeCreated = new Event();
-		this.ChallengeExpired = new Event();
+		this.SeekCreated = new Event();
+		this.SeekExpired = new Event();
+		this.SeekMatched = new Event();
 		
 		this._handleServerEvents();
 		this._subscribeToServerMessages();
@@ -174,7 +175,7 @@ define(function(require) {
 		
 		request.GameRestored.addHandler(function(game) {
 			this._removeGameBackup(request.getId());
-			this.NewGame.fire(this._addGame(game));
+			this.GameRestored.fire(this._addGame(game));
 		}, this);
 		
 		return request;
@@ -211,26 +212,26 @@ define(function(require) {
 		return this._isLoggedIn;
 	}
 	
-	User.prototype.createChallenge = function(options) {
-		return this._promisor.get("/challenge/create", function() {
-			this._server.send("/challenge/create", options);
+	User.prototype.seekGame = function(options) {
+		return this._promisor.get("/seek", function() {
+			this._server.send("/seek", options);
 		});
 	}
 	
-	User.prototype.cancelChallenge = function() {
-		this._server.send("/challenge/cancel");
+	User.prototype.cancelSeek = function() {
+		this._server.send("/seek/cancel");
 	}
 	
-	User.prototype.acceptChallenge = function(id) {
-		this._server.send("/challenge/accept", id);
+	User.prototype.acceptSeek = function(id) {
+		this._server.send("/seek/accept", id);
 	}
 	
-	User.prototype.getCurrentChallenge = function() {
-		return this._currentChallenge;
+	User.prototype.getCurrentSeek = function() {
+		return this._currentSeek;
 	}
 	
-	User.prototype.getLastChallengeOptions = function() {
-		return this._lastChallengeOptions;
+	User.prototype.getLastSeekOptions = function() {
+		return this._lastSeekOptions;
 	}
 	
 	User.prototype.hasGamesInProgress = function() {
@@ -346,8 +347,12 @@ define(function(require) {
 				this._promisor.resolve("/game/" + game.getId(), game);
 			},
 			
-			"/challenge/accepted": function(gameDetails) {
-				this.NewGame.fire(this._addGame(this._createGame(gameDetails)));
+			"/seek/matched": function(gameDetails) {
+				var game = this._addGame(this._createGame(gameDetails));
+				
+				this._currentSeek = null;
+				this.SeekMatched.fire(game);
+				this._promisor.resolve("/seek", game);
 			},
 			
 			"/game/not_found": function(id) {
@@ -359,19 +364,20 @@ define(function(require) {
 				this._promisor.resolve("/details");
 			},
 			
-			"/challenge/create/success": function(challengeDetails) {
-				this._currentChallenge = challengeDetails;
-				this._promisor.resolve("/challenge/create", challengeDetails);
-				this.ChallengeCreated.fire(challengeDetails);
+			"/seek/waiting": function(seekDetails) {
+				this._currentSeek = seekDetails;
+				this._promisor.progress("/seek", seekDetails);
+				this.SeekCreated.fire(seekDetails);
 			},
 			
-			"/challenge/create/failure": function(reason) {
-				this._promisor.fail("/challenge/create", reason);
+			"/seek/error": function(error) {
+				this._promisor.fail("/seek", error);
 			},
 			
-			"/current_challenge_expired": function() {
-				this._currentChallenge = null;
-				this.ChallengeExpired.fire();
+			"/seek/expired": function() {
+				this._currentSeek = null;
+				this.SeekExpired.fire();
+				this._promisor.resolve("/seek", null);
 			},
 			
 			"/restoration_requests": function(ids) {
@@ -389,8 +395,8 @@ define(function(require) {
 		this._username = userDetails.username;
 		this._isLoggedIn = userDetails.isLoggedIn;
 		this._rating = userDetails.rating;
-		this._currentChallenge = userDetails.currentChallenge;
-		this._lastChallengeOptions = userDetails.lastChallengeOptions;
+		this._currentSeek = userDetails.currentSeek;
+		this._lastSeekOptions = userDetails.lastSeekOptions;
 		this._prefs = userDetails.prefs;
 	}
 	

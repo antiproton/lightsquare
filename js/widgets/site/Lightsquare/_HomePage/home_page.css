@@ -66,11 +66,11 @@ div.play {
 	padding: .8em;
 }
 
-div.challenges {
+div.seeks {
 	flex-grow: 1;
 }
 
-div.challenges, div.sidebar {
+div.seeks, div.sidebar {
 	margin-left: .8em;
 }
 

@@ -1,4 +1,4 @@
-div.challenge_graph {
+div.seek_graph {
 	display: flex;
 }
 
@@ -15,17 +15,17 @@ div.ratings > div {
 	text-align: right;
 }
 
-div.challenge_graph_body {
+div.seek_graph_body {
 	flex-grow: 1;
 	border: 1px solid #ababab;
 	background: white;
 }
 
-div.challenge_graph_body > div {
+div.seek_graph_body > div {
 	position: relative;
 }
 
-div.challenge_graph_challenges {
+div.seek_graph_seeks {
 	display: flex;
 	flex-direction: column;
 	align-items: flex-start;
@@ -45,13 +45,13 @@ div.time_lines > div:last-child {
 	border-right: 0;
 }
 
-div.no_challenges_message {
+div.no_seeks_message {
 	display: flex;
 	justify-content: space-around;
 	align-items: center;
 }
 
-div.no_challenges_message > div {
+div.no_seeks_message > div {
 	font-size: 1.2em;
 	text-align: center;
 	color: #ababab;
@@ -59,7 +59,7 @@ div.no_challenges_message > div {
 	background: white;
 }
 
-div.challenge {
+div.seek {
 	display: flex;
 	align-items: center;
 	flex-shrink: 0;
@@ -73,32 +73,32 @@ div.challenge {
 	cursor: pointer;
 }
 
-div.challenge.current_challenge {
+div.seek.current_seek {
 	cursor: default;
 }
 
-div.challenge.not_current_challenge,
-div.challenge.current_challenge,
-div.challenge.current_challenge:hover
+div.seek.not_current_seek,
+div.seek.current_seek,
+div.seek.current_seek:hover
 {
 	background: #efefef;
 }
 
-div.challenge.not_current_challenge:hover,
-div.challenge.current_challenge:hover {
+div.seek.not_current_seek:hover,
+div.seek.current_seek:hover {
 	z-index: 2;
 }
 
-div.challenge.not_current_challenge:hover {
+div.seek.not_current_seek:hover {
 	border-color: #202020;
 	background: #5E5E5E;
 }
 
-div.challenge.not_current_challenge:hover > div.challenge_label > div.challenge_owner {
+div.seek.not_current_seek:hover > div.seek_label > div.seek_owner {
 	color: #E5E5E5;
 }
 
-div.challenge.not_current_challenge:hover > div.challenge_label > div.challenge_time {
+div.seek.not_current_seek:hover > div.seek_label > div.seek_time {
 	color: white;
 }
 
@@ -108,7 +108,7 @@ div.body_and_time_brackets {
 	flex-grow: 1;
 }
 
-div.challenge_label {
+div.seek_label {
 	font-size: .8em;
 	text-align: center;
 	display: flex;
@@ -116,11 +116,11 @@ div.challenge_label {
 	flex-grow: 1;
 }
 
-div.challenge_owner {
+div.seek_owner {
 	color: #606060;
 }
 
-div.challenge_time {
+div.seek_time {
 	font-size: 1.2em;
 }
 

@@ -1,6 +1,6 @@
 define(function(require) {
-	require("css!./challenge_graph.css");
-	var html = require("file!./challenge_graph.html");
+	require("css!./seek_graph.css");
+	var html = require("file!./seek_graph.html");
 	var Event = require("lib/Event");
 	var Time = require("chess/Time");
 	require("lib/Array.getShallowCopy");
@@ -19,12 +19,12 @@ define(function(require) {
 		}
 	}
 	
-	function ChallengeGraph(challengeList, user, parent) {
-		this._challengeList = challengeList;
+	function SeekGraph(seekList, user, parent) {
+		this._seekList = seekList;
 		this._user = user;
 		
 		this._graphHeightInEm = 30;
-		this._challengeHeightInEm = 2;
+		this._seekHeightInEm = 2;
 		
 		this._gridResolution = {
 			x: 2,
@@ -72,11 +72,11 @@ define(function(require) {
 		
 		this._setupTemplate(parent);
 		this._updateTemplate();
-		this._updateCurrentChallenge();
+		this._updateCurrentSeek();
 	}
 	
-	ChallengeGraph.prototype._setupTemplate = function(parent) {
-		var graphRangeInEm = this._graphHeightInEm - this._challengeHeightInEm;
+	SeekGraph.prototype._setupTemplate = function(parent) {
+		var graphRangeInEm = this._graphHeightInEm - this._seekHeightInEm;
 		var ratingRange = this._maxRating - this._minRating;
 		
 		this._template = new Ractive({
@@ -84,46 +84,46 @@ define(function(require) {
 			template: html,
 			data: {
 				graphHeightInEm: this._graphHeightInEm,
-				challengeHeightInEm: this._challengeHeightInEm,
+				seekHeightInEm: this._seekHeightInEm,
 				timeBracketWidthInPercent: this._timeBracketWidthInPercent,
 				timeBrackets: this._timeBrackets,
-				challenges: [],
-				currentChallengeId: null,
+				seeks: [],
+				currentSeekId: null,
 				userRating: this._user.getRating()
 			}
 		});
 		
 		this._template.on("accept", (function(event, id) {
-			this._user.acceptChallenge(id);
+			this._user.acceptSeek(id);
 		}).bind(this));
 		
-		this._challengeList.Updated.addHandler(function() {
+		this._seekList.Updated.addHandler(function() {
 			this._updateTemplate();
 		}, this);
 		
-		this._user.ChallengeCreated.addHandler(function() {
-			this._updateCurrentChallenge();
+		this._user.SeekCreated.addHandler(function() {
+			this._updateCurrentSeek();
 			this._updateTemplate();
 		}, this);
 		
-		this._user.ChallengeExpired.addHandler(function() {
-			this._updateCurrentChallenge();
+		this._user.SeekExpired.addHandler(function() {
+			this._updateCurrentSeek();
 			this._updateTemplate();
 		}, this);
 	}
 	
-	ChallengeGraph.prototype._updateTemplate = function() {
+	SeekGraph.prototype._updateTemplate = function() {
 		var occupiedGridSquares = {};
-		var challenges = this._challengeList.getChallenges();
-		var graphRangeInEm = this._graphHeightInEm - this._challengeHeightInEm;
+		var seeks = this._seekList.getSeeks();
+		var graphRangeInEm = this._graphHeightInEm - this._seekHeightInEm;
 		var ratingRange = this._maxRating - this._minRating;
-		var graphChallenges = [];
+		var graphSeeks = [];
 		
-		challenges.forEach((function(challenge, index) {
-			var rating = challenge.owner.rating;
+		seeks.forEach((function(seek, index) {
+			var rating = seek.owner.rating;
 			var ratingBracket = Math.max(this._minRating, rating - rating % this._ratingBracketSize);
-			var initialTime = Time.fromUnitString(challenge.options.initialTime);
-			var timeIncrement = Time.fromUnitString(challenge.options.timeIncrement, Time.seconds) * AVERAGE_MOVES_PER_GAME;
+			var initialTime = Time.fromUnitString(seek.options.initialTime);
+			var timeIncrement = Time.fromUnitString(seek.options.timeIncrement, Time.seconds) * AVERAGE_MOVES_PER_GAME;
 			var estimatedTotalTime = initialTime + timeIncrement;
 			var timeBracket;
 			
@@ -145,7 +145,7 @@ define(function(require) {
 				leftOffset += offsetWithinBracket;
 			}
 			
-			var ratingAboveMinimum = Math.max(0, challenge.owner.rating - this._minRating);
+			var ratingAboveMinimum = Math.max(0, seek.owner.rating - this._minRating);
 			var topOffset = Math.max(0, graphRangeInEm - ratingAboveMinimum / (ratingRange / graphRangeInEm));
 			
 			var gridX = leftOffset - leftOffset % this._gridResolution.x;
@@ -164,28 +164,28 @@ define(function(require) {
 			}
 			
 			var acceptsRating = {
-				min: getAbsoluteRating(rating, challenge.options.acceptRatingMin),
-				max: getAbsoluteRating(rating, challenge.options.acceptRatingMax)
+				min: getAbsoluteRating(rating, seek.options.acceptRatingMin),
+				max: getAbsoluteRating(rating, seek.options.acceptRatingMax)
 			};
 			
 			var userRating = this._user.getRating();
-			var currentChallenge = this._user.getCurrentChallenge();
+			var currentSeek = this._user.getCurrentSeek();
 			
 			if(
-				(currentChallenge !== null && challenge.id === currentChallenge.id)
+				(currentSeek !== null && seek.id === currentSeek.id)
 				|| (userRating >= acceptsRating.min && userRating <= acceptsRating.max)
 			) {
 				if(!(gridSquare in occupiedGridSquares) && gridSquaresMoved <= maxGridSquaresToMove) {
-					topOffset -= this._challengeHeightInEm * index;
+					topOffset -= this._seekHeightInEm * index;
 					
-					graphChallenges.push({
+					graphSeeks.push({
 						leftOffsetInPercent: leftOffset,
 						topOffsetInEm: topOffset,
-						challenge: {
-							id: challenge.id,
-							owner: challenge.owner.name,
-							initialTime: Time.fromUnitString(challenge.options.initialTime, Time.minutes).getUnitString(Time.minutes),
-							timeIncrement: Time.fromUnitString(challenge.options.timeIncrement, Time.seconds).getUnitString(Time.seconds)
+						seek: {
+							id: seek.id,
+							owner: seek.owner.name,
+							initialTime: Time.fromUnitString(seek.options.initialTime, Time.minutes).getUnitString(Time.minutes),
+							timeIncrement: Time.fromUnitString(seek.options.timeIncrement, Time.seconds).getUnitString(Time.seconds)
 						}
 					});
 					
@@ -194,14 +194,14 @@ define(function(require) {
 			}
 		}).bind(this));
 		
-		this._template.set("challenges", graphChallenges);
+		this._template.set("seeks", graphSeeks);
 	}
 	
-	ChallengeGraph.prototype._updateCurrentChallenge = function() {
-		var currentChallenge = this._user.getCurrentChallenge();
+	SeekGraph.prototype._updateCurrentSeek = function() {
+		var currentSeek = this._user.getCurrentSeek();
 		
-		this._template.set("currentChallengeId", (currentChallenge ? currentChallenge.id : null));
+		this._template.set("currentSeekId", (currentSeek ? currentSeek.id : null));
 	}
 	
-	return ChallengeGraph;
+	return SeekGraph;
 });

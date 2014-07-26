@@ -1,10 +1,10 @@
 define(function(require) {
-	require("css!./create_challenge_form.css");
-	var html = require("file!./create_challenge_form.html");
+	require("css!./seek_form.css");
+	var html = require("file!./seek_form.html");
 	var Ractive = require("lib/dom/Ractive");
 	var jsonChessConstants = require("jsonchess/constants");
 	
-	function CreateChallengeForm(user, server, parent) {
+	function SeekForm(user, server, parent) {
 		this._user = user;
 		this._server = server;
 		
@@ -23,44 +23,44 @@ define(function(require) {
 		
 		this._clearErrorTimer = null;
 		this._timeoutAnimation = null;
-		this._updateCurrentChallenge();
+		this._updateCurrentSeek();
 		
 		this._template.on("create_or_cancel", (function(event) {
 			event.original.preventDefault();
 			
 			if(this._template.get("waiting")) {
-				this._user.cancelChallenge();
+				this._user.cancelSeek();
 			}
 			
 			else {
 				this._clearError();
 				this._clearClearErrorTimer();
 				
-				this._user.createChallenge({
+				this._user.seekGame({
 					initialTime: this._template.get("initialTime").toString(),
 					timeIncrement: this._template.get("timeIncrement").toString(),
 					acceptRatingMin: this._template.get("ratingMin").toString(),
 					acceptRatingMax: this._template.get("ratingMax").toString()
 				}).then((function() {
-					this._updateCurrentChallenge();
+					this._updateCurrentSeek();
 				}).bind(this), (function(error) {
 					this._setError(error);
 				}).bind(this));
 			}
 		}).bind(this));
 		
-		this._fillInLastChallengeOptions();
+		this._fillInLastSeekOptions();
 		
 		this._user.LoggedIn.addHandler(function() {
-			this._fillInLastChallengeOptions();
+			this._fillInLastSeekOptions();
 		}, this);
 		
-		this._user.ChallengeCreated.addHandler(function() {
-			this._updateCurrentChallenge();
+		this._user.SeekCreated.addHandler(function() {
+			this._updateCurrentSeek();
 		}, this);
 		
-		this._user.ChallengeExpired.addHandler(function() {
-			this._updateCurrentChallenge();
+		this._user.SeekExpired.addHandler(function() {
+			this._updateCurrentSeek();
 			
 			if(this._timeoutAnimation) {
 				this._timeoutAnimation.stop();
@@ -69,16 +69,16 @@ define(function(require) {
 		}, this);
 	}
 	
-	CreateChallengeForm.prototype._updateCurrentChallenge = function() {
-		var challenge = this._user.getCurrentChallenge();
+	SeekForm.prototype._updateCurrentSeek = function() {
+		var seek = this._user.getCurrentSeek();
 		
-		this._template.set("waiting", challenge !== null);
+		this._template.set("waiting", seek !== null);
 		
-		if(challenge) {
-			var expiryTime = (challenge ? challenge.expiryTime : null);
+		if(seek) {
+			var expiryTime = (seek ? seek.expiryTime : null);
 			var timeLeft = expiryTime - this._server.getServerTime();
-			var timeElapsed = jsonChessConstants.CHALLENGE_TIMEOUT - timeLeft;
-			var percentExpired = timeElapsed / (jsonChessConstants.CHALLENGE_TIMEOUT / 100);
+			var timeElapsed = jsonChessConstants.SEEK_TIMEOUT - timeLeft;
+			var percentExpired = timeElapsed / (jsonChessConstants.SEEK_TIMEOUT / 100);
 			
 			this._template.set("percentExpired", percentExpired);
 			
@@ -88,8 +88,8 @@ define(function(require) {
 		}
 	}
 	
-	CreateChallengeForm.prototype._fillInLastChallengeOptions = function() {
-		var options = this._user.getLastChallengeOptions();
+	SeekForm.prototype._fillInLastSeekOptions = function() {
+		var options = this._user.getLastSeekOptions();
 		
 		if(options !== null) {
 			this._template.set("initialTime", options.initialTime);
@@ -99,23 +99,23 @@ define(function(require) {
 		}
 	}
 	
-	CreateChallengeForm.prototype._clearError = function() {
+	SeekForm.prototype._clearError = function() {
 		this._template.set("error", "");
 	}
 	
-	CreateChallengeForm.prototype._setError = function(message) {
+	SeekForm.prototype._setError = function(message) {
 		this._template.set("error", message);
 		this._setClearErrorTimer();
 	}
 	
-	CreateChallengeForm.prototype._setClearErrorTimer = function() {
+	SeekForm.prototype._setClearErrorTimer = function() {
 		this._clearErrorTimer = setTimeout((function() {
 			this._clearError();
 			this._clearErrorTimer = null;
 		}).bind(this), 10 * 1000);
 	}
 	
-	CreateChallengeForm.prototype._clearClearErrorTimer = function() {
+	SeekForm.prototype._clearClearErrorTimer = function() {
 		if(this._clearErrorTimer !== null) {
 			clearTimeout(this._clearErrorTimer);
 			
@@ -123,5 +123,5 @@ define(function(require) {
 		}
 	}
 	
-	return CreateChallengeForm;
+	return SeekForm;
 });

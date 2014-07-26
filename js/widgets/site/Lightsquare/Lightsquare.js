@@ -329,7 +329,11 @@ define(function(require) {
 	}
 	
 	Lightsquare.prototype._handleUserEvents = function() {
-		this._user.NewGame.addHandler(function(game) {
+		this._user.SeekMatched.addHandler(function(game) {
+			this._router.navigate("/game/" + game.getId());
+		}, this);
+		
+		this._user.GameRestored.addHandler(function(game) {
 			this._router.navigate("/game/" + game.getId());
 		}, this);
 		

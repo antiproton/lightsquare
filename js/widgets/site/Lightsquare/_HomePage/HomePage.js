@@ -2,11 +2,11 @@ define(function(require) {
 	require("css!./home_page.css");
 	var html = require("file!./home_page.html");
 	var Ractive = require("lib/dom/Ractive");
-	var CreateChallengeForm = require("./_CreateChallengeForm/CreateChallengeForm");
-	var ChallengeGraph = require("./_ChallengeGraph/ChallengeGraph");
+	var SeekForm = require("./_SeekForm/SeekForm");
+	var SeekGraph = require("./_SeekGraph/SeekGraph");
 	var LoginForm = require("./_LoginForm/LoginForm");
 	var GameBackupList = require("./_GameBackupList/GameBackupList");
-	var ChallengeList = require("ChallengeList");
+	var SeekList = require("SeekList");
 	var RegisterForm = require("./_RegisterForm/RegisterForm");
 	var RandomGames = require("RandomGames");
 	var CurrentGames = require("./_CurrentGames/CurrentGames");
@@ -15,7 +15,7 @@ define(function(require) {
 		this._user = user;
 		this._server = server;
 		this._router = router;
-		this._challengeList = new ChallengeList(this._server);
+		this._seekList = new SeekList(this._server);
 		this._setupTemplate(parent);
 		this._handleUserEvents();
 	}
@@ -34,8 +34,8 @@ define(function(require) {
 		});
 		
 		new LoginForm(this._user, this._template.nodes.login_form);
-		new CreateChallengeForm(this._user, this._server, this._template.nodes.create_challenge);
-		new ChallengeGraph(this._challengeList, this._user, this._template.nodes.challenge_graph);
+		new SeekForm(this._user, this._server, this._template.nodes.create_seek);
+		new SeekGraph(this._seekList, this._user, this._template.nodes.seek_graph);
 		
 		var registerForm = new RegisterForm(this._user, this._template.nodes.register_form);
 		
@@ -128,12 +128,12 @@ define(function(require) {
 	}
 	
 	HomePage.prototype._startUpdating = function() {
-		this._challengeList.startUpdating();
+		this._seekList.startUpdating();
 		this._currentGames.startUpdating();
 	}
 	
 	HomePage.prototype._stopUpdating = function() {
-		this._challengeList.stopUpdating();
+		this._seekList.stopUpdating();
 		this._currentGames.stopUpdating();
 	}
 	
