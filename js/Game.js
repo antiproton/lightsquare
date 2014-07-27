@@ -25,6 +25,8 @@ define(function(require) {
 		this.ChatMessageReceived = new Event();
 		this.RematchOffered = new Event();
 		this.RematchDeclined = new Event();
+		this.RematchOfferCanceled = new Event();
+		this.RematchOfferExpired = new Event();
 		this.Rematch = new Event();
 		
 		this._user = user;
@@ -106,12 +108,20 @@ define(function(require) {
 			}
 		}).bind(this));
 		
-		this._server.subscribe("/game/" + this._id + "/rematch_offer", (function() {
+		this._server.subscribe("/game/" + this._id + "/rematch/pending", (function() {
 			this.RematchOffered.fire();
 		}).bind(this));
 		
-		this._server.subscribe("/game/" + this._id + "/rematch_declined", (function() {
+		this._server.subscribe("/game/" + this._id + "/rematch/declined", (function() {
 			this.RematchDeclined.fire();
+		}).bind(this));
+		
+		this._server.subscribe("/game/" + this._id + "/rematch/canceled", (function() {
+			this.RematchOfferCanceled.fire();
+		}).bind(this));
+		
+		this._server.subscribe("/game/" + this._id + "/rematch/expired", (function() {
+			this.RematchOfferExpired.fire();
 		}).bind(this));
 		
 		this._server.subscribe("/game/" + this._id + "/rematch", (function(gameDetails) {
@@ -215,7 +225,11 @@ define(function(require) {
 	}
 	
 	Game.prototype.declineRematch = function() {
-		this._server.send("/game/" + this._id + "/decline_rematch");
+		this._server.send("/game/" + this._id + "/rematch/decline");
+	}
+	
+	Game.prototype.cancelRematch = function() {
+		this._server.send("/game/" + this._id + "/rematch/cancel");
 	}
 	
 	Game.prototype._rematch = function(gameDetails) {
