@@ -329,7 +329,6 @@ define(function(require) {
 		});
 		
 		if(this._userIsPlaying()) {
-			console.log("update");
 			this._updateRematchOffer();
 		}
 	}
