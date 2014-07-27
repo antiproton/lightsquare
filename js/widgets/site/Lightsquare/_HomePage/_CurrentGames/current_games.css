@@ -50,12 +50,12 @@ div.square.dark {
 div.square.light.last_move_to,
 div.square.light.last_move_from
 {
-	background-color: #FFF6D6;
+	background-color: #fdf6c2;
 }
 
 div.square.dark.last_move_to,
 div.square.dark.last_move_from {
-	background-color: #D8C488;
+	background-color: #fff5ae;
 }
 
 div.current_games_scroll_button {
