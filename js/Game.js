@@ -41,6 +41,9 @@ define(function(require) {
 		this._isDrawOffered = gameDetails.isDrawOffered;
 		this._isUndoRequested = gameDetails.isUndoRequested;
 		this._addedTime = gameDetails.addedTime;
+		this._rematchOfferedBy = (gameDetails.rematchOfferedBy ? Colour.fromFenString(gameDetails.rematchOfferedBy) : null);
+		
+		console.log(this._rematchOfferedBy);
 		
 		this._players = {};
 		this._players[Colour.white] = gameDetails.white;
@@ -108,19 +111,27 @@ define(function(require) {
 			}
 		}).bind(this));
 		
-		this._server.subscribe("/game/" + this._id + "/rematch/pending", (function() {
+		this._server.subscribe("/game/" + this._id + "/rematch/offered", (function(colour) {
+			this._rematchOfferedBy = Colour.fromFenString(colour);
 			this.RematchOffered.fire();
 		}).bind(this));
 		
 		this._server.subscribe("/game/" + this._id + "/rematch/declined", (function() {
-			this.RematchDeclined.fire();
+			var colour = this._rematchOfferedBy;
+			
+			this._rematchOfferedBy = null;
+			this.RematchDeclined.fire(colour.opposite);
 		}).bind(this));
 		
 		this._server.subscribe("/game/" + this._id + "/rematch/canceled", (function() {
-			this.RematchOfferCanceled.fire();
+			var colour = this._rematchOfferedBy;
+			
+			this._rematchOfferedBy = null;
+			this.RematchOfferCanceled.fire(colour);
 		}).bind(this));
 		
 		this._server.subscribe("/game/" + this._id + "/rematch/expired", (function() {
+			this._rematchOfferedBy = null;
 			this.RematchOfferExpired.fire();
 		}).bind(this));
 		
@@ -230,6 +241,10 @@ define(function(require) {
 	
 	Game.prototype.cancelRematch = function() {
 		this._server.send("/game/" + this._id + "/rematch/cancel");
+	}
+	
+	Game.prototype.rematchOfferedBy = function() {
+		return this._rematchOfferedBy;
 	}
 	
 	Game.prototype._rematch = function(gameDetails) {

@@ -36,16 +36,16 @@
 						{{/canClaimDraw}}
 					{{/isInProgress}}
 					{{^isInProgress}}
-						<input
-							type="button"
-							on-click="rematch"
-							value="Rematch"
-							class="
-								rematch
-								{{userHasOfferedRematch ? 'disabled' : ''}}
-								{{opponentHasOfferedRematch ? 'rematch_offered' : ''}}
-							"
-						>
+						{{#playerHasOfferedRematch}}
+							<input type="button" on-click="cancel_rematch" value="Cancel" class="cancel_rematch">
+						{{/playerHasOfferedRematch}}
+						{{#opponentHasOfferedRematch}}
+							<input type="button" on-click="rematch" value="Rematch" class="rematch rematch_offered">
+							<input type="button" on-click="decline_rematch" value="Decline" class="decline_rematch">
+						{{/opponentHasOfferedRematch}}
+						{{#(!opponentHasOfferedRematch && !playerHasOfferedRematch)}}
+							<input type="button" on-click="rematch" value="Rematch" class="rematch">
+						{{/neither}}
 						<input type="button" on-click="new_game" value="New {{timingDescription}}">
 					{{/isInProgress}}
 				</div>

@@ -44,12 +44,16 @@ define(function(require) {
 			this._addMessage(this._game.getPlayerName(this._game.getActiveColour().opposite) + " has offered a draw.");
 		}, this);
 		
-		this._game.RematchOffered.addHandler(function() {
-			this._addMessage(this._game.getPlayerName(this._game.getUserColour().opposite) + " has offered you a rematch.");
+		this._game.RematchOffered.addHandler(function(colour) {
+			if(colour === this._game.getUserColour().opposite) {
+				this._addMessage(this._game.getPlayerName(this._game.getUserColour().opposite) + " has offered you a rematch.");
+			}
 		}, this);
 		
-		this._game.RematchDeclined.addHandler(function() {
-			this._addMessage(this._game.getPlayerName(this._game.getUserColour().opposite) + " has declined a rematch.");
+		this._game.RematchDeclined.addHandler(function(colour) {
+			if(colour === this._game.getUserColour().opposite) {
+				this._addMessage(this._game.getPlayerName(colour) + " has declined a rematch.");
+			}
 		}, this);
 		
 		this._game.Rematch.addHandler(function(game) {

@@ -91,8 +91,20 @@ define(function(require) {
 			this._updateClocks(times);
 		}, this);
 		
-		this._game.RematchOffered.addHandler(function() {
-			this._template.set("opponentHasOfferedRematch", true);
+		this._game.RematchOffered.addHandler(function(colour) {
+			this._updateRematchOffer();
+		}, this);
+		
+		this._game.RematchDeclined.addHandler(function() {
+			this._updateRematchOffer();
+		}, this);
+		
+		this._game.RematchOfferCanceled.addHandler(function() {
+			this._updateRematchOffer();
+		}, this);
+		
+		this._game.RematchOfferExpired.addHandler(function() {
+			this._updateRematchOffer();
 		}, this);
 		
 		this._game.Rematch.addHandler(function(game) {
@@ -235,9 +247,20 @@ define(function(require) {
 		}).bind(this));
 		
 		this._template.on("rematch", (function() {
-			if(!this._template.get("userHasOfferedRematch")) {
+			if(this._game.rematchOfferedBy() !== this.getPlayerColour()) {
 				this._game.offerOrAcceptRematch();
-				this._template.set("userHasOfferedRematch", true);
+			}
+		}).bind(this));
+		
+		this._template.on("decline_rematch", (function() {
+			if(this._game.rematchOfferedBy() === this.getPlayerColour().opposite) {
+				this._game.declineRematch();
+			}
+		}).bind(this));
+		
+		this._template.on("cancel_rematch", (function() {
+			if(this._game.rematchOfferedBy() === this.getPlayerColour()) {
+				this._game.cancelRematch();
 			}
 		}).bind(this));
 		
@@ -299,12 +322,25 @@ define(function(require) {
 			isInProgress: this._game.isInProgress(),
 			userIsPlaying: this._userIsPlaying(),
 			viewingActivePlayer: (this._game.getActiveColour() === this._viewingAs),
-			userHasOfferedRematch: false,
 			userIsActivePlayer: this._userIsActivePlayer(),
 			drawOffered: this._game.isDrawOffered(),
 			canClaimDraw: this._game.isDrawClaimable(),
-			timingDescription: this._game.getTimingStyle().getDescription(),
-			opponentHasOfferedRematch: false
+			timingDescription: this._game.getTimingStyle().getDescription()
+		});
+		
+		if(this._userIsPlaying()) {
+			console.log("update");
+			this._updateRematchOffer();
+		}
+	}
+	
+	GamePage.prototype._updateRematchOffer = function() {
+		var rematchOfferedBy = this._game.rematchOfferedBy();
+		var colour = this.getPlayerColour();
+		
+		this._template.set({
+			playerHasOfferedRematch: (rematchOfferedBy === colour),
+			opponentHasOfferedRematch: (rematchOfferedBy === colour.opposite)
 		});
 	}
 	
