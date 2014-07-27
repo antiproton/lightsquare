@@ -43,8 +43,6 @@ define(function(require) {
 		this._addedTime = gameDetails.addedTime;
 		this._rematchOfferedBy = (gameDetails.rematchOfferedBy ? Colour.fromFenString(gameDetails.rematchOfferedBy) : null);
 		
-		console.log(this._rematchOfferedBy);
-		
 		this._players = {};
 		this._players[Colour.white] = gameDetails.white;
 		this._players[Colour.black] = gameDetails.black;
