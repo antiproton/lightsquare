@@ -35,13 +35,7 @@ define(function(require) {
 		this._tabContainer = new TabContainer(this._template.nodes.main, "page");
 		this._setupRouter();
 		
-		var updateClocks = (function() {
-			this._updateClocks();
-			
-			requestAnimationFrame(updateClocks);
-		}).bind(this);
-
-		updateClocks();
+		setInterval(this._updateClocks.bind(this), 100);
 	}
 	
 	Lightsquare.prototype._handleServerEvents = function() {
