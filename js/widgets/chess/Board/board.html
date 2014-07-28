@@ -1,17 +1,28 @@
-<div data-id="root" class="board_root">
-	<div data-id="absolute_wrapper" class="board_absolute_wrapper">
-		<div data-id="rank_coords" class="board_coords_container board_rank">
+<div id="root" class="board_root">
+	<div id="absolute_wrapper" class="board_absolute_wrapper">
+		<div id="rank_coords" class="board_coords_container board_rank">
 
 		</div>
-		<div data-id="board_wrapper" class="board_board_wrapper">
-			<div data-id="promotion_dialog" class="board_promotion_dialog">
+		<div id="board_wrapper" class="board_board_wrapper">
+			<div id="promotion_dialog" class="board_promotion_dialog">
 				
 			</div>
-			<div data-id="board" class="board_board">
+			<div
+				id="animation_piece"
+				class="board_animation_piece"
+				style="
+					display: {{animationInProgress ? '' : 'none'}};
+					top: {{moveAnimationY}}px;
+					left: {{moveAnimationX}}px;
+				"
+			>
+				
+			</div>
+			<div id="board" class="board_board">
 
 			</div>
 		</div>
-		<div data-id="file_coords" class="board_coords_container board_file">
+		<div id="file_coords" class="board_coords_container board_file">
 
 		</div>
 	</div>

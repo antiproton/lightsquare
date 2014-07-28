@@ -1,5 +1,5 @@
 define(function(require) {
-	var Template = require("lib/dom/Template");
+	var Ractive = require("lib/dom/Ractive");
 	var create = require("lib/dom/create");
 	var style = require("lib/dom/style");
 	var getOffsets = require("lib/dom/getOffsets");
@@ -7,13 +7,20 @@ define(function(require) {
 	var ChessSquare = require("chess/Square");
 	var Coords = require("chess/Coords");
 	var Square = require("./_Square/Square");
+	var Piece = require("widgets/chess/Piece/Piece");
 	var Colour = require("chess/Colour");
 	require("css!./board.css");
 	var html = require("file!./board.html");
 	var PromotionDialog = require("./_PromotionDialog/PromotionDialog");
 
 	function Board(parent) {
-		this._template = new Template(html, parent);
+		this._template = new Ractive({
+			template: html,
+			el: parent,
+			data: {
+				animationInProgress: false
+			}
+		});
 
 		this.Move = new Event();
 		this.DragDrop = new Event();
@@ -46,9 +53,7 @@ define(function(require) {
 		this._coordsPadding = 18;
 		this._squareSize = Square.DEFAULT_SIZE;
 		this._borderWidth = 1;
-
-		this._htmlUpdatesEnabled = true;
-		this._pendingUpdates = [];
+		this._currentAnimation = null;
 
 		this._setupHtml();
 	}
@@ -60,6 +65,13 @@ define(function(require) {
 	Board.DEFAULT_SQUARE_STYLE = Square.DEFAULT_STYLE;
 	
 	Board.prototype.setBoardArray = function(board) {
+		this._template.set("animationInProgress", false);
+		
+		if(this._currentAnimation) {
+			this._currentAnimation.stop();
+			this._currentAnimation = null;
+		}
+		
 		ChessSquare.forEach((function(square) {
 			this.setPiece(square, board[square.squareNo]);
 		}).bind(this));
@@ -70,16 +82,7 @@ define(function(require) {
 	}
 
 	Board.prototype.setPiece = function(square, piece) {
-		if(this._htmlUpdatesEnabled) {
-			this._squares[square.squareNo].setPiece(piece);
-		}
-		
-		else {
-			this._pendingUpdates.push({
-				square: square,
-				piece: piece
-			});
-		}
+		this._squares[square.squareNo].setPiece(piece);
 	}
 
 	Board.prototype.highlightSquares = function(squares, highlightType) {
@@ -122,16 +125,39 @@ define(function(require) {
 		}
 	}
 
-	Board.prototype.enableHtmlUpdates = function() {
-		this._htmlUpdatesEnabled = true;
-
-		while(update = this._pendingUpdates.pop()) {
-			this.setPiece(update.square, update.piece);
-		}
+	Board.prototype.move = function(move) {
+		this.setBoardArray(move.getPositionAfter().getBoardArray());
 	}
 	
-	Board.prototype.disableHtmlUpdates = function() {
-		this._htmlUpdatesEnabled = false;
+	Board.prototype.animateMove = function(move) {
+		var from = move.getFrom();
+		var to = move.getTo();
+		
+		this._template.set("animationInProgress", true);
+		this._animationPiece.setPiece(this.getPiece(from));
+		this.setPiece(from, null);
+		
+		var currentOffsets = this._offsetsFromSquare(from);
+		var newOffsets = this._offsetsFromSquare(to);
+		
+		this._template.set({
+			moveAnimationX: currentOffsets.x,
+			moveAnimationY: currentOffsets.y
+		});
+		
+		this._currentAnimation = this._template.animate({
+			moveAnimationX: newOffsets.x,
+			moveAnimationY: newOffsets.y
+		}, {
+			duration: 500,
+			easing: "easeInOut"
+		});
+		
+		this._currentAnimation.then((function() {
+			this._template.set("animationInProgress", false);
+			this._currentAnimation = null;
+			this.setBoardArray(move.getPositionAfter().getBoardArray());
+		}).bind(this));
 	}
 	
 	Board.prototype.setPieceStyle = function(pieceStyle) {
@@ -140,6 +166,7 @@ define(function(require) {
 		});
 		
 		this._promotionDialog.setPieceStyle(pieceStyle);
+		this._animationPiece.setStyle(pieceStyle);
 	}
 
 	Board.prototype.setSquareStyle = function(squareStyle) {
@@ -177,6 +204,7 @@ define(function(require) {
 		this._setupHtmlCoords();
 		this._setupHtmlSquares();
 		this._setupPromotionDialog();
+		this._setupAnimationPiece();
 
 		window.addEventListener("mousemove", (function(event) {
 			this._boardMouseMove(event);
@@ -187,8 +215,8 @@ define(function(require) {
 
 	Board.prototype._setupHtmlCoords = function() {
 		this._coordContainers = {
-			rank: this._template.rank_coords,
-			file: this._template.file_coords
+			rank: this._template.nodes.rank_coords,
+			file: this._template.nodes.file_coords
 		};
 
 		this._coords = {};
@@ -211,7 +239,7 @@ define(function(require) {
 		this._squares = [];
 
 		ChessSquare.forEach((function(chessSquare) {
-			var square = new Square(this._template.board, chessSquare, this._squareSize);
+			var square = new Square(this._template.nodes.board, chessSquare, this._squareSize);
 
 			square.MouseDown.addHandler(function(event) {
 				this._boardMouseDown(event, square);
@@ -227,7 +255,7 @@ define(function(require) {
 	
 	Board.prototype._setupPromotionDialog = function() {
 		this._promotionDialogPieceSize = 45;
-		this._promotionDialog = new PromotionDialog(this._promotionDialogPieceSize, this._template.promotion_dialog);
+		this._promotionDialog = new PromotionDialog(this._promotionDialogPieceSize, this._template.nodes.promotion_dialog);
 		
 		this._promotionDialog.PieceSelected.addHandler(function(type) {
 			this.Move.fire({
@@ -242,6 +270,10 @@ define(function(require) {
 			this._hidePromotionDialog();
 		}, this);
 	}
+	
+	Board.prototype._setupAnimationPiece = function() {
+		this._animationPiece = new Piece(this._template.nodes.animation_piece);
+	}
 
 	Board.prototype._updateHtml = function() {
 		var boardSize = this._getBoardSize();
@@ -250,16 +282,16 @@ define(function(require) {
 		var paddingIfCoordsOrSurround = (this._showCoords || this._showSurround ? this._coordsPadding : 0);
 		var totalSize = paddingIfCoordsOrSurround + boardSize + borderSize + paddingIfSurround;
 
-		this._template.root.classList[
+		this._template.nodes.root.classList[
 			this._showSurround ? "add" : "remove"
 		]("board_with_surround");
 
-		style(this._template.root, {
+		style(this._template.nodes.root, {
 			width: totalSize,
 			height: totalSize
 		});
 
-		style(this._template.board_wrapper, {
+		style(this._template.nodes.board_wrapper, {
 			top: paddingIfSurround,
 			left: paddingIfCoordsOrSurround,
 			width: boardSize,
@@ -267,13 +299,14 @@ define(function(require) {
 			borderWidth: this._borderWidth
 		});
 
-		style(this._template.board, {
+		style(this._template.nodes.board, {
 			width: boardSize,
 			height: boardSize
 		});
 
 		this._updateHtmlCoords();
 		this._updateHtmlSquares();
+		this._animationPiece.setSize(this._squareSize);
 	}
 
 	Board.prototype._updateHtmlCoords = function() {
@@ -351,7 +384,7 @@ define(function(require) {
 		var x = this._lastMoveEvent.event.pageX - boardOffsets.x;
 		var y = this._lastMoveEvent.event.pageY - boardOffsets.y;
 		
-		style(this._template.promotion_dialog, {
+		style(this._template.nodes.promotion_dialog, {
 			display: "block",
 			top: y - this._promotionDialogPieceSize,
 			left: x
@@ -359,7 +392,7 @@ define(function(require) {
 	}
 	
 	Board.prototype._hidePromotionDialog = function() {
-		this._template.promotion_dialog.style.display = "";
+		this._template.nodes.promotion_dialog.style.display = "";
 	}
 
 	Board.prototype._squareFromMouseEvent = function(event, useMoveOffsets) {
@@ -371,7 +404,7 @@ define(function(require) {
 			y += (Math.round(this._squareSize / 2) - this._move.mouseOffsets.y);
 		}
 
-		var offsets = getOffsets(this._template.board);
+		var offsets = getOffsets(this._template.nodes.board);
 
 		return this._squareFromOffsets(x - offsets.x, this._getBoardSize() - (y - offsets.y));
 	}
@@ -405,6 +438,13 @@ define(function(require) {
 		return mouseOffsets;
 	}
 
+	Board.prototype._offsetsFromSquare = function(square) {
+		return {
+			x: square.adjusted[this._viewingAs].coords.x * this._squareSize,
+			y: (7 - square.adjusted[this._viewingAs].coords.y) * this._squareSize
+		};
+	}
+	
 	Board.prototype._isXyOnBoard = function(x, y) {
 		var boardSize = this._getBoardSize();
 		
