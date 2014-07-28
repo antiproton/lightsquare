@@ -7,7 +7,6 @@ define(function(require) {
 	var ChessSquare = require("chess/Square");
 	var Coords = require("chess/Coords");
 	var Square = require("./_Square/Square");
-	var Piece = require("chess/Piece");
 	var Colour = require("chess/Colour");
 	require("css!./board.css");
 	var html = require("file!./board.html");
