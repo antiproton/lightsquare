@@ -135,10 +135,6 @@ define(function(require) {
 		this._htmlUpdatesEnabled = false;
 	}
 	
-	Board.prototype.setAlwaysQueen = function(alwaysQueen) {
-		this._alwaysQueen = alwaysQueen;
-	}
-
 	Board.prototype.setPieceStyle = function(pieceStyle) {
 		this._squares.forEach(function(square) {
 			square.setPieceStyle(pieceStyle);
