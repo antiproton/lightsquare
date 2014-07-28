@@ -16,15 +16,14 @@ define(function(require) {
 	};
 	
 	function GamePage(game, user, parent) {
-		this.PlayerClockTick = new Event();
 		this.Rematch = new Event();
 		
 		this._user = user;
 		this._viewingAs = Colour.white;
 		this._pendingPremove = null;
-		this._setupGame(game);
 		
 		this._setupTemplate(parent);
+		this._setupGame(game);
 		this._populateTemplate();
 		this._setupChat();
 		this._setupBoard();
@@ -35,11 +34,11 @@ define(function(require) {
 		this._updateUserDependentElements();
 	}
 	
-	GamePage.prototype.getPlayerColour = function() {
+	GamePage.prototype.getUserColour = function() {
 		return this._game.getUserColour();
 	}
 	
-	GamePage.prototype._userIsPlaying = function() {
+	GamePage.prototype.userIsPlaying = function() {
 		return this._game.userIsPlaying();
 	}
 	
@@ -83,14 +82,6 @@ define(function(require) {
 			this._template.set("drawOffered", true);
 		}, this);
 		
-		this._game.ClockTick.addHandler(function(times) {
-			if(this.getPlayerColour() === this._game.getActiveColour()) {
-				this.PlayerClockTick.fire();
-			}
-			
-			this._updateClocks(times);
-		}, this);
-		
 		this._game.RematchOffered.addHandler(function(colour) {
 			this._updateRematchOffer();
 		}, this);
@@ -126,6 +117,16 @@ define(function(require) {
 			this._template.set("isInProgress", false);
 			this._clearPremove();
 		}, this);
+		
+		var updateClocks = (function() {
+			this._updateClocks();
+			
+			if(this._game.isInProgress()) {
+				requestAnimationFrame(updateClocks);
+			}
+		}).bind(this);
+		
+		updateClocks();
 	}
 	
 	GamePage.prototype._checkForPendingPremove = function() {
@@ -153,7 +154,7 @@ define(function(require) {
 		this._board = new Board(this._template.nodes.board);
 		
 		this._board.SelectPiece.addHandler(function(data) {
-			if(!this._userIsPlaying() || data.piece.colour !== this.getPlayerColour() || !this._game.isInProgress()) {
+			if(!this.userIsPlaying() || data.piece.colour !== this.getUserColour() || !this._game.isInProgress()) {
 				data.cancel = true;
 			}
 		}, this);
@@ -247,19 +248,19 @@ define(function(require) {
 		}).bind(this));
 		
 		this._template.on("rematch", (function() {
-			if(this._game.rematchOfferedBy() !== this.getPlayerColour()) {
+			if(this._game.rematchOfferedBy() !== this.getUserColour()) {
 				this._game.offerOrAcceptRematch();
 			}
 		}).bind(this));
 		
 		this._template.on("decline_rematch", (function() {
-			if(this._game.rematchOfferedBy() === this.getPlayerColour().opposite) {
+			if(this._game.rematchOfferedBy() === this.getUserColour().opposite) {
 				this._game.declineRematch();
 			}
 		}).bind(this));
 		
 		this._template.on("cancel_rematch", (function() {
-			if(this._game.rematchOfferedBy() === this.getPlayerColour()) {
+			if(this._game.rematchOfferedBy() === this.getUserColour()) {
 				this._game.cancelRematch();
 			}
 		}).bind(this));
@@ -305,12 +306,7 @@ define(function(require) {
 			el: parent,
 			template: html,
 			data: {
-				getTime: function(time) {
-					return time.getColonDisplay(time < 10 * 1000);
-				},
-				timeIsCritical: function(time) {
-					return (time < 10 * 1000);
-				}
+				timeCriticalThreshold: 1000 * 10
 			}
 		});
 	}
@@ -320,7 +316,7 @@ define(function(require) {
 			players: {},
 			result: this._game.getResult(),
 			isInProgress: this._game.isInProgress(),
-			userIsPlaying: this._userIsPlaying(),
+			userIsPlaying: this.userIsPlaying(),
 			viewingActivePlayer: (this._game.getActiveColour() === this._viewingAs),
 			userIsActivePlayer: this._userIsActivePlayer(),
 			drawOffered: this._game.isDrawOffered(),
@@ -328,14 +324,16 @@ define(function(require) {
 			timingDescription: this._game.getTimingStyle().getDescription()
 		});
 		
-		if(this._userIsPlaying()) {
+		if(this.userIsPlaying()) {
 			this._updateRematchOffer();
 		}
+		
+		this._updateClocks();
 	}
 	
 	GamePage.prototype._updateRematchOffer = function() {
 		var rematchOfferedBy = this._game.rematchOfferedBy();
-		var colour = this.getPlayerColour();
+		var colour = this.getUserColour();
 		
 		this._template.set({
 			playerHasOfferedRematch: (rematchOfferedBy === colour),
@@ -344,7 +342,7 @@ define(function(require) {
 	}
 	
 	GamePage.prototype._userIsActivePlayer = function() {
-		return (this.getPlayerColour() === this._game.getActiveColour());
+		return (this.getUserColour() === this._game.getActiveColour());
 	}
 	
 	GamePage.prototype._setupChat = function() {
@@ -356,11 +354,10 @@ define(function(require) {
 	}
 	
 	GamePage.prototype._updateUserDependentElements = function() {
-		this._viewingAs = this.getPlayerColour() || Colour.white;
+		this._viewingAs = this.getUserColour() || Colour.white;
 		this._board.setViewingAs(this._viewingAs);
 		this._updatePlayerInfo();
-		this._updateClocks(this._game.getClockTimes());
-		this._template.set("userIsPlaying", this._userIsPlaying());
+		this._template.set("userIsPlaying", this.userIsPlaying());
 		this._template.set("viewingActivePlayer", (this._game.getActiveColour() === this._viewingAs));
 	}
 	
@@ -373,9 +370,9 @@ define(function(require) {
 		}).bind(this));
 	}
 	
-	GamePage.prototype._updateClocks = function(times) {
+	GamePage.prototype._updateClocks = function() {
 		Colour.forEach((function(colour) {
-			this._template.set("players." + this._relevanceFromColour(colour) + ".time", times[colour]);
+			this._template.set("players." + this._relevanceFromColour(colour) + ".time", this._game.getTimeLeft(colour));
 		}).bind(this));
 	}
 	

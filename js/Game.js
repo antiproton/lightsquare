@@ -77,7 +77,6 @@ define(function(require) {
 		
 		if(this._isInProgress) {
 			this._requestLatestMoves();
-			this._clockTick();
 		}
 		
 		this._subscribeToServerMessages();
@@ -257,16 +256,6 @@ define(function(require) {
 		return this._game.getActiveColour();
 	}
 	
-	Game.prototype.getClockTimes = function() {
-		var times = {};
-		
-		Colour.forEach((function(colour) {
-			times[colour] = this._clock.getTimeLeft(colour);
-		}).bind(this));
-		
-		return times;
-	}
-	
 	Game.prototype.timingHasStarted = function() {
 		return this._clock.timingHasStarted();
 	}
@@ -383,23 +372,7 @@ define(function(require) {
 			}
 		}
 	}
-	
-	Game.prototype._clockTick = function() {
-		var times = {};
 		
-		Colour.forEach(function(colour) {
-			times[colour] = this._clock.getTimeLeft(colour);
-		}, this);
-		
-		this.ClockTick.fire(times);
-		
-		if(this._isInProgress) {
-			setTimeout((function() {
-				this._clockTick();
-			}).bind(this), 100);
-		}
-	}
-	
 	Game.prototype._abort = function() {
 		this._isInProgress = false;
 		this.Aborted.fire();

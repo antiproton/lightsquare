@@ -4,8 +4,8 @@
 			<div class="player_username">
 				{{players.opponent.name}} ({{players.opponent.rating}})
 			</div>
-			<div class="player_clock {{isInProgress && !viewingActivePlayer ? ('active_clock' + (timeIsCritical(players.opponent.time) ? ' critical_clock' : '')) : ''}}">
-				{{getTime(players.opponent.time)}}
+			<div class="player_clock {{isInProgress && !viewingActivePlayer ? ('active_clock' + (players.opponent.time < timeCriticalThreshold ? ' critical_clock' : '')) : ''}}">
+				{{players.opponent.time.getColonDisplay(players.opponent.time < timeCriticalThreshold)}}
 			</div>
 		</div>
 		<div class="game_board_and_controls">
@@ -55,8 +55,8 @@
 			<div>
 				{{players.player.name}} ({{players.player.rating}})
 			</div>
-			<div class="player_clock {{isInProgress && viewingActivePlayer ? ('active_clock' + (timeIsCritical(players.player.time) ? ' critical_clock' : '')) : ''}}">
-				{{getTime(players.player.time)}}
+			<div class="player_clock {{isInProgress && viewingActivePlayer ? ('active_clock' + (players.player.time < timeCriticalThreshold ? ' critical_clock' : '')) : ''}}">
+				{{players.player.time.getColonDisplay(players.player.time < timeCriticalThreshold)}}
 			</div>
 		</div>
 	</div>

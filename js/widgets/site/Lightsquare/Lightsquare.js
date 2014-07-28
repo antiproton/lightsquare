@@ -25,6 +25,7 @@ define(function(require) {
 		
 		this._pages = {};
 		this._gamePages = [];
+		this._gamePageIndex = {};
 		this._currentPage = null;
 		
 		this._handleServerEvents();
@@ -33,6 +34,14 @@ define(function(require) {
 		this._setupTemplate(parent);
 		this._tabContainer = new TabContainer(this._template.nodes.main, "page");
 		this._setupRouter();
+		
+		var updateClocks = (function() {
+			this._updateClocks();
+			
+			requestAnimationFrame(updateClocks);
+		}).bind(this);
+
+		updateClocks();
 	}
 	
 	Lightsquare.prototype._handleServerEvents = function() {
@@ -50,7 +59,8 @@ define(function(require) {
 	
 	Lightsquare.prototype._initialise = function() {
 		this._clearPages();
-		this._gamePages.empty();
+		this._gamePages = [];
+		this._template.set("gamePages", []);
 		this._addGamePages();
 		this._updateUserDependentElements();
 		
@@ -64,23 +74,25 @@ define(function(require) {
 	}
 	
 	Lightsquare.prototype._addGamePage = function(game) {
-		var url = "/game/" + game.getId();
+		var id = game.getId();
+		var url = "/game/" + id;
 		
 		if(!this._hasPage(url)) {
 			var page = new GamePage(game, this._user, this._tabContainer.createTab(url));
 			
 			this._pages[url] = page;
 			this._gamePages.push(page);
+			this._gamePageIndex[id] = this._gamePages.length - 1;
 			
-			page.PlayerClockTick.addHandler(function() {
-				this._updateGamePage(page);
-			}, this);
+			this._updateGamePage(page);
 			
 			page.Rematch.addHandler(function(game) {
-				var newUrl = "/game/" + game.getId();
+				var newId = game.getId();
+				var newUrl = "/game/" + newId;
 				
 				this._tabContainer.changeId(url, newUrl);
 				this._changePageUrl(url, newUrl);
+				this._gamePageIndex[newId] = this._gamePageIndex[id];
 				
 				if(this._router.getCurrentPath() === url) {
 					this._router.navigate(newUrl);
@@ -89,12 +101,52 @@ define(function(require) {
 				this._updateGamePage(page);
 				
 				url = newUrl;
+				id = newId;
 			}, this);
 		}
 	}
 	
 	Lightsquare.prototype._updateGamePage = function(page) {
-		this._template.update("gamePages." + this._gamePages.indexOf(page));
+		var id = page.getId();
+		
+		var data = {
+			url: "/game/" + id,
+			userIsPlaying: page.userIsPlaying(),
+			white: page.getPlayerName(Colour.white),
+			black: page.getPlayerName(Colour.black),
+			timingStyle: page.getTimingStyle().getDescription(),
+			isInProgress: page.gameIsInProgress()
+		};
+		
+		if(page.userIsPlaying()) {
+			var colour = page.getUserColour();
+			
+			data.opponent = page.getPlayerName(colour.opposite);
+			data.playerTime = page.getTimeLeft(colour);
+		}
+		
+		this._template.set("gamePages." + this._gamePageIndex[id], data);
+	}
+	
+	Lightsquare.prototype._updateGamePages = function() {
+		this._gamePages.forEach((function(page) {
+			this._updateGamePage(page);
+		}).bind(this));
+	}
+	
+	Lightsquare.prototype._clearGamePages = function() {
+		this._template.set("gamePages", []);
+	}
+	
+	Lightsquare.prototype._updateClocks = function() {
+		this._gamePages.forEach((function(page) {
+			if(page.userIsPlaying() && page.gameIsInProgress() && page !== this._currentPage) {
+				this._template.set(
+					"gamePages." + this._gamePageIndex[page.getId()] + ".playerTime",
+					page.getTimeLeft(page.getUserColour())
+				);
+			}
+		}).bind(this));
 	}
 	
 	Lightsquare.prototype._addGamePages = function() {
@@ -207,30 +259,8 @@ define(function(require) {
 				showControlPanel: false,
 				username: this._user.getUsername(),
 				userIsLoggedIn: false,
-				gamePages: this._gamePages,
+				gamePages: [],
 				currentPath: "/",
-				getGameTitle: function(gamePage, currentPath) {
-					var timingStyle = gamePage.getTimingStyle().getDescription();
-					var playerColour = gamePage.getPlayerColour();
-					var whiteName = gamePage.getPlayerName(Colour.white);
-					var blackName = gamePage.getPlayerName(Colour.black);
-					
-					if(playerColour === null) {
-						return whiteName + " vs " + blackName + " | " + timingStyle;
-					}
-					
-					else {
-						var opponentName = gamePage.getPlayerName(playerColour.opposite);
-						var timeLeft = gamePage.getTimeLeft(playerColour);
-						var title = opponentName + " | " + timingStyle;
-						
-						if(gamePage.gameIsInProgress() && currentPath !== "/game/" + gamePage.getId()) {
-							title += " | " + timeLeft.getColonDisplay();
-						}
-						
-						return title;
-					}
-				},
 				getAbsolutePath: function(path) {
 					return require.toUrl(path);
 				}
@@ -351,7 +381,7 @@ define(function(require) {
 	Lightsquare.prototype._updateUserDependentElements = function() {
 		this._template.set("userIsLoggedIn", this._user.isLoggedIn());
 		this._template.set("username", this._user.getUsername());
-		this._template.update("gamePages");
+		this._updateGamePages();
 	}
 	
 	return Lightsquare;

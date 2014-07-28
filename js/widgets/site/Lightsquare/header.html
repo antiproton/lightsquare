@@ -9,9 +9,17 @@
 	{{#gamePages}}
 		<a
 		   on-click="navigate"
-		   href="/game/{{this.getId()}}"
-		   class="{{'/game/' + this.getId() === currentPath ? 'on' : ''}}"
-		>{{getGameTitle(this, currentPath)}}</a>
+		   href="{{url}}"
+		   class="{{url === currentPath ? 'on' : ''}}"
+		>{{^userIsPlaying}}
+			{{white}} vs {{black}} | {{timingStyle}}
+		{{/userIsPlaying}}{{#userIsPlaying}}
+			{{opponent}} | {{timingStyle}}
+			{{#isInProgress && currentPath !== url}}
+				| {{playerTime.getColonDisplay()}}
+			{{/showTime}}
+		{{/userIsPlaying}}
+		</a>
 	{{/gamePages}}
 	{{#loadingGame}}
 		<a
