@@ -21,6 +21,7 @@ define(function(require) {
 		this._user = user;
 		this._viewingAs = Colour.white;
 		this._pendingPremove = null;
+		this._clockUpdateInterval = null;
 		
 		this._setupTemplate(parent);
 		this._setupGame(game);
@@ -111,22 +112,16 @@ define(function(require) {
 			this._template.set("result", result);
 			this._template.set("isInProgress", false);
 			this._clearPremove();
+			this._stopUpdatingClocks();
 		}, this);
 		
 		this._game.Aborted.addHandler(function() {
 			this._template.set("isInProgress", false);
 			this._clearPremove();
+			this._stopUpdatingClocks();
 		}, this);
 		
-		var updateClocks = (function() {
-			this._updateClocks();
-			
-			if(this._game.isInProgress()) {
-				requestAnimationFrame(updateClocks);
-			}
-		}).bind(this);
-		
-		updateClocks();
+		this._startUpdatingClocks();
 	}
 	
 	GamePage.prototype._checkForPendingPremove = function() {
@@ -376,6 +371,18 @@ define(function(require) {
 		}).bind(this));
 	}
 	
+	GamePage.prototype._startUpdatingClocks = function() {
+		this._clockUpdateInterval = setInterval(this._updateClocks.bind(this), 100);
+	}
+	
+	GamePage.prototype._stopUpdatingClocks = function() {
+		if(this._clockUpdateInterval) {
+			clearInterval(this._clockUpdateInterval);
+			
+			this._clockUpdateInterval = null;
+		}
+	}
+	
 	GamePage.prototype._handleUserEvents = function() {
 		this._user.PrefsChanged.addHandler(function() {
 			this._setBoardPrefs();
@@ -390,6 +397,18 @@ define(function(require) {
 			this._updateUserDependentElements();
 			this._setBoardPrefs();
 		}, this);
+	}
+	
+	GamePage.prototype.show = function() {
+		this._startUpdatingClocks();
+	}
+	
+	GamePage.prototype.hide = function() {
+		this._stopUpdatingClocks();
+	}
+	
+	GamePage.prototype.remove = function() {
+		this._stopUpdatingClocks();
 	}
 	
 	return GamePage;
