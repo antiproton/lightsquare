@@ -109,8 +109,10 @@ define(function(require) {
 		}).bind(this));
 		
 		this._server.subscribe("/game/" + this._id + "/rematch/offered", (function(colour) {
-			this._rematchOfferedBy = Colour.fromFenString(colour);
-			this.RematchOffered.fire();
+			var offeredBy = Colour.fromFenString(colour);
+			
+			this._rematchOfferedBy = offeredBy;
+			this.RematchOffered.fire(offeredBy);
 		}).bind(this));
 		
 		this._server.subscribe("/game/" + this._id + "/rematch/declined", (function() {
