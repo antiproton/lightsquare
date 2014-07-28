@@ -75,7 +75,7 @@ define(function(require) {
 		this._template.set("waiting", seek !== null);
 		
 		if(seek) {
-			var expiryTime = (seek ? seek.expiryTime : null);
+			var expiryTime = seek.expiryTime;
 			var timeLeft = expiryTime - this._server.getServerTime();
 			var timeElapsed = jsonChessConstants.SEEK_TIMEOUT - timeLeft;
 			var percentExpired = timeElapsed / (jsonChessConstants.SEEK_TIMEOUT / 100);
