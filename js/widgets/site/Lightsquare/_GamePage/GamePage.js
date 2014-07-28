@@ -9,19 +9,22 @@ define(function(require) {
 	var PieceType = require("chess/PieceType");
 	var Ractive = require("lib/dom/Ractive");
 	var Chat = require("./_Chat/Chat");
+	var jsonChessConstants = require("jsonchess/constants");
 	
 	var viewRelevance = {
 		PLAYER: "player",
 		OPPONENT: "opponent"
 	};
 	
-	function GamePage(game, user, parent) {
+	function GamePage(game, user, server, parent) {
 		this.Rematch = new Event();
 		
 		this._user = user;
+		this._server = server;
 		this._viewingAs = Colour.white;
 		this._pendingPremove = null;
 		this._clockUpdateInterval = null;
+		this._newSeekTimeoutAnimation = null;
 		
 		this._setupTemplate(parent);
 		this._setupGame(game);
@@ -33,6 +36,7 @@ define(function(require) {
 		this._checkForPendingPremove();
 		this._handleUserEvents();
 		this._updateUserDependentElements();
+		this._updateNewSeek();
 	}
 	
 	GamePage.prototype.getUserColour = function() {
@@ -67,16 +71,23 @@ define(function(require) {
 		this._game = game;
 		
 		this._game.Move.addHandler(function(move) {
-			this._history.move(move);
-			this._board.setBoardArray(move.getPositionAfter().getBoardArray());
-			this._template.set("viewingActivePlayer", (this._game.getActiveColour() === this._viewingAs));
-			this._template.set("userIsActivePlayer", this._userIsActivePlayer());
-			this._template.set("drawOffered", false);
-			this._template.set("canClaimDraw", this._game.isDrawClaimable());
-			this._history.select(move);
-			this._clearPremove();
-			this._board.unhighlightSquares();
-			this._highlightMove(move);
+			//this._history.move(move);
+			//this._template.set("viewingActivePlayer", (this._game.getActiveColour() === this._viewingAs));
+			//this._template.set("userIsActivePlayer", this._userIsActivePlayer());
+			//this._template.set("drawOffered", false);
+			//this._template.set("canClaimDraw", this._game.isDrawClaimable());
+			//this._history.select(move);
+			//this._clearPremove();
+			//this._board.unhighlightSquares();
+			//this._highlightMove(move);
+			
+			if(move.getColour() === this.getUserColour()) {
+				this._board.move(move);
+			}
+			
+			else {
+				this._board.animateMove(move);
+			}
 		}, this);
 		
 		this._game.DrawOffered.addHandler(function() {
@@ -261,8 +272,52 @@ define(function(require) {
 		}).bind(this));
 		
 		this._template.on("new_game", (function() {
+			var lastOptions = this._user.getLastSeekOptions();
+			var timingStyle = this.getTimingStyle();
 			
+			var options = {
+				initialTime: timingStyle.initialTime.getUnitString(),
+				timeIncrement: timingStyle.increment.getUnitString(),
+				acceptRatingMin: "-100",
+				acceptRatingMax: "+100"
+			};
+			
+			if(lastOptions) {
+				options.acceptRatingMin = lastOptions.acceptRatingMin;
+				options.acceptRatingMax = lastOptions.acceptRatingMax;
+			}
+			
+			this._user.seekGame(options);
 		}).bind(this));
+		
+		this._template.on("cancel_new_game", (function() {
+			this._user.cancelSeek();
+		}).bind(this));
+	}
+	
+	GamePage.prototype._updateNewSeek = function() {
+		var seek = this._user.getCurrentSeek();
+		var timingStyle = this.getTimingStyle();
+		var initialTime = timingStyle.initialTime.getUnitString();
+		var timeIncrement = timingStyle.increment.getUnitString();
+		
+		if(seek !== null && seek.options.initialTime === initialTime && seek.options.timeIncrement === timeIncrement) {
+			var expiryTime = seek.expiryTime;
+			var timeLeft = expiryTime - this._server.getServerTime();
+			var timeElapsed = jsonChessConstants.SEEK_TIMEOUT - timeLeft;
+			var percentExpired = timeElapsed / (jsonChessConstants.SEEK_TIMEOUT / 100);
+			
+			this._template.set("newSeekWaiting", true);
+			this._template.set("newSeekPercentExpired", percentExpired);
+			
+			this._newSeekTimeoutAnimation = this._template.animate("newSeekPercentExpired", 100, {
+				duration: timeLeft
+			});
+		}
+		
+		else {
+			this._template.set("newSeekWaiting", false);
+		}
 	}
 	
 	GamePage.prototype._setupHistory = function() {
@@ -301,7 +356,8 @@ define(function(require) {
 			el: parent,
 			template: html,
 			data: {
-				timeCriticalThreshold: 1000 * 10
+				timeCriticalThreshold: 1000 * 10,
+				newSeekWaiting: false
 			}
 		});
 	}
@@ -396,6 +452,19 @@ define(function(require) {
 		this._user.LoggedOut.addHandler(function() {
 			this._updateUserDependentElements();
 			this._setBoardPrefs();
+		}, this);
+		
+		this._user.SeekCreated.addHandler(function() {
+			this._updateNewSeek();
+		}, this);
+		
+		this._user.SeekExpired.addHandler(function() {
+			this._updateNewSeek();
+			
+			if(this._newSeekTimeoutAnimation) {
+				this._newSeekTimeoutAnimation.stop();
+				this._newSeekTimeoutAnimation = null;
+			}
 		}, this);
 	}
 	

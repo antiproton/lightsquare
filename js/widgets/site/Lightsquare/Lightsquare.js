@@ -72,7 +72,7 @@ define(function(require) {
 		var url = "/game/" + id;
 		
 		if(!this._hasPage(url)) {
-			var page = new GamePage(game, this._user, this._tabContainer.createTab(url));
+			var page = new GamePage(game, this._user, this._server, this._tabContainer.createTab(url));
 			
 			this._pages[url] = page;
 			this._gamePages.push(page);
