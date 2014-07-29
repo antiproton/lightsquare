@@ -458,6 +458,10 @@ define(function(require) {
 			this._setBoardPrefs();
 		}, this);
 		
+		this._user.SeekMatched.addHandler(function() {
+			this._updateNewSeek();
+		}, this);
+		
 		this._user.SeekCreated.addHandler(function() {
 			this._updateNewSeek();
 		}, this);

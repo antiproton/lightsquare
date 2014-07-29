@@ -55,6 +55,10 @@ define(function(require) {
 			this._fillInLastSeekOptions();
 		}, this);
 		
+		this._user.SeekMatched.addHandler(function() {
+			this._updateCurrentSeek();
+		}, this);
+		
 		this._user.SeekCreated.addHandler(function() {
 			this._updateCurrentSeek();
 		}, this);
