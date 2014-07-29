@@ -149,7 +149,7 @@ define(function(require) {
 			moveAnimationX: newOffsets.x,
 			moveAnimationY: newOffsets.y
 		}, {
-			duration: 500,
+			duration: 250,
 			easing: "easeInOut",
 			complete: (function() {
 				this._template.set("animationInProgress", false);
