@@ -129,7 +129,7 @@ define(function(require) {
 		this.setBoardArray(move.getPositionAfter().getBoardArray());
 	}
 	
-	Board.prototype.animateMove = function(move) {
+	Board.prototype.animateMove = function(move, callback) {
 		var from = move.getFrom();
 		var to = move.getTo();
 		
@@ -150,14 +150,17 @@ define(function(require) {
 			moveAnimationY: newOffsets.y
 		}, {
 			duration: 500,
-			easing: "easeInOut"
+			easing: "easeInOut",
+			complete: (function() {
+				this._template.set("animationInProgress", false);
+				this._currentAnimation = null;
+				this.setBoardArray(move.getPositionAfter().getBoardArray());
+				
+				if(callback) {
+					callback();
+				}
+			}).bind(this)
 		});
-		
-		this._currentAnimation.then((function() {
-			this._template.set("animationInProgress", false);
-			this._currentAnimation = null;
-			this.setBoardArray(move.getPositionAfter().getBoardArray());
-		}).bind(this));
 	}
 	
 	Board.prototype.setPieceStyle = function(pieceStyle) {
