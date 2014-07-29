@@ -77,11 +77,11 @@ define(function(require) {
 			this._template.set("drawOffered", false);
 			this._template.set("canClaimDraw", this._game.isDrawClaimable());
 			this._board.unhighlightSquares();
+			this._highlightMove(move);
 			
 			var applyMove = (function() {
 				this._history.select(move);
 				this._clearPremove();
-				this._highlightMove(move);
 			}).bind(this);
 			
 			if(move.getColour() === this.getUserColour()) {
