@@ -1,6 +1,7 @@
 define(function(require) {
 	var Event = require("lib/Event");
 	var html = require("file!./game_page.html");
+	var controlsHtml = require("file!./controls.html");
 	require("css!./game_page.css");
 	var Board = require("widgets/chess/Board/Board");
 	var History = require("widgets/chess/History/History");
@@ -362,6 +363,9 @@ define(function(require) {
 			data: {
 				timeCriticalThreshold: 1000 * 10,
 				newSeekWaiting: false
+			},
+			partials: {
+				controls: controlsHtml
 			}
 		});
 	}
