@@ -71,22 +71,26 @@ define(function(require) {
 		this._game = game;
 		
 		this._game.Move.addHandler(function(move) {
-			//this._history.move(move);
-			//this._template.set("viewingActivePlayer", (this._game.getActiveColour() === this._viewingAs));
-			//this._template.set("userIsActivePlayer", this._userIsActivePlayer());
-			//this._template.set("drawOffered", false);
-			//this._template.set("canClaimDraw", this._game.isDrawClaimable());
-			//this._history.select(move);
-			//this._clearPremove();
-			//this._board.unhighlightSquares();
-			//this._highlightMove(move);
+			this._history.move(move);
+			this._template.set("viewingActivePlayer", (this._game.getActiveColour() === this._viewingAs));
+			this._template.set("userIsActivePlayer", this._userIsActivePlayer());
+			this._template.set("drawOffered", false);
+			this._template.set("canClaimDraw", this._game.isDrawClaimable());
+			this._board.unhighlightSquares();
+			
+			var applyMove = (function() {
+				this._history.select(move);
+				this._clearPremove();
+				this._highlightMove(move);
+			}).bind(this);
 			
 			if(move.getColour() === this.getUserColour()) {
 				this._board.move(move);
+				applyMove();
 			}
 			
 			else {
-				this._board.animateMove(move);
+				this._board.animateMove(move, applyMove);
 			}
 		}, this);
 		
