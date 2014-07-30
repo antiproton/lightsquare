@@ -1,43 +1,27 @@
-<div class="header_home_link">
+<a
+	on-click="navigate"
+	href="/"
+	class="{{'/' === currentPath ? 'on' : ''}}"
+>Home</a>
+{{#gamePages}}
 	<a
-		on-click="navigate"
-		href="/"
-		class="{{'/' === currentPath ? 'on' : ''}}"
-	>Lightsquare</a>
-</div>
-<div class="header_game_links">
-	{{#gamePages}}
-		<a
-		   on-click="navigate"
-		   href="{{url}}"
-		   class="{{url === currentPath ? 'on' : ''}}"
-		>{{^userIsPlaying}}
-			{{white}} vs {{black}} | {{timingStyle}}
-		{{/userIsPlaying}}{{#userIsPlaying}}
-			{{opponent}} | {{timingStyle}}
-			{{#isInProgress && currentPath !== url}}
-				| {{playerTime.getColonDisplay()}}
-			{{/showTime}}
-		{{/userIsPlaying}}
-		</a>
-	{{/gamePages}}
-	{{#loadingGame}}
-		<a
-		   on-click="navigate"
-		   href="/game/{{loadingGameId}}"
-		   class="{{'/game/' + loadingGameId === currentPath ? 'on' : ''}}"
-		>Loading game...</a>
-	{{/loadingGame}}
-	<div class="header_spacer">
-		<!--
-		the bottom border is set on the links as opposed to the container
-		so that the colour can be changed.  this spacer element is there
-		to continue the border.
-		-->
-	</div>
-</div>
-{{#userIsLoggedIn}}
-	<div class="header_user_links">
-		<a class="user_link {{showControlPanel ? 'on' : ''}}" href="javascript:void(0)" on-click="toggle_control_panel">{{username}}</a>
-	</div>
-{{/userIsLoggedIn}}
+	   on-click="navigate"
+	   href="{{url}}"
+	   class="{{url === currentPath ? 'on' : ''}}"
+	>{{^userIsPlaying}}
+		{{white}} vs {{black}} | {{timingStyle}}
+	{{/userIsPlaying}}{{#userIsPlaying}}
+		{{opponent}} | {{timingStyle}}
+		{{#isInProgress && currentPath !== url}}
+			| {{playerTime.getColonDisplay()}}
+		{{/showTime}}
+	{{/userIsPlaying}}
+	</a>
+{{/gamePages}}
+{{#loadingGame}}
+	<a
+	   on-click="navigate"
+	   href="/game/{{loadingGameId}}"
+	   class="{{'/game/' + loadingGameId === currentPath ? 'on' : ''}}"
+	>Loading game...</a>
+{{/loadingGame}}

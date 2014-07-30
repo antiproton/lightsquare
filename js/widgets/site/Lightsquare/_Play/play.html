@@ -1,18 +1,16 @@
 <div class="play">
-			{{^serverConnected}}
-				{{>connectingMessage}}
-			{{/serverConnected}}
-		{{#message}}
-			<div class="message" id="message">
-				{{{message}}}
-			</div>
-		{{/message}}
-		<div class="play_nav">
-			{{>nav}}
-		</div>
-		<div class="play_main" id="main">
-			
-	{{#serverConnected}}
+	{{^serverConnected}}
+		{{>connectingMessage}}
 	{{/serverConnected}}
+	{{#message}}
+		<div class="message" id="message">
+			{{{message}}}
 		</div>
+	{{/message}}
+	<div class="play_nav">
+		{{>nav}}
+	</div>
+	<div class="play_main" id="main">
+		
+	</div>
 </div>

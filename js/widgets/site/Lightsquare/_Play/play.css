@@ -2,6 +2,7 @@ div.play_main {
 	display: flex;
 	flex-grow: 1;
 	z-index: 0;
+	background: white;
 }
 
 div.page {

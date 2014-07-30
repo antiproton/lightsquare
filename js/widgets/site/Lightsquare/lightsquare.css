@@ -5,16 +5,16 @@ div.root {
 	display: flex;
 	flex-grow: 1;
 	flex-direction: column;
+	align-items: center;
 	overflow: hidden;
-	background: #EFEFEF;
+	background: #eeeeda;
 }
 
-div.form_error {
-	font-size: .8em;
-	text-align: center;
-	color: #BA0000;
-	margin-top: .8em;
-	border: 1px solid #D1D1D1;
-	border-radius: 3px;
-	padding: .5em;
+div.main {
+	display: flex;
+	flex-direction: column;
+}
+
+div.page {
+	
 }

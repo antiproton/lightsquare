@@ -1,38 +1,17 @@
 div.play_nav {
 	display: flex;
-	background-color: #F4F4F4;
+	flex-direction: column;
 }
 
-div.play_nav > div {
-	display: flex;
-	align-items: flex-end;
-}
-
-div.play_nav > div > * {
-	border-bottom: 2px solid #CECECE;
-}
-
-div.play_nav > div > a {
+div.play_nav > a {
 	color: #2f2f2f;
 	text-decoration: none;
 	display: block;
 	padding: .5em .7em;
 }
 
-div.play_nav_home_link, div.play_nav_user_links {
-	flex-shrink: 0;
-}
-
-div.play_nav_game_links {
-	flex-grow: 1;
-	flex-shrink: 1;
-	flex-wrap: wrap;
-}
-
 div.play_nav a.on, div.play_nav a.on:hover {
-	color: #E0F6FF;
-	border-bottom: 2px solid #094F77;
-	background-color: #3F8EBF;
+	background: white;
 }
 
 div.play_nav a:hover {
