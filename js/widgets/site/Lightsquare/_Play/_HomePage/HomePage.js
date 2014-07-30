@@ -12,6 +12,7 @@ define(function(require) {
 	var CurrentGames = require("./_CurrentGames/CurrentGames");
 	
 	function HomePage(user, server, router, parent) {
+		console.log(user, server, router, parent)
 		this._user = user;
 		this._server = server;
 		this._router = router;

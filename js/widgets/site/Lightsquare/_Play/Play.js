@@ -4,6 +4,7 @@ define(function(require) {
 	require("css!./nav.css");
 	var html = require("file!./play.html");
 	var navHtml = require("file!./nav.html");
+	var connectingMessageHtml = require("file!./connecting_message.html");
 	var Ractive = require("lib/dom/Ractive");
 	var Router = require("lib/Router");
 	var TabContainer = require("lib/dom/TabContainer");
@@ -257,7 +258,8 @@ define(function(require) {
 				}
 			},
 			partials: {
-				nav: navHtml
+				nav: navHtml,
+				connectingMessage: connectingMessageHtml
 			}
 		});
 		
