@@ -34,7 +34,7 @@ define(function(require) {
 				getSquareColour: function(squareNo) {
 					var coords = Square.fromSquareNo(squareNo).coords;
 					
-					return (coords.x % 2 === coords.y % 2 ? 'w' : 'b');
+					return (coords.x % 2 === coords.y % 2 ? 'b' : 'w');
 				},
 				getPieceOffset: function(piece) {
 					return (piece ? -"PNBRQKpnbrqk".indexOf(piece) : 1) * squareSize;
