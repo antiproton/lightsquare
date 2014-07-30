@@ -382,7 +382,7 @@ define(function(require) {
 		this._pendingPromotion = this._lastMoveEvent;
 		this._promotionDialog.setColour(this._lastMoveEvent.piece.colour);
 		
-		var boardOffsets = getOffsets(this._template.board);
+		var boardOffsets = getOffsets(this._template.nodes.board);
 		
 		var x = this._lastMoveEvent.event.pageX - boardOffsets.x;
 		var y = this._lastMoveEvent.event.pageY - boardOffsets.y;
