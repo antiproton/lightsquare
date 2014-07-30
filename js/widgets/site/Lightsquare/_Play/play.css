@@ -1,0 +1,70 @@
+div.main {
+	display: flex;
+	flex-grow: 1;
+	z-index: 0;
+}
+
+div.page {
+	display: flex;
+	flex-grow: 1;
+}
+
+a {
+	color: #275363;
+}
+
+div.message {
+	color: #420000;
+	position: absolute;
+	z-index: 2;
+	top: 3em;
+	right: .5em;
+	width: 33%;
+	border: 1px solid #AA8E58;
+	padding: .5em;
+	background: rgba(255, 254, 242, 0.95);
+}
+
+div.modal_overlay {
+	position: fixed;
+	z-index: 10;
+	display: flex;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	background: rgba(0, 0, 0, .45);
+}
+
+div.connecting_dialog {
+	color: #323232;
+	align-self: center;
+	width: 65%;
+	margin: 0 auto;
+	padding: .8em;
+	box-shadow: 2px 2px 8px rgba(0, 0, 0, .3);
+	background: white;
+}
+
+div.waiting_for_server {
+	text-align: center;
+}
+
+div.connecting_dialog h1 {
+	text-align: center;
+	font-weight: normal;
+	font-size: 1.5em;
+}
+
+p.backedup {
+	border-radius: 3px;
+	padding: .2em .4em;
+	background: #eeeeee;
+}
+
+div.footer {
+	text-align: right;
+	font-size: .9em;
+	border-top: 1px solid #C1C1C1;
+	padding: .6em .8em;
+}
