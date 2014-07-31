@@ -1,6 +1,7 @@
 define(function(require) {
 	require("css!./lightsquare.css");
 	require("css!./forms.css");
+	require("css!./tools.css");
 	var html = require("file!./lightsquare.html");
 	var homeHtml = require("file!./home.html");
 	var toolsHtml = require("file!./tools.html");
@@ -35,6 +36,10 @@ define(function(require) {
 					"/play": "Live chess",
 					"/tools": "Tools"
 				},
+				toolsTabs: {
+					restoreGame: "Restore game"
+				},
+				toolsTab: "restoreGame",
 				getHref: (function(path) {
 					return this._router.getAbsolutePath(path);
 				}).bind(this)
@@ -44,6 +49,10 @@ define(function(require) {
 				tools: toolsHtml
 			}
 		});
+		
+		this._template.on("select_tools_tab", (function(event, tab) {
+			this._template.set("toolsTab", tab);
+		}).bind(this));
 		
 		this._template.on("navigate", (function(event) {
 			if(event.original.button === LEFT_BUTTON) {
