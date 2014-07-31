@@ -18,11 +18,18 @@ define(function(require) {
 		this._path = new Path();
 		this._router = new Router(this._path);
 		
+		var path = this._router.getPath();
+		
+		this._router.PathChanged.addHandler(function(path) {
+			this._template.set("currentPath", path);
+		}, this);
+		
 		this._template = new Ractive({
 			el: parent,
 			template: html,
 			data: {
-				tab: "/",
+				currentPath: path,
+				tab: path,
 				navLinks: {
 					"/": "Home",
 					"/play": "Live chess",
