@@ -10,5 +10,5 @@ div.games {
 }
 
 div.seeks {
-	flex-grow: 1;
+	margin-top: 1em;
 }
