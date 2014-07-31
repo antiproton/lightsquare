@@ -3,6 +3,7 @@ define(function(require) {
 	require("css!./forms.css");
 	var html = require("file!./lightsquare.html");
 	var homeHtml = require("file!./home.html");
+	var toolsHtml = require("file!./tools.html");
 	var Ractive = require("lib/dom/Ractive");
 	var Router = require("lib/routing/Router");
 	var Path = require("lib/routing/Path");
@@ -21,7 +22,7 @@ define(function(require) {
 			el: parent,
 			template: html,
 			data: {
-				tab: "home",
+				tab: "/",
 				navLinks: {
 					"/": "Home",
 					"/play": "Live chess",
@@ -32,7 +33,8 @@ define(function(require) {
 				}).bind(this)
 			},
 			partials: {
-				home: homeHtml
+				home: homeHtml,
+				tools: toolsHtml
 			}
 		});
 		
@@ -49,24 +51,20 @@ define(function(require) {
 		}).bind(this));
 		
 		this._router.addRoute("/", (function() {
-			this._showTab("home");
+			this._template.set("tab", "/");
 		}).bind(this));
 		
 		this._router.addPartialRoute("/play", (function() {
-			this._showTab("play");
+			this._template.set("tab", "/play");
 		}).bind(this));
 		
 		this._router.addPartialRoute("/tools", (function() {
-			this._showTab("tools");
+			this._template.set("tab", "/tools");
 		}).bind(this));
 		
 		new Play(this._user, this._server, new Router(this._path, "/play"), this._template.nodes.play);
 		
 		this._router.execute();
-	}
-	
-	Lightsquare.prototype._showTab = function(tab) {
-		this._template.set("tab", tab);
 	}
 	
 	return Lightsquare;

@@ -1,23 +1,26 @@
 <div class="main">
-	<div class="title">
-		<h1>Lightsquare</h1>
-	</div>
-	<div class="menu_bar">
-		<div class="nav">
-			{{#navLinks:href}}
-				<a on-click="navigate" href="{{getHref(href)}}" class="{{curentPath === href ? 'on' : ''}}">{{.}}</a>
-			{{/navLinks}}
+	<div class="title_bar">
+		<div class="title">
+			<h1>Lightsquare</h1>
 		</div>
 		<div class="user_menu" id="user_menu">
 			asd
 		</div>
 	</div>
+	<div class="nav">
+		{{#navLinks:href}}
+			<a on-click="navigate" href="{{getHref(href)}}" class="{{curentPath === href ? 'on' : ''}}">{{.}}</a>
+		{{/navLinks}}
+	</div>
 	<div class="tabs">
-		<div class="page" style="display: {{tab === 'home' ? '' : 'none'}};">
+		<div class="page" style="display: {{tab === '/' ? '' : 'none'}};">
 			{{>home}}
 		</div>
-		<div class="page" style="display: {{tab === 'play' ? '' : 'none'}};" id="play">
+		<div class="page" style="display: {{tab === '/play' ? '' : 'none'}};" id="play">
 			
+		</div>
+		<div class="page" style="display: {{tab === '/tools' ? '' : 'none'}};">
+			{{>tools}}
 		</div>
 	</div>
 </div>

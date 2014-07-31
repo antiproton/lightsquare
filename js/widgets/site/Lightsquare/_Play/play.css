@@ -1,7 +1,6 @@
 div.play {
 	display: flex;
 	flex-grow: 1;
-	margin-top: .9em;
 }
 
 div.play_main {
@@ -89,7 +88,7 @@ div.connecting_message h1 {
 
 p.backedup {
 	border-radius: 3px;
-	padding: .2em .4em;
+	padding: .2em .4em .5em .4em;
 	border: 1px solid #F0E1A4;
 	background: #FDFCE2;
 }
