@@ -1,0 +1,25 @@
+{{#navLinks:href}}
+	<a on-click="navigate" href="{{getHref(href)}}" class="{{currentPath === href ? 'on' : ''}}">{{.}}</a>
+{{/navLinks}}
+{{#gamePages}}
+	<a
+	   on-click="navigate"
+	   href="{{getHref(href)}}"
+	   class="{{currentPath === href ? 'on' : ''}}"
+	>{{^userIsPlaying}}
+		{{white}} vs {{black}} | {{timingStyle}}
+	{{/userIsPlaying}}{{#userIsPlaying}}
+		{{opponent}} | {{timingStyle}}
+		{{#isInProgress && currentPath !== href}}
+			| {{playerTime.getColonDisplay()}}
+		{{/showTime}}
+	{{/userIsPlaying}}
+	</a>
+{{/gamePages}}
+{{#loadingGame}}
+	<a
+	   on-click="navigate"
+	   href="{{getHref('/game/' + loadingGameId)}}"
+	   class="{{currentPath === '/game/' + loadingGameId ? 'on' : ''}}"
+	>Loading game...</a>
+{{/loadingGame}}

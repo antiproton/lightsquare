@@ -1,52 +1,26 @@
-{{^serverConnected}}
-	<div class="modal_overlay">
-		<div class="connecting_dialog">
-			{{#waitingForServer}}
-				<div class="waiting_for_server">
-					<p>
-						<img src="{{getAbsolutePath('./loading.gif')}}">
-					</p>
-					<p>
-						Connecting to the server...
-					</p>
-				</div>
-			{{/waitingForServer}}
-			{{^waitingForServer}}
-				<div class="connection_problem">
-					<h1>Connection problem</h1>
-					<p>
-						If you still see this message after reloading the page, there is likely a
-						temporary problem with the server.  Otherwise, check your internet connection.
-					</p>
-					<p class="backedup">
-						<img src="{{getAbsolutePath('./i.png')}}">
-						Your games are backed up locally.  If you have a game in progress,
-						click &lsquo;Restore game&rsquo; under Tools when the server comes back online.
-					</p>
-					<p>
-						<a target="_blank" href="http://twitter.com/lightsquaredev">Check the latest status updates on Twitter.</a>
-					</p>
-				</div>
-			{{/waitingForServer}}
+<div class="main">
+	<div class="title_bar">
+		<div class="title">
+			<h1>Lightsquare</h1>
+		</div>
+		<div class="user_menu" id="user_menu">
+			asd
 		</div>
 	</div>
-{{/serverConnected}}
-<div class="modal_overlay" style="display: {{dialog ? '' : 'none'}}" on-click="hide_dialog">
-	
-</div>
-<div class="root" on-click="hide_popups">
-	{{#message}}
-		<div class="message" id="message">
-			{{{message}}}
+	<div class="nav">
+		{{#navLinks:href}}
+			<a on-click="navigate" href="{{getHref(href)}}" class="{{currentPath === href ? 'on' : ''}}">{{.}}</a>
+		{{/navLinks}}
+	</div>
+	<div class="tabs">
+		<div class="page" style="display: {{tab === '/' ? '' : 'none'}};">
+			{{>home}}
 		</div>
-	{{/message}}
-	<div class="header" id="header">
-		{{>header}}
-	</div>
-	<div class="control_panel" on-click="register_click:'controlPanel'" style="display: {{showControlPanel ? '' : 'none'}}">
-		{{>controlPanel}}
-	</div>
-	<div class="main" id="main">
-		
+		<div class="page" style="display: {{tab === '/play' ? '' : 'none'}};" id="play">
+			
+		</div>
+		<div class="page" style="display: {{tab === '/tools' ? '' : 'none'}};">
+			{{>tools}}
+		</div>
 	</div>
 </div>

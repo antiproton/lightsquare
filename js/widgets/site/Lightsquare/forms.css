@@ -74,3 +74,13 @@ form.single_column label {
 form.single_column input {
 	text-align: center;
 }
+
+div.form_error {
+	font-size: .8em;
+	text-align: center;
+	color: #BA0000;
+	margin-top: .8em;
+	border: 1px solid #D1D1D1;
+	border-radius: 3px;
+	padding: .5em;
+}
