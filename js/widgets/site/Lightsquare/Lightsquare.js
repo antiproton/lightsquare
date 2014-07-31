@@ -2,6 +2,7 @@ define(function(require) {
 	require("css!./lightsquare.css");
 	require("css!./forms.css");
 	require("css!./tools.css");
+	require("css!./home.css");
 	var html = require("file!./lightsquare.html");
 	var homeHtml = require("file!./home.html");
 	var toolsHtml = require("file!./tools.html");
@@ -11,6 +12,7 @@ define(function(require) {
 	var TabContainer = require("lib/dom/TabContainer");
 	var Play = require("./_Play/Play");
 	var GameBackupList = require("./_GameBackupList/GameBackupList");
+	var LoginForm = require("./_LoginForm/LoginForm");
 	
 	var LEFT_BUTTON = 0;
 	
@@ -23,6 +25,7 @@ define(function(require) {
 		this._setupRouter();
 		this._setupUser();
 		
+		new LoginForm(this._user, this._template.nodes.login_form);
 		new Play(this._user, this._server, this._router.createChild("/play"), this._template.nodes.play);
 		this._gameBackupList = new GameBackupList(this._user, this._server, this._template.nodes.restore_game);
 		

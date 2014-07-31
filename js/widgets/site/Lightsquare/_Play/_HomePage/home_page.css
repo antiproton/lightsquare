@@ -1,12 +1,7 @@
-div.home {
+div.play_home {
 	display: flex;
 	flex-direction: column;
 	flex-grow: 1;
-}
-
-div.games {
-	display: flex;
-	flex-direction: column;
 }
 
 div.seeks {

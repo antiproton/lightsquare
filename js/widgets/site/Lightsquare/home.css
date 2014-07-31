@@ -1,0 +1,9 @@
+div.home {
+	display: flex;
+	flex-grow: 1;
+	background: white;
+}
+
+div.home_main {
+	flex-grow: 1;
+}
