@@ -5,7 +5,7 @@
 	<div class="menu_bar">
 		<div class="nav">
 			{{#navLinks:href}}
-				<a on-click="navigate" href="{{href}}" class="{{curentPath === href ? 'on' : ''}}">{{.}}</a>
+				<a on-click="navigate" href="{{getHref(href)}}" class="{{curentPath === href ? 'on' : ''}}">{{.}}</a>
 			{{/navLinks}}
 		</div>
 		<div class="user_menu" id="user_menu">

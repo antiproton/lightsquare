@@ -195,3 +195,96 @@ div.register_link {
 				<a href="javascript:void(0)" on-click="register">Create account</a>
 			</div>
 		</div>
+		
+		
+		
+		
+		
+		//////////////////////Play dialogs etc
+		
+		var lastClickTarget = null;
+		
+		this._template.on("hide_popups", (function() {
+			this._hideMessage();
+			
+			if(lastClickTarget !== "controlPanel") {
+				this._template.set("showControlPanel", false);
+			}
+			
+			lastClickTarget = null;
+		}).bind(this));
+		
+		this._template.on("hide_dialog", (function() {
+			if(lastClickTarget !== "dialog") {
+				this._template.set("showControlPanel", false);
+			}
+			
+			lastClickTarget = null;
+		}).bind(this));
+		
+		this._template.on("register_click", (function(event, target) {
+			lastClickTarget = target;
+		}).bind(this));
+		
+		this._template.on("dialog_click", (function(event, target) {
+			lastClickTarget = "dialog";
+		}).bind(this));
+		
+		this._template.on("toggle_control_panel", (function() {
+			this._template.set("showControlPanel", !this._template.get("showControlPanel"));
+			
+			lastClickTarget = "controlPanel";
+		}).bind(this));
+		
+		this._template.on("logout", (function() {
+			if(this._user.hasGamesInProgress()) {
+				this._template.set("showLogoutConfirmation", true);
+			}
+			
+			else {
+				this._user.logout();
+			}
+		}).bind(this));
+		
+		this._template.on("logout_confirm", (function() {
+			this._user.logout();
+			this._template.set("showLogoutConfirmation", false);
+		}).bind(this));
+		
+		this._template.on("logout_cancel", (function() {
+			this._template.set("showLogoutConfirmation", false);
+		}).bind(this));
+		
+		
+	
+	Play.prototype._showMessage = function(message, durationInSeconds) {
+		this._hideMessage();
+		this._template.set("message", message);
+		
+		if(durationInSeconds) {
+			this._hideMessageTimer = setTimeout((function() {
+				this._hideMessage();
+			}).bind(this), durationInSeconds * 1000);
+		}
+	}
+	
+	Play.prototype._hideMessage = function() {
+		this._template.set("message", null);
+		
+		if(this._hideMessageTimer !== null) {
+			clearTimeout(this._hideMessageTimer);
+			
+			this._hideMessageTimer = null;
+		}
+	}
+	
+	
+	
+	///////////Play template
+	
+	
+				message: null,
+				dialog: null,
+				showControlPanel: false,
+				username: this._user.getUsername(),
+				userIsLoggedIn: false,

@@ -21,12 +21,15 @@ define(function(require) {
 			el: parent,
 			template: html,
 			data: {
-				tab: "play",
+				tab: "home",
 				navLinks: {
 					"/": "Home",
 					"/play": "Live chess",
 					"/tools": "Tools"
-				}
+				},
+				getHref: (function(path) {
+					return this._router.getAbsolutePath(path);
+				}).bind(this)
 			},
 			partials: {
 				home: homeHtml
@@ -37,7 +40,11 @@ define(function(require) {
 			if(event.original.button === LEFT_BUTTON) {
 				event.original.preventDefault();
 			
-				this._router.setPath(event.node.getAttribute("href"));
+				var path = this._router.getRelativePath(event.node.getAttribute("href"));
+				
+				if(path) {
+					this._router.setPath(path);
+				}
 			}
 		}).bind(this));
 		
@@ -45,11 +52,11 @@ define(function(require) {
 			this._showTab("home");
 		}).bind(this));
 		
-		this._router.addRoute("/play", (function() {
+		this._router.addPartialRoute("/play", (function() {
 			this._showTab("play");
 		}).bind(this));
 		
-		this._router.addRoute("/tools", (function() {
+		this._router.addPartialRoute("/tools", (function() {
 			this._showTab("tools");
 		}).bind(this));
 		

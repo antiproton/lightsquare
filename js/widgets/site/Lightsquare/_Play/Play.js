@@ -82,8 +82,8 @@ define(function(require) {
 				this._changePageUrl(url, newUrl);
 				this._gamePageIndex[newId] = this._gamePageIndex[id];
 				
-				if(this._router.getCurrentPath() === url) {
-					this._router.navigate(newUrl);
+				if(this._router.getPath() === url) {
+					this._router.setPath(newUrl);
 				}
 				
 				this._updateGamePage(page);
@@ -98,7 +98,7 @@ define(function(require) {
 		var id = page.getId();
 		
 		var data = {
-			url: "/game/" + id,
+			href: "/game/" + id,
 			userIsPlaying: page.userIsPlaying(),
 			white: page.getPlayerName(Colour.white),
 			black: page.getPlayerName(Colour.black),
@@ -217,13 +217,14 @@ define(function(require) {
 					
 					this._showPage(url);
 				}).bind(this), (function() {
-					this._showMessage(
-						"The requested game could not be found &ndash; if you had a game in"
-						+ " progress, you may be able to restore it by clicking \"Restore game\"",
-						5
-					);
+					//FIXME do something here
+					//this._showMessage(
+					//	"The requested game could not be found &ndash; if you had a game in"
+					//	+ " progress, you may be able to restore it by clicking \"Restore game\"",
+					//	5
+					//);
 					
-					this._router.navigate("/");
+					this._router.setPath("/");
 				}).bind(this), (function() {
 					this._template.set("loadingGame", false);
 				}).bind(this));
@@ -236,19 +237,17 @@ define(function(require) {
 			el: parent,
 			template: html,
 			data: {
-				message: null,
-				dialog: null,
 				serverConnected: false,
 				waitingForServer: true,
-				showControlPanel: false,
-				username: this._user.getUsername(),
-				userIsLoggedIn: false,
 				gamePages: [],
 				currentPath: this._router.getPath(),
 				navLinks: {
 					"/": "New game",
 					"/games": "Games in progress"
 				},
+				getHref: (function(path) {
+					return this._router.getAbsolutePath(path);
+				}).bind(this),
 				getAbsolutePath: function(path) {
 					return require.toUrl(path);
 				}
@@ -263,61 +262,12 @@ define(function(require) {
 			if(event.original.button === LEFT_BUTTON) {
 				event.original.preventDefault();
 			
-				this._router.setPath(event.node.getAttribute("href"));
+				var path = this._router.getRelativePath(event.node.getAttribute("href"));
+				
+				if(path) {
+					this._router.setPath(path);
+				}
 			}
-		}).bind(this));
-		
-		var lastClickTarget = null;
-		
-		this._template.on("hide_popups", (function() {
-			this._hideMessage();
-			
-			if(lastClickTarget !== "controlPanel") {
-				this._template.set("showControlPanel", false);
-			}
-			
-			lastClickTarget = null;
-		}).bind(this));
-		
-		this._template.on("hide_dialog", (function() {
-			if(lastClickTarget !== "dialog") {
-				this._template.set("showControlPanel", false);
-			}
-			
-			lastClickTarget = null;
-		}).bind(this));
-		
-		this._template.on("register_click", (function(event, target) {
-			lastClickTarget = target;
-		}).bind(this));
-		
-		this._template.on("dialog_click", (function(event, target) {
-			lastClickTarget = "dialog";
-		}).bind(this));
-		
-		this._template.on("toggle_control_panel", (function() {
-			this._template.set("showControlPanel", !this._template.get("showControlPanel"));
-			
-			lastClickTarget = "controlPanel";
-		}).bind(this));
-		
-		this._template.on("logout", (function() {
-			if(this._user.hasGamesInProgress()) {
-				this._template.set("showLogoutConfirmation", true);
-			}
-			
-			else {
-				this._user.logout();
-			}
-		}).bind(this));
-		
-		this._template.on("logout_confirm", (function() {
-			this._user.logout();
-			this._template.set("showLogoutConfirmation", false);
-		}).bind(this));
-		
-		this._template.on("logout_cancel", (function() {
-			this._template.set("showLogoutConfirmation", false);
 		}).bind(this));
 		
 		setTimeout((function() {
@@ -325,34 +275,13 @@ define(function(require) {
 		}).bind(this), 3000);
 	}
 	
-	Play.prototype._showMessage = function(message, durationInSeconds) {
-		this._hideMessage();
-		this._template.set("message", message);
-		
-		if(durationInSeconds) {
-			this._hideMessageTimer = setTimeout((function() {
-				this._hideMessage();
-			}).bind(this), durationInSeconds * 1000);
-		}
-	}
-	
-	Play.prototype._hideMessage = function() {
-		this._template.set("message", null);
-		
-		if(this._hideMessageTimer !== null) {
-			clearTimeout(this._hideMessageTimer);
-			
-			this._hideMessageTimer = null;
-		}
-	}
-	
 	Play.prototype._handleUserEvents = function() {
 		this._user.SeekMatched.addHandler(function(game) {
-			this._router.navigate("/game/" + game.getId());
+			this._router.setPath("/game/" + game.getId());
 		}, this);
 		
 		this._user.GameRestored.addHandler(function(game) {
-			this._router.navigate("/game/" + game.getId());
+			this._router.setPath("/game/" + game.getId());
 		}, this);
 		
 		this._user.LoggedIn.addHandler(function() {
@@ -362,7 +291,7 @@ define(function(require) {
 		
 		this._user.LoggedOut.addHandler(function() {
 			this._initialise();
-			this._router.loadFromUrl();
+			this._router.execute();
 		}, this);
 	}
 	
