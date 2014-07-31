@@ -30,7 +30,7 @@ define(function(require) {
 		this._handleUserEvents();
 		
 		this._setupTemplate(parent);
-		this._tabContainer = new TabContainer(this._template.nodes.main, "page");
+		this._tabContainer = new TabContainer(this._template.nodes.main, "play_page");
 		this._setupRouter();
 		
 		setInterval(this._updateClocks.bind(this), 100);

@@ -1,19 +1,18 @@
-<div class="root">
-	<div class="main">
-		<div class="title">
-			<h1>Lightsquare</h1>
+<div class="main">
+	<div class="title">
+		<h1>Lightsquare</h1>
+	</div>
+	<div class="nav">
+		<a href="/">Home</a>
+		<a href="/">Play</a>
+		<a href="/">Tools</a>
+	</div>
+	<div class="tabs">
+		<div class="page" style="display: {{tab === 'home' ? '' : 'none'}}" id="home">
+			
 		</div>
-		<div class="nav">
-			<a href="/">Home</a>
-			<a href="/">Play</a>
-		</div>
-		<div class="tabs">
-			<div class="page" style="display: {{tab === 'home' ? '' : 'none'}}" id="home">
-				
-			</div>
-			<div class="page" style="display: {{tab === 'play' ? '' : 'none'}}" id="play">
-				
-			</div>
+		<div class="page" style="display: {{tab === 'play' ? '' : 'none'}}" id="play">
+			
 		</div>
 	</div>
 </div>

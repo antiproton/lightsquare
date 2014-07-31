@@ -1,11 +1,11 @@
 div.play_main {
 	display: flex;
 	flex-grow: 1;
-	z-index: 0;
+	padding: .8em;
 	background: white;
 }
 
-div.page {
+div.play_page {
 	display: flex;
 	flex-grow: 1;
 }
