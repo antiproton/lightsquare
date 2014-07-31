@@ -1,13 +1,6 @@
-<a
-	on-click="navigate"
-	href="/"
-	class="{{currentPath === '/' ? 'on' : ''}}"
->New game</a>
-<a
-	on-click="navigate"
-	href="/"
-	class="{{curentPath === 'games' ? 'on' : ''}}"
->Games in progress</a>
+{{#navLinks:href}}
+	<a on-click="navigate" href="{{href}}" class="{{currentPath === href ? 'on' : ''}}">{{.}}</a>
+{{/navLinks}}
 {{#gamePages}}
 	<a
 	   on-click="navigate"

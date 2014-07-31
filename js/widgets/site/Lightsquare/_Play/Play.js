@@ -5,16 +5,12 @@ define(function(require) {
 	var navHtml = require("file!./nav.html");
 	var connectingMessageHtml = require("file!./connecting_message.html");
 	var Ractive = require("lib/dom/Ractive");
-	var Router = require("lib/Router");
 	var TabContainer = require("lib/dom/TabContainer");
 	var HomePage = require("./_HomePage/HomePage");
 	var GamePage = require("./_GamePage/GamePage");
 	var Colour = require("chess/Colour");
 	
-	var MouseButtons = {
-		left: 0,
-		middle: 1
-	};
+	var LEFT_BUTTON = 0;
 	
 	function Play(user, server, router, parent) {
 		this._user = user;
@@ -40,7 +36,7 @@ define(function(require) {
 		this._server.ConnectionOpened.addHandler(function() {
 			this._user.getDetails().then((function() {
 				this._initialise();
-				this._router.loadFromUrl();
+				this._router.execute();
 			}).bind(this));
 		}, this);
 		
@@ -193,9 +189,7 @@ define(function(require) {
 	}
 	
 	Play.prototype._setupRouter = function() {
-		this._template.set("currentPath", this._router.getCurrentPath());
-		
-		this._router.UrlChanged.addHandler(function(path) {
+		this._router.PathChanged.addHandler(function(path) {
 			this._template.set("currentPath", path);
 		}, this);
 		
@@ -250,7 +244,11 @@ define(function(require) {
 				username: this._user.getUsername(),
 				userIsLoggedIn: false,
 				gamePages: [],
-				currentPath: "/",
+				currentPath: this._router.getPath(),
+				navLinks: {
+					"/": "New game",
+					"/games": "Games in progress"
+				},
 				getAbsolutePath: function(path) {
 					return require.toUrl(path);
 				}
@@ -262,10 +260,10 @@ define(function(require) {
 		});
 		
 		this._template.on("navigate", (function(event) {
-			if(event.original.button !== MouseButtons.middle) {
+			if(event.original.button === LEFT_BUTTON) {
 				event.original.preventDefault();
 			
-				this._router.navigate(event.node.getAttribute("href"));
+				this._router.setPath(event.node.getAttribute("href"));
 			}
 		}).bind(this));
 		

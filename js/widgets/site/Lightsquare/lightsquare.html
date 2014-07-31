@@ -4,17 +4,17 @@
 	</div>
 	<div class="menu_bar">
 		<div class="nav">
-			<a href="/">Home</a>
-			<a href="/">Play</a>
-			<a href="/">Tools</a>
+			{{#navLinks:href}}
+				<a on-click="navigate" href="{{href}}" class="{{curentPath === href ? 'on' : ''}}">{{.}}</a>
+			{{/navLinks}}
 		</div>
 		<div class="user_menu" id="user_menu">
 			asd
 		</div>
 	</div>
 	<div class="tabs">
-		<div class="page" style="display: {{tab === 'home' ? '' : 'none'}};" id="home">
-			
+		<div class="page" style="display: {{tab === 'home' ? '' : 'none'}};">
+			{{>home}}
 		</div>
 		<div class="page" style="display: {{tab === 'play' ? '' : 'none'}};" id="play">
 			
