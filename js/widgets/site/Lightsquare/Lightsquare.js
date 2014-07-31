@@ -10,6 +10,7 @@ define(function(require) {
 	var AddressBarPath = require("lib/routing/AddressBarPath");
 	var TabContainer = require("lib/dom/TabContainer");
 	var Play = require("./_Play/Play");
+	var GameBackupList = require("./_GameBackupList/GameBackupList");
 	
 	var LEFT_BUTTON = 0;
 	
@@ -22,9 +23,10 @@ define(function(require) {
 		this._setupRouter();
 		this._setupUser();
 		
-		this._router.execute();
-		
 		new Play(this._user, this._server, this._router.createChild("/play"), this._template.nodes.play);
+		this._gameBackupList = new GameBackupList(this._user, this._server, this._template.nodes.restore_game);
+		
+		this._router.execute();
 	}
 	
 	Lightsquare.prototype._updateUserDetails = function() {
@@ -63,8 +65,9 @@ define(function(require) {
 			this._template.set("tab", "/play");
 		}).bind(this));
 		
-		this._router.addPartialRoute("/tools", (function() {
+		this._router.addRoute("/tools", (function() {
 			this._template.set("tab", "/tools");
+			this._gameBackupList.refresh();
 		}).bind(this));
 	}
 	

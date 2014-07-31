@@ -6,19 +6,22 @@ define(function(require) {
 	var Colour = require("chess/Colour");
 	var Event = require("lib/Event");
 	
-	function GameBackupList(user, parent) {
+	function GameBackupList(user, server, parent) {
 		this._user = user;
+		this._server = server;
 		this._boards = {};
 		this._setupTemplate(parent);
 		this._restorationRequests = {};
 		
 		this.GameRestored = new Event();
 		
-		this._user.getPendingRestorations().then((function(ids) {
-			ids.forEach((function(id) {
-				this._template.set("restorationRequestSubmitted." + id, true)
+		this._server.Connected.addHandler(function() {
+			this._user.getPendingRestorations().then((function(ids) {
+				ids.forEach((function(id) {
+					this._template.set("restorationRequestSubmitted." + id, true)
+				}).bind(this));
 			}).bind(this));
-		}).bind(this));
+		}, this);
 	}
 	
 	GameBackupList.prototype._setupTemplate = function(parent) {

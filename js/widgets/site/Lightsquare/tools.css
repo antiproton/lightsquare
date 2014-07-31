@@ -1,20 +1,13 @@
 div.tools {
+	flex-grow: 1;
 }
 
 div.tools_tabs {
 	display: flex;
-}
-
-div.tools_tabs {
-	display: flex;
-	flex-direction: column;
-	flex-basis: 15%;
-	z-index: 1;
 }
 
 div.tools_tabs > a {
 	font-size: .85em;
-	text-align: right;
 	color: #5c5c5c;
 	text-decoration: none;
 	display: block;
