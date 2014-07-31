@@ -79,7 +79,6 @@ define(function(require) {
 				var newUrl = "/game/" + newId;
 				
 				this._tabContainer.changeId(url, newUrl);
-				this._changePageUrl(url, newUrl);
 				this._gamePageIndex[newId] = this._gamePageIndex[id];
 				
 				if(this._router.getPath() === url) {
