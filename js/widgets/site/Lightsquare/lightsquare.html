@@ -9,7 +9,7 @@
 	</div>
 	<div class="nav">
 		{{#navLinks:href}}
-			<a on-click="navigate" href="{{getHref(href)}}" class="{{currentPath === href ? 'on' : ''}}">{{.}}</a>
+			<a on-click="navigate" href="{{getHref(href)}}" class="{{tab === href ? 'on' : ''}}">{{.}}</a>
 		{{/navLinks}}
 	</div>
 	<div class="tabs">
