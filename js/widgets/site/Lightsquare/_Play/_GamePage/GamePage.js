@@ -17,11 +17,12 @@ define(function(require) {
 		OPPONENT: "opponent"
 	};
 	
-	function GamePage(game, user, server, parent) {
+	function GamePage(game, user, server, router, parent) {
 		this.Rematch = new Event();
 		
 		this._user = user;
 		this._server = server;
+		this._router = router;
 		this._viewingAs = Colour.white;
 		this._pendingPremove = null;
 		this._clockUpdateInterval = null;
@@ -34,6 +35,7 @@ define(function(require) {
 		this._setupBoard();
 		this._setupHistory();
 		this._setupControls();
+		this._setupRouter();
 		this._checkForPendingPremove();
 		this._handleUserEvents();
 		this._updateUserDependentElements();
@@ -300,6 +302,16 @@ define(function(require) {
 		}).bind(this));
 	}
 	
+	GamePage.prototype._setupRouter = function() {
+		this._router.addRoute("/", (function() {
+			this._startUpdatingClocks();
+		}).bind(this), (function() {
+			this._stopUpdatingClocks();
+		}).bind(this));
+		
+		this._router.execute();
+	}
+	
 	GamePage.prototype._updateNewSeek = function() {
 		var seek = this._user.getCurrentSeek();
 		var timingStyle = this.getTimingStyle();
@@ -478,18 +490,6 @@ define(function(require) {
 				this._newSeekTimeoutAnimation = null;
 			}
 		}, this);
-	}
-	
-	GamePage.prototype.show = function() {
-		this._startUpdatingClocks();
-	}
-	
-	GamePage.prototype.hide = function() {
-		this._stopUpdatingClocks();
-	}
-	
-	GamePage.prototype.remove = function() {
-		this._stopUpdatingClocks();
 	}
 	
 	return GamePage;

@@ -46,7 +46,7 @@ define(function(require) {
 	}
 	
 	Play.prototype._initialise = function() {
-		this._clearPages();
+		this._tabContainer.clear();
 		this._gamePages = [];
 		this._template.set("gamePages", []);
 		this._addGamePages();
@@ -66,7 +66,7 @@ define(function(require) {
 		var url = "/game/" + id;
 		
 		if(!this._hasPage(url)) {
-			var page = new GamePage(game, this._user, this._server, this._tabContainer.createTab(url));
+			var page = new GamePage(game, this._user, this._server, this._router.createChild(url), this._createPage(url));
 			
 			this._pages[url] = page;
 			this._gamePages.push(page);
@@ -145,47 +145,16 @@ define(function(require) {
 		}).bind(this));
 	}
 	
-	Play.prototype._clearPages = function() {
-		this._tabContainer.clear();
-		
-		var page;
-		
-		for(var url in this._pages) {
-			page = this._pages[url];
-			
-			if(page.remove) {
-				page.remove();
-			}
-		}
-		
-		this._pages = {};
+	Play.prototype._hasPage = function(url) {
+		return this._tabContainer.hasTab(url);
 	}
 	
 	Play.prototype._showPage = function(url) {
-		var page = this._pages[url];
-		
-		if(this._currentPage !== page) {
-			if(this._currentPage !== null && this._currentPage.hide) {
-				this._currentPage.hide();
-			}
-			
-			if(page.show) {
-				page.show();
-			}
-		}
-		
-		this._currentPage = page;
 		this._tabContainer.showTab(url);
 	}
 	
-	Play.prototype._hasPage = function(url) {
-		return (url in this._pages);
-	}
-	
-	Play.prototype._changePageUrl = function(oldUrl, newUrl) {
-		this._pages[newUrl] = this._pages[oldUrl];
-		
-		delete this._pages[oldUrl];
+	Play.prototype._createPage = function(url) {
+		return this._tabContainer.createTab(url);
 	}
 	
 	Play.prototype._setupRouter = function() {
@@ -195,7 +164,7 @@ define(function(require) {
 		
 		this._router.addRoute("/", (function(params, url) {
 			if(!this._hasPage(url)) {
-				this._pages[url] = new HomePage(this._user, this._server, this._router, this._tabContainer.createTab(url));
+				new HomePage(this._user, this._server, this._router.createChild(), this._createPage(url));
 			}
 			
 			this._showPage(url);

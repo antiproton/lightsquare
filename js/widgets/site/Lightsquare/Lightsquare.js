@@ -69,7 +69,7 @@ define(function(require) {
 			this._template.set("tab", "/tools");
 		}).bind(this));
 		
-		new Play(this._user, this._server, new Router(this._path, "/play"), this._template.nodes.play);
+		new Play(this._user, this._server, this._router.createChild("/play"), this._template.nodes.play);
 		
 		this._router.execute();
 		
@@ -89,11 +89,6 @@ define(function(require) {
 	}
 	
 	Lightsquare.prototype._updateUserDetails = function() {
-		
-		console.log({
-			username: this._user.getUsername(),
-			userIsLoggedIn: this._user.isLoggedIn()
-		})
 		this._template.set({
 			username: this._user.getUsername(),
 			userIsLoggedIn: this._user.isLoggedIn()

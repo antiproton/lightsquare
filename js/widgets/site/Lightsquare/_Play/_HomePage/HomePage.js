@@ -12,6 +12,7 @@ define(function(require) {
 		this._router = router;
 		this._seekList = new SeekList(this._server);
 		this._setupTemplate(parent);
+		this._setupRouter();
 	}
 	
 	HomePage.prototype._setupTemplate = function(parent) {
@@ -24,24 +25,14 @@ define(function(require) {
 		new SeekGraph(this._seekList, this._user, this._template.nodes.seek_graph);
 	}
 	
-	HomePage.prototype.show = function() {
-		this._startUpdating();
-	}
-	
-	HomePage.prototype.hide = function() {
-		this._stopUpdating();
-	}
-	
-	HomePage.prototype.remove = function() {
-		this._stopUpdating();
-	}
-	
-	HomePage.prototype._startUpdating = function() {
-		this._seekList.startUpdating();
-	}
-	
-	HomePage.prototype._stopUpdating = function() {
-		this._seekList.stopUpdating();
+	HomePage.prototype._setupRouter = function() {
+		this._router.addRoute("/", (function() {
+			this._seekList.startUpdating();
+		}).bind(this), (function() {
+			this._seekList.stopUpdating();
+		}).bind(this));
+		
+		this._router.execute();
 	}
 	
 	return HomePage;
