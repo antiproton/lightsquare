@@ -1,8 +1,38 @@
+div.play {
+	display: flex;
+	flex-grow: 1;
+	margin-top: .9em;
+}
+
 div.play_main {
 	display: flex;
 	flex-grow: 1;
 	padding: .8em;
 	background: white;
+}
+
+div.play_nav {
+	display: flex;
+	flex-direction: column;
+	flex-basis: 15%;
+}
+
+div.play_nav > a {
+	color: #2f2f2f;
+	text-decoration: none;
+	display: block;
+	padding: .5em .7em;
+	box-shadow: inset -2px 0px 3px rgba(0, 0, 0, .06);
+	background: #E3E7E9;
+}
+
+div.play_nav a.on, div.play_nav a.on:hover {
+	box-shadow: none;
+	background: white;
+}
+
+div.play_nav a:hover {
+	border-color: #BABABA;
 }
 
 div.play_page {
@@ -37,21 +67,17 @@ div.modal_overlay {
 	background: rgba(0, 0, 0, .45);
 }
 
-div.connecting_dialog {
+div.connecting_message {
+	flex-grow: 1;
 	color: #323232;
-	align-self: center;
-	width: 65%;
-	margin: 0 auto;
 	padding: .8em;
-	box-shadow: 2px 2px 8px rgba(0, 0, 0, .3);
-	background: white;
 }
 
 div.waiting_for_server {
 	text-align: center;
 }
 
-div.connecting_dialog h1 {
+div.connecting_message h1 {
 	text-align: center;
 	font-weight: normal;
 	font-size: 1.5em;
@@ -60,7 +86,8 @@ div.connecting_dialog h1 {
 p.backedup {
 	border-radius: 3px;
 	padding: .2em .4em;
-	background: #eeeeee;
+	border: 1px solid #F0E1A4;
+	background: #FDFCE2;
 }
 
 div.footer {

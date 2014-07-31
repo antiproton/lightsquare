@@ -1,7 +1,6 @@
 define(function(require) {
 	require("lib/Array.empty");
 	require("css!./play.css");
-	require("css!./nav.css");
 	var html = require("file!./play.html");
 	var navHtml = require("file!./nav.html");
 	var connectingMessageHtml = require("file!./connecting_message.html");
@@ -17,9 +16,10 @@ define(function(require) {
 		middle: 1
 	};
 	
-	function Play(user, server, parent) {
-		this._server = server;
+	function Play(user, server, router, parent) {
 		this._user = user;
+		this._server = server;
+		this._router = router;
 		
 		this._pages = {};
 		this._gamePages = [];
@@ -193,8 +193,6 @@ define(function(require) {
 	}
 	
 	Play.prototype._setupRouter = function() {
-		this._router = new Router();
-		
 		this._template.set("currentPath", this._router.getCurrentPath());
 		
 		this._router.UrlChanged.addHandler(function(path) {

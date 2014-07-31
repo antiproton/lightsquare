@@ -1,7 +1,7 @@
-<div class="play">
-	{{^serverConnected}}
-		{{>connectingMessage}}
-	{{/serverConnected}}
+{{^serverConnected}}
+	{{>connectingMessage}}
+{{/serverConnected}}
+<div class="play" style="display: {{serverConnected ? 'inherit' : 'none'}}">
 	{{#message}}
 		<div class="message" id="message">
 			{{{message}}}

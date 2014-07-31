@@ -20,7 +20,7 @@ define(function(require) {
 			}
 		});
 		
-		new Play(this._user, this._server, this._template.nodes.play);
+		new Play(this._user, this._server, new Router("/play"), this._template.nodes.play);
 	}
 	
 	return Lightsquare;

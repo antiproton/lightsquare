@@ -11,24 +11,28 @@ div.title h1 {
 	font-weight: normal;
 }
 
+div.menu_bar {
+	display: flex;
+	justify-content: space-between;
+}
+
 div.nav {
 	display: flex;
 	border-radius: 4px;
-	background: #3D3D3D;
+	background: #d3ceb7;
 }
 
 div.nav a {
-	color: #D1EAF9;
+	color: #466e86;
 	display: block;
 	padding: .3em .5em;
+}
+
+div.user_menu {
+	background: black;
 }
 
 div.page {
 	display: flex;
 	flex-grow: 1;
-}
-
-div.play {
-	display: flex;
-	margin-top: .9em;
 }

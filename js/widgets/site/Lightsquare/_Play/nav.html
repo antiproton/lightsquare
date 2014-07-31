@@ -1,13 +1,18 @@
 <a
 	on-click="navigate"
 	href="/"
-	class="{{'/' === currentPath ? 'on' : ''}}"
->Home</a>
+	class="{{currentPath === '/' ? 'on' : ''}}"
+>New game</a>
+<a
+	on-click="navigate"
+	href="/"
+	class="{{curentPath === 'games' ? 'on' : ''}}"
+>Games in progress</a>
 {{#gamePages}}
 	<a
 	   on-click="navigate"
 	   href="{{url}}"
-	   class="{{url === currentPath ? 'on' : ''}}"
+	   class="{{currentPath === url ? 'on' : ''}}"
 	>{{^userIsPlaying}}
 		{{white}} vs {{black}} | {{timingStyle}}
 	{{/userIsPlaying}}{{#userIsPlaying}}
@@ -22,6 +27,6 @@
 	<a
 	   on-click="navigate"
 	   href="/game/{{loadingGameId}}"
-	   class="{{'/game/' + loadingGameId === currentPath ? 'on' : ''}}"
+	   class="{{currentPath === '/game/' + loadingGameId ? 'on' : ''}}"
 	>Loading game...</a>
 {{/loadingGame}}
