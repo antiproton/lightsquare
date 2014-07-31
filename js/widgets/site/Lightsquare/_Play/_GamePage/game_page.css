@@ -1,47 +1,38 @@
 div.game {
 	display: flex;
+	flex-direction: column;
 	flex-grow: 1;
-	align-items: flex-start;
-	background: white;
 }
 
 input.rematch.rematch_offered {
 	box-shadow: 0 0 3px rgba(255, 253, 234, .7);
 }
 
-div.game_main {
-	display: flex;
-	flex-direction: column;
-	flex-grow: 1;
-	margin: .8em 0 0 .8em;
-	border: 1px solid #ababab;
-	border-radius: 3px;
-	box-shadow: 1px 1px 4px rgba(0, 0, 0, .2);
-	background: #eeeeee;
-}
-
 div.game_details {
-	flex-basis: 20em;
-	max-width: 20em;
-	padding: .7em;
+	margin-left: .8em;
+	flex-grow: 1;
 }
 
 div.game_board_and_controls {
 	display: flex;
 	align-items: center;
 	justify-content: center;
-	background: #F4F4F4;
+}
+
+div.game_main {
+	display: flex;
+	padding: 1em 0;
 }
 
 div.game_board {
-	padding: 2.2em 0;
 }
 
 div.game_player {
 	font-size: 1.2em;
 	display: flex;
+	flex-grow: 1;
 	justify-content: space-between;
-	padding: .5em;
+	padding: .3em 0;
 }
 
 div.game_player.player {
@@ -74,15 +65,14 @@ div.game_result {
 
 div.game_controls {
 	display: flex;
-	flex-direction: column;
-	min-width: 8em;
-	margin-left: .6em;
+	margin-top: .2em;
 }
 
 div.game_controls input {
 	color: #404040;
-	margin: .2em 0 0 0;
+	margin: 0 .2em 0 0;
 	border-color: #b0b0b0;
+	padding: .3em .6em;
 	background: #f7f7f7;
 }
 

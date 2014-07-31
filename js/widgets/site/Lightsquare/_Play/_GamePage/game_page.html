@@ -1,41 +1,39 @@
 <div class="game">
-	<div class="game_main">
-		<div class="game_player opponent">
-			<div class="player_username">
-				{{players.opponent.name}} ({{players.opponent.rating}})
-			</div>
-			<div class="player_clock {{isInProgress && !viewingActivePlayer ? ('active_clock' + (players.opponent.time < timeCriticalThreshold ? ' critical_clock' : '')) : ''}}">
-				{{players.opponent.time.getColonDisplay(players.opponent.time < timeCriticalThreshold)}}
-			</div>
+	<div class="game_player opponent">
+		<div class="player_username">
+			{{players.opponent.name}} ({{players.opponent.rating}})
 		</div>
-		<div class="game_board_and_controls">
-			<div class="game_board" id="board" on-contextmenu="cancel_premove">
+		<div class="player_clock {{isInProgress && !viewingActivePlayer ? ('active_clock' + (players.opponent.time < timeCriticalThreshold ? ' critical_clock' : '')) : ''}}">
+			{{players.opponent.time.getColonDisplay(players.opponent.time < timeCriticalThreshold)}}
+		</div>
+	</div>
+	<div class="game_main">
+		<div class="game_board" id="board" on-contextmenu="cancel_premove">
+			
+		</div>
+		<div class="game_details">
+			{{#result}}
+				<div class="game_result">
+						{{result.summary}}
+				</div>
+			{{/result}}
+			<div class="game_history" id="history">
+				
+			</div>
+			<div class="game_chat" id="chat">
 				
 			</div>
 			{{#userIsPlaying}}
 				{{>controls}}
 			{{/userIsPlaying}}
 		</div>
-		<div class="game_player player">
-			<div>
-				{{players.player.name}} ({{players.player.rating}})
-			</div>
-			<div class="player_clock {{isInProgress && viewingActivePlayer ? ('active_clock' + (players.player.time < timeCriticalThreshold ? ' critical_clock' : '')) : ''}}">
-				{{players.player.time.getColonDisplay(players.player.time < timeCriticalThreshold)}}
-			</div>
-		</div>
 	</div>
-	<div class="game_details">
-		{{#result}}
-			<div class="game_result">
-					{{result.summary}}
-			</div>
-		{{/result}}
-		<div class="game_history" id="history">
-			
+	<div class="game_player player">
+		<div>
+			{{players.player.name}} ({{players.player.rating}})
 		</div>
-		<div class="game_chat" id="chat">
-			
+		<div class="player_clock {{isInProgress && viewingActivePlayer ? ('active_clock' + (players.player.time < timeCriticalThreshold ? ' critical_clock' : '')) : ''}}">
+			{{players.player.time.getColonDisplay(players.player.time < timeCriticalThreshold)}}
 		</div>
 	</div>
 </div>
