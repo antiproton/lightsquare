@@ -293,7 +293,7 @@ define(function(require) {
 	}
 	
 	User.prototype._handleServerEvents = function() {
-		this._server.ConnectionOpened.addHandler(function() {
+		this._server.Connected.addHandler(function() {
 			this._resetSession();
 		}, this);
 	}

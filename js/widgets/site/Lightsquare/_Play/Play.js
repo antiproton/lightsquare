@@ -33,14 +33,14 @@ define(function(require) {
 	}
 	
 	Play.prototype._handleServerEvents = function() {
-		this._server.ConnectionOpened.addHandler(function() {
+		this._server.Connected.addHandler(function() {
 			this._user.getDetails().then((function() {
 				this._initialise();
 				this._router.execute();
 			}).bind(this));
 		}, this);
 		
-		this._server.ConnectionLost.addHandler(function() {
+		this._server.Disconnected.addHandler(function() {
 			this._template.set("serverConnected", false);
 		}, this);
 	}

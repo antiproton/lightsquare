@@ -4,7 +4,10 @@
 			<h1>Lightsquare</h1>
 		</div>
 		<div class="user_menu" id="user_menu">
-			asd
+			{{username}}
+			{{#userIsLoggedIn}}
+				<a href="javascript:void(0)" on-click="logout">Log out</a>
+			{{/userIsLoggedIn}}
 		</div>
 	</div>
 	<div class="nav">

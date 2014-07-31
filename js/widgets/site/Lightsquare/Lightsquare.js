@@ -72,6 +72,32 @@ define(function(require) {
 		new Play(this._user, this._server, new Router(this._path, "/play"), this._template.nodes.play);
 		
 		this._router.execute();
+		
+		this._server.Connected.addHandler(function() {
+			this._user.getDetails().then((function() {
+				this._updateUserDetails();
+			}).bind(this));
+		}, this);
+		
+		this._user.LoggedIn.addHandler(function() {
+			this._updateUserDetails();
+		}, this);
+		
+		this._user.LoggedOut.addHandler(function() {
+			this._updateUserDetails();
+		}, this);
+	}
+	
+	Lightsquare.prototype._updateUserDetails = function() {
+		
+		console.log({
+			username: this._user.getUsername(),
+			userIsLoggedIn: this._user.isLoggedIn()
+		})
+		this._template.set({
+			username: this._user.getUsername(),
+			userIsLoggedIn: this._user.isLoggedIn()
+		});
 	}
 	
 	return Lightsquare;
