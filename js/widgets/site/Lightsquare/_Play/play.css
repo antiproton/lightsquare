@@ -43,18 +43,6 @@ div.play_page {
 	flex-grow: 1;
 }
 
-div.message {
-	color: #420000;
-	position: absolute;
-	z-index: 2;
-	top: 3em;
-	right: .5em;
-	width: 33%;
-	border: 1px solid #AA8E58;
-	padding: .5em;
-	background: rgba(255, 254, 242, 0.95);
-}
-
 div.connecting_message {
 	flex-grow: 1;
 	color: #323232;
