@@ -1,12 +1,3 @@
-
-//////////widgets removed from HomePage
-		
-		this._currentGames = new CurrentGames(new RandomGames(this._server), this._template.nodes.current_games);
-		
-		this._currentGames.ClickGame.addHandler(function(id) {
-			this._router.navigate("/game/" + id);
-		}, this);
-
 		//////////////////////Play dialogs etc
 	
 		this._template.on("logout", (function() {

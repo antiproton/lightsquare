@@ -32,6 +32,7 @@ define(function(require) {
 		this._setupLoginForm();
 		this._setupRegisterForm();
 		this._setupPages();
+		this._setupCurrentGames();
 		this._setupOverlayHandlers();
 		
 		this._router.execute();
@@ -67,6 +68,9 @@ define(function(require) {
 		
 		this._router.addRoute("/", (function() {
 			this._template.set("tab", "/");
+			this._currentGames.startUpdating();
+		}).bind(this), (function() {
+			this._currentGames.stopUpdating();
 		}).bind(this));
 		
 		this._router.addPartialRoute("/play", (function() {
@@ -180,6 +184,14 @@ define(function(require) {
 			this._hideDialog();
 			this._template.set("registered", false);
 		}).bind(this));
+	}
+	
+	Lightsquare.prototype._setupCurrentGames = function() {
+		this._currentGames = new CurrentGames(new RandomGames(this._server), this._template.nodes.current_games);
+		
+		this._currentGames.ClickGame.addHandler(function(id) {
+			this._router.setPath("/play/game/" + id);
+		}, this);
 	}
 	
 	return Lightsquare;

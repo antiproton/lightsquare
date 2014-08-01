@@ -1,7 +1,6 @@
 div.current_games {
 	display: flex;
 	min-height: 3em;
-	margin: .8em;
 	box-shadow: inset 8px 8px 32px rgba(0, 0, 0, .3);
 	background: #C6C6C6;
 }
