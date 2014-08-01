@@ -55,5 +55,9 @@ define(function(require) {
 		this._template.set("error", null);
 	}
 	
+	RegisterForm.prototype.focus = function() {
+		this._template.nodes.register_username.focus();
+	}
+	
 	return RegisterForm;
 });

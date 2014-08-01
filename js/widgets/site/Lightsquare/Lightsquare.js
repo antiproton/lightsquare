@@ -190,6 +190,7 @@ define(function(require) {
 			this._showDialog("register");
 			
 			registerForm.reset();
+			registerForm.focus();
 		}).bind(this));
 		
 		this._template.on("register_done", (function() {
