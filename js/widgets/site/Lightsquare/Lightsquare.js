@@ -32,6 +32,7 @@ define(function(require) {
 		this._setupLoginForm();
 		this._setupRegisterForm();
 		this._setupPages();
+		this._setupOverlayHandlers();
 		
 		this._router.execute();
 	}
@@ -123,16 +124,9 @@ define(function(require) {
 				}
 			}
 		}).bind(this));
-		
-		this._template.on("register", (function() {
-			this._showDialog("register");
-		}).bind(this));
-		
-		this._template.on("register_done", (function() {
-			this._hideDialog();
-			this._template.set("registered", false);
-		}).bind(this));
-		
+	}
+	
+	Lightsquare.prototype._setupOverlayHandlers = function() {
 		var foregroundClicked = false;
 		
 		this._template.on("background_click", (function() {
@@ -177,6 +171,15 @@ define(function(require) {
 			this._template.set("registerAutoLoggedIn", data.loggedIn);
 			this._template.set("registeredUsername", data.registeredUsername);
 		}, this);
+		
+		this._template.on("register", (function() {
+			this._showDialog("register");
+		}).bind(this));
+		
+		this._template.on("register_done", (function() {
+			this._hideDialog();
+			this._template.set("registered", false);
+		}).bind(this));
 	}
 	
 	return Lightsquare;
