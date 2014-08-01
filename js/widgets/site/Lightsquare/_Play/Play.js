@@ -210,8 +210,7 @@ define(function(require) {
 				gamePages: [],
 				currentPath: this._router.getPath(),
 				navLinks: {
-					"/": "New game",
-					"/games": "Games in progress"
+					"/": "New game"
 				},
 				getHref: (function(path) {
 					return this._router.getAbsolutePath(path);

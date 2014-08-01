@@ -1,9 +1,14 @@
 div.home {
 	display: flex;
 	flex-grow: 1;
+	padding: .7em;
 	background: white;
 }
 
 div.home_main {
 	flex-grow: 1;
+}
+
+div.home_sidebar {
+	flex-shrink: 0;
 }

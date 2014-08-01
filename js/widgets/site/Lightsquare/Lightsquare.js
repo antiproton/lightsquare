@@ -1,4 +1,5 @@
 define(function(require) {
+	require("css!./base.css");
 	require("css!./lightsquare.css");
 	require("css!./forms.css");
 	require("css!./tools.css");
@@ -85,7 +86,7 @@ define(function(require) {
 				tab: path,
 				navLinks: {
 					"/": "Home",
-					"/play": "Live chess",
+					"/play": "Play",
 					"/tools": "Tools"
 				},
 				toolsTabs: {
