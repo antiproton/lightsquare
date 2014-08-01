@@ -188,6 +188,7 @@ define(function(require) {
 		
 		this._template.on("register", (function() {
 			this._showDialog("register");
+			this._registerForm.reset();
 		}).bind(this));
 		
 		this._template.on("register_done", (function() {
