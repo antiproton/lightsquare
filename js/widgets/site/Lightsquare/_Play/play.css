@@ -43,10 +43,6 @@ div.play_page {
 	flex-grow: 1;
 }
 
-a {
-	color: #275363;
-}
-
 div.message {
 	color: #420000;
 	position: absolute;
