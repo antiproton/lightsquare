@@ -1,3 +1,27 @@
+<div class="modal_overlay" on-click="background_click" style="display: {{dialog ? 'auto' : 'none'}}">
+	<div class="register_dialog" style="display: {{dialog === 'register' ? 'auto' : 'none'}}" on-click="foreground_click">
+		<div id="register_form" style="display: {{registered ? 'none' : 'auto'}}">
+			
+		</div>
+		{{#registered}}
+			<h1>Welcome to Lightsquare, {{registeredUsername}}.</h1>
+			<div class="register_success">
+				<p>
+					Your account has been created.
+				</p>
+				{{^registerAutoLoggedIn}}
+					<p>
+						(You can log in to your account after completing any games and logging
+						out of any other accounts.)
+					</p>
+				{{/registerAutoLoggedIn}}
+			</div>
+			<div class="register_done">
+				<input type="button" class="register_done" on-click="register_done" value="OK" autofocus>
+			</div>
+		{{/registered}}
+	</div>
+</div>
 <div class="main">
 	<div class="title_bar">
 		<div class="title">

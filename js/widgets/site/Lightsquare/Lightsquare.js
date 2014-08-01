@@ -14,6 +14,9 @@ define(function(require) {
 	var Play = require("./_Play/Play");
 	var GameBackupList = require("./_GameBackupList/GameBackupList");
 	var LoginForm = require("./_LoginForm/LoginForm");
+	var RegisterForm = require("./_RegisterForm/RegisterForm");
+	var CurrentGames = require("./_CurrentGames/CurrentGames");
+	var RandomGames = require("RandomGames");
 	
 	var LEFT_BUTTON = 0;
 	
@@ -26,9 +29,9 @@ define(function(require) {
 		this._setupRouter();
 		this._setupUser();
 		
-		new LoginForm(this._user, this._template.nodes.login_form);
-		new Play(this._user, this._server, this._router.createChild("/play"), this._template.nodes.play);
-		this._gameBackupList = new GameBackupList(this._user, this._server, this._template.nodes.restore_game);
+		this._setupLoginForm();
+		this._setupRegisterForm();
+		this._setupPages();
 		
 		this._router.execute();
 	}
@@ -82,6 +85,7 @@ define(function(require) {
 			el: parent,
 			template: html,
 			data: {
+				dialog: null,
 				currentPath: path,
 				tab: path,
 				navLinks: {
@@ -95,7 +99,8 @@ define(function(require) {
 				toolsTab: "restoreGame",
 				getHref: (function(path) {
 					return this._router.getAbsolutePath(path);
-				}).bind(this)
+				}).bind(this),
+				registered: false
 			},
 			partials: {
 				home: homeHtml,
@@ -118,6 +123,60 @@ define(function(require) {
 				}
 			}
 		}).bind(this));
+		
+		this._template.on("register", (function() {
+			this._showDialog("register");
+		}).bind(this));
+		
+		this._template.on("register_done", (function() {
+			this._hideDialog();
+			this._template.set("registered", false);
+		}).bind(this));
+		
+		var foregroundClicked = false;
+		
+		this._template.on("background_click", (function() {
+			if(!foregroundClicked) {
+				this._hideOverlays();
+			}
+			
+			foregroundClicked = false;
+		}).bind(this));
+		
+		this._template.on("foreground_click", (function() {
+			foregroundClicked = true;
+		}).bind(this));
+	}
+	
+	Lightsquare.prototype._hideOverlays = function() {
+		this._hideDialog();
+	}
+	
+	Lightsquare.prototype._showDialog = function(dialog) {
+		this._template.set("dialog", dialog);
+	}
+	
+	Lightsquare.prototype._hideDialog = function() {
+		this._template.set("dialog", null);
+	}
+	
+	Lightsquare.prototype._setupPages = function() {
+		new Play(this._user, this._server, this._router.createChild("/play"), this._template.nodes.play);
+		this._gameBackupList = new GameBackupList(this._user, this._server, this._template.nodes.restore_game);
+	}
+	
+	Lightsquare.prototype._setupLoginForm = function() {
+		new LoginForm(this._user, this._template.nodes.login_form);
+	}
+	
+	Lightsquare.prototype._setupRegisterForm = function() {
+		var registerForm = new RegisterForm(this._user, this._template.nodes.register_form);
+		
+		registerForm.Registered.addHandler(function(data) {
+			this._template.set("registered", true);
+			this._template.set("registerAutoLoggedIn", data.loggedIn);
+			this._template.set("registeredUsername", data.registeredUsername);
+		}, this);
 	}
 	
 	return Lightsquare;

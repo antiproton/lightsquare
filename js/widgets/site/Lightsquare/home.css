@@ -12,3 +12,8 @@ div.home_main {
 div.home_sidebar {
 	flex-shrink: 0;
 }
+
+div.register_link {
+	text-align: center;
+	margin-top: .2em;
+}
