@@ -19,6 +19,7 @@ define(function(require) {
 	var RandomGames = require("RandomGames");
 	
 	var LEFT_BUTTON = 0;
+	var ESCAPE_KEY = 27;
 	
 	function Lightsquare(user, server, parent) {
 		this._user = user;
@@ -145,6 +146,12 @@ define(function(require) {
 		
 		this._template.on("foreground_click", (function() {
 			foregroundClicked = true;
+		}).bind(this));
+		
+		window.addEventListener("keyup", (function(event) {
+			if(event.keyCode === ESCAPE_KEY) {
+				this._hideOverlays();
+			}
 		}).bind(this));
 	}
 	
