@@ -58,6 +58,17 @@ div.page {
 	margin-top: .8em;
 }
 
+div.modal_overlay {
+	position: fixed;
+	z-index: 10;
+	display: flex;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	background: rgba(0, 0, 0, .45);
+}
+
 div.register_dialog {
 	width: 35%;
 	margin: 5% auto auto auto;

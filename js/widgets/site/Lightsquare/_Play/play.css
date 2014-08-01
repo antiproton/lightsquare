@@ -59,17 +59,6 @@ div.message {
 	background: rgba(255, 254, 242, 0.95);
 }
 
-div.modal_overlay {
-	position: fixed;
-	z-index: 10;
-	display: flex;
-	top: 0;
-	left: 0;
-	right: 0;
-	bottom: 0;
-	background: rgba(0, 0, 0, .45);
-}
-
 div.connecting_message {
 	flex-grow: 1;
 	color: #323232;
