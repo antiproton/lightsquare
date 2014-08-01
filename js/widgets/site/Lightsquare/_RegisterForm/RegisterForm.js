@@ -23,14 +23,14 @@ define(function(require) {
 		this._template.on("submit", (function(event) {
 			event.original.preventDefault();
 			
-			this._clearError();
+			this._template.set("error", null);
 			
 			var username = this._template.get("username") + "";
 			var password = this._template.get("password") + "";
 			var password_confirm = this._template.get("password_confirm") + "";
 			
 			if(password_confirm.length > 0 && password !== password_confirm) {
-				this._setError("Password confirmation supplied and doesn't match password");
+				this._template.set("error", "Password confirmation supplied and doesn't match password");
 			}
 			
 			else {
@@ -42,7 +42,7 @@ define(function(require) {
 						registeredUsername: username
 					});
 				}).bind(this), (function(error) {
-					this._setError(error);
+					this._template.set("error", error);
 				}).bind(this));
 			}
 		}).bind(this));
@@ -52,14 +52,7 @@ define(function(require) {
 		this._template.set("username", "");
 		this._template.set("password", "");
 		this._template.set("password_confirm", "");
-	}
-	
-	RegisterForm.prototype._clearError = function() {
-		this._template.set("error", "");
-	}
-	
-	RegisterForm.prototype._setError = function(message) {
-		this._template.set("error", message);
+		this._template.set("error", null);
 	}
 	
 	return RegisterForm;
