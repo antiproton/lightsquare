@@ -11,7 +11,9 @@ define(function(require) {
 	}
 	
 	RandomGames.prototype.startUpdating = function() {
-		this._server.send("/random_games/subscribe");
+		this._server.getConnection().then((function() {
+			this._server.send("/random_games/subscribe");
+		}).bind(this));
 	}
 	
 	RandomGames.prototype.stopUpdating = function() {
