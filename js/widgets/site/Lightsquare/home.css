@@ -7,11 +7,11 @@ div.home {
 
 div.home_main {
 	flex-grow: 1;
-	margin-right: .8em;
 }
 
 div.home_sidebar {
 	flex-shrink: 0;
+	margin-left: .8em;
 }
 
 div.register_link {
