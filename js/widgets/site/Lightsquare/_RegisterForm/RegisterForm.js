@@ -35,7 +35,7 @@ define(function(require) {
 			
 			else {
 				this._user.register(username, password).then((function(loggedIn) {
-					this._clearForm();
+					this.reset();
 					
 					this.Registered.fire({
 						loggedIn: loggedIn,
@@ -48,7 +48,7 @@ define(function(require) {
 		}).bind(this));
 	}
 	
-	RegisterForm.prototype._clearForm = function() {
+	RegisterForm.prototype.reset = function() {
 		this._template.set("username", "");
 		this._template.set("password", "");
 		this._template.set("password_confirm", "");
