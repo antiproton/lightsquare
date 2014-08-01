@@ -22,7 +22,7 @@
 		{{/registered}}
 	</div>
 </div>
-<div class="main">
+<div class="main" on-click="background_click">
 	<div class="title_bar">
 		<div class="title">
 			<h1>Lightsquare</h1>
@@ -30,10 +30,24 @@
 		<div class="user">
 			{{username}}
 			{{#userIsLoggedIn}}
-				(<a href="javascript:void(0)" on-click="logout">Log out</a>)
+				(<a href="javascript:void(0)" on-click="logout"><span on-click="foreground_click">Log out</span></a>)
+				
 			{{/userIsLoggedIn}}
 		</div>
 	</div>
+	{{#showLogoutConfirmation}}
+		<div class="logout_confirmation_container">
+			<div class="logout_confirmation">
+				<div class="logout_confirmation_message">
+					You must finish all games before logging out.
+				</div>
+				<div class="logout_confirmation_buttons">
+					<input type="button" class="logout_confirm_logout" on-click="logout_confirm" value="Resign all games and log out">
+					<input type="button" class="logout_confirm_cancel" on-click="logout_cancel" value="Cancel">
+				</div>
+			</div>
+		</div>
+	{{/showLogoutConfirmation}}
 	<div class="nav">
 		{{#navLinks:href}}
 			<a on-click="navigate" href="{{getHref(href)}}" class="{{tab === href ? 'on' : ''}}">{{.}}</a>

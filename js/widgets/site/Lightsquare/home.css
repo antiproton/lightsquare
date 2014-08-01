@@ -7,6 +7,7 @@ div.home {
 
 div.home_main {
 	flex-grow: 1;
+	margin-right: .8em;
 }
 
 div.home_sidebar {

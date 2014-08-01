@@ -30,6 +30,7 @@ define(function(require) {
 		this._setupUser();
 		
 		this._setupLoginForm();
+		this._setupLogoutLink();
 		this._setupRegisterForm();
 		this._setupPages();
 		this._setupCurrentGames();
@@ -91,6 +92,7 @@ define(function(require) {
 			template: html,
 			data: {
 				dialog: null,
+				showLogoutConfirmation: false,
 				currentPath: path,
 				tab: path,
 				navLinks: {
@@ -148,6 +150,7 @@ define(function(require) {
 	
 	Lightsquare.prototype._hideOverlays = function() {
 		this._hideDialog();
+		this._template.set("showLogoutConfirmation", false);
 	}
 	
 	Lightsquare.prototype._showDialog = function(dialog) {
@@ -192,6 +195,27 @@ define(function(require) {
 		this._currentGames.ClickGame.addHandler(function(id) {
 			this._router.setPath("/play/game/" + id);
 		}, this);
+	}
+	
+	Lightsquare.prototype._setupLogoutLink = function() {
+		this._template.on("logout", (function() {
+			if(this._user.hasGamesInProgress()) {
+				this._template.set("showLogoutConfirmation", true);
+			}
+			
+			else {
+				this._user.logout();
+			}
+		}).bind(this));
+		
+		this._template.on("logout_confirm", (function() {
+			this._user.logout();
+			this._template.set("showLogoutConfirmation", false);
+		}).bind(this));
+		
+		this._template.on("logout_cancel", (function() {
+			this._template.set("showLogoutConfirmation", false);
+		}).bind(this));
 	}
 	
 	return Lightsquare;
