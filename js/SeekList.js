@@ -6,11 +6,17 @@ define(function(require) {
 		this._server = server;
 		this._seeks = [];
 		this._isUpdating = false;
+		this._urls = ["/open_seeks", "/open_seek/new", "/open_seek/expired"];
 		
 		this.Updated = new Event();
 		
+		this._server.subscribe("/open_seek/new", (function(seek) {
+			this._seeks.push(seek);
+			this.Updated.fire();
+		}).bind(this));
+		
 		this._server.subscribe("/open_seeks", (function(seeks) {
-			this._seeks = this._seeks.concat(seeks);
+			this._seeks = seeks;
 			this.Updated.fire();
 		}).bind(this));
 		
@@ -29,10 +35,11 @@ define(function(require) {
 	
 	SeekList.prototype.startUpdating = function() {
 		if(!this._isUpdating) {
-			this._server.send("/unignore", "/open_seeks");
-			this._server.send("/unignore", "/open_seek/expired");
-			this._server.send("/request/open_seeks");
+			this._urls.forEach((function(url) {
+				this._server.send("/unignore", url);
+			}).bind(this));
 			
+			this._server.send("/request/open_seeks");
 			this._isUpdating = true;
 		}
 	}
@@ -43,8 +50,9 @@ define(function(require) {
 			
 			this.Updated.fire();
 			
-			this._server.send("/ignore", "/open_seeks");
-			this._server.send("/ignore", "/open_seek/expired");
+			this._urls.forEach((function(url) {
+				this._server.send("/ignore", url);
+			}).bind(this));
 			
 			this._isUpdating = false;
 		}
