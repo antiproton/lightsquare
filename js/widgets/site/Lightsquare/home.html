@@ -1,10 +1,30 @@
 <div class="home">
 	<div class="home_main">
-		<h2>Live chess</h2>
+		<h2>Fast and reliable live chess</h2>
 		<p>
-			Lightsquare is a realtime chess app designed for low latency and robustness.
-			Even when the server crashes, interrupted games can be restored from local
-			backups held by each player.
+			Lightsquare is the client reference implementation of the
+			<a href="http://jsonchess.org">jsonchess</a> protocol.  It is designed
+			for simplicity and robustness, and makes use of the full capabilities of
+			modern browsers to provide a nice interface and minimise latency.
+		</p>
+		<p>
+			All of the code for jsonchess, this web application, the server it connects to, and the
+			chess rules library is free and open source, and can be found on
+			<a href="http://github.com/lightsquaredev">Github</a>.
+		</p>
+		<p>
+			To start a game, click Play above and then:
+		</p>
+		<ul>
+			<li>
+				accept a challenge by clicking it in the graph, or
+			</li>
+			<li>
+				create a seek by filling in the form.
+			</li>
+		</ul>
+		<p>
+			Players named &lsquo;Stockfish N&rsquo; are bots placed on the server for testing purposes.
 		</p>
 		<div id="current_games">
 			
