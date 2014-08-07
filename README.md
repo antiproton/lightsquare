@@ -33,5 +33,5 @@ instructions:
 </VirtualHost>
 ```
 
-[1]:http://github.com/lightsquaredev/libjs
-[2]:http://github.com/lightsquaredev/jsonchess
+[1]:http://github.com/gushogg-blake/libjs
+[2]:http://github.com/jsonchess/jsonchess
