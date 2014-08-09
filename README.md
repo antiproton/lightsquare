@@ -20,6 +20,10 @@ Installation
     - [chess][10]
     - [jsonchess][12]
     - [dom][11]
+	- [RequireJS][https://github.com/jrburke/requirejs]
+	- [RequireJS text][https://github.com/requirejs/text]
+	- [RequireJS css][https://github.com/guybedford/require-css]
+	- [RequireJS domReady][https://github.com/requirejs/domReady]
 
 I also use an Apache Alias directive to map /lib to the folder containing the above repos.
 
