@@ -31,7 +31,8 @@ I also use an Apache Alias directive to map /lib to the folder containing the ab
 
 ```
 <VirtualHost *:80>
-    DocumentRoot /var/www/lightsquare
+	DocumentRoot /home/gus/projects/lightsquare
+	Alias /lib /home/gus/projects
 	ServerName lightsquare
 	DirectoryIndex /index.html
 	RewriteEngine On
