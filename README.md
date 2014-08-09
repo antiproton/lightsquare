@@ -27,12 +27,6 @@ Installation
 
 I also use an Apache Alias directive to map /lib to the folder containing the above repos.
 
-Optimisation
-------------
-
-Run `r.js -o optimise.js` to build a completely separate source tree with compressed
-JavaScript.
-
 **Example Apache virtualhost:**
 
 ```
@@ -45,6 +39,12 @@ JavaScript.
 	RewriteRule ^[^.]+$ /index.html
 </VirtualHost>
 ```
+
+Optimisation
+------------
+
+Run `r.js -o optimise.js` to build a completely separate source tree with compressed
+JavaScript.
 
 [1]:http://github.com/gushogg-blake/libjs
 [2]:http://github.com/jsonchess/jsonchess
