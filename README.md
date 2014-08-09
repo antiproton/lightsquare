@@ -2,30 +2,32 @@ Lightsquare
 ===========
 
 Lightsquare is an HTML5 application for playing chess with other people.
-It connects to any WebSocket server implementing the [jsonchess][2] protocol.
+It connects to any WebSocket server implementing the [jsonchess][3] protocol.
 
 Installation
 ------------
 
-There's nothing particularly special or complicated about the app - it could quite
-easily be run with $python -mSimpleHTTPServer from the root directory with some
-minor changes - but for the sake of code organisation not all of the libraries it
-uses are included in the source, so there is a bit of messing around to do to setup
-all the paths properly.  It uses RequireJS, so if you're familiar with that then it
-will probably be obvious from looking at the config in index.html and reading these
-instructions:
-
 - Download the code
 - Put it somewhere where index.html is at the root of a webserver (e.g. in an Apache virtual host)
-- Redirect all URLs to /index.html (optional - the view is determined by the URL using the history API so this is required for navigating directly to URLs other than index.html)
-- Download [libjs][1] and place it where it will be found under the 'lib' path as mapped in the requirejs config in index.html
-- Download [jsonchess][2] and put it in the libjs folder
+- Redirect all URLs without a file extension to /index.html (optional - the view is determined by the URL using the history API so this is required for navigating directly to URLs other than index.html)
+- Download the following repos and place them according to the paths configuration in index.html:
+    - [websocket][4]
+    - [routing][5]
+    - [js][6]
+    - [tokeniser][7]
+    - [Array.prototype][8]
+    - [json-local-storage][9]
+    - [chess][10]
+    - [jsonchess][12]
+    - [dom][11]
+
+I also use an Apache Alias directive to map /lib to the folder containing the above repos.
 
 **Example Apache virtualhost:**
 
 ```
 <VirtualHost *:80>
-	DocumentRoot /var/www/lightsquare
+    DocumentRoot /var/www/lightsquare
 	ServerName lightsquare
 	DirectoryIndex /index.html
 	RewriteEngine On
@@ -35,3 +37,13 @@ instructions:
 
 [1]:http://github.com/gushogg-blake/libjs
 [2]:http://github.com/jsonchess/jsonchess
+[3]:http://jsonchess.org
+[4]:http://github.com/gushogg-blake/websocket
+[5]:http://github.com/gushogg-blake/routing
+[6]:http://github.com/gushogg-blake/js
+[7]:http://github.com/gushogg-blake/tokeniser
+[8]:http://github.com/gushogg-blake/Array.prototype
+[9]:http://github.com/gushogg-blake/json-local-storage
+[10]:http://github.com/gushogg-blake/chess
+[11]:http://github.com/gushogg-blake/dom
+[12]:http://github.com/gushogg-blake/jsonchess
