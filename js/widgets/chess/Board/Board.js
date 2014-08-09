@@ -53,7 +53,12 @@ define(function(require) {
 		this._coordsPadding = 18;
 		this._squareSize = Square.DEFAULT_SIZE;
 		this._borderWidth = 1;
-		this._currentAnimation = null;
+		
+		this._animation = {
+			isInProgress: false,
+			move: null,
+			ractiveAnimation: null
+		};
 
 		this._setupHtml();
 	}
@@ -65,11 +70,10 @@ define(function(require) {
 	Board.DEFAULT_SQUARE_STYLE = Square.DEFAULT_STYLE;
 	
 	Board.prototype.setBoardArray = function(board) {
-		this._template.set("animationInProgress", false);
-		
-		if(this._currentAnimation) {
-			this._currentAnimation.stop();
-			this._currentAnimation = null;
+		if(this._animation.isInProgress) {
+			this._template.set("animationInProgress", false);
+			this._animation.ractiveAnimation.stop();
+			this._animation.isInProgress = false;
 		}
 		
 		ChessSquare.forEach((function(square) {
@@ -132,8 +136,15 @@ define(function(require) {
 	Board.prototype.animateMove = function(move, callback) {
 		var from = move.getFrom();
 		var to = move.getTo();
+		var boardArray = move.getPositionAfter().getBoardArray();
+		
+		if(this._animation.isInProgress) {
+			this.setBoardArray(this._animation.move.getPositionAfter().getBoardArray());
+		}
 		
 		this._template.set("animationInProgress", true);
+		this._animation.isInProgress = true;
+		this._animation.move = move;
 		this._animationPiece.setPiece(this.getPiece(from));
 		this.setPiece(from, null);
 		
@@ -145,7 +156,7 @@ define(function(require) {
 			moveAnimationY: currentOffsets.y
 		});
 		
-		this._currentAnimation = this._template.animate({
+		this._animation.ractiveAnimation = this._template.animate({
 			moveAnimationX: newOffsets.x,
 			moveAnimationY: newOffsets.y
 		}, {
@@ -153,8 +164,8 @@ define(function(require) {
 			easing: "easeInOut",
 			complete: (function() {
 				this._template.set("animationInProgress", false);
-				this._currentAnimation = null;
-				this.setBoardArray(move.getPositionAfter().getBoardArray());
+				this._animation.isInProgress = false;
+				this.setBoardArray(boardArray);
 				
 				if(callback) {
 					callback();
