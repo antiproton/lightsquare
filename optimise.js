@@ -17,7 +17,7 @@
 	},
 	map: {
 		"*": {
-			"css": "require/css",
+			"css": "require/css/css",
 			"file": "require/text",
 			"ready": "require/domReady"
 		}
