@@ -20,12 +20,14 @@
 				"routing": "/lib/routing",
 				"json-local-storage": "/lib/json-local-storage",
 				"chess": "/lib/chess",
-				"jsonchess": "/lib/jsonchess"
+				"jsonchess": "/lib/jsonchess",
+				"require": "/lib/lib/require"
 			},
 			map: {
 				"*": {
-					"css": "/lib/lib/require/css",
-					"file": "/lib/lib/require/text"
+					"css": "require/css",
+					"file": "require/text",
+					"ready": "require/domReady"
 				}
 			},
 			urlArgs: "timestamp=" + (new Date()).valueOf()
