@@ -1,14 +1,14 @@
 define(function(require) {
-	require("lib/Array.empty");
+	require("Array.prototype/empty");
 	require("css!./play.css");
 	var html = require("file!./play.html");
 	var navHtml = require("file!./nav.html");
 	var connectingMessageHtml = require("file!./connecting_message.html");
-	var Ractive = require("lib/dom/Ractive");
-	var TabContainer = require("lib/dom/TabContainer");
+	var Ractive = require("ractive/Ractive");
+	var TabContainer = require("dom/TabContainer");
+	var Colour = require("chess/Colour");
 	var HomePage = require("./_HomePage/HomePage");
 	var GamePage = require("./_GamePage/GamePage");
-	var Colour = require("chess/Colour");
 	
 	var LEFT_BUTTON = 0;
 	
