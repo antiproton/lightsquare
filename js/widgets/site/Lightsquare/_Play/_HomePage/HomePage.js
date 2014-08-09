@@ -1,7 +1,7 @@
 define(function(require) {
 	require("css!./home_page.css");
 	var html = require("file!./home_page.html");
-	var Ractive = require("lib/dom/Ractive");
+	var Ractive = require("ractive/Ractive");
 	var SeekForm = require("./_SeekForm/SeekForm");
 	var SeekGraph = require("./_SeekGraph/SeekGraph");
 	var SeekList = require("SeekList");

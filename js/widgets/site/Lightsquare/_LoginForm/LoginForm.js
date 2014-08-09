@@ -1,7 +1,7 @@
 define(function(require) {
 	require("css!./login_form.css");
 	var html = require("file!./login_form.html");
-	var Ractive = require("lib/dom/Ractive");
+	var Ractive = require("ractive/Ractive");
 	
 	function LoginForm(user, parent) {
 		this._user = user;

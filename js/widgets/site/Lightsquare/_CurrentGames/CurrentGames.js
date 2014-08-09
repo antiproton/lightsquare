@@ -1,11 +1,11 @@
 define(function(require) {
 	require("css!./current_games.css");
 	var html = require("file!./current_games.html");
-	var Ractive = require("lib/dom/Ractive");
+	var Ractive = require("ractive/Ractive");
+	var Event = require("lib/Event");
 	var Move = require("jsonchess/Move");
 	var Position = require("chess/Position");
 	var Square = require("chess/Square");
-	var Event = require("lib/Event");
 	var Colour = require("chess/Colour");
 	
 	function CurrentGames(gamesList, parent) {

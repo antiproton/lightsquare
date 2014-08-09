@@ -1,10 +1,10 @@
 define(function(require) {
-	var Event = require("lib/Event");
-	var Fullmove = require("./_Fullmove");
-	var Ractive = require("lib/dom/Ractive");
-	var Colour = require("chess/Colour");
-	var html = require("file!./history.html");
 	require("css!./history.css");
+	var html = require("file!./history.html");
+	var Ractive = require("ractive/Ractive");
+	var Event = require("lib/Event");
+	var Colour = require("chess/Colour");
+	var Fullmove = require("./_Fullmove");
 
 	function History(parent) {
 		this.UserSelect = new Event();

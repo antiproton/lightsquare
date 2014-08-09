@@ -1,7 +1,7 @@
 define(function(require) {
 	require("css!./seek_form.css");
 	var html = require("file!./seek_form.html");
-	var Ractive = require("lib/dom/Ractive");
+	var Ractive = require("ractive/Ractive");
 	var jsonChessConstants = require("jsonchess/constants");
 	
 	function SeekForm(user, server, parent) {

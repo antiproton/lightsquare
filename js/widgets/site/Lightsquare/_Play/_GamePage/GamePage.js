@@ -1,16 +1,16 @@
 define(function(require) {
-	var Event = require("lib/Event");
+	require("css!./game_page.css");
 	var html = require("file!./game_page.html");
 	var controlsHtml = require("file!./controls.html");
-	require("css!./game_page.css");
-	var Board = require("widgets/chess/Board/Board");
-	var History = require("widgets/chess/History/History");
+	var Ractive = require("ractive/Ractive");
+	var Event = require("lib/Event");
+	var jsonChessConstants = require("jsonchess/constants");
 	var Colour = require("chess/Colour");
 	var Move = require("chess/Move");
 	var PieceType = require("chess/PieceType");
-	var Ractive = require("lib/dom/Ractive");
 	var Chat = require("./_Chat/Chat");
-	var jsonChessConstants = require("jsonchess/constants");
+	var Board = require("widgets/chess/Board/Board");
+	var History = require("widgets/chess/History/History");
 	
 	var viewRelevance = {
 		PLAYER: "player",

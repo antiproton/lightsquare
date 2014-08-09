@@ -1,7 +1,7 @@
 define(function(require) {
 	require("css!./chat.css");
 	var html = require("file!./chat.html");
-	var Ractive = require("lib/dom/Ractive");
+	var Ractive = require("ractive/Ractive");
 	var Colour = require("chess/Colour");
 	
 	function Chat(game, parent) {

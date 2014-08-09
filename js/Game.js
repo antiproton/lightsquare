@@ -1,18 +1,18 @@
 define(function(require) {
+	require("Array.prototype/getShallowCopy");
+	var Event = require("lib/Event");
+	var Promisor = require("lib/Promisor");
+	var Move = require("jsonchess/Move");
+	var Premove = require("jsonchess/Premove");
 	var ChessGame = require("chess/Game");
 	var Colour = require("chess/Colour");
 	var ChessMove = require("chess/Move");
-	var Move = require("jsonchess/Move");
-	var Premove = require("jsonchess/Premove");
-	var Event = require("lib/Event");
 	var Square = require("chess/Square");
 	var PieceType = require("chess/PieceType");
 	var Fen = require("chess/Fen");
 	var TimingStyle = require("chess/TimingStyle");
 	var Time = require("chess/Time");
-	var Promisor = require("lib/Promisor");
 	var Clock = require("chess/Clock");
-	require("lib/Array.getShallowCopy");
 
 	function Game(user, server, gameDetails) {
 		this._promisor = new Promisor(this);

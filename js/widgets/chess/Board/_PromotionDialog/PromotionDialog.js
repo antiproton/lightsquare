@@ -2,12 +2,12 @@ define(function(require) {
 	require("css!./promotionDialog.css");
 	var html = require("file!./promotionDialog.html");
 	var Event = require("lib/Event");
-	var create = require("lib/dom/create");
-	var Template = require("lib/dom/Template");
+	var create = require("dom/create");
+	var Template = require("dom/Template");
 	var PieceType = require("chess/PieceType");
 	var ChessPiece = require("chess/Piece");
-	var Piece = require("widgets/chess/Piece/Piece");
 	var Colour = require("chess/Colour");
+	var Piece = require("widgets/chess/Piece/Piece");
 	
 	function PromotionDialog(pieceSize, parent) {
 		this.PieceSelected = new Event();

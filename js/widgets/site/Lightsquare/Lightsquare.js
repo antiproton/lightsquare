@@ -7,10 +7,10 @@ define(function(require) {
 	var html = require("file!./lightsquare.html");
 	var homeHtml = require("file!./home.html");
 	var toolsHtml = require("file!./tools.html");
-	var Ractive = require("lib/dom/Ractive");
-	var Router = require("lib/routing/Router");
-	var AddressBarPath = require("lib/routing/AddressBarPath");
-	var TabContainer = require("lib/dom/TabContainer");
+	var Ractive = require("ractive/Ractive");
+	var Router = require("routing/Router");
+	var AddressBarPath = require("routing/AddressBarPath");
+	var TabContainer = require("dom/TabContainer");
 	var Play = require("./_Play/Play");
 	var GameBackupList = require("./_GameBackupList/GameBackupList");
 	var LoginForm = require("./_LoginForm/LoginForm");

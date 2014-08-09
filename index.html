@@ -12,14 +12,20 @@
 		var require = {
 			baseUrl: "/js",
 			paths: {
-				"lib": "/lib/js"
+				"lib": "/lib/js",
+				"Array.prototype": "/lib/Array.prototype",
+				"tokeniser": "/lib/tokeniser",
+				"websocket": "/lib/websocket",
+				"dom": "/lib/dom",
+				"routing": "/lib/routing",
+				"json-local-storage": "/lib/json-local-storage",
+				"chess": "/lib/chess",
+				"jsonchess": "/lib/jsonchess"
 			},
 			map: {
 				"*": {
-					"css": "lib/require-css/css",
-					"file": "lib/require-text/text",
-					"chess": "lib/chess",
-					"jsonchess": "lib/jsonchess"
+					"css": "/lib/require-css/css",
+					"file": "/lib/require-text/text"
 				}
 			},
 			urlArgs: "timestamp=" + (new Date()).valueOf()

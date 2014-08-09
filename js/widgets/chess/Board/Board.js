@@ -1,16 +1,16 @@
 define(function(require) {
-	var Ractive = require("lib/dom/Ractive");
-	var create = require("lib/dom/create");
-	var style = require("lib/dom/style");
-	var getOffsets = require("lib/dom/getOffsets");
+	require("css!./board.css");
+	var html = require("file!./board.html");
+	var Ractive = require("ractive/Ractive");
+	var create = require("dom/create");
+	var style = require("dom/style");
+	var getOffsets = require("dom/getOffsets");
 	var Event = require("lib/Event");
 	var ChessSquare = require("chess/Square");
 	var Coords = require("chess/Coords");
+	var Colour = require("chess/Colour");
 	var Square = require("./_Square/Square");
 	var Piece = require("widgets/chess/Piece/Piece");
-	var Colour = require("chess/Colour");
-	require("css!./board.css");
-	var html = require("file!./board.html");
 	var PromotionDialog = require("./_PromotionDialog/PromotionDialog");
 
 	function Board(parent) {

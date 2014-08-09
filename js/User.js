@@ -1,10 +1,10 @@
 define(function(require) {
-	var Game = require("./Game");
 	var Event = require("lib/Event");
+	var time = require("lib/time");
 	var Promisor = require("lib/Promisor");
 	var glicko2 = require("jsonchess/glicko2");
 	var gameRestoration = require("jsonchess/gameRestoration");
-	var time = require("lib/time");
+	var Game = require("./Game");
 	var RestorationRequest = require("./RestorationRequest");
 	
 	var GAME_BACKUP_MAX_AGE = 1000 * 60 * 60 * 24;

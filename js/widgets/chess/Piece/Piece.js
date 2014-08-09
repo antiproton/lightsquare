@@ -1,7 +1,7 @@
 define(function(require) {
-	var Template = require("lib/dom/Template");
+	var Template = require("dom/Template");
 	var html = require("file!./piece.html");
-	var style = require("lib/dom/style");
+	var style = require("dom/style");
 	var Fen = require("chess/Fen");
 
 	function Piece(parent, size) {
