@@ -211,9 +211,13 @@ define(function(require) {
 				waitingForServer: true,
 				gamePages: [],
 				currentPath: this._router.getPath(),
-				navLinks: {
-					"/": "New game"
-				},
+				navLinks: [
+					{
+						href: "/",
+						label: "New game",
+						className: "new_game"
+					}
+				],
 				getHref: (function(path) {
 					return this._router.getAbsolutePath(path);
 				}).bind(this),

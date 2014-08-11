@@ -1,21 +1,19 @@
-{{#navLinks:href}}
-	<a on-click="navigate" href="{{getHref(href)}}" class="{{currentPath === href ? 'on' : ''}}">{{.}}</a>
+{{#navLinks}}
+	<a on-click="navigate" href="{{getHref(href)}}" class="{{className}} {{currentPath === href ? 'on' : ''}}">{{label}}</a>
 {{/navLinks}}
 {{#gamePages}}
 	<a
 	   on-click="navigate"
 	   href="{{getHref(href)}}"
 	   class="{{currentPath === href ? 'on' : ''}}"
-	>{{^userIsPlaying}}
-		{{white}} vs {{black}} | {{timingStyle}}
-	{{/userIsPlaying}}{{#userIsPlaying}}
-		<div class="game_tab_title">
-			{{opponent}}
+	>
+		<div>
+			{{userIsPlaying ? opponent : white + ' vs ' + black}}
 		</div>
-		<div class="game_tab_timing_style">
+		<div>
 			{{timingStyle}}
 		</div>
-		{{#isInProgress && currentPath !== href}}
+		{{#userIsPlaying && isInProgress && currentPath !== href}}
 			<div
 				class="
 					game_tab_clock
@@ -29,8 +27,7 @@
 			>
 				{{playerTime.getColonDisplay()}}
 			</div>
-		{{/showTime}}
-	{{/userIsPlaying}}
+		{{/userIsPlaying}}
 	</a>
 {{/gamePages}}
 {{#loadingGame}}
