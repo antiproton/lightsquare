@@ -75,6 +75,7 @@ div.seek {
 
 div.seek.current_seek {
 	cursor: default;
+	border-right: 0;
 }
 
 div.seek.not_current_seek,
