@@ -23,6 +23,7 @@ div.game_main {
 }
 
 div.game_board {
+	flex-shrink: 0;
 }
 
 div.game_player {
