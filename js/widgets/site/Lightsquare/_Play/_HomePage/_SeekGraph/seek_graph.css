@@ -67,9 +67,9 @@ div.seek {
 	z-index: 1;
 	box-sizing: border-box;
 	min-width: 5em;
-	border: 1px solid #cfcfcf;
+	border-right: 2px solid #489124;
 	padding: .3em .5em;
-	box-shadow: 1px 2px 2px rgba(0, 0, 0, .3);
+	box-shadow: 1px 1px 3px rgba(0, 0, 0, .25);
 	cursor: pointer;
 }
 
@@ -81,7 +81,7 @@ div.seek.not_current_seek,
 div.seek.current_seek,
 div.seek.current_seek:hover
 {
-	background: #efefef;
+	background: #FFFFFF;
 }
 
 div.seek.not_current_seek:hover,
@@ -90,22 +90,7 @@ div.seek.current_seek:hover {
 }
 
 div.seek.not_current_seek:hover {
-	border-color: #202020;
-	background: #5E5E5E;
-}
-
-div.seek.not_current_seek:hover > div.seek_label > div.seek_owner {
-	color: #E5E5E5;
-}
-
-div.seek.not_current_seek:hover > div.seek_label > div.seek_time {
-	color: white;
-}
-
-div.body_and_time_brackets {
-	display: flex;
-	flex-direction: column;
-	flex-grow: 1;
+	background: #eeeeee;
 }
 
 div.seek_label {
@@ -122,6 +107,12 @@ div.seek_owner {
 
 div.seek_time {
 	font-size: 1.2em;
+}
+
+div.body_and_time_brackets {
+	display: flex;
+	flex-direction: column;
+	flex-grow: 1;
 }
 
 div.time_brackets {
