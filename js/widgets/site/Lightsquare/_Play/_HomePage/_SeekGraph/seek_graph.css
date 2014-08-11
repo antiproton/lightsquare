@@ -1,8 +1,5 @@
 div.seek_graph {
 	display: flex;
-	border-radius: 3px;
-	padding: .3em;
-	background: #efefef;
 }
 
 div.ratings {
