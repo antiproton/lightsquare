@@ -3,6 +3,7 @@ define(function(require) {
 	var html = require("file!./chat.html");
 	var Ractive = require("ractive/Ractive");
 	var Colour = require("chess/Colour");
+	var jsonchess = require("jsonchess/constants");
 	
 	function Chat(game, parent) {
 		this._template = new Ractive({
@@ -65,7 +66,10 @@ define(function(require) {
 		}, this);
 		
 		this._game.Aborted.addHandler(function() {
-			this._addMessage("Game aborted by the server.");
+			this._addMessage(
+				"Game aborted by the server - moves before timing starts must be made"
+				+ " within " + (jsonchess.TIME_FOR_MOVES_BEFORE_CLOCK_START / 1000) + " seconds."
+			);
 		}, this);
 	}
 	
