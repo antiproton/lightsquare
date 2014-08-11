@@ -90,6 +90,18 @@ define(function(require) {
 				url = newUrl;
 				id = newId;
 			}, this);
+			
+			page.Move.addHandler(function() {
+				this._updateGamePage(page);
+			}, this);
+			
+			page.GameOver.addHandler(function() {
+				this._updateGamePage(page);
+			}, this);
+			
+			page.Aborted.addHandler(function() {
+				this._updateGamePage(page);
+			}, this);
 		}
 	}
 	
