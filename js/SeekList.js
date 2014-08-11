@@ -6,7 +6,7 @@ define(function(require) {
 		this._server = server;
 		this._seeks = [];
 		this._isUpdating = false;
-		this._urls = ["/open_seeks", "/open_seek/new", "/open_seek/expired"];
+		this._topics = ["/open_seeks", "/open_seek/new", "/open_seek/expired"];
 		
 		this.Updated = new Event();
 		
@@ -35,8 +35,8 @@ define(function(require) {
 	
 	SeekList.prototype.startUpdating = function() {
 		if(!this._isUpdating) {
-			this._urls.forEach((function(url) {
-				this._server.send("/unignore", url);
+			this._topics.forEach((function(topic) {
+				this._server.send("/unignore", topic);
 			}).bind(this));
 			
 			this._server.send("/request/open_seeks");
@@ -50,8 +50,8 @@ define(function(require) {
 			
 			this.Updated.fire();
 			
-			this._urls.forEach((function(url) {
-				this._server.send("/ignore", url);
+			this._topics.forEach((function(topic) {
+				this._server.send("/ignore", topic);
 			}).bind(this));
 			
 			this._isUpdating = false;

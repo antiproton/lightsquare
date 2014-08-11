@@ -385,8 +385,8 @@ define(function(require) {
 			}
 		};
 		
-		for(var url in subscriptions) {
-			this._server.subscribe(url, subscriptions[url].bind(this));
+		for(var topic in subscriptions) {
+			this._server.subscribe(topic, subscriptions[topic].bind(this));
 		}
 	}
 	
