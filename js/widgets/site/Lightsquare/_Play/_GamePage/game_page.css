@@ -42,20 +42,6 @@ div.game_player.opponent {
 	border-bottom: 1px solid #ababab;
 }
 
-div.player_clock {
-	padding: 0 .2em;
-}
-
-div.active_clock {
-	border-radius: 2px;
-	color: white;
-	background: #58992A;
-}
-
-div.critical_clock {
-	background: #912222;
-}
-
 div.game_result {
 	font-size: 1.2em;
 	text-align: right;
