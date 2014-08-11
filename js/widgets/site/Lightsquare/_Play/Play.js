@@ -99,6 +99,7 @@ define(function(require) {
 		var data = {
 			href: "/game/" + id,
 			userIsPlaying: page.userIsPlaying(),
+			userIsActivePlayer: page.userIsActivePlayer(),
 			white: page.getPlayerName(Colour.white),
 			black: page.getPlayerName(Colour.black),
 			timingStyle: page.getTimingStyle().getDescription(),
@@ -205,6 +206,7 @@ define(function(require) {
 			el: parent,
 			template: html,
 			data: {
+				timeCriticalThreshold: 1000 * 10,
 				serverConnected: false,
 				waitingForServer: true,
 				gamePages: [],

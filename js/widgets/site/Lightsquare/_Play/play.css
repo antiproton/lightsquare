@@ -22,10 +22,17 @@ div.play_nav > a {
 	font-size: .85em;
 	color: #5c5c5c;
 	text-decoration: none;
-	display: block;
+	display: flex;
+	flex-direction: column;
+	align-items: flex-start;
 	padding: .8em .9em;
 	box-shadow: inset -2px 0px 3px rgba(0, 0, 0, .06);
 	background: #E3E7E9;
+}
+
+div.game_tab_clock {
+	margin-top: .2em;
+	padding: .1em .2em;
 }
 
 div.play_nav a.on, div.play_nav a.on:hover {

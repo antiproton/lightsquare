@@ -9,9 +9,26 @@
 	>{{^userIsPlaying}}
 		{{white}} vs {{black}} | {{timingStyle}}
 	{{/userIsPlaying}}{{#userIsPlaying}}
-		{{opponent}} | {{timingStyle}}
+		<div class="game_tab_title">
+			{{opponent}}
+		</div>
+		<div class="game_tab_timing_style">
+			{{timingStyle}}
+		</div>
 		{{#isInProgress && currentPath !== href}}
-			| {{playerTime.getColonDisplay()}}
+			<div
+				class="
+					game_tab_clock
+					{{#isInProgress && userIsActivePlayer}}
+						active_clock
+						{{#playerTime < timeCriticalThreshold}}
+							critical_clock
+						{{/playerTime lt timeCriticalThreshold}}
+					{{/isInProgress and userIsActivePlayer}}
+				"
+			>
+				{{playerTime.getColonDisplay()}}
+			</div>
 		{{/showTime}}
 	{{/userIsPlaying}}
 	</a>
