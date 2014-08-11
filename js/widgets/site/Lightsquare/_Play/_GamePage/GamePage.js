@@ -19,6 +19,9 @@ define(function(require) {
 	
 	function GamePage(game, user, server, router, parent) {
 		this.Rematch = new Event();
+		this.GameOver = new Event();
+		this.Move = new Event();
+		this.Aborted = new Event();
 		
 		this._user = user;
 		this._server = server;
@@ -95,6 +98,8 @@ define(function(require) {
 			else {
 				this._board.animateMove(move, applyMove);
 			}
+			
+			this.Move.fire(move);
 		}, this);
 		
 		this._game.DrawOffered.addHandler(function() {
@@ -131,12 +136,14 @@ define(function(require) {
 			this._template.set("isInProgress", false);
 			this._clearPremove();
 			this._stopUpdatingClocks();
+			this.GameOver.fire(result);
 		}, this);
 		
 		this._game.Aborted.addHandler(function() {
 			this._template.set("isInProgress", false);
 			this._clearPremove();
 			this._stopUpdatingClocks();
+			this.Aborted.fire();
 		}, this);
 		
 		this._startUpdatingClocks();
