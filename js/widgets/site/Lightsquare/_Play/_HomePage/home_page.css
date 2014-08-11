@@ -5,5 +5,10 @@ div.play_home {
 }
 
 div.seeks {
-	margin-top: 1em;
+	flex-grow: 1;
+	margin-left: .8em;
+}
+
+div.create_and_find {
+	display: flex;
 }
