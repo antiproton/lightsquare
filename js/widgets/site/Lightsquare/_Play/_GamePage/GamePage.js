@@ -76,7 +76,7 @@ define(function(require) {
 		this._game.Move.addHandler(function(move) {
 			this._history.move(move);
 			this._template.set("viewingActivePlayer", (this._game.getActiveColour() === this._viewingAs));
-			this._template.set("userIsActivePlayer", this._userIsActivePlayer());
+			this._template.set("userIsActivePlayer", this.userIsActivePlayer());
 			this._template.set("drawOffered", false);
 			this._template.set("canClaimDraw", this._game.isDrawClaimable());
 			this._board.unhighlightSquares();
@@ -184,7 +184,7 @@ define(function(require) {
 		
 		this._board.Move.addHandler(function(moveEvent) {
 			var allowPremove = this._user.getPrefs().premove;
-			var userIsActive = this._userIsActivePlayer();
+			var userIsActive = this.userIsActivePlayer();
 			var promoteTo = (this._user.getPrefs().alwaysQueen ? PieceType.queen : moveEvent.promoteTo);
 			
 			if(userIsActive || allowPremove) {
@@ -247,7 +247,7 @@ define(function(require) {
 		}).bind(this));
 		
 		this._template.on("offer_or_accept_draw", (function() {
-			if(this._userIsActivePlayer()) {
+			if(this.userIsActivePlayer()) {
 				this._game.acceptDraw();
 			}
 			
@@ -389,7 +389,7 @@ define(function(require) {
 			isInProgress: this._game.isInProgress(),
 			userIsPlaying: this.userIsPlaying(),
 			viewingActivePlayer: (this._game.getActiveColour() === this._viewingAs),
-			userIsActivePlayer: this._userIsActivePlayer(),
+			userIsActivePlayer: this.userIsActivePlayer(),
 			drawOffered: this._game.isDrawOffered(),
 			canClaimDraw: this._game.isDrawClaimable(),
 			timingDescription: this._game.getTimingStyle().getDescription()
@@ -412,7 +412,7 @@ define(function(require) {
 		});
 	}
 	
-	GamePage.prototype._userIsActivePlayer = function() {
+	GamePage.prototype.userIsActivePlayer = function() {
 		return (this.getUserColour() === this._game.getActiveColour());
 	}
 	
