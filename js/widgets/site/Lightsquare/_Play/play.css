@@ -15,7 +15,7 @@ div.play_nav {
 	background: #9B9B9B;
 }
 
-div.play_nav > a {
+div.nav_links > a {
 	font-size: .85em;
 	color: #5c5c5c;
 	text-decoration: none;
@@ -26,12 +26,11 @@ div.play_nav > a {
 	background: #E3E7E9;
 }
 
-div.play_nav a.new_game {
-	padding: .7em .5em;
-}
-
 div.nav_header {
-	
+	font-size: .8em;
+	padding: .2em .3em;
+	text-shadow: 1px 1px 0 rgba(255, 255, 255, .4);
+	background: linear-gradient(to top, rgb(179, 179, 179) 0%, rgb(196, 196, 196) 100%);
 }
 
 div.player_clock {

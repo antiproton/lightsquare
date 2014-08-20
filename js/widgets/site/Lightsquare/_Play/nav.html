@@ -1,42 +1,57 @@
 <div class="nav_header">
 	Home
 </div>
-{{#navLinks}}
-	<a on-click="navigate" href="{{getHref(href)}}" class="{{className}} {{currentPath === href ? 'on' : ''}}">{{label}}</a>
-{{/navLinks}}
-{{#gamePages}}
-	<a
-	   on-click="navigate"
-	   href="{{getHref(href)}}"
-	   class="{{currentPath === href ? 'on' : ''}}"
-	>
-		<div>
-			{{userIsPlaying ? opponent : white + ' vs ' + black}}
-		</div>
-		<div>
-			{{timingStyle}}
-		</div>
-		{{#userIsPlaying && isInProgress && currentPath !== href}}
-			<div
-				class="
-					player_clock game_tab_clock
-					{{#isInProgress && userIsActivePlayer}}
-						active_clock
-						{{#playerTime < timeCriticalThreshold}}
-							critical_clock
-						{{/playerTime lt timeCriticalThreshold}}
-					{{/isInProgress and userIsActivePlayer}}
-				"
-			>
-				{{playerTime.getColonDisplay()}}
+<div class="nav_links">
+	{{#navLinks.home}}
+		<a on-click="navigate" href="{{getHref(href)}}" class="{{currentPath === href ? 'on' : ''}}">{{label}}</a>
+	{{/navLinks.home}}
+</div>
+<div class="nav_header">
+	Games
+</div>
+<div class="nav_links">
+	{{#gamePages}}
+		<a
+		   on-click="navigate"
+		   href="{{getHref(href)}}"
+		   class="{{currentPath === href ? 'on' : ''}}"
+		>
+			<div>
+				{{userIsPlaying ? opponent : white + ' vs ' + black}}
 			</div>
-		{{/userIsPlaying}}
-	</a>
-{{/gamePages}}
-{{#loadingGame}}
-	<a
-	   on-click="navigate"
-	   href="{{getHref('/game/' + loadingGameId)}}"
-	   class="{{currentPath === '/game/' + loadingGameId ? 'on' : ''}}"
-	>Loading game...</a>
-{{/loadingGame}}
+			<div>
+				{{timingStyle}}
+			</div>
+			{{#userIsPlaying && isInProgress && currentPath !== href}}
+				<div
+					class="
+						player_clock game_tab_clock
+						{{#isInProgress && userIsActivePlayer}}
+							active_clock
+							{{#playerTime < timeCriticalThreshold}}
+								critical_clock
+							{{/playerTime lt timeCriticalThreshold}}
+						{{/isInProgress and userIsActivePlayer}}
+					"
+				>
+					{{playerTime.getColonDisplay()}}
+				</div>
+			{{/userIsPlaying}}
+		</a>
+	{{/gamePages}}
+	{{#loadingGame}}
+		<a
+		   on-click="navigate"
+		   href="{{getHref('/game/' + loadingGameId)}}"
+		   class="{{currentPath === '/game/' + loadingGameId ? 'on' : ''}}"
+		>Loading game...</a>
+	{{/loadingGame}}
+</div>
+<div class="nav_header">
+	Tools
+</div>
+<div class="nav_links">
+	{{#navLinks.tools}}
+		<a on-click="navigate" href="{{getHref(href)}}" class="{{currentPath === href ? 'on' : ''}}">{{label}}</a>
+	{{/navLinks.tools}}
+</div>
