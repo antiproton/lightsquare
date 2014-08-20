@@ -12,11 +12,11 @@ div.general_chat_history {
 	border-radius: 2px;
 	padding: .4em;
 	overflow-y: scroll;
-	background: white;
 }
 
-div.general_chat_controls {
+form.general_chat_controls {
 	display: flex;
+	flex-shrink: 0;
 	margin: 1px 0 0 0;
 }
 

@@ -9,10 +9,8 @@
 			</div>
 		{{/messages}}
 	</div>
-	<form on-submit="send">
-		<div class="general_chat_controls">
-			<input class="general_chat_message" type="text" value="{{message}}">
-			<input class="general_chat_send" type="submit" value="Send">
-		</div>
+	<form class="general_chat_controls" on-submit="send">
+		<input class="general_chat_message" type="text" value="{{message}}">
+		<input class="general_chat_send" type="submit" value="Send">
 	</form>
 </div>
