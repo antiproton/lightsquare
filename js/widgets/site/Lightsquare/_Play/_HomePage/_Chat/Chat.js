@@ -4,6 +4,8 @@ define(function(require) {
 	var Ractive = require("ractive/Ractive");
 	
 	function Chat(server, parent) {
+		this._server = server;
+		
 		this._template = new Ractive({
 			el: parent,
 			template: html,
@@ -14,7 +16,7 @@ define(function(require) {
 		});
 		
 		this._scrollOnNewMessages = true;
-		this._historyNode = this._template.nodes.chat_history;
+		this._historyNode = this._template.nodes.history;
 		
 		this._historyNode.addEventListener("scroll", (function() {
 			this._scrollOnNewMessages = (this._historyNode.scrollHeight - this._historyNode.scrollTop === this._historyNode.clientHeight);

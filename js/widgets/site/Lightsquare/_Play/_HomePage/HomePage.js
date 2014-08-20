@@ -4,6 +4,7 @@ define(function(require) {
 	var Ractive = require("ractive/Ractive");
 	var SeekForm = require("./_SeekForm/SeekForm");
 	var SeekGraph = require("./_SeekGraph/SeekGraph");
+	var Chat = require("./_Chat/Chat");
 	var SeekList = require("SeekList");
 	
 	function HomePage(user, server, router, parent) {
@@ -23,6 +24,7 @@ define(function(require) {
 		
 		new SeekForm(this._user, this._server, this._template.nodes.create_seek);
 		new SeekGraph(this._seekList, this._user, this._template.nodes.seek_graph);
+		new Chat(this._server, this._template.nodes.chat);
 	}
 	
 	HomePage.prototype._setupRouter = function() {

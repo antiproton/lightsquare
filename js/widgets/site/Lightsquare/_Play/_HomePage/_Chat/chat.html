@@ -1,18 +1,18 @@
-<div class="chat">
-	<div class="chat_history" id="chat_history">
+<div class="general_chat">
+	<div class="general_chat_history" id="history">
 		{{#messages}}
-			<div class="chat_message">
+			<div class="general_chat_message">
 				{{#from}}
-					<span class="chat_message_from">{{from}}:</span>
+					<span class="general_chat_message_from">{{from}}:</span>
 				{{/from}}
-				<span class="chat_message_body">{{body}}</span>
+				<span class="general_chat_message_body">{{body}}</span>
 			</div>
 		{{/messages}}
 	</div>
 	<form on-submit="send">
-		<div class="chat_controls">
-			<input class="chat_message" type="text" value="{{message}}">
-			<input class="chat_send" type="submit" value="Send">
+		<div class="general_chat_controls">
+			<input class="general_chat_message" type="text" value="{{message}}">
+			<input class="general_chat_send" type="submit" value="Send">
 		</div>
 	</form>
 </div>

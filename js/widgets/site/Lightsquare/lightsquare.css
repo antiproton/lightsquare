@@ -9,6 +9,7 @@ div.main {
 
 div.nav {
 	display: flex;
+	flex-shrink: 0;
 	background: #464646;
 }
 
