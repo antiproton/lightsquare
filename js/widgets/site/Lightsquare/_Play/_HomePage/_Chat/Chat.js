@@ -34,7 +34,7 @@ define(function(require) {
 		}).bind(this));
 	}
 	
-	Chat.prototype._addMessage = function(body, from) {
+	Chat.prototype._addMessage = function(from, body) {
 		this._template.get("messages").push({
 			from: from,
 			body: body
