@@ -11,4 +11,11 @@ div.seeks {
 
 div.create_and_find {
 	display: flex;
+	border-bottom: 1px solid #A0A0A0;
+}
+
+div.create_seek {
+	padding: .6em;
+	border-right: 1px solid #888;
+	background: #eeeeee;
 }

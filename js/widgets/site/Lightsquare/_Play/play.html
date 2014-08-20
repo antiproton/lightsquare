@@ -1,7 +1,7 @@
 {{^serverConnected}}
 	{{>connectingMessage}}
 {{/serverConnected}}
-<div class="play" style="display: {{serverConnected ? 'auto' : 'none'}}">
+<div class="play" style="{{serverConnected ? '' : 'display: none'}}">
 	{{#message}}
 		<div class="message" id="message">
 			{{{message}}}

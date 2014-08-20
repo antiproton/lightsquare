@@ -1,6 +1,6 @@
-<div class="modal_overlay" on-click="background_click" style="display: {{dialog ? 'auto' : 'none'}}">
-	<div class="register_dialog" style="display: {{dialog === 'register' ? 'auto' : 'none'}}" on-click="foreground_click">
-		<div id="register_form" style="display: {{registered ? 'none' : 'auto'}}">
+<div class="modal_overlay" on-click="background_click" style="{{dialog ? '' : 'display: none'}}">
+	<div class="register_dialog" style="{{dialog === 'register' ? '' : 'display: none'}}" on-click="foreground_click">
+		<div id="register_form" style="{{registered ? 'display: none' : ''}}">
 			
 		</div>
 		{{#registered}}
@@ -23,44 +23,19 @@
 	</div>
 </div>
 <div class="main" on-click="background_click">
-	<div class="title_bar">
-		<div class="title">
-			<h1>Lightsquare</h1>
-		</div>
-		<div class="user">
-			{{username}}
-			{{#userIsLoggedIn}}
-				(<a href="javascript:void(0)" on-click="logout"><span on-click="foreground_click">Log out</span></a>)
-				
-			{{/userIsLoggedIn}}
-		</div>
-	</div>
-	{{#showLogoutConfirmation}}
-		<div class="logout_confirmation_container">
-			<div class="logout_confirmation">
-				<div class="logout_confirmation_message">
-					You must finish all games before logging out.
-				</div>
-				<div class="logout_confirmation_buttons">
-					<input type="button" class="logout_confirm_logout" on-click="logout_confirm" value="Resign all games and log out">
-					<input type="button" class="logout_confirm_cancel" on-click="logout_cancel" value="Cancel">
-				</div>
-			</div>
-		</div>
-	{{/showLogoutConfirmation}}
 	<div class="nav">
 		{{#navLinks:href}}
 			<a on-click="navigate" href="{{getHref(href)}}" class="{{tab === href ? 'on' : ''}}">{{.}}</a>
 		{{/navLinks}}
 	</div>
 	<div class="tabs">
-		<div class="page" style="display: {{tab === '/' ? 'auto' : 'none'}};">
+		<div class="page" style="{{tab === '/' ? '' : 'display: none'}};">
 			{{>home}}
 		</div>
-		<div class="page" style="display: {{tab === '/play' ? 'auto' : 'none'}};" id="play">
+		<div class="page" style="{{tab === '/play' ? '' : 'display: none'}};" id="play">
 			
 		</div>
-		<div class="page" style="display: {{tab === '/tools' ? 'auto' : 'none'}};">
+		<div class="page" style="{{tab === '/tools' ? '' : 'display: none'}};">
 			{{>tools}}
 		</div>
 	</div>
