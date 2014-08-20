@@ -46,6 +46,9 @@ Optimisation
 Run `r.js -o optimise.js` to build a completely separate source tree with compressed
 JavaScript.
 
+Copy index.html to the new source tree and point the Apache vhost for the production
+URL to it.
+
 [1]:http://github.com/gushogg-blake/libjs
 [2]:http://github.com/jsonchess/jsonchess
 [3]:http://jsonchess.org
