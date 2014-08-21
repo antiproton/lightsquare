@@ -3,7 +3,7 @@
 </div>
 <div class="nav_links">
 	{{#navLinks.home}}
-		<a on-click="navigate" href="{{getHref(href)}}" class="{{currentPath === href ? 'on' : ''}}">{{label}}</a>
+		<a on-click="navigate" href="{{getHref(href)}}" class="{{currentPath === href ? 'on' : 'off'}}">{{label}}</a>
 	{{/navLinks.home}}
 </div>
 <div class="nav_header">
@@ -14,18 +14,20 @@
 		<a
 		   on-click="navigate"
 		   href="{{getHref(href)}}"
-		   class="{{currentPath === href ? 'on' : ''}}"
+		   class="nav_game {{currentPath === href ? 'on' : 'off'}}"
 		>
-			<div>
-				{{userIsPlaying ? opponent : white + ' vs ' + black}}
-			</div>
-			<div>
-				{{timingStyle}}
+			<div class="nav_game_title">
+				<div>
+					{{userIsPlaying ? opponent : white + ' vs ' + black}}
+				</div>
+				<div>
+					{{timingStyle}}
+				</div>
 			</div>
 			{{#userIsPlaying && isInProgress && currentPath !== href}}
 				<div
 					class="
-						player_clock game_tab_clock
+						nav_game_clock player_clock game_tab_clock
 						{{#isInProgress && userIsActivePlayer}}
 							active_clock
 							{{#playerTime < timeCriticalThreshold}}
@@ -43,7 +45,7 @@
 		<a
 		   on-click="navigate"
 		   href="{{getHref('/game/' + loadingGameId)}}"
-		   class="{{currentPath === '/game/' + loadingGameId ? 'on' : ''}}"
+		   class="{{currentPath === '/game/' + loadingGameId ? 'on' : 'off'}}"
 		>Loading game...</a>
 	{{/loadingGame}}
 </div>
@@ -52,6 +54,6 @@
 </div>
 <div class="nav_links">
 	{{#navLinks.tools}}
-		<a on-click="navigate" href="{{getHref(href)}}" class="{{currentPath === href ? 'on' : ''}}">{{label}}</a>
+		<a on-click="navigate" href="{{getHref(href)}}" class="{{currentPath === href ? 'on' : 'off'}}">{{label}}</a>
 	{{/navLinks.tools}}
 </div>
