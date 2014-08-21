@@ -7,29 +7,29 @@ div.main {
 	flex-grow: 1;
 }
 
-div.nav {
+div.top_bar {
 	display: flex;
 	flex-shrink: 0;
 	background: #464646;
 }
 
-div.nav a {
+div.top_bar a {
 	color: #a8e7ff;
 	text-decoration: none;
 	display: block;
 	padding: .7em 1.2em;
 }
 
-div.nav a:hover {
+div.top_bar a:hover {
 	text-decoration: underline;
 }
 
-div.nav a.on, div.nav a.on:hover {
+div.top_bar a.on, div.top_bar a.on:hover {
 	color: #ECFAFF;
 	text-decoration: none;
 }
 
-div.nav a:first-child {
+div.top_bar a:first-child {
 	border-top-left-radius: 4px;
 	border-bottom-left-radius: 4px;
 }
@@ -86,4 +86,96 @@ input[type="button"].register_done {
 	border-color: #9B9B9B;
 	padding: .3em 1em;
 	background: #BFBFBF;
+}
+
+div.play {
+	display: flex;
+	flex-grow: 1;
+}
+
+div.play_main {
+	display: flex;
+	flex-grow: 1;
+}
+
+div.play_nav {
+	display: flex;
+	flex-direction: column;
+	flex-basis: 15%;
+	background: #9B9B9B;
+}
+
+div.nav_links > a {
+	font-size: .85em;
+	color: #5c5c5c;
+	text-decoration: none;
+	display: flex;
+	flex-direction: column;
+	align-items: flex-start;
+	padding: .4em .5em;
+	background: #E3E7E9;
+}
+
+div.nav_header {
+	font-size: .8em;
+	padding: .2em .3em;
+	text-shadow: 1px 1px 0 rgba(255, 255, 255, .4);
+	background: linear-gradient(to top, rgb(179, 179, 179) 0%, rgb(196, 196, 196) 100%);
+}
+
+div.player_clock {
+	padding: 0 .2em;
+	border-radius: 2px;
+}
+
+div.game_tab_clock {
+	margin-top: .2em;
+	padding: .1em .2em;
+	background: #cbcdce;
+}
+
+div.active_clock {
+	color: white;
+	background: #58992A;
+}
+
+div.critical_clock {
+	background: #912222;
+}
+
+div.play_nav a.on, div.play_nav a.on:hover {
+	box-shadow: none;
+	background: white;
+}
+
+div.play_nav a:hover {
+	border-color: #BABABA;
+}
+
+div.play_page {
+	display: flex;
+	flex-grow: 1;
+}
+
+div.connecting_message {
+	flex-grow: 1;
+	color: #323232;
+	padding: .8em;
+}
+
+div.waiting_for_server {
+	text-align: center;
+}
+
+div.connecting_message h1 {
+	text-align: center;
+	font-weight: normal;
+	font-size: 1.5em;
+}
+
+p.backedup {
+	border-radius: 3px;
+	padding: .2em .4em .5em .4em;
+	border: 1px solid #F0E1A4;
+	background: #FDFCE2;
 }

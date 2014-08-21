@@ -23,20 +23,30 @@
 	</div>
 </div>
 <div class="main" on-click="background_click">
-	<div class="nav">
-		{{#navLinks:href}}
-			<a on-click="navigate" href="{{getHref(href)}}" class="{{tab === href ? 'on' : ''}}">{{.}}</a>
-		{{/navLinks}}
+	<div class="top_bar">
+		<div>
+			Lightsquare
+		</div>
+		<div>
+			Anonymous
+		</div>
 	</div>
-	<div class="tabs">
-		<div class="page" style="{{tab === '/' ? '' : 'display: none'}};">
-			{{>home}}
-		</div>
-		<div class="page" style="{{tab === '/play' ? '' : 'display: none'}};" id="play">
-			
-		</div>
-		<div class="page" style="{{tab === '/tools' ? '' : 'display: none'}};">
-			{{>tools}}
+	<div class="page">
+		{{^serverConnected}}
+			{{>connectingMessage}}
+		{{/serverConnected}}
+		<div class="play" style="{{serverConnected ? '' : 'display: none'}}">
+			{{#message}}
+				<div class="message" id="message">
+					{{{message}}}
+				</div>
+			{{/message}}
+			<div class="play_nav">
+				{{>nav}}
+			</div>
+			<div class="play_main" id="tabs">
+				
+			</div>
 		</div>
 	</div>
 </div>

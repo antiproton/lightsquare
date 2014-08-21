@@ -65,3 +65,15 @@ input.logout_cancel {
 	border: 1px solid #A0A0A0;
 	background: #F7F7F7;
 }
+
+
+
+
+	
+	Lightsquare.prototype._setupCurrentGames = function() {
+		this._currentGames = new CurrentGames(new RandomGames(this._server), this._template.nodes.current_games);
+		
+		this._currentGames.ClickGame.addHandler(function(id) {
+			this._router.setPath("/play/game/" + id);
+		}, this);
+	}
