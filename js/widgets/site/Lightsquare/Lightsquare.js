@@ -265,7 +265,6 @@ define(function(require) {
 				dialog: null,
 				showLogoutConfirmation: false,
 				currentPath: path,
-				tab: path,
 				navLinks: {
 					home: [
 						{
@@ -358,9 +357,11 @@ define(function(require) {
 		var registerForm = new RegisterForm(this._user, this._template.nodes.register_form);
 		
 		registerForm.Registered.addHandler(function(data) {
-			this._template.set("registered", true);
-			this._template.set("registerAutoLoggedIn", data.loggedIn);
-			this._template.set("registeredUsername", data.registeredUsername);
+			this._template.set({
+				registered: true,
+				registerAutoLoggedIn: data.loggedIn,
+				registeredUsername: data.registeredUsername
+			});
 		}, this);
 		
 		this._template.on("register", (function() {
