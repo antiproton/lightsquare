@@ -107,11 +107,11 @@ div.time_brackets {
 
 div.time_brackets > div {
 	color: #333333;
-	font-size: .8em;
+	font-size: .72em;
 	text-align: center;
 	box-sizing: border-box;
 	width: 20%;
-	border-right: 1px solid #929292;
+	border-right: 1px solid #bdbdbd;
 	padding: .2em;
-	background: #b3b3b3;
+	background: #dbdbdb;
 }
