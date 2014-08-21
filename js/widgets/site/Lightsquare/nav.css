@@ -24,7 +24,6 @@ div.nav_header {
 }
 
 div.nav a.on, div.nav a.on:hover {
-	box-shadow: none;
 	background: white;
 }
 
