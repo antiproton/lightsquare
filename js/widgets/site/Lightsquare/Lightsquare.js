@@ -6,6 +6,7 @@ define(function(require) {
 	require("css!./nav.css");
 	require("css!./connecting_message.css");
 	require("css!./top_bar.css");
+	require("css!./login.css");
 	require("css!./register.css");
 	require("css!./player_clocks.css");
 	var html = require("file!./lightsquare.html");
@@ -178,6 +179,7 @@ define(function(require) {
 		this._user.LoggedIn.addHandler(function() {
 			this._addGamePages();
 			this._updateUserDetails();
+			this._hideDialog("login");
 		}, this);
 		
 		this._user.LoggedOut.addHandler(function() {
@@ -345,12 +347,18 @@ define(function(require) {
 		this._template.set("dialog", dialog);
 	}
 	
-	Lightsquare.prototype._hideDialog = function() {
-		this._template.set("dialog", null);
+	Lightsquare.prototype._hideDialog = function(dialog) {
+		if(!dialog || this._template.get("dialog") === dialog) {
+			this._template.set("dialog", null);
+		}
 	}
 	
 	Lightsquare.prototype._setupLoginForm = function() {
 		new LoginForm(this._user, this._template.nodes.login_form);
+		
+		this._template.on("login", (function() {
+			this._showDialog("login");
+		}).bind(this));
 	}
 	
 	Lightsquare.prototype._setupRegisterForm = function() {

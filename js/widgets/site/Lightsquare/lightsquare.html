@@ -21,14 +21,26 @@
 			</div>
 		{{/registered}}
 	</div>
+	<div class="login_dialog" style="{{dialog === 'login' ? '' : 'display: none'}}" on-click="foreground_click">
+		<div id="login_form">
+			
+		</div>
+	</div>
 </div>
 <div class="container" on-click="background_click">
 	<div class="top_bar">
 		<div>
 			Lightsquare
 		</div>
-		<div>
-			Anonymous
+		<div class="user">
+			{{#userIsLoggedIn}}
+				{{username}} (<a href="javascript:void(0)" on-click="logout">Log out</a>)
+			{{/userIsLoggedIn}}
+			{{^userIsLoggedIn}}
+				<a href="javascript:void(0)" on-click="login"><span on-click="foreground_click">Login</span></a>
+				&nbsp;&nbsp;
+				<a href="javascript:void(0)" on-click="register"><span on-click="foreground_click">Create account</span></a>
+			{{/userIsLoggedIn}}
 		</div>
 	</div>
 	{{^serverConnected}}
