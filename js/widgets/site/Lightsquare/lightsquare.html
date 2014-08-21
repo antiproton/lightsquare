@@ -29,12 +29,12 @@
 </div>
 <div class="container" on-click="background_click">
 	<div class="top_bar">
-		<div>
+		<div class="title">
 			Lightsquare
 		</div>
 		<div class="user">
 			{{#userIsLoggedIn}}
-				{{username}} (<a href="javascript:void(0)" on-click="logout">Log out</a>)
+				{{username}} (<a href="javascript:void(0)" on-click="logout"><span on-click="foreground_click">Log out</span></a>)
 			{{/userIsLoggedIn}}
 			{{^userIsLoggedIn}}
 				<a href="javascript:void(0)" on-click="login"><span on-click="foreground_click">Login</span></a>
@@ -43,6 +43,19 @@
 			{{/userIsLoggedIn}}
 		</div>
 	</div>
+	{{#showLogoutConfirmation}}
+		<div class="logout_confirmation_container">
+			<div class="logout_confirmation">
+				<div class="logout_confirmation_message">
+					You must finish all games before logging out.
+				</div>
+				<div class="logout_confirmation_buttons">
+					<input type="button" class="logout_confirm_logout" on-click="logout_confirm" value="Resign all games and log out">
+					<input type="button" class="logout_confirm_cancel" on-click="logout_cancel" value="Cancel">
+				</div>
+			</div>
+		</div>
+	{{/showLogoutConfirmation}}
 	{{^serverConnected}}
 		{{>connectingMessage}}
 	{{/serverConnected}}

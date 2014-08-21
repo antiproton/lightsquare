@@ -8,6 +8,7 @@ define(function(require) {
 	require("css!./top_bar.css");
 	require("css!./login.css");
 	require("css!./register.css");
+	require("css!./logout_confirmation.css");
 	require("css!./player_clocks.css");
 	var html = require("file!./lightsquare.html");
 	var navHtml = require("file!./nav.html");
