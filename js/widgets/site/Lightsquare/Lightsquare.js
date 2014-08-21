@@ -49,8 +49,6 @@ define(function(require) {
 		this._tabContainer = new TabContainer(this._template.nodes.tabs, "page");
 		
 		setInterval(this._updateClocks.bind(this), 100);
-		
-		this._router.execute();
 	}
 	
 	Lightsquare.prototype._addGamePage = function(game) {
