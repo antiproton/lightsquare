@@ -1,0 +1,33 @@
+div.nav {
+	display: flex;
+	flex-direction: column;
+	flex-basis: 15%;
+	background: #9B9B9B;
+}
+
+div.nav_links > a {
+	font-size: .85em;
+	color: #5c5c5c;
+	text-decoration: none;
+	display: flex;
+	flex-direction: column;
+	align-items: flex-start;
+	padding: .4em .5em;
+	background: #E3E7E9;
+}
+
+div.nav_header {
+	font-size: .8em;
+	padding: .2em .3em;
+	text-shadow: 1px 1px 0 rgba(255, 255, 255, .4);
+	background: linear-gradient(to top, rgb(179, 179, 179) 0%, rgb(196, 196, 196) 100%);
+}
+
+div.nav a.on, div.nav a.on:hover {
+	box-shadow: none;
+	background: white;
+}
+
+div.nav a:hover {
+	border-color: #BABABA;
+}

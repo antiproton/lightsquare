@@ -1,0 +1,11 @@
+div.top_bar {
+	color: white;
+	display: flex;
+	flex-shrink: 0;
+	justify-content: space-between;
+	background: #464646;
+}
+
+div.top_bar > div {
+	padding: .5em;
+}

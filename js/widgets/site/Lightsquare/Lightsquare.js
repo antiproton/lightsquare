@@ -3,6 +3,11 @@ define(function(require) {
 	require("css!./base.css");
 	require("css!./lightsquare.css");
 	require("css!./forms.css");
+	require("css!./nav.css");
+	require("css!./connecting_message.css");
+	require("css!./top_bar.css");
+	require("css!./register.css");
+	require("css!./player_clocks.css");
 	var html = require("file!./lightsquare.html");
 	var navHtml = require("file!./nav.html");
 	var connectingMessageHtml = require("file!./connecting_message.html");
@@ -39,7 +44,7 @@ define(function(require) {
 		this._gamePageIndex = {};
 		this._currentPage = null;
 		
-		this._tabContainer = new TabContainer(this._template.nodes.tabs, "play_page");
+		this._tabContainer = new TabContainer(this._template.nodes.tabs, "page");
 		
 		setInterval(this._updateClocks.bind(this), 100);
 		

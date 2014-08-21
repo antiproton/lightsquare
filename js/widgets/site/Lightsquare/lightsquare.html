@@ -22,7 +22,7 @@
 		{{/registered}}
 	</div>
 </div>
-<div class="main" on-click="background_click">
+<div class="container" on-click="background_click">
 	<div class="top_bar">
 		<div>
 			Lightsquare
@@ -31,22 +31,15 @@
 			Anonymous
 		</div>
 	</div>
-	<div class="page">
-		{{^serverConnected}}
-			{{>connectingMessage}}
-		{{/serverConnected}}
-		<div class="play" style="{{serverConnected ? '' : 'display: none'}}">
-			{{#message}}
-				<div class="message" id="message">
-					{{{message}}}
-				</div>
-			{{/message}}
-			<div class="play_nav">
-				{{>nav}}
-			</div>
-			<div class="play_main" id="tabs">
-				
-			</div>
+	{{^serverConnected}}
+		{{>connectingMessage}}
+	{{/serverConnected}}
+	<div class="main" style="{{serverConnected ? '' : 'display: none'}}">
+		<div class="nav">
+			{{>nav}}
+		</div>
+		<div class="tabs" id="tabs">
+			
 		</div>
 	</div>
 </div>
