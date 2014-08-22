@@ -47,6 +47,10 @@ div.nav_game_title {
 	flex-grow: 1;
 }
 
+div.nav_game_timing_style {
+	flex-shrink: 0;
+}
+
 div.nav_game_clock {
 	align-self: flex-start;
 }
