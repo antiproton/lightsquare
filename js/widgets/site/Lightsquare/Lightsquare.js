@@ -18,6 +18,7 @@ define(function(require) {
 	var AddressBarPath = require("routing/AddressBarPath");
 	var TabContainer = require("dom/TabContainer");
 	var Colour = require("chess/Colour");
+	var Time = require("chess/Time");
 	var LoginForm = require("./_LoginForm/LoginForm");
 	var RegisterForm = require("./_RegisterForm/RegisterForm");
 	var HomePage = require("./_HomePage/HomePage");
@@ -277,13 +278,14 @@ define(function(require) {
 	
 	Lightsquare.prototype._setupTemplate = function(parent) {
 		var path = this._router.getPath();
+		var timeCriticalThreshold = Time.fromUnitString("10s");
 		
 		this._template = new Ractive({
 			el: parent,
 			template: html,
 			data: {
 				gamePages: [],
-				timeCriticalThreshold: 1000 * 10,
+				timeCriticalThreshold: timeCriticalThreshold,
 				serverConnected: false,
 				waitingForServer: true,
 				dialog: null,
@@ -312,6 +314,9 @@ define(function(require) {
 				}).bind(this),
 				getAbsolutePath: function(path) {
 					return require.toUrl(path);
+				},
+				getColonDisplay: function(time) {
+					return Time.fromMilliseconds(time).getColonDisplay(time < timeCriticalThreshold);
 				},
 				registered: false
 			},

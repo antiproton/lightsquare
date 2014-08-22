@@ -4,7 +4,7 @@
 			{{players.opponent.name}} ({{players.opponent.rating}})
 		</div>
 		<div class="player_clock {{isInProgress && !viewingActivePlayer ? ('active_clock' + (players.opponent.time < timeCriticalThreshold ? ' critical_clock' : '')) : ''}}">
-			{{players.opponent.time.getColonDisplay(players.opponent.time < timeCriticalThreshold)}}
+			{{getColonDisplay(players.opponent.time)}}
 		</div>
 	</div>
 	<div class="game_main">
@@ -33,7 +33,7 @@
 			{{players.player.name}} ({{players.player.rating}})
 		</div>
 		<div class="player_clock {{isInProgress && viewingActivePlayer ? ('active_clock' + (players.player.time < timeCriticalThreshold ? ' critical_clock' : '')) : ''}}">
-			{{players.player.time.getColonDisplay(players.player.time < timeCriticalThreshold)}}
+			{{getColonDisplay(players.player.time)}}
 		</div>
 	</div>
 </div>

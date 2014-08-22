@@ -7,6 +7,7 @@ define(function(require) {
 	var jsonChessConstants = require("jsonchess/constants");
 	var Colour = require("chess/Colour");
 	var Move = require("chess/Move");
+	var Time = require("chess/Time");
 	var PieceType = require("chess/PieceType");
 	var Chat = require("./_Chat/Chat");
 	var Board = require("widgets/chess/Board/Board");
@@ -290,8 +291,8 @@ define(function(require) {
 			var timingStyle = this.getTimingStyle();
 			
 			var options = {
-				initialTime: timingStyle.initialTime.getUnitString(),
-				timeIncrement: timingStyle.increment.getUnitString(),
+				initialTime: timingStyle.initialTime,
+				timeIncrement: timingStyle.increment,
 				acceptRatingMin: "-100",
 				acceptRatingMax: "+100"
 			};
@@ -376,12 +377,17 @@ define(function(require) {
 	}
 	
 	GamePage.prototype._setupTemplate = function(parent) {
+		var timeCriticalThreshold = Time.fromUnitString("10s");
+		
 		this._template = new Ractive({
 			el: parent,
 			template: html,
 			data: {
-				timeCriticalThreshold: 1000 * 10,
-				newSeekWaiting: false
+				timeCriticalThreshold: timeCriticalThreshold,
+				newSeekWaiting: false,
+				getColonDisplay: function(time) {
+					return Time.fromMilliseconds(time).getColonDisplay(time < timeCriticalThreshold);
+				}
 			},
 			partials: {
 				controls: controlsHtml
