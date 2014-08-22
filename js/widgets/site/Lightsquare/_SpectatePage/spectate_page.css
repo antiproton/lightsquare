@@ -1,7 +1,9 @@
 div.spectate_page {
+	position: relative;
 	display: flex;
 	flex-grow: 1;
 	padding: 1em;
+	overflow-y: auto;
 }
 
 div.current_game {
