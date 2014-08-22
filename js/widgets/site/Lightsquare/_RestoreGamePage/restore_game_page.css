@@ -1,3 +1,13 @@
 div.restore_game {
+	flex-grow: 1;
 	padding: .7em;
+	padding-top: 0;
+}
+
+div.restore_game h1 {
+	font-size: 1.6em;
+}
+
+div.restore_backup_list {
+	border: 1px solid #C4C4C4;
 }
