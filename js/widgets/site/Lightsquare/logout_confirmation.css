@@ -10,7 +10,7 @@ div.logout_confirmation {
 	right: 0;
 	padding: .5em .8em;
 	box-shadow: 1px 1px 1px rgba(0, 0, 0, .3);
-	background: white;
+	background: #fdfced;
 }
 
 div.logout_confirmation input {
@@ -23,15 +23,11 @@ div.logout_confirmation_buttons {
 }
 
 input.logout_confirm {
-	color: #FFFFFF;
-	text-shadow: 1px 1px 0 rgba(255, 255, 255, .3);
-	border: 1px solid #262626;
-	background: #595959;
 }
 
 input.logout_cancel {
 	color: #212121;
 	text-shadow: 1px 1px 0 rgba(0, 0, 0, .1);
 	border: 1px solid #A0A0A0;
-	background: #F7F7F7;
+	background: #E2E2E2;
 }
