@@ -1,8 +1,11 @@
-<form class="single_column login" on-submit="submit">
-	<label>Username</label>
-	<input type="text" value="{{username}}">
-	<label>Password</label>
-	<input type="password" value="{{password}}">
+<form class="login" on-submit="submit">
+	<h1>Log in</h1>
+	<div class="login_form_fields">
+		<label>Username</label>
+		<input type="text" value="{{username}}" autofocus>
+		<label>Password</label>
+		<input type="password" value="{{password}}">
+	</div>
 	<input class="login" type="submit" value="Log in">
 	{{#error}}
 		<div class="form_error">

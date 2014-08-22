@@ -1,5 +1,8 @@
 div.game {
+	position: relative;
 	flex-grow: 1;
+	padding: .3em .7em;
+	overflow-y: auto;
 }
 
 input.rematch.rematch_offered {

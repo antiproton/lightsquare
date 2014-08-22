@@ -1,6 +1,6 @@
-<div class="modal_overlay" on-click="background_click" style="display: {{dialog ? 'auto' : 'none'}}">
-	<div class="register_dialog" style="display: {{dialog === 'register' ? 'auto' : 'none'}}" on-click="foreground_click">
-		<div id="register_form" style="display: {{registered ? 'none' : 'auto'}}">
+<div class="modal_overlay" on-click="background_click" style="{{dialog ? '' : 'display: none'}}">
+	<div class="register_dialog" style="{{dialog === 'register' ? '' : 'display: none'}}" on-click="foreground_click">
+		<div id="register_form" style="{{registered ? 'display: none' : ''}}">
 			
 		</div>
 		{{#registered}}
@@ -21,17 +21,25 @@
 			</div>
 		{{/registered}}
 	</div>
+	<div class="login_dialog" style="{{dialog === 'login' ? '' : 'display: none'}}" on-click="foreground_click">
+		<div id="login_form">
+			
+		</div>
+	</div>
 </div>
-<div class="main" on-click="background_click">
-	<div class="title_bar">
+<div class="container" on-click="background_click">
+	<div class="top_bar">
 		<div class="title">
-			<h1>Lightsquare</h1>
+			Lightsquare
 		</div>
 		<div class="user">
-			{{username}}
 			{{#userIsLoggedIn}}
-				(<a href="javascript:void(0)" on-click="logout"><span on-click="foreground_click">Log out</span></a>)
-				
+				{{username}} (<a href="javascript:void(0)" on-click="logout"><span on-click="foreground_click">Log out</span></a>)
+			{{/userIsLoggedIn}}
+			{{^userIsLoggedIn}}
+				<a href="javascript:void(0)" on-click="login"><span on-click="foreground_click">Login</span></a>
+				&nbsp;&nbsp;
+				<a href="javascript:void(0)" on-click="register"><span on-click="foreground_click">Create account</span></a>
 			{{/userIsLoggedIn}}
 		</div>
 	</div>
@@ -42,26 +50,21 @@
 					You must finish all games before logging out.
 				</div>
 				<div class="logout_confirmation_buttons">
-					<input type="button" class="logout_confirm_logout" on-click="logout_confirm" value="Resign all games and log out">
-					<input type="button" class="logout_confirm_cancel" on-click="logout_cancel" value="Cancel">
+					<input type="button" class="logout_confirm" on-click="logout_confirm" value="Resign all games and log out">
+					<input type="button" class="logout_cancel" on-click="logout_cancel" value="Cancel">
 				</div>
 			</div>
 		</div>
 	{{/showLogoutConfirmation}}
-	<div class="nav">
-		{{#navLinks:href}}
-			<a on-click="navigate" href="{{getHref(href)}}" class="{{tab === href ? 'on' : ''}}">{{.}}</a>
-		{{/navLinks}}
-	</div>
-	<div class="tabs">
-		<div class="page" style="display: {{tab === '/' ? 'auto' : 'none'}};">
-			{{>home}}
+	{{^serverConnected}}
+		{{>connectingMessage}}
+	{{/serverConnected}}
+	<div class="main" style="{{serverConnected ? '' : 'display: none'}}">
+		<div class="nav">
+			{{>nav}}
 		</div>
-		<div class="page" style="display: {{tab === '/play' ? 'auto' : 'none'}};" id="play">
+		<div class="tabs" id="tabs">
 			
-		</div>
-		<div class="page" style="display: {{tab === '/tools' ? 'auto' : 'none'}};">
-			{{>tools}}
 		</div>
 	</div>
 </div>

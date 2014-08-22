@@ -2,23 +2,8 @@ div.seek_graph {
 	display: flex;
 }
 
-div.ratings {
-	color: #3f3f3f;
-	display: flex;
-	flex-direction: column;
-	justify-content: space-between;
-	padding: .3em .3em 1.3em 0;
-}
-
-div.ratings > div {
-	font-size: .8em;
-	text-align: right;
-}
-
 div.seek_graph_body {
 	flex-grow: 1;
-	border: 1px solid #ababab;
-	background: white;
 }
 
 div.seek_graph_body > div {
@@ -118,12 +103,15 @@ div.body_and_time_brackets {
 
 div.time_brackets {
 	display: flex;
-	height: 1em;
 }
 
 div.time_brackets > div {
-	font-size: .8em;
+	color: #333333;
+	font-size: .72em;
 	text-align: center;
+	box-sizing: border-box;
 	width: 20%;
-	margin-top: .3em;
+	border-right: 1px solid #bdbdbd;
+	padding: .2em;
+	background: #dbdbdb;
 }

@@ -1,0 +1,28 @@
+div.top_bar {
+	color: white;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	flex-shrink: 0;
+	background: #464646;
+}
+
+div.title {
+	color: #cdf1fc;
+}
+
+div.top_bar {
+	padding: .5em;
+}
+
+div.user {
+	font-size: .9em;
+}
+
+div.user a {
+	color: #F2F2F2;
+}
+
+div.user a:hover {
+	color: white;
+}
