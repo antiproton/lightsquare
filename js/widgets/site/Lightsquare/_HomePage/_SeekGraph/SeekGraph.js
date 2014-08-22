@@ -122,9 +122,7 @@ define(function(require) {
 		seeks.forEach((function(seek, index) {
 			var rating = seek.owner.rating;
 			var ratingBracket = Math.max(this._minRating, rating - rating % this._ratingBracketSize);
-			var initialTime = Time.fromUnitString(seek.options.initialTime);
-			var timeIncrement = Time.fromUnitString(seek.options.timeIncrement, Time.seconds) * AVERAGE_MOVES_PER_GAME;
-			var estimatedTotalTime = initialTime + timeIncrement;
+			var estimatedTotalTime = seek.options.initialTime + seek.options.timeIncrement * AVERAGE_MOVES_PER_GAME;
 			var timeBracket;
 			
 			this._timeBrackets.getShallowCopy().reverse().some(function(bracket) {
@@ -184,8 +182,8 @@ define(function(require) {
 						seek: {
 							id: seek.id,
 							owner: seek.owner.name,
-							initialTime: Time.fromUnitString(seek.options.initialTime, Time.minutes).getUnitString(Time.minutes),
-							timeIncrement: Time.fromUnitString(seek.options.timeIncrement, Time.seconds).getUnitString(Time.seconds)
+							initialTime: Time.fromMilliseconds(seek.options.initialTime).getUnitString(Time.minutes),
+							timeIncrement: Time.fromMilliseconds(seek.options.timeIncrement).getUnitString(Time.seconds)
 						}
 					});
 					

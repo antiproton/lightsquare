@@ -3,6 +3,7 @@ define(function(require) {
 	var html = require("file!./seek_form.html");
 	var Ractive = require("ractive/Ractive");
 	var jsonChessConstants = require("jsonchess/constants");
+	var Time = require("chess/Time");
 	
 	function SeekForm(user, server, parent) {
 		this._user = user;
@@ -37,8 +38,8 @@ define(function(require) {
 				this._clearClearErrorTimer();
 				
 				this._user.seekGame({
-					initialTime: this._template.get("initialTime").toString(),
-					timeIncrement: this._template.get("timeIncrement").toString(),
+					initialTime: Time.fromUnitString(this._template.get("initialTime").toString(), Time.minutes),
+					timeIncrement: Time.fromUnitString(this._template.get("timeIncrement").toString(), Time.seconds),
 					acceptRatingMin: this._template.get("ratingMin").toString(),
 					acceptRatingMax: this._template.get("ratingMax").toString()
 				}).then((function() {
@@ -96,8 +97,8 @@ define(function(require) {
 		var options = this._user.getLastSeekOptions();
 		
 		if(options !== null) {
-			this._template.set("initialTime", options.initialTime);
-			this._template.set("timeIncrement", options.timeIncrement);
+			this._template.set("initialTime", Time.fromMilliseconds(options.initialTime).getUnitString(Time.minutes));
+			this._template.set("timeIncrement", Time.fromMilliseconds(options.timeIncrement).getUnitString(Time.seconds));
 			this._template.set("ratingMin", options.acceptRatingMin);
 			this._template.set("ratingMax", options.acceptRatingMax);
 		}
