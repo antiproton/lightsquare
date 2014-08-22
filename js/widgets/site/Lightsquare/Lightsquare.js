@@ -128,6 +128,8 @@ define(function(require) {
 	}
 	
 	Lightsquare.prototype._clearGamePages = function() {
+		this._gamePages = [];
+		this._gamePageIndex = {};
 		this._template.set("gamePages", []);
 	}
 	
@@ -185,8 +187,7 @@ define(function(require) {
 		}, this);
 		
 		this._user.LoggedOut.addHandler(function() {
-			this._initialise();
-			this._router.execute();
+			this._updateUserDetails();
 		}, this);
 		
 		this._user.SeekMatched.addHandler(function(game) {
@@ -428,11 +429,10 @@ define(function(require) {
 			this._template.set("showLogoutConfirmation", false);
 		}).bind(this));
 	}
-	
+		
 	Lightsquare.prototype._initialise = function() {
 		this._tabContainer.clear();
-		this._gamePages = [];
-		this._template.set("gamePages", []);
+		this._clearGamePages();
 		this._addGamePages();
 		this._updateUserDetails();
 		
