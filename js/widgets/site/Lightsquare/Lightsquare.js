@@ -23,6 +23,7 @@ define(function(require) {
 	var HomePage = require("./_HomePage/HomePage");
 	var GamePage = require("./_GamePage/GamePage");
 	var SpectatePage = require("./_SpectatePage/SpectatePage");
+	var RestoreGamePage = require("./_RestoreGamePage/RestoreGamePage");
 	var RandomGames = require("RandomGames");
 	
 	var LEFT_BUTTON = 0;
@@ -261,6 +262,14 @@ define(function(require) {
 					this._router.createChild(url),
 					this._createPage(url)
 				);
+			}
+			
+			this._showPage(url);
+		}).bind(this));
+		
+		this._router.addRoute("/restore-game", (function(params, url) {
+			if(!this._hasPage(url)) {
+				new RestoreGamePage(this._user, this._server, this._router.createChild(url), this._createPage(url));
 			}
 			
 			this._showPage(url);
