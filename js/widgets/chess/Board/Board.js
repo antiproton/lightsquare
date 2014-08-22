@@ -53,6 +53,7 @@ define(function(require) {
 		this._coordsPadding = 18;
 		this._squareSize = Square.DEFAULT_SIZE;
 		this._borderWidth = 1;
+		this._dropBasedOnPiece = false;
 		
 		this._animation = {
 			isInProgress: false,
@@ -212,6 +213,10 @@ define(function(require) {
 	Board.prototype.setViewingAs = function(colour) {
 		this._viewingAs = colour;
 		this._updateHtml();
+	}
+	
+	Board.prototype.setDropBasedOnPiece = function(dropBasedOnPiece) {
+		this._dropBasedOnPiece = dropBasedOnPiece;
 	}
 
 	Board.prototype._setupHtml = function() {
@@ -543,7 +548,7 @@ define(function(require) {
 		var square = this._squareFromMouseEvent(event);
 
 		if(this._move.isInProgress && this._move.isDragging) {
-			square = this._squareFromMouseEvent(event, true);
+			square = this._squareFromMouseEvent(event, this._dropBasedOnPiece);
 		}
 
 		var fromSquare = null;
