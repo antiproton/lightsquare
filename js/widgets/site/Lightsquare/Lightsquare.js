@@ -44,7 +44,6 @@ define(function(require) {
 		this._setupRegisterForm();
 		this._setupOverlayHandlers();
 		
-		this._pages = {};
 		this._gamePages = [];
 		this._gamePageIndex = {};
 		this._currentPage = null;
@@ -61,7 +60,6 @@ define(function(require) {
 		if(!this._hasPage(url)) {
 			var page = new GamePage(game, this._user, this._server, this._router.createChild(url), this._createPage(url));
 			
-			this._pages[url] = page;
 			this._gamePages.push(page);
 			this._gamePageIndex[id] = this._gamePages.length - 1;
 			
