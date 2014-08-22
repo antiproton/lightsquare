@@ -1,0 +1,40 @@
+<div class="spectate_page">
+	{{#games:id}}
+		<div
+			class="current_game"
+			style="
+				width: {{squareSize * 8}}px;
+				height: {{squareSize * 8}}px;
+			"
+		>
+			<div
+				class="current_game_board"
+				style="
+					width: {{squareSize * 8}}px;
+					height: {{squareSize * 8}}px;
+				"
+				on-click="click_game:{{id}}"
+			>
+				{{#board:squareNo}}
+					<div
+						class="
+							square
+							{{getSquareColour(squareNo) === 'w' ? 'light' : 'dark'}}
+							{{lastMove.from === squareNo ? 'last_move_from' : ''}}
+							{{lastMove.to === squareNo ? 'last_move_to' : ''}}
+						"
+						style="
+							top: {{getSquareY(squareNo, id) * squareSize}}px;
+							left: {{getSquareX(squareNo, id) * squareSize}}px;
+							width: {{squareSize}}px;
+							height: {{squareSize}}px;
+							background-image: url('{{pieceUrl}}');
+							background-position: {{getPieceOffset(this)}}px 0;
+							background-repeat: no-repeat;
+						"
+					></div>
+				{{/board}}
+			</div>
+		</div>
+	{{/games}}
+</div>

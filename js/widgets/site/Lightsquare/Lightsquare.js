@@ -22,6 +22,8 @@ define(function(require) {
 	var RegisterForm = require("./_RegisterForm/RegisterForm");
 	var HomePage = require("./_HomePage/HomePage");
 	var GamePage = require("./_GamePage/GamePage");
+	var SpectatePage = require("./_SpectatePage/SpectatePage");
+	var RandomGames = require("RandomGames");
 	
 	var LEFT_BUTTON = 0;
 	var ESCAPE_KEY = 27;
@@ -249,6 +251,19 @@ define(function(require) {
 					this._template.set("loadingGame", false);
 				}).bind(this));
 			}
+		}).bind(this));
+		
+		this._router.addRoute("/games", (function(params, url) {
+			if(!this._hasPage(url)) {
+				new SpectatePage(
+					new RandomGames(this._server),
+					this._router,
+					this._router.createChild(url),
+					this._createPage(url)
+				);
+			}
+			
+			this._showPage(url);
 		}).bind(this));
 	}
 	

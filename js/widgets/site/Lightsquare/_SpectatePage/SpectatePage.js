@@ -1,6 +1,6 @@
 define(function(require) {
-	require("css!./current_games.css");
-	var html = require("file!./current_games.html");
+	require("css!./spectate_page.css");
+	var html = require("file!./spectate_page.html");
 	var Ractive = require("ractive/Ractive");
 	var Event = require("lib/Event");
 	var Move = require("jsonchess/Move");
@@ -8,10 +8,19 @@ define(function(require) {
 	var Square = require("chess/Square");
 	var Colour = require("chess/Colour");
 	
-	function CurrentGames(gamesList, parent) {
+	function SpectatePage(gamesList, router, prefixedRouter, parent) {
+		this._router = router;
+		this._prefixedRouter = prefixedRouter;
 		this._gamesList = gamesList;
 		
-		this.ClickGame = new Event(this);
+		this._prefixedRouter.addRoute("/", (function() {
+			this._gamesList.startUpdating();
+		}).bind(this), (function() {
+			this._gamesList.stopUpdating();
+			this._template.set("games", {});
+		}).bind(this));
+		
+		this._prefixedRouter.execute();
 		
 		var squareSize = 45;
 		var viewingAs = {};
@@ -20,9 +29,6 @@ define(function(require) {
 			el: parent,
 			template: html,
 			data: {
-				scrollOffset: 0,
-				canScrollLeft: true,
-				canScrollRight: true,
 				squareSize: squareSize,
 				pieceUrl: require.toUrl("./piece_sprite.png"),
 				getSquareY: function(squareNo, id) {
@@ -64,66 +70,16 @@ define(function(require) {
 		}, this);
 		
 		this._template.on("click_game", (function(event, id) {
-			this.ClickGame.fire(id);
-		}).bind(this));
-		
-		this._scrollAnimation = null;
-		this._scrollVelocity = 0;
-		
-		this._template.on("scroll_left", (function() {
-			this._scroll(1);
-		}).bind(this));
-		
-		this._template.on("scroll_right", (function() {
-			this._scroll(-1);
+			this._router.setPath("/game/" + id);
 		}).bind(this));
 	}
 	
-	CurrentGames.prototype.startUpdating = function() {
-		this._gamesList.startUpdating();
-	}
-	
-	CurrentGames.prototype.stopUpdating = function() {
-		this._gamesList.stopUpdating();
-		this._template.set("games", {});
-	}
-	
-	CurrentGames.prototype._updateGame = function(gameDetails) {
+	SpectatePage.prototype._updateGame = function(gameDetails) {
 		var id = gameDetails.id;
 		
 		this._template.set("games." + id + ".board", new Position(gameDetails.fen).getBoardArray());
 		this._template.set("games." + id + ".lastMove", gameDetails.lastMove);
 	}
 	
-	CurrentGames.prototype._scroll = function(velocity) {
-		if(this._scrollAnimation) {
-			this._scrollAnimation.stop();
-		}
-		
-		this._scrollVelocity += velocity;
-		
-		var containerWidth = this._template.nodes.scroll_outer.offsetWidth;
-		var scrollWidth = this._template.nodes.scroll_inner.scrollWidth;
-		var minOffset = -(scrollWidth - containerWidth);
-		var currentOffset = this._template.get("scrollOffset");
-		var moveBy = containerWidth * this._scrollVelocity;
-		var newOffset = currentOffset + moveBy;
-		
-		this._template.set("canScrollLeft", (newOffset < 0));
-		this._template.set("canScrollRight", (newOffset > minOffset));
-		
-		newOffset = Math.max(newOffset, minOffset);
-		newOffset = Math.min(0, newOffset);
-		
-		this._scrollAnimation = this._template.animate("scrollOffset", newOffset, {
-			duration: 700,
-			easing: "easeOut"
-		});
-		
-		this._scrollAnimation.then((function() {
-			this._scrollVelocity = 0;
-		}).bind(this));
-	}
-	
-	return CurrentGames;
+	return SpectatePage;
 });
