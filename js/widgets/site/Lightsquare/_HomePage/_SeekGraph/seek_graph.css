@@ -80,7 +80,6 @@ div.seek.not_current_seek:hover {
 }
 
 div.seek_label {
-	font-size: .8em;
 	text-align: center;
 	display: flex;
 	flex-direction: column;
@@ -88,11 +87,12 @@ div.seek_label {
 }
 
 div.seek_owner {
+	font-size: .7em;
 	color: #606060;
 }
 
 div.seek_time {
-	font-size: 1.2em;
+	font-size: .9em;
 }
 
 div.body_and_time_brackets {
