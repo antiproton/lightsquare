@@ -2,6 +2,7 @@ div.nav {
 	display: flex;
 	flex-direction: column;
 	flex-basis: 15%;
+	flex-shrink: 0;
 	background: #9B9B9B;
 }
 
