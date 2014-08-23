@@ -323,10 +323,12 @@ define(function(require) {
 	GamePage.prototype._updateNewSeek = function() {
 		var seek = this._user.getCurrentSeek();
 		var timingStyle = this.getTimingStyle();
-		var initialTime = timingStyle.initialTime.getUnitString();
-		var timeIncrement = timingStyle.increment.getUnitString();
 		
-		if(seek !== null && seek.options.initialTime === initialTime && seek.options.timeIncrement === timeIncrement) {
+		if(
+			seek !== null
+			&& seek.options.initialTime === timingStyle.initialTime
+			&& seek.options.timeIncrement === timingStyle.increment
+		) {
 			var expiryTime = seek.expiryTime;
 			var timeLeft = expiryTime - this._server.getServerTime();
 			var timeElapsed = jsonChessConstants.SEEK_TIMEOUT - timeLeft;

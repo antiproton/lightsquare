@@ -38,8 +38,8 @@ define(function(require) {
 				this._clearClearErrorTimer();
 				
 				this._user.seekGame({
-					initialTime: Time.fromUnitString(this._template.get("initialTime").toString(), Time.minutes),
-					timeIncrement: Time.fromUnitString(this._template.get("timeIncrement").toString(), Time.seconds),
+					initialTime: Time.fromUnitString(this._template.get("initialTime").toString(), Time.minutes).getMilliseconds(),
+					timeIncrement: Time.fromUnitString(this._template.get("timeIncrement").toString(), Time.seconds).getMilliseconds(),
 					acceptRatingMin: this._template.get("ratingMin").toString(),
 					acceptRatingMax: this._template.get("ratingMax").toString()
 				}).then((function() {
