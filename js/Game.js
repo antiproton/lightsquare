@@ -11,7 +11,6 @@ define(function(require) {
 	var PieceType = require("chess/PieceType");
 	var Fen = require("chess/Fen");
 	var TimingStyle = require("chess/TimingStyle");
-	var Time = require("chess/Time");
 	var Clock = require("chess/Clock");
 
 	function Game(user, server, gameDetails) {
@@ -54,8 +53,8 @@ define(function(require) {
 		this._moveQueue = [];
 		
 		this._timingStyle = new TimingStyle({
-			initialTime: Time.fromMilliseconds(this._options.initialTime),
-			increment: Time.fromMilliseconds(this._options.timeIncrement)
+			initialTime: this._options.initialTime,
+			increment: this._options.timeIncrement
 		});
 		
 		this._game = new ChessGame({
