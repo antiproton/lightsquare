@@ -136,6 +136,7 @@ define(function(require) {
 			this._template.set("result", result);
 			this._template.set("isInProgress", false);
 			this._clearPremove();
+			this._updateClocks();
 			this._stopUpdatingClocks();
 			this.GameOver.fire(result);
 		}, this);
