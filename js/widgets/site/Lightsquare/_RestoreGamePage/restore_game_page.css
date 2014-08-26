@@ -1,7 +1,9 @@
 div.restore_game {
+	position: relative;
 	flex-grow: 1;
 	padding: .7em;
 	padding-top: 0;
+	overflow-y: auto;
 }
 
 div.restore_game h1 {
