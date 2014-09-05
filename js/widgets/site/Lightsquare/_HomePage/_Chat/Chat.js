@@ -2,6 +2,12 @@ define(function(require) {
 	require("css!./chat.css");
 	var html = require("file!./chat.html");
 	var Ractive = require("ractive/Ractive");
+	var jsonchessMessageTypes = require("jsonchess/chatMessageTypes");
+	
+	var messageClasses = {};
+	
+	messageClasses[jsonchessMessageTypes.ADMIN] = "admin";
+	messageClasses[jsonchessMessageTypes.USER] = "user";
 	
 	function Chat(server, parent) {
 		this._server = server;
@@ -11,7 +17,11 @@ define(function(require) {
 			template: html,
 			data: {
 				message: "",
-				messages: []
+				messages: [],
+				getMessageClass: function(jsonchessMessageType) {
+					console.log(jsonchessMessageType);
+					return "message_type_" + messageClasses[jsonchessMessageType];
+				}
 			}
 		});
 		
@@ -30,15 +40,12 @@ define(function(require) {
 		}).bind(this));
 		
 		this._server.subscribe("/chat", (function(message) {
-			this._addMessage(message.from, message.body);
+			this.addMessage(message);
 		}).bind(this));
 	}
 	
-	Chat.prototype._addMessage = function(from, body) {
-		this._template.get("messages").push({
-			from: from,
-			body: body
-		});
+	Chat.prototype.addMessage = function(message) {
+		this._template.get("messages").push(message);
 			
 		if(this._scrollOnNewMessages) {
 			this._historyNode.scrollTop = this._historyNode.scrollHeight;

@@ -1,7 +1,7 @@
 <div class="general_chat">
 	<div class="general_chat_history" id="history">
 		{{#messages}}
-			<div class="general_chat_message">
+			<div class="general_chat_message {{getMessageClass(type)}}">
 				{{#from}}
 					<span class="general_chat_message_from">{{from}}:</span>
 				{{/from}}

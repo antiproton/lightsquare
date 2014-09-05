@@ -37,3 +37,8 @@ input.general_chat_send {
 span.general_chat_message_from {
 	color: #4f4f4f;
 }
+
+div.general_chat_message.message_type_admin {
+	font-weight: bold;
+	background: #FFFCE2;
+}

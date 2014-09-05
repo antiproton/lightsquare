@@ -6,6 +6,7 @@ define(function(require) {
 	var SeekGraph = require("./_SeekGraph/SeekGraph");
 	var Chat = require("./_Chat/Chat");
 	var SeekList = require("SeekList");
+	var jsonchessMessageTypes = require("jsonchess/chatMessageTypes");
 	
 	function HomePage(user, server, router, parent) {
 		this._user = user;
@@ -24,7 +25,15 @@ define(function(require) {
 		
 		new SeekForm(this._user, this._server, this._template.nodes.create_seek);
 		new SeekGraph(this._seekList, this._user, this._template.nodes.seek_graph);
-		new Chat(this._server, this._template.nodes.chat);
+		
+		var chat = new Chat(this._server, this._template.nodes.chat);
+		
+		setTimeout(function() {
+			chat.addMessage({
+				body: "Welcome to Lightsquare!  Find an opponent by clicking Start game, or accepting a seek from the graph.",
+				type: jsonchessMessageTypes.ADMIN
+			});
+		}, Math.round(100 + Math.random() * 100));
 	}
 	
 	HomePage.prototype._setupRouter = function() {
