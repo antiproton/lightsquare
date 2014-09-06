@@ -8,5 +8,5 @@ define(function(require) {
 	var db = new JsonLocalStorage("/lightsquare");
 	var server = new Server("ws://" + window.location.hostname + ":8080");
 	var user = new User(server, db);
-	var lightsquare = new Lightsquare(user, server, document.body);
+	var lightsquare = new Lightsquare(user, server, document.getElementById("main"));
 });
