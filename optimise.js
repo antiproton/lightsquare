@@ -6,7 +6,7 @@
 		"lib": "/home/gus/projects/js",
 		"Array.prototype": "/home/gus/projects/Array.prototype",
 		"tokeniser": "/home/gus/projects/tokeniser",
-		"websocket": "/home/gus/projects/websocket",
+		"websocket": "/home/gus/projects/websocket-client",
 		"dom": "/home/gus/projects/dom",
 		"routing": "/home/gus/projects/routing",
 		"json-local-storage": "/home/gus/projects/json-local-storage",
