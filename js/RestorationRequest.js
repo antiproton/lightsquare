@@ -1,6 +1,6 @@
 define(function(require) {
-	var Event = require("lib/Event");
-	var Promise = require("lib/Promise");
+	var Event = require("js/Event");
+	var Promise = require("js/Promise");
 	var Game = require("./Game");
 	
 	function RestorationRequest(user, server, backup) {

@@ -3,7 +3,7 @@ define(function(require) {
 	var html = require("file!./game_page.html");
 	var controlsHtml = require("file!./controls.html");
 	var Ractive = require("ractive/Ractive");
-	var Event = require("lib/Event");
+	var Event = require("js/Event");
 	var jsonChessConstants = require("jsonchess/constants");
 	var Colour = require("chess/Colour");
 	var Move = require("chess/Move");

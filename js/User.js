@@ -1,7 +1,7 @@
 define(function(require) {
-	var Event = require("lib/Event");
-	var time = require("lib/time");
-	var Promisor = require("lib/Promisor");
+	var Event = require("js/Event");
+	var time = require("js/time");
+	var Promisor = require("js/Promisor");
 	var glicko2 = require("jsonchess/glicko2");
 	var gameRestoration = require("jsonchess/gameRestoration");
 	var Game = require("./Game");

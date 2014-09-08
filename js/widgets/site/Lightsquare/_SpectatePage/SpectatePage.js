@@ -2,7 +2,7 @@ define(function(require) {
 	require("css!./spectate_page.css");
 	var html = require("file!./spectate_page.html");
 	var Ractive = require("ractive/Ractive");
-	var Event = require("lib/Event");
+	var Event = require("js/Event");
 	var Move = require("jsonchess/Move");
 	var Position = require("chess/Position");
 	var Square = require("chess/Square");

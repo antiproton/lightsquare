@@ -2,7 +2,7 @@ define(function(require) {
 	require("css!./seek_graph.css");
 	require("Array.prototype/getShallowCopy");
 	var html = require("file!./seek_graph.html");
-	var Event = require("lib/Event");
+	var Event = require("js/Event");
 	var Time = require("chess/Time");
 	
 	var AVERAGE_MOVES_PER_GAME = 30;

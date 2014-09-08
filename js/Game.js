@@ -1,7 +1,7 @@
 define(function(require) {
 	require("Array.prototype/getShallowCopy");
-	var Event = require("lib/Event");
-	var Promisor = require("lib/Promisor");
+	var Event = require("js/Event");
+	var Promisor = require("js/Promisor");
 	var Move = require("jsonchess/Move");
 	var Premove = require("jsonchess/Premove");
 	var ChessGame = require("chess/Game");

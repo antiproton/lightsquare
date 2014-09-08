@@ -1,5 +1,5 @@
 define(function(require) {
-	var Event = require("lib/Event");
+	var Event = require("js/Event");
 	require("Array.prototype/getShallowCopy");
 	
 	function SeekList(server) {
