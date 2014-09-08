@@ -7,11 +7,15 @@ It connects to any WebSocket server implementing the [jsonchess][3] protocol.
 Installation
 ------------
 
+_*NOTE*_ I'm currently looking at automating the process of fetching all
+the dependencies using a client-side package manager.  Installation will be
+much simpler once I've got it sorted out.
+
 - Download the code
 - Put it somewhere where index.html is at the root of a webserver (e.g. in an Apache virtual host)
 - Redirect all URLs without a file extension to /index.html (optional - the view is determined by the URL using the history API so this is required for navigating directly to URLs other than index.html)
 - Download the following repos and place them according to the paths configuration in index.html:
-    - [websocket][4]
+    - [websocket-client][4]
     - [routing][5]
     - [js][6]
     - [tokeniser][7]
@@ -52,7 +56,7 @@ URL to it.
 [1]:http://github.com/gushogg-blake/libjs
 [2]:http://github.com/jsonchess/jsonchess
 [3]:http://jsonchess.org
-[4]:http://github.com/gushogg-blake/websocket
+[4]:http://github.com/gushogg-blake/websocket-client
 [5]:http://github.com/gushogg-blake/routing
 [6]:http://github.com/gushogg-blake/js
 [7]:http://github.com/gushogg-blake/tokeniser
