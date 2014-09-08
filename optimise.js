@@ -3,7 +3,7 @@
 	dir: "/home/gus/projects/lightsquare-optimised/js",
 	baseUrl: "./",
 	paths: {
-		"lib": "/home/gus/projects/js",
+		"js": "/home/gus/projects/js",
 		"Array.prototype": "/home/gus/projects/Array.prototype",
 		"tokeniser": "/home/gus/projects/tokeniser",
 		"websocket": "/home/gus/projects/websocket-client",
