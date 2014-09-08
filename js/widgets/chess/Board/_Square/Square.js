@@ -1,7 +1,7 @@
 define(function(require) {
 	require("css!./square.css");
 	var html = require("file!./square.html");
-	var Event = require("lib/Event");
+	var Event = require("js/Event");
 	var Template = require("dom/Template");
 	var style = require("dom/style");
 	var getOffsets = require("dom/getOffsets");

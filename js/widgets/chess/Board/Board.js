@@ -5,7 +5,7 @@ define(function(require) {
 	var create = require("dom/create");
 	var style = require("dom/style");
 	var getOffsets = require("dom/getOffsets");
-	var Event = require("lib/Event");
+	var Event = require("js/Event");
 	var ChessSquare = require("chess/Square");
 	var Coords = require("chess/Coords");
 	var Colour = require("chess/Colour");

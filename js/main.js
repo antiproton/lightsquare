@@ -1,6 +1,6 @@
 define(function(require) {
 	require("ready!");
-	var Server = require("websocket/client/Server");
+	var Server = require("websocket/Server");
 	var JsonLocalStorage = require("json-local-storage/JsonLocalStorage");
 	var User = require("./User");
 	var Lightsquare = require("./widgets/site/Lightsquare/Lightsquare");

@@ -1,7 +1,7 @@
 define(function(require) {
 	require("css!./promotionDialog.css");
 	var html = require("file!./promotionDialog.html");
-	var Event = require("lib/Event");
+	var Event = require("js/Event");
 	var create = require("dom/create");
 	var Template = require("dom/Template");
 	var PieceType = require("chess/PieceType");

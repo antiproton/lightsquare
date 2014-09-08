@@ -2,7 +2,7 @@ define(function(require) {
 	require("css!./history.css");
 	var html = require("file!./history.html");
 	var Ractive = require("ractive/Ractive");
-	var Event = require("lib/Event");
+	var Event = require("js/Event");
 	var Colour = require("chess/Colour");
 	var Fullmove = require("./_Fullmove");
 
