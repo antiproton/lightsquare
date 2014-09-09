@@ -1,0 +1,30 @@
+{
+	"name": "lightsquare",
+	"version": "1.0.0",
+	"authors": [
+		"Gus <gus@hogg-blake.co.uk>"
+	],
+	"description": "Play chess online",
+	"main": "js/main.js",
+	"moduleType": [
+		"amd"
+	],
+	"homepage": "http://jsonchess.com",
+	"private": true,
+	"dependencies": {
+		"Array.prototype": "git://github.com/gushogg-blake/Array.prototype.git",
+		"websocket-client": "git://github.com/gushogg-blake/websocket-client.git",
+		"routing": "git://github.com/gushogg-blake/routing.git",
+		"js": "git://github.com/gushogg-blake/js.git",
+		"json-local-storage": "git://github.com/gushogg-blake/json-local-storage.git",
+		"tokeniser": "git://github.com/gushogg-blake/tokeniser.git",
+		"dom": "git://github.com/gushogg-blake/dom.git",
+		"jsonchess": "git://github.com/gushogg-blake/jsonchess.git",
+		"chess": "git://github.com/gushogg-blake/chess.git",
+		"requirejs": "git://github.com/jrburke/requirejs.git",
+		"text": "git://github.com/requirejs/text.git",
+		"css": "git://github.com/guybedford/require-css.git",
+		"domReady": "git://github.com/requirejs/domReady.git",
+		"lightsquare": "./js"
+	}
+}
