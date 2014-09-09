@@ -37,7 +37,5 @@ Optimisation
 ------------
 
 Run `r.js -o rjs-optimise.js` to build a completely separate source tree with compressed
-JavaScript.
-
-Copy index.html to the new source tree and point the Apache vhost for the production
-URL to it.
+JavaScript.  Note - the r.js options file `r.js-optimise.js` contains hard-coded
+paths so you'll want to change these to match your system.
