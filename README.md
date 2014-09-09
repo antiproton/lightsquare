@@ -2,7 +2,7 @@ Lightsquare
 ===========
 
 Lightsquare is an HTML5 application for playing chess with other people.
-It connects to the WebSocket server created by the [lightsquared](http://github.com/jsonchess/lightsquared).
+It connects to the WebSocket server created by [lightsquared](http://github.com/jsonchess/lightsquared).
 It can connect to any WebSocket server by changing the address in main.js,
 and this doesn't necessarily have to be running lightsquared, but the messages
 haven't been formalised into a proper protocol yet so at the moment writing
