@@ -1,12 +1,12 @@
 ({
-	appDir: "/home/gus/projects/lightsquare/bower_components",
-	dir: "/home/gus/projects/lightsquare-optimised/bower_components",
-	baseUrl: "./",
+	appDir: "/home/gus/projects/lightsquare",
+	dir: "/home/gus/projects/lightsquare-optimised",
+	baseUrl: "./bower_components",
 	map: {
 		"*": {
-			"css": "css/css",
-			"file": "text/text",
-			"ready": "domReady/domReady"
+			"css": "require-css/css",
+			"file": "require-text/text",
+			"ready": "require-domReady/domReady"
 		}
 	},
 	name: "lightsquare/main"

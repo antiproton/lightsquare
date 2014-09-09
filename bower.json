@@ -21,10 +21,10 @@
 		"dom": "git://github.com/gushogg-blake/dom.git",
 		"jsonchess": "git://github.com/gushogg-blake/jsonchess.git",
 		"chess": "git://github.com/gushogg-blake/chess.git",
-		"requirejs": "git://github.com/jrburke/requirejs.git",
-		"text": "git://github.com/requirejs/text.git",
-		"css": "git://github.com/guybedford/require-css.git",
-		"domReady": "git://github.com/requirejs/domReady.git",
+		"require": "git://github.com/jrburke/requirejs.git",
+		"require-text": "git://github.com/requirejs/text.git",
+		"require-css": "git://github.com/guybedford/require-css.git",
+		"require-domReady": "git://github.com/requirejs/domReady.git",
 		"ractive": "*",
 		"lightsquare": "./js"
 	}
