@@ -13,10 +13,6 @@ there.
 Installation
 ------------
 
-_*NOTE*_ I'm currently looking at automating the process of fetching all
-the dependencies using a client-side package manager.  Installation will be
-much simpler once I've got it sorted out.
-
 - Download the code
 - Put it somewhere where index.html is at the root of a webserver (e.g. in
     an Apache virtual host)
