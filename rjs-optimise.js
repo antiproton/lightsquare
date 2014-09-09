@@ -1,26 +1,13 @@
 ({
-	appDir: "/home/gus/projects/lightsquare/js",
-	dir: "/home/gus/projects/lightsquare-optimised/js",
+	appDir: "/home/gus/projects/lightsquare/bower_components",
+	dir: "/home/gus/projects/lightsquare-optimised/bower_components",
 	baseUrl: "./",
-	paths: {
-		"js": "/home/gus/projects/js",
-		"Array.prototype": "/home/gus/projects/Array.prototype",
-		"tokeniser": "/home/gus/projects/tokeniser",
-		"websocket": "/home/gus/projects/websocket-client",
-		"dom": "/home/gus/projects/dom",
-		"routing": "/home/gus/projects/routing",
-		"json-local-storage": "/home/gus/projects/json-local-storage",
-		"chess": "/home/gus/projects/chess",
-		"jsonchess": "/home/gus/projects/jsonchess",
-		"require": "/home/gus/projects/lib/require",
-		"ractive": "/home/gus/projects/lib/ractive"
-	},
 	map: {
 		"*": {
-			"css": "require/css/css",
-			"file": "require/text",
-			"ready": "require/domReady"
+			"css": "css/css",
+			"file": "text/text",
+			"ready": "domReady/domReady"
 		}
 	},
-	name: "main"
+	name: "lightsquare/main"
 })
