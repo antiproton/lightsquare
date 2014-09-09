@@ -19,7 +19,6 @@ define(function(require) {
 				message: "",
 				messages: [],
 				getMessageClass: function(jsonchessMessageType) {
-					console.log(jsonchessMessageType);
 					return "message_type_" + messageClasses[jsonchessMessageType];
 				}
 			}
