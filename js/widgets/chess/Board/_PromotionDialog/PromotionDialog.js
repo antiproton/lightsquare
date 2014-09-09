@@ -7,7 +7,7 @@ define(function(require) {
 	var PieceType = require("chess/PieceType");
 	var ChessPiece = require("chess/Piece");
 	var Colour = require("chess/Colour");
-	var Piece = require("widgets/chess/Piece/Piece");
+	var Piece = require("lightsquare/widgets/chess/Piece/Piece");
 	
 	function PromotionDialog(pieceSize, parent) {
 		this.PieceSelected = new Event();

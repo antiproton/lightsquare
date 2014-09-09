@@ -13,7 +13,7 @@ define(function(require) {
 	var html = require("file!./lightsquare.html");
 	var navHtml = require("file!./nav.html");
 	var connectingMessageHtml = require("file!./connecting_message.html");
-	var Ractive = require("ractive/Ractive");
+	var Ractive = require("ractive/ractive");
 	var Router = require("routing/Router");
 	var AddressBarPath = require("routing/AddressBarPath");
 	var TabContainer = require("dom/TabContainer");
@@ -25,7 +25,7 @@ define(function(require) {
 	var GamePage = require("./_GamePage/GamePage");
 	var SpectatePage = require("./_SpectatePage/SpectatePage");
 	var RestoreGamePage = require("./_RestoreGamePage/RestoreGamePage");
-	var RandomGames = require("RandomGames");
+	var RandomGames = require("lightsquare/RandomGames");
 	
 	var LEFT_BUTTON = 0;
 	var ESCAPE_KEY = 27;

@@ -1,7 +1,7 @@
 define(function(require) {
 	require("css!./register_form.css");
 	var html = require("file!./register_form.html");
-	var Ractive = require("ractive/Ractive");
+	var Ractive = require("ractive/ractive");
 	var Event = require("js/Event");
 	
 	function RegisterForm(user, parent) {

@@ -1,7 +1,7 @@
 define(function(require) {
 	require("css!./board.css");
 	var html = require("file!./board.html");
-	var Ractive = require("ractive/Ractive");
+	var Ractive = require("ractive/ractive");
 	var create = require("dom/create");
 	var style = require("dom/style");
 	var getOffsets = require("dom/getOffsets");
@@ -10,7 +10,7 @@ define(function(require) {
 	var Coords = require("chess/Coords");
 	var Colour = require("chess/Colour");
 	var Square = require("./_Square/Square");
-	var Piece = require("widgets/chess/Piece/Piece");
+	var Piece = require("lightsquare/widgets/chess/Piece/Piece");
 	var PromotionDialog = require("./_PromotionDialog/PromotionDialog");
 
 	function Board(parent) {

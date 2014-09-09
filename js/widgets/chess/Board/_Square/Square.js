@@ -5,7 +5,7 @@ define(function(require) {
 	var Template = require("dom/Template");
 	var style = require("dom/style");
 	var getOffsets = require("dom/getOffsets");
-	var Piece = require("widgets/chess/Piece/Piece");
+	var Piece = require("lightsquare/widgets/chess/Piece/Piece");
 	
 	var LEFT_MOUSE_BUTTON = 0;
 

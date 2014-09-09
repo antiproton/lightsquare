@@ -2,7 +2,7 @@ define(function(require) {
 	require("css!./game_page.css");
 	var html = require("file!./game_page.html");
 	var controlsHtml = require("file!./controls.html");
-	var Ractive = require("ractive/Ractive");
+	var Ractive = require("ractive/ractive");
 	var Event = require("js/Event");
 	var jsonChessConstants = require("jsonchess/constants");
 	var Colour = require("chess/Colour");
@@ -10,8 +10,8 @@ define(function(require) {
 	var Time = require("chess/Time");
 	var PieceType = require("chess/PieceType");
 	var Chat = require("./_Chat/Chat");
-	var Board = require("widgets/chess/Board/Board");
-	var History = require("widgets/chess/History/History");
+	var Board = require("lightsquare/widgets/chess/Board/Board");
+	var History = require("lightsquare/widgets/chess/History/History");
 	
 	var viewRelevance = {
 		PLAYER: "player",

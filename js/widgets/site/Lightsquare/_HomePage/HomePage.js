@@ -1,12 +1,12 @@
 define(function(require) {
 	require("css!./home_page.css");
 	var html = require("file!./home_page.html");
-	var Ractive = require("ractive/Ractive");
+	var Ractive = require("ractive/ractive");
 	var SeekForm = require("./_SeekForm/SeekForm");
 	var SeekGraph = require("./_SeekGraph/SeekGraph");
 	var Chat = require("./_Chat/Chat");
-	var SeekList = require("SeekList");
 	var jsonchessMessageTypes = require("jsonchess/chatMessageTypes");
+	var SeekList = require("lightsquare/SeekList");
 	
 	function HomePage(user, server, router, parent) {
 		this._user = user;

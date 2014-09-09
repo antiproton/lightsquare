@@ -25,6 +25,7 @@
 		"text": "git://github.com/requirejs/text.git",
 		"css": "git://github.com/guybedford/require-css.git",
 		"domReady": "git://github.com/requirejs/domReady.git",
+		"ractive": "*",
 		"lightsquare": "./js"
 	}
 }

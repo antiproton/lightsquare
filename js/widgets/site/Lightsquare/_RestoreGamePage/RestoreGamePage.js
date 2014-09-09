@@ -1,7 +1,7 @@
 define(function(require) {
 	require("css!./restore_game_page.css");
 	var html = require("file!./restore_game_page.html");
-	var Ractive = require("ractive/Ractive");
+	var Ractive = require("ractive/ractive");
 	var GameBackupList = require("./_GameBackupList/GameBackupList");
 	
 	function RestoreGamePage(user, server, router, parent) {

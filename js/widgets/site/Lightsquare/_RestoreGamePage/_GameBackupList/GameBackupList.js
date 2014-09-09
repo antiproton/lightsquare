@@ -2,10 +2,10 @@ define(function(require) {
 	require("css!./game_backup_list.css");
 	var html = require("file!./game_backup_list.html");
 	var Event = require("js/Event");
-	var Ractive = require("ractive/Ractive");
+	var Ractive = require("ractive/ractive");
 	var Position = require("chess/Position");
 	var Colour = require("chess/Colour");
-	var Board = require("widgets/chess/Board/Board");
+	var Board = require("lightsquare/widgets/chess/Board/Board");
 	
 	function GameBackupList(user, server, parent) {
 		this._user = user;

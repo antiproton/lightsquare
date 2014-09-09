@@ -1,7 +1,7 @@
 define(function(require) {
 	require("css!./chat.css");
 	var html = require("file!./chat.html");
-	var Ractive = require("ractive/Ractive");
+	var Ractive = require("ractive/ractive");
 	var jsonchessMessageTypes = require("jsonchess/chatMessageTypes");
 	
 	var messageClasses = {};

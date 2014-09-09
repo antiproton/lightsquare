@@ -11,31 +11,18 @@
 		</style>
 		<script>
 		var require = {
-			baseUrl: "/js",
-			paths: {
-				"js": "/lib/js",
-				"Array.prototype": "/lib/Array.prototype",
-				"tokeniser": "/lib/tokeniser",
-				"websocket": "/lib/websocket-client",
-				"dom": "/lib/dom",
-				"routing": "/lib/routing",
-				"json-local-storage": "/lib/json-local-storage",
-				"chess": "/lib/chess",
-				"jsonchess": "/lib/jsonchess",
-				"require": "/lib/lib/require",
-				"ractive": "/lib/lib/ractive"
-			},
+			baseUrl: "bower_components",
 			map: {
 				"*": {
-					"css": "require/css/css",
-					"file": "require/text",
-					"ready": "require/domReady"
+					"css": "css/css",
+					"file": "text/text",
+					"ready": "domReady/domReady"
 				}
 			},
 			urlArgs: "timestamp=" + (new Date()).valueOf()
 		};
 		</script>
-		<script data-main="main" src="/lib/lib/require/require.js"></script>
+		<script data-main="lightsquare/main" src="bower_components/requirejs/require.js"></script>
 	</head>
 	<body>
 		<div id="main">
@@ -49,7 +36,7 @@
 		var scJsHost = (document.location.protocol === "https:" ? "https://secure." : "http://www.");
 		var scSrc = scJsHost + "statcounter.com/counter/counter.js";
 		
-		document.write("<script type=\"text/javascript\" src=\"" + src + "\"></" + "script>");
+		document.write("<script type=\"text/javascript\" src=\"" + scSrc + "\"></" + "script>");
 		</script>
 	</body>
 </html>
