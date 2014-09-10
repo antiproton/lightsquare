@@ -1,6 +1,6 @@
 ({
-	appDir: "/home/gus/projects/lightsquare",
-	dir: "/home/gus/projects/lightsquare-optimised",
+	appDir: "./",
+	dir: "../lightsquare-optimised",
 	baseUrl: "./bower_components",
 	map: {
 		"*": {
@@ -9,5 +9,7 @@
 			"ready": "require-domReady/domReady"
 		}
 	},
-	name: "lightsquare/main"
+	name: "lightsquare/main",
+	skipDirOptimize: true,
+	keepBuildDir: true
 })
