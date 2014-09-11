@@ -14,12 +14,16 @@ Installation
 ------------
 
 - Download the code
-- Put it somewhere where index.html is at the root of a webserver (e.g. in
-    an Apache virtual host)
-- Redirect all URLs without a file extension to /index.html (optional -
-    the view is determined by the URL using the history API so this is required
-    for navigating directly to URLs other than index.html)
-- `$bower install` (`#npm install -g bower` to get the bower command)
+- Put it somewhere where index.html is at the root of a webserver
+- Redirect all URLs without a file extension to /index.html*
+- `cd` to the downloaded directory
+- Run `$bower install` (run `#npm install -g bower` to get the bower command)
+
+*This step is optional.  If omitted, the app will work correctly when you visit
+`/` or `/index.html`, and then click around and use the back button.  It won't
+work if you point your browser directly to a URL like `/game/123`, for example
+by refreshing the page or following a link or bookmark.  See the example apache
+virtual host for a mod_rewrite-based solution for this.
 
 **Note** - `bower` seems to require the `node` command, which can be obtained by
 installing the `node-legacy` package, or possibly by just symlinking /usr/bin/node
