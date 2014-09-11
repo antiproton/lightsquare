@@ -19,7 +19,7 @@ Installation
 - Redirect all URLs without a file extension to /index.html (optional -
     the view is determined by the URL using the history API so this is required
     for navigating directly to URLs other than index.html)
-- $bower install (#npm install -g bower to get the bower command)
+- `$bower install` (`#npm install -g bower` to get the bower command)
 
 **Note** - `bower` seems to require the `node` command, which can be obtained by
 installing the `node-legacy` package, or possibly by just symlinking /usr/bin/node
