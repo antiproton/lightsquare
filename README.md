@@ -21,6 +21,10 @@ Installation
     for navigating directly to URLs other than index.html)
 - $bower install (#npm install -g bower to get the bower command)
 
+**Note** - `bower` seems to require the `node` command, which can be obtained by
+installing the `node-legacy` package, or possibly by just symlinking /usr/bin/node
+to /usr/bin/nodejs.
+
 **Example Apache virtualhost:**
 
 ```
