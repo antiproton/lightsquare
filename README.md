@@ -26,7 +26,7 @@ by refreshing the page or following a link or bookmark.  See the example apache
 virtual host for a mod_rewrite-based solution for this.
 
 **Note** - `bower` seems to require the `node` command, which can be obtained by
-installing the `node-legacy` package, or possibly by just symlinking /usr/bin/node
+installing the `nodejs-legacy` package, or possibly by just symlinking /usr/bin/node
 to /usr/bin/nodejs.
 
 **Example Apache virtualhost:**
