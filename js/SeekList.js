@@ -16,7 +16,7 @@ define(function(require) {
 		}).bind(this));
 		
 		this._server.subscribe("/open_seeks", (function(seeks) {
-			this._seeks = seeks;
+			this._seeks = seeks.getShallowCopy();
 			this.Updated.fire();
 		}).bind(this));
 		
