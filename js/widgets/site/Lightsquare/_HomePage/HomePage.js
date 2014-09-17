@@ -30,10 +30,17 @@ define(function(require) {
 		
 		setTimeout(function() {
 			chat.addMessage({
-				body: "Welcome to Lightsquare!  Find an opponent by clicking Start game, or accepting a seek from the graph.",
+				body: "Welcome to Lightsquare!",
 				type: jsonchessMessageTypes.ADMIN
 			});
 		}, Math.round(100 + Math.random() * 100));
+		
+		setTimeout(function() {
+			chat.addMessage({
+				body: "To find an opponent click Start game, or accept a seek from the graph.",
+				type: jsonchessMessageTypes.USER
+			});
+		}, Math.round(400 + Math.random() * 100));
 	}
 	
 	HomePage.prototype._setupRouter = function() {
