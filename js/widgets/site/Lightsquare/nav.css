@@ -3,8 +3,7 @@ div.nav {
 	flex-direction: column;
 	flex-basis: 15%;
 	flex-shrink: 0;
-	border-right: 2px ridge #f7f7f7;
-	background: #9B9B9B;
+	background: #d1d1d1;
 }
 
 div.nav_header {
@@ -21,13 +20,12 @@ div.nav_links > a {
 	display: flex;
 	flex-direction: column;
 	padding: .4em .5em;
-	background: #d8d8d8;
 }
 
 div.nav a.on {
 	color: rgba(255, 255, 255, 0.92);
 	text-shadow: 1px 1px 0 rgba(2, 1, 1, 0.41);
-	background: linear-gradient(to top, #3784CA 0%, #80cdff 100%);
+	background: #305c64;
 }
 
 div.nav a.off:hover {

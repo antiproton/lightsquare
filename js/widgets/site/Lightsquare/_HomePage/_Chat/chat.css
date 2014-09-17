@@ -8,8 +8,6 @@ div.general_chat {
 
 div.general_chat_history {
 	flex-grow: 1;
-	border: 1px solid #ababab;
-	border-radius: 2px;
 	padding: .4em;
 	overflow-y: scroll;
 }
@@ -40,5 +38,5 @@ span.general_chat_message_from {
 
 div.general_chat_message.message_type_admin {
 	font-weight: bold;
-	background: #FFFCE2;
+	background: #FFFFEC;
 }
