@@ -15,9 +15,9 @@ div.login_form_fields label {
 }
 
 input.login {
-	color: #F5F9FD;
+	color: #FFFFFF;
 	text-shadow: 1px 1px 0 rgba(0, 0, 0, .1);
-	border-color: #1B4479;
+	border-color: #1B4C79;
 	padding: .3em 1em;
-	background: #527d9e;
+	background: #4A85A2;
 }
