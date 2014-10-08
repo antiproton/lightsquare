@@ -13,6 +13,9 @@ there.
 Installation
 ------------
 
+See [a screencast](https://www.youtube.com/watch?v=PR2FBr_5wiI) showing the
+installation procedure or follow the steps below:
+
 - Download the code
 - Put it somewhere where index.html is at the root of a webserver
 - Redirect all URLs without a file extension to /index.html*
