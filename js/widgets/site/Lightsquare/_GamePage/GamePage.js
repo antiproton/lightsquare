@@ -77,6 +77,11 @@ define(function(require) {
 	GamePage.prototype._setupGame = function(game) {
 		this._game = game;
 		
+		var applyMove = (function(move) {
+			this._history.select(move);
+			this._clearPremove();
+		}).bind(this);
+		
 		this._game.Move.addHandler(function(move) {
 			this._history.move(move);
 			this._template.set("viewingActivePlayer", (this._game.getActiveColour() === this._viewingAs));
@@ -86,18 +91,15 @@ define(function(require) {
 			this._board.unhighlightSquares();
 			this._highlightMove(move);
 			
-			var applyMove = (function() {
-				this._history.select(move);
-				this._clearPremove();
-			}).bind(this);
-			
 			if(move.getColour() === this.getUserColour()) {
 				this._board.move(move);
-				applyMove();
+				applyMove(move);
 			}
 			
 			else {
-				this._board.animateMove(move, applyMove);
+				this._board.animateMove(move, function() {
+					applyMove(move);
+				});
 			}
 			
 			this.Move.fire(move);
