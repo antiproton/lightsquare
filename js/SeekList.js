@@ -6,21 +6,20 @@ define(function(require) {
 		this._server = server;
 		this._seeks = [];
 		this._isUpdating = false;
-		this._topics = ["/open_seeks", "/open_seek/new", "/open_seek/expired"];
 		
 		this.Updated = new Event();
 		
-		this._server.subscribe("/open_seek/new", (function(seek) {
+		this._server.subscribe("/list/open_seeks/add", (function(seek) {
 			this._seeks.push(seek);
 			this.Updated.fire();
 		}).bind(this));
 		
-		this._server.subscribe("/open_seeks", (function(seeks) {
+		this._server.subscribe("/list/open_seeks", (function(seeks) {
 			this._seeks = seeks.getShallowCopy();
 			this.Updated.fire();
 		}).bind(this));
 		
-		this._server.subscribe("/open_seek/expired", (function(id) {
+		this._server.subscribe("/list/open_seeks/remove", (function(id) {
 			this._seeks = this._seeks.filter(function(seek) {
 				return (seek.id !== id);
 			});
@@ -35,11 +34,7 @@ define(function(require) {
 	
 	SeekList.prototype.startUpdating = function() {
 		if(!this._isUpdating) {
-			this._topics.forEach((function(topic) {
-				this._server.send("/unignore", topic);
-			}).bind(this));
-			
-			this._server.send("/request/open_seeks");
+			this._server.send("/feed/activate", "open_seeks");
 			this._isUpdating = true;
 		}
 	}
@@ -47,13 +42,8 @@ define(function(require) {
 	SeekList.prototype.stopUpdating = function() {
 		if(this._isUpdating) {
 			this._seeks = [];
-			
 			this.Updated.fire();
-			
-			this._topics.forEach((function(topic) {
-				this._server.send("/ignore", topic);
-			}).bind(this));
-			
+			this._server.send("/feed/deactivate", "open_seeks");
 			this._isUpdating = false;
 		}
 	}
