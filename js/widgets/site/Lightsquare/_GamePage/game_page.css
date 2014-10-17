@@ -60,6 +60,7 @@ div.player_score {
 
 div.game_player div.player_clock {
 	font-size: 1.2em;
+	font-weight: bold;
 	text-align: center;
 	min-width: 3.0em;
 	margin-right: .4em;
