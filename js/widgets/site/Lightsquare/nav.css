@@ -48,6 +48,7 @@ div.nav_game_title {
 
 div.nav_game_timing_style {
 	flex-shrink: 0;
+	margin-left: .3em;
 }
 
 div.nav_game_clock {
