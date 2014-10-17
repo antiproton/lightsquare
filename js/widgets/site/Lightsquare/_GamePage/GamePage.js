@@ -54,6 +54,10 @@ define(function(require) {
 		return this._game.userIsPlaying();
 	}
 	
+	GamePage.prototype.getStartTime = function() {
+		return this._game.getStartTime();
+	}
+	
 	GamePage.prototype.getTimingStyle = function() {
 		return this._game.getTimingStyle();
 	}

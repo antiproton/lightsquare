@@ -61,10 +61,19 @@ define(function(require) {
 		if(!this._hasPage(url)) {
 			var page = new GamePage(game, this._user, this._server, this._router.createChild(url), this._createPage(url));
 			
-			this._gamePages.push(page);
-			this._gamePageIndex[id] = this._gamePages.length - 1;
+			var index = this._gamePages.length;
 			
-			this._updateGamePage(page);
+			for(var i = 0; i < this._gamePages.length; i++) {
+				if(game.getStartTime() >= this._gamePages[i].getStartTime()) {
+					index = i;
+					
+					break;
+				}
+			}
+			
+			this._gamePages.splice(index, 0, page);
+			this._updateGamePageIndex();
+			this._updateGamePages();
 			
 			page.Rematch.addHandler(function(game) {
 				var newId = game.getId();
@@ -124,6 +133,12 @@ define(function(require) {
 		this._gamePages.forEach((function(page) {
 			this._updateGamePage(page);
 		}).bind(this));
+	}
+	
+	Lightsquare.prototype._updateGamePageIndex = function() {
+		this._gamePages.forEach(function(page, index) {
+			this._gamePageIndex[page.getId()] = index;
+		}, this);
 	}
 	
 	Lightsquare.prototype._clearGamePages = function() {
