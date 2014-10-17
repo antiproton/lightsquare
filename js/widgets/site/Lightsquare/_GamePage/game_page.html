@@ -1,22 +1,22 @@
 <div class="game">
-	<div class="game_player opponent">
-		<div class="player_username">
-			{{players.opponent.name}} ({{players.opponent.rating}})
-		</div>
-		<div class="player_clock {{isInProgress && !viewingActivePlayer ? ('active_clock' + (players.opponent.time < timeCriticalThreshold ? ' critical_clock' : '')) : ''}}">
-			{{getColonDisplay(players.opponent.time)}}
-		</div>
-	</div>
 	<div class="game_main">
 		<div class="game_board" id="board" on-contextmenu="cancel_premove">
 			
 		</div>
 		<div class="game_details">
-			{{#result}}
-				<div class="game_result">
-					{{result.summary}}
+			<div class="game_player opponent">
+				<div class="player_clock {{isInProgress && !viewingActivePlayer ? ('active_clock' + (players.opponent.time < timeCriticalThreshold ? ' critical_clock' : '')) : 'inactive_clock'}}">
+					{{getColonDisplay(players.opponent.time)}}
 				</div>
-			{{/result}}
+				<div class="player_name">
+					{{players.opponent.name}} ({{players.opponent.rating}})
+				</div>
+				{{#result !== null}}
+					<div class="player_score">
+						{{scores.opponent}}
+					</div>
+				{{/result}}
+			</div>
 			<div class="game_history" id="history">
 				
 			</div>
@@ -26,14 +26,19 @@
 			{{#userIsPlaying}}
 				{{>controls}}
 			{{/userIsPlaying}}
-		</div>
-	</div>
-	<div class="game_player player">
-		<div>
-			{{players.player.name}} ({{players.player.rating}})
-		</div>
-		<div class="player_clock {{isInProgress && viewingActivePlayer ? ('active_clock' + (players.player.time < timeCriticalThreshold ? ' critical_clock' : '')) : ''}}">
-			{{getColonDisplay(players.player.time)}}
+			<div class="game_player player">
+				<div class="player_clock {{isInProgress && viewingActivePlayer ? ('active_clock' + (players.player.time < timeCriticalThreshold ? ' critical_clock' : '')) : 'inactive_clock'}}">
+					{{getColonDisplay(players.player.time)}}
+				</div>
+				<div class="player_name">
+					{{players.player.name}} ({{players.player.rating}})
+				</div>
+				{{#result !== null}}
+					<div class="player_score">
+						{{scores.player}}
+					</div>
+				{{/result}}
+			</div>
 		</div>
 	</div>
 </div>

@@ -139,6 +139,7 @@ define(function(require) {
 			this._template.set("isInProgress", false);
 			this._clearPremove();
 			this._updateClocks();
+			this._updateScores();
 			this._stopUpdatingClocks();
 			this.GameOver.fire(result);
 		}, this);
@@ -381,6 +382,20 @@ define(function(require) {
 		}
 	}
 	
+	GamePage.prototype._updateScores = function() {
+		var result = this._game.getResult();
+		
+		if(result) {
+			var scores = {};
+				
+			Colour.forEach((function(colour) {
+				scores[this._relevanceFromColour(colour)] = result.scores[colour];
+			}).bind(this));
+			
+			this._template.set("scores", scores);
+		}
+	}
+	
 	GamePage.prototype._setupTemplate = function(parent) {
 		var timeCriticalThreshold = Time.fromUnitString("10s");
 		
@@ -417,6 +432,7 @@ define(function(require) {
 			this._updateRematchOffer();
 		}
 		
+		this._updateScores();
 		this._updateClocks();
 	}
 	
@@ -446,6 +462,7 @@ define(function(require) {
 		this._viewingAs = this.getUserColour() || Colour.white;
 		this._board.setViewingAs(this._viewingAs);
 		this._updatePlayerInfo();
+		this._updateScores();
 		this._template.set("userIsPlaying", this.userIsPlaying());
 		this._template.set("viewingActivePlayer", (this._game.getActiveColour() === this._viewingAs));
 	}

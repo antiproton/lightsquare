@@ -10,8 +10,10 @@ input.rematch.rematch_offered {
 }
 
 div.game_details {
-	margin-left: .8em;
+	display: flex;
+	flex-direction: column;
 	flex-grow: 1;
+	margin-left: .8em;
 }
 
 div.game_board_and_controls {
@@ -30,25 +32,42 @@ div.game_board {
 }
 
 div.game_player {
-	font-size: 1.2em;
 	display: flex;
-	flex-grow: 1;
-	justify-content: space-between;
-	padding: .3em 0;
+	align-items: center;
+	border: 1px solid #bbbbbb;
+	border-radius: 3px;
 }
 
 div.game_player.player {
-	border-top: 1px solid #ababab;
+	margin-top: .5em;
 }
 
 div.game_player.opponent {
-	border-bottom: 1px solid #ababab;
+	margin-bottom: .3em;
 }
 
-div.game_result {
+div.player_name, div.game_player div.player_clock {
+	padding: .35em;
+}
+
+div.player_score {
+	color: white;
+	margin-left: 1em;
+	border-radius: 2px;
+	padding: 0 .25em;
+	background: #4C4C4C;
+}
+
+div.game_player div.player_clock {
 	font-size: 1.2em;
-	text-align: right;
-	margin-bottom: .5em;
+	margin-right: .4em;
+	border-radius: 0;
+	border-right: 1px solid #6f6f6f;
+	opacity: .8;
+}
+
+div.game_player div.player_clock.inactive_clock {
+	background: #e9e9e9;
 }
 
 div.game_controls {
