@@ -22,8 +22,18 @@
 					</div>
 				{{/result}}
 			</div>
-			<div class="game_history" id="history">
-				
+			<div class="history_and_captured">
+				<div class="game_history" id="history">
+					
+				</div>
+				<div class="captured_pieces_container">
+					<div class="captured_pieces" id="captured_pieces_opponent">
+						opponent's captured pieces
+					</div>
+					<div class="captured_pieces" id="captured_pieces_player">
+						player's captured pieces
+					</div>
+				</div>
 			</div>
 			{{#userIsPlaying}}
 				{{>controls}}
