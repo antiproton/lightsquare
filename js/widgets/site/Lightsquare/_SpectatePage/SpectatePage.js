@@ -8,6 +8,8 @@ define(function(require) {
 	var Square = require("chess/Square");
 	var Colour = require("chess/Colour");
 	
+	var SQUARE_SIZE = 45;
+	
 	function SpectatePage(gamesList, router, prefixedRouter, parent) {
 		this._router = router;
 		this._prefixedRouter = prefixedRouter;
@@ -22,14 +24,13 @@ define(function(require) {
 		
 		this._prefixedRouter.execute();
 		
-		var squareSize = 45;
 		var viewingAs = {};
 		
 		this._template = new Ractive({
 			el: parent,
 			template: html,
 			data: {
-				squareSize: squareSize,
+				squareSize: SQUARE_SIZE,
 				pieceUrl: require.toUrl("./piece_sprite.png"),
 				getSquareY: function(squareNo, id) {
 					return 7 - Square.fromSquareNo(squareNo).adjusted[viewingAs[id]].coords.y;
@@ -43,7 +44,7 @@ define(function(require) {
 					return (coords.x % 2 === coords.y % 2 ? 'b' : 'w');
 				},
 				getPieceOffset: function(piece) {
-					return (piece ? -"PNBRQKpnbrqk".indexOf(piece) : 1) * squareSize;
+					return (piece ? -"PNBRQKpnbrqk".indexOf(piece) : 1) * SQUARE_SIZE;
 				},
 				getAbsolutePath: function(path) {
 					return require.toUrl(path);
