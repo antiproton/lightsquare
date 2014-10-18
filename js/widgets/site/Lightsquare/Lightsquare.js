@@ -218,6 +218,11 @@ define(function(require) {
 			this._user.getDetails().then((function() {
 				this._initialise();
 				this._router.execute();
+				
+				this._template.set({
+					serverConnected: true,
+					waitingForServer: false
+				});
 			}).bind(this));
 		}, this);
 		
@@ -453,12 +458,7 @@ define(function(require) {
 		this._clearGamePages();
 		this._addGamePages();
 		this._updateUserDetails();
-		
-		this._template.set({
-			dialog: null,
-			serverConnected: true,
-			waitingForServer: false
-		});
+		this._template.set("dialog",  null);
 	}
 	
 	return Lightsquare;

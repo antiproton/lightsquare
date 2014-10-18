@@ -56,10 +56,17 @@
 			</div>
 		</div>
 	{{/showLogoutConfirmation}}
-	{{^serverConnected}}
+	{{#if !serverConnected && !waitingForServer}}
+		<div class="connection_problem {{!serverConnected && !waitingForServer ? 'visible' : ''}}">
+			<strong>Connection problem</strong> &ndash; if you see this after reloading, the server may have
+			gone down.  Otherwise, check your internet connection.
+			<a target="_blank" href="http://twitter.com/lightsquaredev">Check the status on Twitter.</a>
+		</div>
+	{{/if}}
+	{{#waitingForServer}}
 		{{>connectingMessage}}
-	{{/serverConnected}}
-	<div class="main" style="{{serverConnected ? '' : 'display: none'}}">
+	{{/waitingForServer}}
+	<div class="main" style="{{waitingForServer ? 'display: none' : ''}}">
 		<div class="nav">
 			{{>nav}}
 		</div>
