@@ -39,7 +39,7 @@ div.game_player {
 }
 
 div.game_player.player {
-	margin-top: .5em;
+	margin-top: .2em;
 }
 
 div.game_player.opponent {
@@ -75,7 +75,7 @@ div.game_player div.player_clock.inactive_clock {
 
 div.game_controls {
 	display: flex;
-	margin-top: .2em;
+	margin-top: .5em;
 }
 
 div.game_controls input {
