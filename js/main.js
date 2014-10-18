@@ -9,4 +9,8 @@ define(function(require) {
 	var server = new Server("ws://" + window.location.hostname + ":8080");
 	var user = new User(server, db);
 	var lightsquare = new Lightsquare(user, server, document.getElementById("main"));
+	
+	console.log("Hi :)");
+	console.log("To get the source code and/or contribute to the project, go to http://github.com/jsonchess.");
+	console.log("A screencast showing the installation and setup can be found at http://gus.hogg-blake.co.uk.");
 });
