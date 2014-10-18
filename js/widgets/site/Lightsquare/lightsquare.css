@@ -25,7 +25,6 @@ div.connection_problem {
 	width: 100%;
 	padding: .3em;
 	box-shadow: 0 2px 1px rgba(0, 0, 0, .15);
-	opacity: 0;
 	background: #FFFFE2;
 }
 
