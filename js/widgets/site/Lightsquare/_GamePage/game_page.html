@@ -27,12 +27,21 @@
 					
 				</div>
 				<div class="captured_pieces_container">
-					<div class="captured_pieces" id="captured_pieces_opponent">
-						opponent's captured pieces
-					</div>
-					<div class="captured_pieces" id="captured_pieces_player">
-						player's captured pieces
-					</div>
+	<!--				{{#capturedPieces}}
+						<div class="captured_pieces opponent" id="captured_pieces_opponent">
+							{{# ? }}
+								<div
+									class="captured_piece"
+									style="
+										width: {{squareSize}}px;
+										height: {{squareSize}}px;
+										background-image: url('{{pieceUrl}}');
+										background-position: {{getPieceOffset(.)}}px 0;
+									"
+								></div>
+							{{/}}
+						</div>
+					{{/}}-->
 				</div>
 			</div>
 			{{#userIsPlaying}}

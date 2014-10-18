@@ -14,6 +14,8 @@ define(function(require) {
 	var Board = require("lightsquare/widgets/chess/Board/Board");
 	var History = require("lightsquare/widgets/chess/History/History");
 	
+	var CAPTURED_PIECE_SIZE = 20;
+	
 	var viewRelevance = {
 		PLAYER: "player",
 		OPPONENT: "opponent"
@@ -409,6 +411,36 @@ define(function(require) {
 		this._history.select(this._game.getLastMove());
 	}
 	
+	GamePage.prototype._clearCapturedPieces = function() {
+		for(var relevance in viewRelevance) {
+			this._template.set("capturedPieces." + viewRelevance[relevance] + ".pawns", []);
+			this._template.set("capturedPieces." + viewRelevance[relevance] + ".pieces", []);
+		}
+	}
+	
+	GamePage.prototype._populateCapturedPieces = function() {
+		this._game.getHistory().forEach(function(move) {
+			var capturedPiece = move.getCapturedPiece();
+			
+			if(capturedPiece !== null) {
+				this._addCapturedPiece(capturedPiece);
+			}
+		}, this);
+	}
+	
+	GamePage.prototype._updateCapturedPieces = function() {
+		//this._clearCapturedPieces();
+		//this._populateCapturedPieces();
+	}
+	
+	GamePage.prototype._addCapturedPiece = function(piece) {
+		this._template.get("capturedPieces")[
+			this._relevanceFromColour(piece.colour)
+		][
+			(piece.type === PieceType.pawn ? "pawns" : "pieces")
+		].push(piece);
+	}
+	
 	GamePage.prototype._updateBoard = function() {
 		this._board.unhighlightSquares();
 		this._board.setBoardArray(this._game.getPosition().getBoardArray());
@@ -441,6 +473,11 @@ define(function(require) {
 			el: parent,
 			template: html,
 			data: {
+				capturedPieceSize: CAPTURED_PIECE_SIZE,
+				capturedPieceSprite: require.toUrl("lightsquare/widgets/site/Lightsquare/piece_sprites/Classic/" + CAPTURED_PIECE_SIZE + ".png"),
+				getPieceOffset: function(piece) {
+					return -"PNBRQKpnbrqk".indexOf(piece) * CAPTURED_PIECE_SIZE;
+				},
 				timeCriticalThreshold: timeCriticalThreshold,
 				newSeekWaiting: false,
 				getColonDisplay: function(time) {
@@ -470,6 +507,7 @@ define(function(require) {
 			this._updateRematchOffer();
 		}
 		
+		this._updateCapturedPieces();
 		this._updateScores();
 		this._updateClocks();
 	}
@@ -501,6 +539,7 @@ define(function(require) {
 		this._board.setViewingAs(this._viewingAs);
 		this._updatePlayerInfo();
 		this._updateScores();
+		this._updateCapturedPieces();
 		this._template.set("userIsPlaying", this.userIsPlaying());
 		this._template.set("viewingActivePlayer", (this._game.getActiveColour() === this._viewingAs));
 	}
