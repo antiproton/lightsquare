@@ -25,12 +25,12 @@
 			<div class="game_history" id="history">
 				
 			</div>
-			<div class="game_chat" id="chat">
-				
-			</div>
 			{{#userIsPlaying}}
 				{{>controls}}
 			{{/userIsPlaying}}
+			<div class="game_chat" id="chat">
+				
+			</div>
 			<div class="game_player player">
 				<div class="player_clock {{isInProgress && viewingActivePlayer ? ('active_clock' + (players.player.time < timeCriticalThreshold ? ' critical_clock' : '')) : 'inactive_clock'}}">
 					{{getColonDisplay(players.player.time)}}
