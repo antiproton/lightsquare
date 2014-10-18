@@ -2,6 +2,7 @@ define(function(require) {
 	require("css!./game_page.css");
 	var html = require("file!./game_page.html");
 	var controlsHtml = require("file!./controls.html");
+	var objToArray = require("js/objToArray");
 	var Ractive = require("ractive/ractive");
 	var Event = require("js/Event");
 	var jsonChessConstants = require("jsonchess/constants");
@@ -27,6 +28,7 @@ define(function(require) {
 		this._user = user;
 		this._server = server;
 		this._router = router;
+		this._viewingAsPreference = null;
 		this._viewingAs = Colour.white;
 		this._pendingPremove = null;
 		this._clockUpdateInterval = null;
@@ -38,7 +40,8 @@ define(function(require) {
 		this._setupChat();
 		this._setupBoard();
 		this._setupHistory();
-		this._setupControls();
+		this._setupGameControls();
+		this._setupBoardControls();
 		this._setupRouter();
 		this._checkForPendingPremove();
 		this._handleUserEvents();
@@ -257,7 +260,7 @@ define(function(require) {
 		this._board.highlightSquares(move.getTo(), Board.squareHighlightTypes.LAST_MOVE_TO);
 	}
 	
-	GamePage.prototype._setupControls = function() {
+	GamePage.prototype._setupGameControls = function() {
 		this._template.on("resign", (function() {
 			this._game.resign();
 		}).bind(this));
@@ -315,6 +318,37 @@ define(function(require) {
 		
 		this._template.on("cancel_new_game", (function() {
 			this._user.cancelSeek();
+		}).bind(this));
+	}
+	
+	GamePage.prototype._setupBoardControls = function() {
+		var boardSizes = objToArray(Board.sizes);
+		var currentBoardSize = this._user.getPrefs().boardSize || Board.DEFAULT_SQUARE_SIZE;
+		var currentBoardSizeIndex = boardSizes.indexOf(currentBoardSize);
+		
+		this._template.on("board_flip", (function() {
+			this._viewingAsPreference = this._viewingAs.opposite;
+			this._updateUserDependentElements();
+		}).bind(this));
+		
+		this._template.on("board_size_down", (function() {
+			if(currentBoardSizeIndex > 0) {
+				currentBoardSize = boardSizes[--currentBoardSizeIndex];
+				
+				this._user.updatePrefs({
+					boardSize: currentBoardSize
+				});
+			}
+		}).bind(this));
+		
+		this._template.on("board_size_up", (function() {
+			if(currentBoardSizeIndex < boardSizes.length - 1) {
+				currentBoardSize = boardSizes[++currentBoardSizeIndex];
+				
+				this._user.updatePrefs({
+					boardSize: currentBoardSize
+				});
+			}
 		}).bind(this));
 	}
 	
@@ -463,7 +497,7 @@ define(function(require) {
 	}
 	
 	GamePage.prototype._updateUserDependentElements = function() {
-		this._viewingAs = this.getUserColour() || Colour.white;
+		this._viewingAs = this._viewingAsPreference || this.getUserColour() || Colour.white;
 		this._board.setViewingAs(this._viewingAs);
 		this._updatePlayerInfo();
 		this._updateScores();

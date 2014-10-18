@@ -31,6 +31,26 @@ div.game_board {
 	flex-shrink: 0;
 }
 
+div.board_controls {
+	display: flex;
+	justify-content: flex-end;
+	margin-bottom: .2em;
+}
+
+div.board_controls input[type="button"] {
+	font-size: .72em;
+	color: #303030;
+	text-shadow: 1px 1px 1px rgba(255, 255, 255, .4);
+	margin: 0 0 0 .17em;
+	border-color: #7f7f7f;
+	padding: .2em .7em;
+	background: #DADADA;
+}
+
+div.board_controls input[type="button"]:hover {
+	text-decoration: none;
+}
+
 div.game_player {
 	display: flex;
 	align-items: center;

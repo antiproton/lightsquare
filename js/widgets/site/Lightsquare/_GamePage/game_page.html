@@ -4,6 +4,11 @@
 			
 		</div>
 		<div class="game_details">
+			<div class="board_controls">
+				<input type="button" on-click="board_flip" value="Flip board">
+				<input type="button" on-click="board_size_down" value="-">
+				<input type="button" on-click="board_size_up" value="+">
+			</div>
 			<div class="game_player opponent">
 				<div class="player_clock {{isInProgress && !viewingActivePlayer ? ('active_clock' + (players.opponent.time < timeCriticalThreshold ? ' critical_clock' : '')) : 'inactive_clock'}}">
 					{{getColonDisplay(players.opponent.time)}}
