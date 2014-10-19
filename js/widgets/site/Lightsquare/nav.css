@@ -1,6 +1,7 @@
 div.nav {
 	display: flex;
 	flex-direction: column;
+	flex-shrink: 0;
 	width: 15%;
 	min-width: 8.5em;
 	max-width: 15em;
