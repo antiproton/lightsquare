@@ -34,6 +34,7 @@ div.game_board {
 div.board_controls {
 	display: flex;
 	justify-content: flex-end;
+	align-items: center;
 	margin-bottom: .2em;
 }
 
@@ -49,6 +50,11 @@ div.board_controls input[type="button"] {
 
 div.board_controls input[type="button"]:hover {
 	text-decoration: none;
+}
+
+label.always_queen {
+	font-size: .8em;
+	margin-right: .5em;
 }
 
 div.game_player {
