@@ -1,7 +1,7 @@
 div.history {
 	font-size: .8em;
 	height: 14em;
-	overflow-y: scroll;
+	overflow-y: auto;
 	background: white;
 }
 
