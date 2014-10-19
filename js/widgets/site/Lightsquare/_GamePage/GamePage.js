@@ -43,7 +43,7 @@ define(function(require) {
 		this._setupBoard();
 		this._setupHistory();
 		this._setupGameControls();
-		this._setupBoardControls();
+		this._setupPrefsPanel();
 		this._setupRouter();
 		this._checkForPendingPremove();
 		this._handleUserEvents();
@@ -336,10 +336,16 @@ define(function(require) {
 		}).bind(this));
 	}
 	
-	GamePage.prototype._setupBoardControls = function() {
+	GamePage.prototype._setupPrefsPanel = function() {
 		var boardSizes = objToArray(Board.sizes);
 		var currentBoardSize = this._user.getPrefs().boardSize || Board.DEFAULT_SQUARE_SIZE;
 		var currentBoardSizeIndex = boardSizes.indexOf(currentBoardSize);
+		
+		this._template.on("toggle_always_queen", (function() {
+			this._user.updatePrefs({
+				alwaysQueen: this._template.nodes.always_queen.checked
+			});
+		}).bind(this));
 		
 		this._template.on("board_flip", (function() {
 			this._viewingAsPreference = this._viewingAs.opposite;
@@ -486,6 +492,7 @@ define(function(require) {
 			el: parent,
 			template: html,
 			data: {
+				prefs: this._user.getPrefs(),
 				capturedPieceSize: CAPTURED_PIECE_SIZE,
 				capturedPieceSprite: require.toUrl("../piece_sprites/Classic/" + CAPTURED_PIECE_SIZE + ".png"),
 				capturedPieces: {},
@@ -595,6 +602,7 @@ define(function(require) {
 	GamePage.prototype._handleUserEvents = function() {
 		this._user.PrefsChanged.addHandler(function() {
 			this._setBoardPrefs();
+			this._template.set("prefs", this._user.getPrefs());
 		}, this);
 		
 		this._user.LoggedIn.addHandler(function() {
