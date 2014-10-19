@@ -204,6 +204,14 @@ define(function(require) {
 		this._server.send("/user/prefs/update", prefs);
 	}
 	
+	User.prototype.updatePref = function(pref, value) {
+		var prefs = {};
+		
+		prefs[pref] = value;
+		
+		this.updatePrefs(prefs);
+	}
+	
 	User.prototype.getRating = function() {
 		return this._rating;
 	}
