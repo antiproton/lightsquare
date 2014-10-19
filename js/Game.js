@@ -353,7 +353,7 @@ define(function(require) {
 	
 	Game.prototype._updateTimeFromServerMove = function(moveDetails) {
 		this._history[moveDetails.index].setTime(moveDetails.time);
-			this._clock.calculateTimes();
+		this._clock.calculateTimes();
 	}
 	
 	Game.prototype._applyServerMove = function(moveDetails) {
