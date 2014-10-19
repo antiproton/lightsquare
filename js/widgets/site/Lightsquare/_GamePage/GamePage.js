@@ -215,7 +215,14 @@ define(function(require) {
 			var promoteTo = (this._user.getPrefs().alwaysQueen ? PieceType.queen : moveEvent.promoteTo);
 			
 			if(userIsActive || allowPremove) {
-				if(promoteTo === null && (new Move(this._game.getPosition(), moveEvent.from, moveEvent.to)).isPromotion()) {
+				if(
+					promoteTo === null
+					&& (
+						userIsActive ?
+						new Move(this._game.getPosition(), moveEvent.from, moveEvent.to).isPromotion() :
+						(moveEvent.piece.type === PieceType.pawn && moveEvent.to.isPromotionRank)
+					)
+				) {
 					moveEvent.promptForPromotionPiece();
 				}
 				
