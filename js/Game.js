@@ -82,8 +82,8 @@ define(function(require) {
 	}
 	
 	Game.prototype._subscribeToServerMessages = function() {
-		this._server.subscribe("/game/" + this._id + "/move", (function(move) {
-			this._handleServerMove(move);
+		this._server.subscribe("/game/" + this._id + "/move", (function(moveDetails) {
+			this._handleServerMove(moveDetails);
 		}).bind(this));
 		
 		this._server.subscribe("/game/" + this._id + "/chat", (function(message) {
@@ -333,43 +333,47 @@ define(function(require) {
 		this._server.send("/game/" + this._id + "/chat", message);
 	}
 	
-	Game.prototype._handleServerMove = function(move) {
-		if(move.index > this._history.length) {
-			this._moveQueue[move.index] = move;
+	Game.prototype._handleServerMove = function(moveDetails) {
+		if(moveDetails.index > this._history.length) {
+			this._enqueueServerMove(moveDetails);
+		}
+		
+		else if(moveDetails.index < this._history.length) {
+			this._updateTimeFromServerMove(moveDetails);
 		}
 		
 		else {
-			this._applyServerMove(move);
-			
-			var i = move.index;
-			var nextMove;
-			
-			while(nextMove = this._moveQueue[++i]) {
-				this._applyServerMove(nextMove);
-			}
+			this._applyServerMove(moveDetails);
 		}
 	}
 	
-	Game.prototype._applyServerMove = function(serverMove) {
-		if(serverMove.index in this._history) {
-			this._history[serverMove.index].setTime(serverMove.time);
+	Game.prototype.enqueueServerMove = function(moveDetails) {
+		this._moveQueue[moveDetails.index] = moveDetails;
+	}
+	
+	Game.prototype._updateTimeFromServerMove = function(moveDetails) {
+		this._history[moveDetails.index].setTime(moveDetails.time);
 			this._clock.calculateTimes();
-		}
+	}
+	
+	Game.prototype._applyServerMove = function(moveDetails) {
+		var chessMove = this._game.move(
+			Square.fromSquareNo(moveDetails.from),
+			Square.fromSquareNo(moveDetails.to),
+			moveDetails.promoteTo ? PieceType.fromSanString(moveDetails.promoteTo) : PieceType.queen
+		);
 		
-		else {
-			var chessMove = this._game.move(
-				Square.fromSquareNo(serverMove.from),
-				Square.fromSquareNo(serverMove.to),
-				serverMove.promoteTo ? PieceType.fromSanString(serverMove.promoteTo) : PieceType.queen
-			);
+		if(chessMove !== null && chessMove.isLegal()) {
+			move = Move.fromMove(chessMove);
+			move.setTime(moveDetails.time);
 			
-			if(chessMove !== null && chessMove.isLegal()) {
-				var move = Move.fromMove(chessMove);
-				
-				move.setTime(serverMove.time);
-				
-				this._history.push(move);
-				this.Move.fire(move);
+			this._history.push(move);
+			this.Move.fire(move);
+			
+			var nextMove = this._moveQueue[moveDetails.index + 1];
+			
+			if(nextMove) {
+				this._applyServerMove(nextMove);
 			}
 		}
 	}
