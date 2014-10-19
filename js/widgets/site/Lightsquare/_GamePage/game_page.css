@@ -113,11 +113,12 @@ div.captured_pieces_container {
 	flex-direction: column;
 	justify-content: space-between;
 	flex-grow: 1;
+	flex-basis: 7em;
 	margin-left: .3em;
 }
 
 div.captured_pieces {
-	background: yellow;
+	
 }
 
 div.captured_piece_row {

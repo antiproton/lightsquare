@@ -17,8 +17,8 @@ define(function(require) {
 	var CAPTURED_PIECE_SIZE = 20;
 	
 	var viewRelevance = {
-		PLAYER: "player",
-		OPPONENT: "opponent"
+		player: "player",
+		opponent: "opponent"
 	};
 	
 	function GamePage(game, user, server, router, parent) {
@@ -109,6 +109,12 @@ define(function(require) {
 				this._board.animateMove(move, function() {
 					applyMove(move);
 				});
+			}
+			
+			var capturedPiece = move.getCapturedPiece();
+			
+			if(capturedPiece) {
+				this._addCapturedPiece(capturedPiece);
 			}
 			
 			this.Move.fire(move);
@@ -413,8 +419,8 @@ define(function(require) {
 	
 	GamePage.prototype._clearCapturedPieces = function() {
 		for(var relevance in viewRelevance) {
-			this._template.set("capturedPieces." + viewRelevance[relevance] + ".pawns", []);
-			this._template.set("capturedPieces." + viewRelevance[relevance] + ".pieces", []);
+			this._template.set("capturedPieces." + relevance + ".pawns", []);
+			this._template.set("capturedPieces." + relevance + ".pieces", []);
 		}
 	}
 	
@@ -429,8 +435,8 @@ define(function(require) {
 	}
 	
 	GamePage.prototype._updateCapturedPieces = function() {
-		//this._clearCapturedPieces();
-		//this._populateCapturedPieces();
+		this._clearCapturedPieces();
+		this._populateCapturedPieces();
 	}
 	
 	GamePage.prototype._addCapturedPiece = function(piece) {
@@ -475,6 +481,7 @@ define(function(require) {
 			data: {
 				capturedPieceSize: CAPTURED_PIECE_SIZE,
 				capturedPieceSprite: require.toUrl("../piece_sprites/Classic/" + CAPTURED_PIECE_SIZE + ".png"),
+				capturedPieces: {},
 				getPieceOffset: function(piece) {
 					return -"PNBRQKpnbrqk".indexOf(piece) * CAPTURED_PIECE_SIZE;
 				},
@@ -488,6 +495,13 @@ define(function(require) {
 				controls: controlsHtml
 			}
 		});
+		
+		for(var relevance in viewRelevance) {
+			this._template.set("capturedPieces." + relevance, {
+				pawns: [],
+				pieces: []
+			});
+		}
 	}
 	
 	GamePage.prototype._populateTemplate = function() {
@@ -531,7 +545,7 @@ define(function(require) {
 	}
 	
 	GamePage.prototype._relevanceFromColour = function(colour) {
-		return (colour === this._viewingAs ? viewRelevance.PLAYER : viewRelevance.OPPONENT);
+		return (colour === this._viewingAs ? viewRelevance.player : viewRelevance.opponent);
 	}
 	
 	GamePage.prototype._updateUserDependentElements = function() {

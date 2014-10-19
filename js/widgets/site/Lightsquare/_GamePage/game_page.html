@@ -27,21 +27,25 @@
 					
 				</div>
 				<div class="captured_pieces_container">
-	<!--				{{#capturedPieces}}
-						<div class="captured_pieces opponent" id="captured_pieces_opponent">
-							{{# ? }}
-								<div
-									class="captured_piece"
-									style="
-										width: {{squareSize}}px;
-										height: {{squareSize}}px;
-										background-image: url('{{pieceUrl}}');
-										background-position: {{getPieceOffset(.)}}px 0;
-									"
-								></div>
-							{{/}}
+					{{#capturedPieces:playerRelevance}}
+						<div class="captured_pieces {{playerRelevance}}">
+							{{#this:pieceClass}}
+								<div class="captured_piece_row">
+									{{#each this}}
+										<div
+											class="captured_piece"
+											style="
+												width: {{capturedPieceSize}}px;
+												height: {{capturedPieceSize}}px;
+												background-image: url('{{capturedPieceSprite}}');
+												background-position: {{getPieceOffset(.)}}px 0;
+											"
+										></div>
+									{{/each}}
+								</div>
+							{{/this}}
 						</div>
-					{{/}}-->
+					{{/}}
 				</div>
 			</div>
 			{{#userIsPlaying}}
