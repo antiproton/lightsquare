@@ -46,10 +46,7 @@ define(function(require) {
 		this._players[Colour.white] = gameDetails.white;
 		this._players[Colour.black] = gameDetails.black;
 		
-		this._history = gameDetails.history.map(function(move) {
-			return Move.fromJSON(move);
-		});
-		
+		this._history = [];
 		this._moveQueue = [];
 		
 		this._timingStyle = new TimingStyle({
@@ -58,11 +55,15 @@ define(function(require) {
 		});
 		
 		this._game = new ChessGame({
-			history: this._history,
 			isTimed: false
 		});
 		
+		gameDetails.history.forEach(function(move) {
+			this._applyServerMove(move);
+		}, this);
+		
 		this._game.Move.addHandler(function() {
+			console.log("resolving premove to null");
 			this._promisor.resolve("/request/premove", null);
 		}, this);
 		
@@ -333,45 +334,56 @@ define(function(require) {
 		this._server.send("/game/" + this._id + "/chat", message);
 	}
 	
-	Game.prototype._handleServerMove = function(move) {
-		if(move.index > this._history.length) {
-			this._moveQueue[move.index] = move;
+	Game.prototype._addServerMoveHelper = function(moveDetails) {
+		var move = this._applyServerMove(moveDetails);
+		
+		if(move) {
+			this.Move.fire(move);
+		}
+	}
+	
+	Game.prototype._handleServerMove = function(moveDetails) {
+		if(moveDetails.index > this._history.length) {
+			this._moveQueue[moveDetails.index] = moveDetails;
+		}
+		
+		else if(moveDetails.index < this._history.length) {
+			this._history[moveDetails.index].setTime(moveDetails.time);
+			this._clock.calculateTimes();
 		}
 		
 		else {
-			this._applyServerMove(move);
-			
-			var i = move.index;
-			var nextMove;
-			
-			while(nextMove = this._moveQueue[++i]) {
-				this._applyServerMove(nextMove);
+			var move = this._applyServerMove(moveDetails);
+		
+			if(move) {
+				this.Move.fire(move);
+				
+				var nextMove = this._moveQueue[moveDetails.index + 1];
+				
+				if(nextMove) {
+					this._handleServerMove(nextMove);
+				}
 			}
 		}
 	}
 	
 	Game.prototype._applyServerMove = function(serverMove) {
-		if(serverMove.index in this._history) {
-			this._history[serverMove.index].setTime(serverMove.time);
-			this._clock.calculateTimes();
+		var move = null;
+		
+		var chessMove = this._game.move(
+			Square.fromSquareNo(serverMove.from),
+			Square.fromSquareNo(serverMove.to),
+			serverMove.promoteTo ? PieceType.fromSanString(serverMove.promoteTo) : PieceType.queen
+		);
+		
+		if(chessMove !== null && chessMove.isLegal()) {
+			move = Move.fromMove(chessMove);
+			move.setTime(serverMove.time);
+			
+			this._history.push(move);
 		}
 		
-		else {
-			var chessMove = this._game.move(
-				Square.fromSquareNo(serverMove.from),
-				Square.fromSquareNo(serverMove.to),
-				serverMove.promoteTo ? PieceType.fromSanString(serverMove.promoteTo) : PieceType.queen
-			);
-			
-			if(chessMove !== null && chessMove.isLegal()) {
-				var move = Move.fromMove(chessMove);
-				
-				move.setTime(serverMove.time);
-				
-				this._history.push(move);
-				this.Move.fire(move);
-			}
-		}
+		return move;
 	}
 		
 	Game.prototype._abort = function() {
