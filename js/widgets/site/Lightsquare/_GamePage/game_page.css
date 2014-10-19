@@ -111,7 +111,7 @@ div.history_and_captured {
 }
 
 div.game_history {
-	flex-basis: 15em;
+	flex-basis: 10em;
 	flex-grow: 1;
 }
 
