@@ -31,7 +31,7 @@ define(function(require) {
 			template: html,
 			data: {
 				squareSize: SQUARE_SIZE,
-				pieceUrl: require.toUrl("./piece_sprite.png"),
+				pieceUrl: require.toUrl("../piece_sprites/Classic/" + SQUARE_SIZE + ".png"),
 				getSquareY: function(squareNo, id) {
 					return 7 - Square.fromSquareNo(squareNo).adjusted[viewingAs[id]].coords.y;
 				},
