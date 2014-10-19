@@ -474,7 +474,7 @@ define(function(require) {
 			template: html,
 			data: {
 				capturedPieceSize: CAPTURED_PIECE_SIZE,
-				capturedPieceSprite: require.toUrl("lightsquare/widgets/site/Lightsquare/piece_sprites/Classic/" + CAPTURED_PIECE_SIZE + ".png"),
+				capturedPieceSprite: require.toUrl("../piece_sprites/Classic/" + CAPTURED_PIECE_SIZE + ".png"),
 				getPieceOffset: function(piece) {
 					return -"PNBRQKpnbrqk".indexOf(piece) * CAPTURED_PIECE_SIZE;
 				},
