@@ -52,7 +52,7 @@ div.board_controls input[type="button"]:hover {
 	text-decoration: none;
 }
 
-label.always_queen {
+label.game_page_pref {
 	font-size: .8em;
 	margin-right: .5em;
 }

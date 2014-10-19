@@ -5,8 +5,10 @@
 		</div>
 		<div class="game_details">
 			<div class="board_controls">
-				<input type="checkbox" on-change="toggle_always_queen" checked="{{prefs.alwaysQueen}}" id="always_queen">
-				<label class="always_queen" for="always_queen">Always queen</label>
+				<input type="checkbox" on-change="toggle:'premove'" checked="{{prefs.premove}}" id="premove">
+				<label class="game_page_pref" for="premove">Premove</label>
+				<input type="checkbox" on-change="toggle:'alwaysQueen'" checked="{{prefs.alwaysQueen}}" id="always_queen">
+				<label class="game_page_pref" for="alwaysQueen">Always queen</label>
 				<input type="button" on-click="board_flip" value="Flip board">
 				<input type="button" on-click="board_size_down" value="-">
 				<input type="button" on-click="board_size_up" value="+">

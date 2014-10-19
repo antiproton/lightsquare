@@ -190,6 +190,11 @@ define(function(require) {
 		this._pendingPremove = null;
 	}
 	
+	GamePage.prototype._cancelPremove = function() {
+		this._game.cancelPremove();
+		this._clearPremove();
+	}
+	
 	GamePage.prototype._setupBoard = function() {
 		this._board = new Board(this._template.nodes.board);
 		
@@ -245,8 +250,7 @@ define(function(require) {
 		this._template.on("cancel_premove", (function(event) {
 			event.original.preventDefault();
 			
-			this._game.cancelPremove();
-			this._clearPremove();
+			this._cancelPremove();
 		}).bind(this));
 		
 		this._updateBoard();
@@ -341,10 +345,8 @@ define(function(require) {
 		var currentBoardSize = this._user.getPrefs().boardSize || Board.DEFAULT_SQUARE_SIZE;
 		var currentBoardSizeIndex = boardSizes.indexOf(currentBoardSize);
 		
-		this._template.on("toggle_always_queen", (function() {
-			this._user.updatePrefs({
-				alwaysQueen: this._template.nodes.always_queen.checked
-			});
+		this._template.on("toggle", (function(event, pref) {
+			this._user.updatePref(pref, this._template.nodes[pref].checked);
 		}).bind(this));
 		
 		this._template.on("board_flip", (function() {
@@ -603,6 +605,10 @@ define(function(require) {
 		this._user.PrefsChanged.addHandler(function() {
 			this._setBoardPrefs();
 			this._template.set("prefs", this._user.getPrefs());
+			
+			if(!this._user.getPrefs().premove && this._pendingPremove) {
+				this._cancelPremove();
+			}
 		}, this);
 		
 		this._user.LoggedIn.addHandler(function() {
