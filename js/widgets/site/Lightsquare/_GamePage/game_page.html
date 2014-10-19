@@ -4,14 +4,16 @@
 			
 		</div>
 		<div class="game_details">
-			<div class="board_controls">
+			<div class="prefs_panel">
 				<input type="checkbox" on-change="toggle:'premove'" checked="{{prefs.premove}}" id="premove">
 				<label class="game_page_pref" for="premove">Premove</label>
 				<input type="checkbox" on-change="toggle:'alwaysQueen'" checked="{{prefs.alwaysQueen}}" id="always_queen">
 				<label class="game_page_pref" for="alwaysQueen">Always queen</label>
-				<input type="button" on-click="board_flip" value="Flip board">
-				<input type="button" on-click="board_size_down" value="-">
-				<input type="button" on-click="board_size_up" value="+">
+				<div class="board_buttons">
+					<input type="button" on-click="board_flip" value="Flip board">
+					<input type="button" on-click="board_size_down" value="-">
+					<input type="button" on-click="board_size_up" value="+">
+				</div>
 			</div>
 			<div class="game_player opponent">
 				<div class="player_clock {{isInProgress && !viewingActivePlayer ? ('active_clock' + (players.opponent.time < timeCriticalThreshold ? ' critical_clock' : '')) : 'inactive_clock'}}">

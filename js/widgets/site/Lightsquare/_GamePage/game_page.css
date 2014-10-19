@@ -31,14 +31,19 @@ div.game_board {
 	flex-shrink: 0;
 }
 
-div.board_controls {
+div.prefs_panel {
 	display: flex;
 	justify-content: flex-end;
 	align-items: center;
+	flex-wrap: wrap;
 	margin-bottom: .2em;
 }
 
-div.board_controls input[type="button"] {
+div.board_buttons {
+	display: flex;
+}
+
+div.board_buttons input {
 	font-size: .72em;
 	color: #303030;
 	text-shadow: 1px 1px 1px rgba(255, 255, 255, .4);
@@ -48,7 +53,7 @@ div.board_controls input[type="button"] {
 	background: #DADADA;
 }
 
-div.board_controls input[type="button"]:hover {
+div.board_buttons input:hover {
 	text-decoration: none;
 }
 
