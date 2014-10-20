@@ -8,7 +8,7 @@ div.nav {
 	background: #d1d1d1;
 }
 
-div.nav div {
+div.nav > div {
 	flex-shrink: 0;
 }
 
