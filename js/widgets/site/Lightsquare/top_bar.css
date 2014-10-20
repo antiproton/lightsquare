@@ -4,17 +4,15 @@ div.top_bar {
 	justify-content: space-between;
 	align-items: center;
 	flex-shrink: 0;
+	padding: .5em;
 	background: #464646;
 }
 
-div.title {
+div.title a {
 	font-size: .7em;
 	font-weight: bold;
 	color: #EDFBFF;
-}
-
-div.top_bar {
-	padding: .5em;
+	text-decoration: none;
 }
 
 div.user {
