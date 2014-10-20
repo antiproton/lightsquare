@@ -5,7 +5,7 @@ define(function(require) {
 	var Ractive = require("ractive/ractive");
 	var Position = require("chess/Position");
 	var Colour = require("chess/Colour");
-	var Board = require("lightsquare/widgets/chess/Board/Board");
+	var Board = require("lightsquare/Board/Board");
 	
 	function GameBackupList(user, server, parent) {
 		this._user = user;

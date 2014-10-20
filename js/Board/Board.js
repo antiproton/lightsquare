@@ -10,7 +10,7 @@ define(function(require) {
 	var Coords = require("chess/Coords");
 	var Colour = require("chess/Colour");
 	var Square = require("./_Square/Square");
-	var Piece = require("lightsquare/widgets/chess/Piece/Piece");
+	var Piece = require("lightsquare/Piece/Piece");
 	var PromotionDialog = require("./_PromotionDialog/PromotionDialog");
 
 	function Board(parent) {

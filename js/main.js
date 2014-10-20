@@ -3,7 +3,7 @@ define(function(require) {
 	var Server = require("websocket-client/Server");
 	var JsonLocalStorage = require("json-local-storage/JsonLocalStorage");
 	var User = require("./User");
-	var Lightsquare = require("./widgets/site/Lightsquare/Lightsquare");
+	var Lightsquare = require("./Lightsquare/Lightsquare");
 
 	var db = new JsonLocalStorage("/lightsquare");
 	var server = new Server("ws://" + window.location.hostname + ":8080");

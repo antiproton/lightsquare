@@ -11,8 +11,8 @@ define(function(require) {
 	var Time = require("chess/Time");
 	var PieceType = require("chess/PieceType");
 	var Chat = require("./_Chat/Chat");
-	var Board = require("lightsquare/widgets/chess/Board/Board");
-	var History = require("lightsquare/widgets/chess/History/History");
+	var Board = require("lightsquare/Board/Board");
+	var History = require("lightsquare/History/History");
 	
 	var CAPTURED_PIECE_SIZE = 20;
 	
