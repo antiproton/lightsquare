@@ -8,11 +8,23 @@ div.nav {
 	background: #d1d1d1;
 }
 
+div.nav div {
+	flex-shrink: 0;
+}
+
 div.nav_header {
 	font-size: .8em;
 	padding: .2em .3em;
 	text-shadow: 1px 1px 0 rgba(255, 255, 255, .4);
 	background: linear-gradient(to top, rgb(179, 179, 179) 0%, rgb(196, 196, 196) 100%);
+}
+
+div.nav_links {
+	overflow-y: auto;
+}
+
+div.nav_links.game_links {
+	flex-shrink: 1;
 }
 
 div.nav_links > a {
