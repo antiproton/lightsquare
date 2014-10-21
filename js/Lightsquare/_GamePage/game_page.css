@@ -111,8 +111,7 @@ div.history_and_captured {
 }
 
 div.game_history {
-	flex-basis: 10em;
-	flex-grow: 1;
+	width: 13.5em;
 }
 
 div.game_history, div.captured_pieces_container {
