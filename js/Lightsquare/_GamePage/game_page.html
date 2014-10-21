@@ -57,9 +57,6 @@
 			{{#userIsPlaying}}
 				{{>controls}}
 			{{/userIsPlaying}}
-			<div class="game_chat" id="chat">
-				
-			</div>
 			<div class="game_player player">
 				<div class="player_clock {{isInProgress && viewingActivePlayer ? ('active_clock' + (players.player.time < timeCriticalThreshold ? ' critical_clock' : '')) : 'inactive_clock'}}">
 					{{getColonDisplay(players.player.time)}}
@@ -72,6 +69,9 @@
 						{{scores.player}}
 					</div>
 				{{/result}}
+			</div>
+			<div class="game_chat" id="chat">
+				
 			</div>
 		</div>
 	</div>
