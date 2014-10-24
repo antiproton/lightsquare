@@ -145,6 +145,11 @@ define(function(require) {
 			this._populateTemplate();
 			this._updateBoard();
 			this._updateHistory();
+			
+			if(this.userIsPlaying()) {
+				this._viewingAsPreference = null;
+			}
+			
 			this._updateUserDependentElements();
 			this.Rematch.fire(game);
 		}, this);
