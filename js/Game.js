@@ -1,5 +1,6 @@
 define(function(require) {
 	require("Array.prototype/getShallowCopy");
+	var objToArray = require("js/objToArray");
 	var Event = require("js/Event");
 	var Promisor = require("js/Promisor");
 	var Move = require("jsonchess/Move");
@@ -287,6 +288,10 @@ define(function(require) {
 	
 	Game.prototype.getPlayerName = function(colour) {
 		return this._players[colour].name;
+	}
+	
+	Game.prototype.getPlayers = function() {
+		return objToArray(this._players);
 	}
 	
 	Game.prototype.getRating = function(colour) {
