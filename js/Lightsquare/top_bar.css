@@ -9,9 +9,9 @@ div.top_bar {
 }
 
 div.title a {
-	font-size: .72em;
-	font-weight: bold;
-	color: #EDFBFF;
+	font-family: arial;
+	font-size: .95em;
+	color: white;
 	text-decoration: none;
 }
 
