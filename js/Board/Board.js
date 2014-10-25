@@ -66,7 +66,7 @@ define(function(require) {
 
 	Board.sizes = Square.sizes;
 	Board.squareStyles = Square.styles;
-	Board.squareHighlightTypes = Square.highlightTypes;
+	Board.highlightTypes = Square.highlightTypes;
 	Board.DEFAULT_SQUARE_SIZE = Square.DEFAULT_SIZE;
 	Board.DEFAULT_SQUARE_STYLE = Square.DEFAULT_STYLE;
 	
@@ -110,8 +110,8 @@ define(function(require) {
 		var highlightTypes = Array.prototype.slice.call(arguments);
 		
 		if(highlightTypes.length === 0) {
-			for(var type in Board.squareHighlightTypes) {
-				highlightTypes.push(Board.squareHighlightTypes[type]);
+			for(var type in Board.highlightTypes) {
+				highlightTypes.push(Board.highlightTypes[type]);
 			}
 		}
 		
@@ -122,7 +122,7 @@ define(function(require) {
 			
 			if(highlightType in this._highlightedSquares) {
 				for(var j = 0; j < this._highlightedSquares[highlightType].length; j++) {
-					this._squares[this._highlightedSquares[highlightType][j].squareNo].setHighlight(Board.squareHighlightTypes.NONE);
+					this._squares[this._highlightedSquares[highlightType][j].squareNo].setHighlight(Board.highlightTypes.NONE);
 				}
 		
 				this._highlightedSquares[highlightType] = [];

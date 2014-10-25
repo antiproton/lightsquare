@@ -184,14 +184,14 @@ define(function(require) {
 	
 	GamePage.prototype._setPremove = function(premove) {
 		this._board.setBoardArray(premove.getBoardArray());
-		this._board.highlightSquares(premove.getFrom(), Board.squareHighlightTypes.PREMOVE_FROM);
-		this._board.highlightSquares(premove.getTo(), Board.squareHighlightTypes.PREMOVE_TO);
+		this._board.highlightSquares(premove.getFrom(), Board.highlightTypes.PREMOVE_FROM);
+		this._board.highlightSquares(premove.getTo(), Board.highlightTypes.PREMOVE_TO);
 		this._pendingPremove = premove;
 	}
 	
 	GamePage.prototype._clearPremove = function() {
 		this._board.setBoardArray(this._game.getPosition().getBoardArray());
-		this._board.unhighlightSquares(Board.squareHighlightTypes.PREMOVE_FROM, Board.squareHighlightTypes.PREMOVE_TO);
+		this._board.unhighlightSquares(Board.highlightTypes.PREMOVE_FROM, Board.highlightTypes.PREMOVE_TO);
 		this._pendingPremove = null;
 	}
 	
@@ -211,12 +211,12 @@ define(function(require) {
 		
 		this._board.PieceSelected.addHandler(function(data) {
 			if(!data.isDragging) {
-				this._board.highlightSquares(data.square, Board.squareHighlightTypes.SELECTED);
+				this._board.highlightSquares(data.square, Board.highlightTypes.SELECTED);
 			}
 		}, this);
 		
 		this._board.Deselected.addHandler(function() {
-			this._board.unhighlightSquares(Board.squareHighlightTypes.SELECTED);
+			this._board.unhighlightSquares(Board.highlightTypes.SELECTED);
 		}, this);
 		
 		this._board.Move.addHandler(function(moveEvent) {
@@ -279,9 +279,9 @@ define(function(require) {
 	}
 	
 	GamePage.prototype._highlightMove = function(move) {
-		this._board.unhighlightSquares(Board.squareHighlightTypes.LAST_MOVE_FROM, Board.squareHighlightTypes.LAST_MOVE_TO);
-		this._board.highlightSquares(move.getFrom(), Board.squareHighlightTypes.LAST_MOVE_FROM);
-		this._board.highlightSquares(move.getTo(), Board.squareHighlightTypes.LAST_MOVE_TO);
+		this._board.unhighlightSquares(Board.highlightTypes.LAST_MOVE_FROM, Board.highlightTypes.LAST_MOVE_TO);
+		this._board.highlightSquares(move.getFrom(), Board.highlightTypes.LAST_MOVE_FROM);
+		this._board.highlightSquares(move.getTo(), Board.highlightTypes.LAST_MOVE_TO);
 	}
 	
 	GamePage.prototype._setupGameControls = function() {
