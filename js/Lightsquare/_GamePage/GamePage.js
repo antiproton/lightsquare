@@ -39,6 +39,7 @@ define(function(require) {
 		this._setupTemplate(parent);
 		this._setupGame(game);
 		this._populateTemplate();
+		this._handleConnectionStatusMessages();
 		this._setupChat();
 		this._setupBoard();
 		this._setupHistory();
@@ -172,6 +173,33 @@ define(function(require) {
 		}, this);
 		
 		this._startUpdatingClocks();
+	}
+	
+	GamePage.prototype._getPlayerColour = function(player) {
+		var playerColour = null;
+		
+		Colour.forEach(function(colour) {
+			if(this._game.getPlayer(colour) === player) {
+				playerColour = colour;
+			}
+		}, this);
+		
+		return playerColour;
+	}
+	
+	GamePage.prototype._handleConnectionStatusMessages = function() {
+		this._game.getPlayers().forEach(function(player) {
+			this._server.subscribe("/player_connection_status/" + player.id, (function(isConnected) {
+				this._updateConnectionStatus(player, isConnected);
+			}).bind(this));
+		}, this);
+	}
+	
+	GamePage.prototype._updateConnectionStatus = function(player, isConnected) {
+		var colour = this._getPlayerColour(player);
+		var relevance = this._relevanceFromColour(colour);
+		console.log(colour.fenString, relevance);
+		this._template.set("players." + relevance + ".isConnected", isConnected);
 	}
 	
 	GamePage.prototype._checkForPendingPremove = function() {
@@ -523,7 +551,14 @@ define(function(require) {
 	
 	GamePage.prototype._populateTemplate = function() {
 		this._template.set({
-			players: {},
+			players: {
+				player: {
+					isConnected: true
+				},
+				opponent: {
+					isConnected: true
+				}
+			},
 			result: this._game.getResult(),
 			isInProgress: this._game.isInProgress(),
 			userIsPlaying: this.userIsPlaying(),

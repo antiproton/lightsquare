@@ -27,6 +27,17 @@
 						{{players.opponent.score}}
 					</div>
 				{{/result}}
+				<div class="player_connection_status">
+					{{#players.opponent.isBot}}
+						
+					{{else}}
+						{{#players.opponent.isConnected}}
+							
+						{{else}}
+							
+						{{/}}
+					{{/}}
+				</div>
 			</div>
 			<div class="history_and_captured">
 				<div class="game_history" id="history">
@@ -69,6 +80,17 @@
 						{{players.player.score}}
 					</div>
 				{{/result}}
+				<div class="player_connection_status">
+					{{#players.player.isBot}}
+						
+					{{else}}
+						{{#players.player.isConnected}}
+							
+						{{else}}
+							
+						{{/}}
+					{{/}}
+				</div>
 			</div>
 			<div class="game_chat" id="chat">
 				
