@@ -294,6 +294,10 @@ define(function(require) {
 		return objToArray(this._players);
 	}
 	
+	Game.prototype.getPlayer = function(colour) {
+		return this._players[colour];
+	}
+	
 	Game.prototype.getRating = function(colour) {
 		return this._players[colour].rating;
 	}
