@@ -12,5 +12,5 @@ define(function(require) {
 	
 	console.log("Hi :)");
 	console.log("To get the source code and/or contribute to the project, go to http://github.com/jsonchess.");
-	console.log("A screencast showing the installation and setup can be found at http://gus.hogg-blake.co.uk.");
+	console.log("A screencast showing the installation and setup can be found at https://www.youtube.com/watch?v=PR2FBr_5wiI.");
 });
