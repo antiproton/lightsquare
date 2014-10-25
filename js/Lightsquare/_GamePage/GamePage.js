@@ -482,13 +482,9 @@ define(function(require) {
 		var result = this._game.getResult();
 		
 		if(result) {
-			var scores = {};
-				
 			Colour.forEach((function(colour) {
-				scores[this._relevanceFromColour(colour)] = result.scores[colour];
+				this._template.set("players." + this._relevanceFromColour(colour) + ".score", result.scores[colour]);
 			}).bind(this));
-			
-			this._template.set("scores", scores);
 		}
 	}
 	
