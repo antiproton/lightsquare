@@ -83,6 +83,10 @@ div.game_player > div.details {
 	align-items: center;
 }
 
+div.player_connection_status {
+	font-size: .55em;
+}
+
 div.player_name, div.game_player div.player_clock {
 	padding: .35em;
 }
