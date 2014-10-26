@@ -28,14 +28,16 @@
 					</div>
 				{{/result}}
 				<div class="player_connection_status">
-					{{#players.opponent.isBot}}
-						
-					{{else}}
-						{{#players.opponent.isConnected}}
-							
-						{{else}}
-							
+					{{#players.opponent.isUser}}
+						{{#players.opponent.id !== userPlayerId}}
+							{{#players.opponent.isConnected}}
+								<img src="{{getAbsolutePath('./connected.png')}}">
+							{{else}}
+								<img src="{{getAbsolutePath('./disconnected.png')}}">
+							{{/}}
 						{{/}}
+					{{else}}
+						<img src="{{getAbsolutePath('./bot.png')}}">
 					{{/}}
 				</div>
 			</div>
@@ -81,14 +83,16 @@
 					</div>
 				{{/result}}
 				<div class="player_connection_status">
-					{{#players.player.isBot}}
-						
-					{{else}}
-						{{#players.player.isConnected}}
-							
-						{{else}}
-							
+					{{#players.player.isUser}}
+						{{#players.player.id !== userPlayerId}}
+							{{#players.player.isConnected}}
+								<img src="{{getAbsolutePath('./connected.png')}}">
+							{{else}}
+								<img src="{{getAbsolutePath('./disconnected.png')}}">
+							{{/}}
 						{{/}}
+					{{else}}
+						<img src="{{getAbsolutePath('./bot.png')}}">
 					{{/}}
 				</div>
 			</div>

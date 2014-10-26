@@ -523,6 +523,7 @@ define(function(require) {
 			el: parent,
 			template: html,
 			data: {
+				userPlayerId: this._user.getPlayerId(),
 				prefs: this._user.getPrefs(),
 				capturedPieceSize: CAPTURED_PIECE_SIZE,
 				capturedPieceSprite: require.toUrl("../piece_sprites/Classic/" + CAPTURED_PIECE_SIZE + ".png"),
@@ -534,6 +535,9 @@ define(function(require) {
 				newSeekWaiting: false,
 				getColonDisplay: function(time) {
 					return Time.fromMilliseconds(time).getColonDisplay(time < timeCriticalThreshold);
+				},
+				getAbsolutePath: function(path) {
+					return require.toUrl(path);
 				}
 			},
 			partials: {
@@ -612,10 +616,7 @@ define(function(require) {
 	
 	GamePage.prototype._updatePlayerInfo = function() {
 		Colour.forEach((function(colour) {
-			var relevance = this._relevanceFromColour(colour);
-			
-			this._template.set("players." + relevance + ".name", this._game.getPlayerName(colour));
-			this._template.set("players." + relevance + ".rating", this._game.getRating(colour));
+			this._template.set("players." + this._relevanceFromColour(colour), this._game.getPlayer(colour));
 		}).bind(this));
 	}
 	
