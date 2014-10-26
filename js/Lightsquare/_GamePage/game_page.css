@@ -65,6 +65,7 @@ label.game_page_pref {
 div.game_player {
 	display: flex;
 	align-items: center;
+	justify-content: space-between;
 	border: 1px solid #bbbbbb;
 	border-radius: 3px;
 }
@@ -77,13 +78,18 @@ div.game_player.opponent {
 	margin-bottom: .3em;
 }
 
+div.game_player > div.details {
+	display: flex;
+	align-items: center;
+}
+
 div.player_name, div.game_player div.player_clock {
 	padding: .35em;
 }
 
-div.player_score {
+div.game_player > div.score {
 	color: white;
-	margin-left: 1em;
+	margin-right: .5em;
 	border-radius: 2px;
 	padding: 0 .25em;
 	background: #3777a2;

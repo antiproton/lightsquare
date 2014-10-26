@@ -16,30 +16,32 @@
 				</div>
 			</div>
 			<div class="game_player opponent">
-				<div class="player_clock {{isInProgress && !viewingActivePlayer ? ('active_clock' + (players.opponent.time < timeCriticalThreshold ? ' critical_clock' : '')) : 'inactive_clock'}}">
-					{{getColonDisplay(players.opponent.time)}}
-				</div>
-				<div class="player_name">
-					{{players.opponent.name}} ({{players.opponent.rating}})
+				<div class="details">
+					<div class="player_clock {{isInProgress && !viewingActivePlayer ? ('active_clock' + (players.opponent.time < timeCriticalThreshold ? ' critical_clock' : '')) : 'inactive_clock'}}">
+						{{getColonDisplay(players.opponent.time)}}
+					</div>
+					<div class="player_name">
+						{{players.opponent.name}} ({{players.opponent.rating}})
+					</div>
+					<div class="player_connection_status">
+						{{#players.opponent.isUser}}
+							{{#players.opponent.id !== userPlayerId}}
+								{{#players.opponent.isConnected}}
+									<img src="{{getAbsolutePath('./connected.png')}}">
+								{{else}}
+									<img src="{{getAbsolutePath('./disconnected.png')}}">
+								{{/}}
+							{{/}}
+						{{else}}
+							<img src="{{getAbsolutePath('./bot.png')}}">
+						{{/}}
+					</div>
 				</div>
 				{{#result !== null}}
-					<div class="player_score">
+					<div class="score">
 						{{players.opponent.score}}
 					</div>
 				{{/result}}
-				<div class="player_connection_status">
-					{{#players.opponent.isUser}}
-						{{#players.opponent.id !== userPlayerId}}
-							{{#players.opponent.isConnected}}
-								<img src="{{getAbsolutePath('./connected.png')}}">
-							{{else}}
-								<img src="{{getAbsolutePath('./disconnected.png')}}">
-							{{/}}
-						{{/}}
-					{{else}}
-						<img src="{{getAbsolutePath('./bot.png')}}">
-					{{/}}
-				</div>
 			</div>
 			<div class="history_and_captured">
 				<div class="game_history" id="history">
@@ -71,30 +73,32 @@
 				{{>controls}}
 			{{/userIsPlaying}}
 			<div class="game_player player">
-				<div class="player_clock {{isInProgress && viewingActivePlayer ? ('active_clock' + (players.player.time < timeCriticalThreshold ? ' critical_clock' : '')) : 'inactive_clock'}}">
-					{{getColonDisplay(players.player.time)}}
-				</div>
-				<div class="player_name">
-					{{players.player.name}} ({{players.player.rating}})
+				<div class="details">
+					<div class="player_clock {{isInProgress && viewingActivePlayer ? ('active_clock' + (players.player.time < timeCriticalThreshold ? ' critical_clock' : '')) : 'inactive_clock'}}">
+						{{getColonDisplay(players.player.time)}}
+					</div>
+					<div class="player_name">
+						{{players.player.name}} ({{players.player.rating}})
+					</div>
+					<div class="player_connection_status">
+						{{#players.player.isUser}}
+							{{#players.player.id !== userPlayerId}}
+								{{#players.player.isConnected}}
+									<img src="{{getAbsolutePath('./connected.png')}}">
+								{{else}}
+									<img src="{{getAbsolutePath('./disconnected.png')}}">
+								{{/}}
+							{{/}}
+						{{else}}
+							<img src="{{getAbsolutePath('./bot.png')}}">
+						{{/}}
+					</div>
 				</div>
 				{{#result !== null}}
-					<div class="player_score">
+					<div class="score">
 						{{players.player.score}}
 					</div>
 				{{/result}}
-				<div class="player_connection_status">
-					{{#players.player.isUser}}
-						{{#players.player.id !== userPlayerId}}
-							{{#players.player.isConnected}}
-								<img src="{{getAbsolutePath('./connected.png')}}">
-							{{else}}
-								<img src="{{getAbsolutePath('./disconnected.png')}}">
-							{{/}}
-						{{/}}
-					{{else}}
-						<img src="{{getAbsolutePath('./bot.png')}}">
-					{{/}}
-				</div>
 			</div>
 			<div class="game_chat" id="chat">
 				
