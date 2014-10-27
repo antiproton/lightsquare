@@ -10,6 +10,7 @@ define(function(require) {
 	require("css!./register.css");
 	require("css!./logout_confirmation.css");
 	require("css!./player_clocks.css");
+	require("css!./chrome_scrollbars.css");
 	var html = require("file!./lightsquare.html");
 	var navHtml = require("file!./nav.html");
 	var connectingMessageHtml = require("file!./connecting_message.html");
