@@ -1,5 +1,5 @@
 define(function(require) {
-	require("Array.prototype/getShallowCopy");
+	require("Array.prototype/slice");
 	var objToArray = require("js/objToArray");
 	var Event = require("js/Event");
 	var Promisor = require("js/Promisor");
@@ -103,7 +103,7 @@ define(function(require) {
 		}).bind(this));
 		
 		this._server.subscribe("/game/" + this._id + "/draw_offer", (function(colour) {
-			if(Colour.fromFenString(colour) === this._game.getActiveColour().opposite) {
+			if(Colour.fromFenString(colour) === this._game.activeColour.opposite) {
 				this.DrawOffered.fire();
 			}
 		}).bind(this));
@@ -255,7 +255,7 @@ define(function(require) {
 	}
 	
 	Game.prototype.getActiveColour = function() {
-		return this._game.getActiveColour();
+		return this._game.activeColour;
 	}
 	
 	Game.prototype.timingHasStarted = function() {
@@ -267,7 +267,7 @@ define(function(require) {
 	}
 	
 	Game.prototype.getHistory = function() {
-		return this._history.getShallowCopy();
+		return this._history.slice();
 	}
 	
 	Game.prototype.getUserColour = function() {
@@ -303,7 +303,7 @@ define(function(require) {
 	}
 	
 	Game.prototype.getActivePlayer = function() {
-		return this._players[this._game.getActiveColour()];
+		return this._players[this._game.activeColour];
 	}
 	
 	Game.prototype.getTimeLeft = function(colour) {
@@ -356,12 +356,12 @@ define(function(require) {
 		}
 	}
 	
-	Game.prototype.enqueueServerMove = function(moveDetails) {
-		this._moveQueue[moveDetails.index] = moveDetails;
+	Game.prototype.enqueueServerMove = function(move) {
+		this._moveQueue[move.index] = move;
 	}
 	
-	Game.prototype._updateTimeFromServerMove = function(moveDetails) {
-		this._history[moveDetails.index].setTime(moveDetails.time);
+	Game.prototype._updateTimeFromServerMove = function(move) {
+		this._history[moveDetails.index].setTime(move.time);
 		this._clock.calculateTimes();
 	}
 	
