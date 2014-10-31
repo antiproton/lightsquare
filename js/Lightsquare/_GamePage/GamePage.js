@@ -198,7 +198,7 @@ define(function(require) {
 	GamePage.prototype._updateConnectionStatus = function(player, isConnected) {
 		var colour = this._getPlayerColour(player);
 		var relevance = this._relevanceFromColour(colour);
-		console.log(colour.fenString, relevance);
+		
 		this._template.set("players." + relevance + ".isConnected", isConnected);
 	}
 	
@@ -212,8 +212,8 @@ define(function(require) {
 	
 	GamePage.prototype._setPremove = function(premove) {
 		this._board.setBoardArray(premove.getBoardArray());
-		this._board.highlightSquares(premove.getFrom(), Board.highlightTypes.PREMOVE_FROM);
-		this._board.highlightSquares(premove.getTo(), Board.highlightTypes.PREMOVE_TO);
+		this._board.highlightSquares(premove.from, Board.highlightTypes.PREMOVE_FROM);
+		this._board.highlightSquares(premove.to, Board.highlightTypes.PREMOVE_TO);
 		this._pendingPremove = premove;
 	}
 	
@@ -308,8 +308,8 @@ define(function(require) {
 	
 	GamePage.prototype._highlightMove = function(move) {
 		this._board.unhighlightSquares(Board.highlightTypes.LAST_MOVE_FROM, Board.highlightTypes.LAST_MOVE_TO);
-		this._board.highlightSquares(move.getFrom(), Board.highlightTypes.LAST_MOVE_FROM);
-		this._board.highlightSquares(move.getTo(), Board.highlightTypes.LAST_MOVE_TO);
+		this._board.highlightSquares(move.from, Board.highlightTypes.LAST_MOVE_FROM);
+		this._board.highlightSquares(move.to, Board.highlightTypes.LAST_MOVE_TO);
 	}
 	
 	GamePage.prototype._setupGameControls = function() {
@@ -332,19 +332,19 @@ define(function(require) {
 		}).bind(this));
 		
 		this._template.on("rematch", (function() {
-			if(this._game.rematchOfferedBy() !== this.getUserColour()) {
+			if(this._game.rematchOfferedBy !== this.getUserColour()) {
 				this._game.offerOrAcceptRematch();
 			}
 		}).bind(this));
 		
 		this._template.on("decline_rematch", (function() {
-			if(this._game.rematchOfferedBy() === this.getUserColour().opposite) {
+			if(this._game.rematchOfferedBy === this.getUserColour().opposite) {
 				this._game.declineRematch();
 			}
 		}).bind(this));
 		
 		this._template.on("cancel_rematch", (function() {
-			if(this._game.rematchOfferedBy() === this.getUserColour()) {
+			if(this._game.rematchOfferedBy === this.getUserColour()) {
 				this._game.cancelRematch();
 			}
 		}).bind(this));
@@ -473,11 +473,9 @@ define(function(require) {
 	}
 	
 	GamePage.prototype._populateCapturedPieces = function() {
-		this._game.getHistory().forEach(function(move) {
-			var capturedPiece = move.getCapturedPiece();
-			
-			if(capturedPiece !== null) {
-				this._addCapturedPiece(capturedPiece);
+		this._game.history.forEach(function(move) {
+			if(move.capturedPiece !== null) {
+				this._addCapturedPiece(move.capturedPiece);
 			}
 		}, this);
 	}
