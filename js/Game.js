@@ -1,5 +1,4 @@
 define(function(require) {
-	require("Array.prototype/slice");
 	var objToArray = require("js/objToArray");
 	var Event = require("js/Event");
 	var Promisor = require("js/Promisor");
