@@ -53,12 +53,11 @@ define(function(require) {
 		
 		this.position = new Position();
 		this.history = [];
+		this._moveQueue = [];
 		
 		for(var i = 0; i < gameDetails.history.length; i++) {
 			this._handleServerMove(gameDetails.history[i]);
 		}
-		
-		this._moveQueue = [];
 		
 		this.timingStyle = new TimingStyle({
 			initialTime: this._options.initialTime,
