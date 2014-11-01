@@ -40,7 +40,7 @@ define(function(require) {
 		this.isDrawOffered = gameDetails.isDrawOffered;
 		this.isUndoRequested = gameDetails.isUndoRequested;
 		this._addedTime = gameDetails.addedTime;
-		this.rematchOfferedBy = (gameDetails.rematchOfferedBy ? Colour.fromFenString(gameDetails.rematchOfferedBy) : null);
+		this.rematchOfferedBy = (gameDetails.rematchOfferedBy ? Colour.byFenString[gameDetails.rematchOfferedBy] : null);
 		
 		this._players = {};
 		this._players[Colour.white] = gameDetails.white;
@@ -253,10 +253,6 @@ define(function(require) {
 		return this._clock.timingHasStarted();
 	}
 	
-	Game.prototype.getHistory = function() {
-		return this.history.slice();
-	}
-	
 	Game.prototype.getUserColour = function() {
 		var userColour = null;
 		
@@ -323,7 +319,7 @@ define(function(require) {
 		}
 	}
 	
-	Game.prototype.enqueueServerMove = function(move) {
+	Game.prototype._enqueueServerMove = function(move) {
 		this._moveQueue[move.index] = move;
 	}
 	
@@ -357,7 +353,7 @@ define(function(require) {
 		this.GameOver.fire(result);
 	}
 	
-	Game.prototype.getBackupDetails = function() {
+	Game.prototype.getBackupDetails = function() { //FIXME make this work with the new formats
 		return {
 			history: this.history.map(function(move) {
 				return Move.fromMove(move);
