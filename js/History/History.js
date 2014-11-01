@@ -29,7 +29,9 @@ define(function(require) {
 		this._historyNode = this._template.nodes.history;
 		
 		this._historyNode.addEventListener("scroll", (function() {
-			this._scrollOnNewMoves = (this._historyNode.scrollHeight - this._historyNode.scrollTop === this._historyNode.clientHeight);
+			var node = this._historyNode;
+			
+			this._scrollOnNewMoves = (node.scrollHeight - node.scrollTop === node.clientHeight);
 		}).bind(this));
 	}
 
