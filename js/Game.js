@@ -9,7 +9,6 @@ define(function(require) {
 	var ChessMove = require("chess/Move");
 	var Square = require("chess/Square");
 	var PieceType = require("chess/PieceType");
-	var Fen = require("chess/Fen");
 	var TimingStyle = require("chess/TimingStyle");
 	var Clock = require("chess/Clock");
 
@@ -40,15 +39,20 @@ define(function(require) {
 		this.isDrawOffered = gameDetails.isDrawOffered;
 		this.isUndoRequested = gameDetails.isUndoRequested;
 		this._addedTime = gameDetails.addedTime;
-		this.rematchOfferedBy = (gameDetails.rematchOfferedBy ? Colour.byFenString[gameDetails.rematchOfferedBy] : null);
+		
+		this.rematchOfferedBy = (
+			gameDetails.rematchOfferedBy ?
+			Colour.byFenString[gameDetails.rematchOfferedBy] :
+			null
+		);
 		
 		this._players = {};
 		this._players[Colour.white] = gameDetails.white;
 		this._players[Colour.black] = gameDetails.black;
 		
-		this.history = gameDetails.history.map(function(move) {
-			return Move.fromJSON(move);
-		});
+		for(var i = 0; i < gameDetails.history.length; i++) {
+			this._handleServerMove(gameDetails.history[i]);
+		}
 		
 		this._moveQueue = [];
 		
@@ -102,13 +106,13 @@ define(function(require) {
 		}).bind(this));
 		
 		this._server.subscribe("/game/" + this.id + "/draw_offer", (function(colour) {
-			if(Colour.fromFenString(colour) === this._game.position.activeColour.opposite) {
+			if(Colour.byFenString[colour] === this._game.position.activeColour.opposite) {
 				this.DrawOffered.fire();
 			}
 		}).bind(this));
 		
 		this._server.subscribe("/game/" + this.id + "/rematch/offered", (function(colour) {
-			var offeredBy = Colour.fromFenString(colour);
+			var offeredBy = Colour.byFenString[colour];
 			
 			this.rematchOfferedBy = offeredBy;
 			this.RematchOffered.fire(offeredBy);
@@ -141,9 +145,9 @@ define(function(require) {
 			var premove = null;
 			
 			if(data !== null) {
-				var promoteTo = (data.promoteTo ? PieceType.fromSanString(data.promoteTo) : PieceType.queen);
-				var from = Square.fromSquareNo(data.from);
-				var to = Square.fromSquareNo(data.to);
+				var promoteTo = (data.promoteTo ? PieceType.bySanString[data.promoteTo] : PieceType.queen);
+				var from = Square.bySquareNo[data.from];
+				var to = Square.bySquareNo[data.to];
 				
 				premove = new Premove(this.getPosition(), from, to, promoteTo);
 			}
@@ -305,7 +309,9 @@ define(function(require) {
 		this._server.send("/game/" + this.id + "/chat", message);
 	}
 	
-	Game.prototype._handleServerMove = function(move) {
+	Game.prototype._handleServerMove = function(moveString) {
+		var move = Move.unpack(moveString);
+		
 		if(move.index > this.history.length) {
 			this._enqueueServerMove(move);
 		}
