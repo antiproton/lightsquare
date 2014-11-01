@@ -135,12 +135,12 @@ define(function(require) {
 	}
 	
 	Board.prototype.animateMove = function(move, callback) {
-		var from = move.getFrom();
-		var to = move.getTo();
-		var boardArray = move.getPositionAfter().getBoardArray();
+		var from = move.from;
+		var to = move.to;
+		var boardArray = move.positionAfter.board;
 		
 		if(this._animation.isInProgress) {
-			this.setBoardArray(this._animation.move.getPositionAfter().getBoardArray());
+			this.setBoardArray(this._animation.move.positionAfter.board);
 		}
 		
 		this._template.set("animationInProgress", true);
@@ -440,7 +440,7 @@ define(function(require) {
 				boardY = 7 - boardY;
 			}
 			
-			square = ChessSquare.fromCoords(new Coords(boardX, boardY));
+			square = ChessSquare.byCoords[boardX][boardY];
 		}
 		
 		return square;
