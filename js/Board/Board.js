@@ -131,7 +131,7 @@ define(function(require) {
 	}
 
 	Board.prototype.move = function(move) {
-		this.setBoardArray(move.getPositionAfter().getBoardArray());
+		this.setBoardArray(move.positionAfter.board);
 	}
 	
 	Board.prototype.animateMove = function(move, callback) {

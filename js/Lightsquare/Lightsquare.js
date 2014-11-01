@@ -56,7 +56,7 @@ define(function(require) {
 	}
 	
 	Lightsquare.prototype._addGamePage = function(game) {
-		var id = game.getId();
+		var id = game.id;
 		var url = "/game/" + id;
 		
 		if(!this._hasPage(url)) {
@@ -77,7 +77,7 @@ define(function(require) {
 			this._updateGamePages();
 			
 			page.Rematch.addHandler(function(game) {
-				var newId = game.getId();
+				var newId = game.id;
 				var newUrl = "/game/" + newId;
 				
 				this._tabContainer.changeId(url, newUrl);
@@ -206,11 +206,11 @@ define(function(require) {
 		}, this);
 		
 		this._user.SeekMatched.addHandler(function(game) {
-			this._router.setPath("/game/" + game.getId());
+			this._router.setPath("/game/" + game.id);
 		}, this);
 		
 		this._user.GameRestored.addHandler(function(game) {
-			this._router.setPath("/game/" + game.getId());
+			this._router.setPath("/game/" + game.id);
 		}, this);
 	}
 	

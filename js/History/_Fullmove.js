@@ -5,10 +5,12 @@ define(function(require) {
 		this._moves = {};
 		this._moves[Colour.white] = null;
 		this._moves[Colour.black] = null;
+		this.fullmove = null;
 	}
 
 	Fullmove.prototype.add = function(move) {
-		this._moves[move.getColour()] = move;
+		this._moves[move.colour] = move;
+		this.fullmove = move.fullmove;
 	}
 
 	Fullmove.prototype.remove = function(move) {
@@ -29,10 +31,6 @@ define(function(require) {
 	
 	Fullmove.prototype.getBlackMove = function() {
 		return this._moves[Colour.black];
-	}
-	
-	Fullmove.prototype.getFullmove = function() {
-		return this.getLastMove() ? this.getLastMove().getFullmove() : null;
 	}
 
 	return Fullmove;

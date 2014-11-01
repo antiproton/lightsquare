@@ -209,14 +209,14 @@ define(function(require) {
 	}
 	
 	GamePage.prototype._setPremove = function(premove) {
-		this._board.setBoardArray(premove.getBoardArray());
+		this._board.setBoardArray(premove.board);
 		this._board.highlightSquares(premove.from, Board.highlightTypes.PREMOVE_FROM);
 		this._board.highlightSquares(premove.to, Board.highlightTypes.PREMOVE_TO);
 		this._pendingPremove = premove;
 	}
 	
 	GamePage.prototype._clearPremove = function() {
-		this._board.setBoardArray(this._game.getPosition().getBoardArray());
+		this._board.setBoardArray(this._game.position.board);
 		this._board.unhighlightSquares(Board.highlightTypes.PREMOVE_FROM, Board.highlightTypes.PREMOVE_TO);
 		this._pendingPremove = null;
 	}
@@ -230,7 +230,7 @@ define(function(require) {
 		this._board = new Board(this._template.nodes.board);
 		
 		this._board.SelectPiece.addHandler(function(data) {
-			if(!this.userIsPlaying() || data.piece.colour !== this.getUserColour() || !this._game.isInProgress()) {
+			if(!this.userIsPlaying() || data.piece.colour !== this.getUserColour() || !this._game.isInProgress) {
 				data.cancel = true;
 			}
 		}, this);
@@ -255,7 +255,7 @@ define(function(require) {
 					promoteTo === null
 					&& (
 						userIsActive ?
-						new Move(this._game.getPosition(), moveEvent.from, moveEvent.to).isPromotion() :
+						new Move(this._game.position, moveEvent.from, moveEvent.to).isPromotion :
 						(moveEvent.piece.type === PieceType.pawn && moveEvent.to.isPromotionRank)
 					)
 				) {
@@ -270,7 +270,7 @@ define(function(require) {
 					else if(this._pendingPremove === null) {
 						var premove = this._game.premove(moveEvent.from, moveEvent.to, moveEvent.promoteTo);
 						
-						if(premove.isValid()) {
+						if(premove.isValid) {
 							this._setPremove(premove);
 						}
 					}
@@ -564,7 +564,7 @@ define(function(require) {
 			userIsPlaying: this.userIsPlaying(),
 			viewingActivePlayer: (this._game.position.activeColour === this._viewingAs),
 			userIsActivePlayer: this.userIsActivePlayer(),
-			drawOffered: this._game.isDrawOffered(),
+			drawOffered: this._game.isDrawOffered,
 			canClaimDraw: this._game.isDrawClaimable(),
 			timingDescription: this._game.timingStyle.getDescription()
 		});

@@ -5,6 +5,7 @@ define(function(require) {
 	var Move = require("jsonchess/Move");
 	var Premove = require("jsonchess/Premove");
 	var ChessGame = require("chess/Game");
+	var Position = require("chess/Position");
 	var Colour = require("chess/Colour");
 	var ChessMove = require("chess/Move");
 	var Square = require("chess/Square");
@@ -50,6 +51,9 @@ define(function(require) {
 		this._players[Colour.white] = gameDetails.white;
 		this._players[Colour.black] = gameDetails.black;
 		
+		this.position = new Position();
+		this.history = [];
+		
 		for(var i = 0; i < gameDetails.history.length; i++) {
 			this._handleServerMove(gameDetails.history[i]);
 		}
@@ -61,12 +65,7 @@ define(function(require) {
 			increment: this._options.timeIncrement
 		});
 		
-		this._game = new ChessGame({
-			history: this.history,
-			isTimed: false
-		});
-		
-		this._game.Move.addHandler(function() {
+		this.Move.addHandler(function() {
 			this._promisor.resolve("/request/premove", null);
 		}, this);
 		
@@ -106,7 +105,7 @@ define(function(require) {
 		}).bind(this));
 		
 		this._server.subscribe("/game/" + this.id + "/draw_offer", (function(colour) {
-			if(Colour.byFenString[colour] === this._game.position.activeColour.opposite) {
+			if(Colour.byFenString[colour] === this.position.activeColour.opposite) {
 				this.DrawOffered.fire();
 			}
 		}).bind(this));
@@ -149,7 +148,7 @@ define(function(require) {
 				var from = Square.bySquareNo[data.from];
 				var to = Square.bySquareNo[data.to];
 				
-				premove = new Premove(this.getPosition(), from, to, promoteTo);
+				premove = new Premove(this.position, from, to, promoteTo);
 			}
 			
 			this._promisor.resolve("/request/premove", premove);
@@ -162,11 +161,10 @@ define(function(require) {
 
 	Game.prototype.move = function(from, to, promoteTo) {
 		if(this.isInProgress) {
-			var move = new ChessMove(this.getPosition(), from, to, promoteTo);
+			var move = new ChessMove(this.position, from, to, promoteTo);
 			
-			if(move.isLegal()) {
-				this._game.move(from, to, promoteTo);
-				this.history.push(Move.fromMove(move));
+			if(move.isLegal) {
+				this._addMove(move);
 				
 				this._server.send("/game/" + this.id + "/move", {
 					from: from.squareNo,
@@ -180,9 +178,9 @@ define(function(require) {
 	}
 	
 	Game.prototype.premove = function(from, to, promoteTo) {
-		var premove = new Premove(this.getPosition(), from, to, promoteTo);
+		var premove = new Premove(this.position, from, to, promoteTo);
 			
-		if(premove.isValid()) {
+		if(premove.isValid) {
 			this._server.send("/game/" + this.id + "/premove", premove);
 		}
 		
@@ -245,14 +243,6 @@ define(function(require) {
 		this.Rematch.fire(new Game(this._user, this._server, gameDetails));
 	}
 	
-	Game.prototype.getPosition = function() {
-		return this._game.position;
-	}
-	
-	Game.prototype.getActiveColour = function() {
-		return this._game.position.activeColour;
-	}
-	
 	Game.prototype.timingHasStarted = function() {
 		return this._clock.timingHasStarted();
 	}
@@ -290,7 +280,7 @@ define(function(require) {
 	}
 	
 	Game.prototype.getActivePlayer = function() {
-		return this._players[this._game.position.activeColour];
+		return this._players[this.position.activeColour];
 	}
 	
 	Game.prototype.getTimeLeft = function(colour) {
@@ -298,7 +288,15 @@ define(function(require) {
 	}
 	
 	Game.prototype.isDrawClaimable = function() {
-		return (this._game.isFiftymoveClaimable() || this._game.isThreefoldClaimable());
+		return (this.isFiftymoveClaimable() || this.isThreefoldClaimable());
+	}
+	
+	Game.prototype.isFiftymoveClaimable = function() {
+		return ChessGame.prototype.isFiftymoveClaimable.call(this);
+	}
+	
+	Game.prototype.isThreefoldClaimable = function() {
+		return ChessGame.prototype.isThreefoldClaimable.call(this);
 	}
 	
 	Game.prototype.getLastMove = function() {
@@ -337,15 +335,19 @@ define(function(require) {
 	Game.prototype._applyServerMove = function(jsonchessMove) {
 		var move = Move.decode(jsonchessMove, this.position);
 		
-		this._game.addMove(move);
-		this.history.push(move);
-		this.Move.fire(move);
+		this._addMove(move);
 		
 		var next = this._moveQueue[move.index + 1];
 		
 		if(next) {
 			this._applyServerMove(next);
 		}
+	}
+	
+	Game.prototype._addMove = function(move) {
+		this.position = move.positionAfter.getCopy();
+		this.history.push(move);
+		this.Move.fire(move);
 	}
 		
 	Game.prototype._abort = function() {

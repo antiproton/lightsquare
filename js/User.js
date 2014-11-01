@@ -146,7 +146,7 @@ define(function(require) {
 					name: game.getPlayerName(playingAs.opposite),
 					rating: game.getRating(playingAs.opposite)
 				},
-				timingDescription: game.getTimingStyle().getDescription(),
+				timingDescription: game.timingStyle.getDescription(),
 				playingAs: playingAs.fenString
 			};
 		}
@@ -244,7 +244,7 @@ define(function(require) {
 	
 	User.prototype.hasGamesInProgress = function() {
 		return this._games.some((function(game) {
-			return (game.getUserColour() !== null && game.isInProgress());
+			return (game.getUserColour() !== null && game.isInProgress);
 		}).bind(this));
 	}
 	
@@ -257,13 +257,13 @@ define(function(require) {
 		
 		if(game.userIsPlaying()) {
 			game.Move.addHandler(function() {
-				if(game.getHistory().length >= gameRestoration.MIN_MOVES) {
+				if(game.history.length >= gameRestoration.MIN_MOVES) {
 					this._saveGameBackup(game);
 				}
 			}, this);
 			
 			game.GameOver.addHandler(function() {
-				this._removeGameBackup(game.getId());
+				this._removeGameBackup(game.id);
 			}, this);
 		}
 		
@@ -277,7 +277,7 @@ define(function(require) {
 	User.prototype.getGame = function(id) {
 		return this._promisor.get("/game/" + id, function(promise) {
 			this._games.some(function(game) {
-				if(game.getId() === id) {
+				if(game.id === id) {
 					promise.resolve(game);
 					
 					return true;
@@ -349,10 +349,10 @@ define(function(require) {
 			
 			"/game": function(gameDetails) {
 				var game = this._games.filter(function(existingGame) {
-					return (existingGame.getId() === gameDetails.id);
+					return (existingGame.id === gameDetails.id);
 				})[0] || this._addGame(this._createGame(gameDetails));
 							
-				this._promisor.resolve("/game/" + game.getId(), game);
+				this._promisor.resolve("/game/" + game.id, game);
 			},
 			
 			"/seek/matched": function(gameDetails) {

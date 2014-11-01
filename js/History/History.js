@@ -36,7 +36,7 @@ define(function(require) {
 	History.prototype.move = function(move) {
 		var lastFullmove = this._getLastFullmove();
 		
-		if(lastFullmove === null || move.getColour() === Colour.white) {
+		if(lastFullmove === null || move.colour === Colour.white) {
 			lastFullmove = new Fullmove();
 			
 			this._fullmoves.push(lastFullmove);

@@ -5,10 +5,10 @@
 				{{this.getFullmove()}}
 			</div>
 			<div class="history_move_label {{selectedMove === this.getWhiteMove() ? 'selected' : ''}}" on-click="select:{{this.getWhiteMove()}}">
-				{{this.getWhiteMove().getLabel()}}
+				{{this.getWhiteMove().label}}
 			</div>
 			<div class="history_move_label {{selectedMove === this.getBlackMove() ? 'selected' : ''}}" on-click="select:{{this.getBlackMove()}}">
-				{{this.getBlackMove().getLabel()}}
+				{{this.getBlackMove().label}}
 			</div>
 		</div>
 	{{/fullmoves}}
