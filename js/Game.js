@@ -163,6 +163,8 @@ define(function(require) {
 			var move = new ChessMove(this.position, from, to, promoteTo);
 			
 			if(move.isLegal) {
+				move.generateLabels();
+				
 				this._addMove(move);
 				
 				this._server.send("/game/" + this.id + "/move", {
