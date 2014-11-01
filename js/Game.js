@@ -337,6 +337,7 @@ define(function(require) {
 		var move = Move.decode(jsonchessMove, this.position);
 		
 		this._addMove(move);
+		this.Move.fire(move);
 		
 		var next = this._moveQueue[move.index + 1];
 		
@@ -348,7 +349,6 @@ define(function(require) {
 	Game.prototype._addMove = function(move) {
 		this.position = move.positionAfter.getCopy();
 		this.history.push(move);
-		this.Move.fire(move);
 	}
 		
 	Game.prototype._abort = function() {
