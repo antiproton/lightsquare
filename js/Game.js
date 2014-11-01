@@ -34,9 +34,9 @@ define(function(require) {
 		this._options = gameDetails.options;
 		this.startTime = gameDetails.startTime;
 		this.endTime = gameDetails.endTime;
-		this._id = gameDetails.id;
+		this.id = gameDetails.id;
 		this.isInProgress = gameDetails.isInProgress;
-		this._result = gameDetails.result;
+		this.result = gameDetails.result;
 		this.isDrawOffered = gameDetails.isDrawOffered;
 		this.isUndoRequested = gameDetails.isUndoRequested;
 		this._addedTime = gameDetails.addedTime;
@@ -82,62 +82,62 @@ define(function(require) {
 	}
 	
 	Game.prototype._subscribeToServerMessages = function() {
-		this._server.subscribe("/game/" + this._id + "/move", (function(move) {
+		this._server.subscribe("/game/" + this.id + "/move", (function(move) {
 			this._handleServerMove(move);
 		}).bind(this));
 		
-		this._server.subscribe("/game/" + this._id + "/chat", (function(message) {
+		this._server.subscribe("/game/" + this.id + "/chat", (function(message) {
 			this.ChatMessageReceived.fire({
 				from: message.from,
 				body: message.body
 			});
 		}).bind(this));
 		
-		this._server.subscribe("/game/" + this._id + "/game_over", (function(result) {
+		this._server.subscribe("/game/" + this.id + "/game_over", (function(result) {
 			this._gameOver(result);
 		}).bind(this));
 		
-		this._server.subscribe("/game/" + this._id + "/aborted", (function() {
+		this._server.subscribe("/game/" + this.id + "/aborted", (function() {
 			this._abort();
 		}).bind(this));
 		
-		this._server.subscribe("/game/" + this._id + "/draw_offer", (function(colour) {
-			if(Colour.fromFenString(colour) === this._game.activeColour.opposite) {
+		this._server.subscribe("/game/" + this.id + "/draw_offer", (function(colour) {
+			if(Colour.fromFenString(colour) === this._game.position.activeColour.opposite) {
 				this.DrawOffered.fire();
 			}
 		}).bind(this));
 		
-		this._server.subscribe("/game/" + this._id + "/rematch/offered", (function(colour) {
+		this._server.subscribe("/game/" + this.id + "/rematch/offered", (function(colour) {
 			var offeredBy = Colour.fromFenString(colour);
 			
 			this.rematchOfferedBy = offeredBy;
 			this.RematchOffered.fire(offeredBy);
 		}).bind(this));
 		
-		this._server.subscribe("/game/" + this._id + "/rematch/declined", (function() {
+		this._server.subscribe("/game/" + this.id + "/rematch/declined", (function() {
 			var colour = this.rematchOfferedBy;
 			
 			this.rematchOfferedBy = null;
 			this.RematchDeclined.fire(colour.opposite);
 		}).bind(this));
 		
-		this._server.subscribe("/game/" + this._id + "/rematch/canceled", (function() {
+		this._server.subscribe("/game/" + this.id + "/rematch/canceled", (function() {
 			var colour = this.rematchOfferedBy;
 			
 			this.rematchOfferedBy = null;
 			this.RematchOfferCanceled.fire(colour);
 		}).bind(this));
 		
-		this._server.subscribe("/game/" + this._id + "/rematch/expired", (function() {
+		this._server.subscribe("/game/" + this.id + "/rematch/expired", (function() {
 			this.rematchOfferedBy = null;
 			this.RematchOfferExpired.fire();
 		}).bind(this));
 		
-		this._server.subscribe("/game/" + this._id + "/rematch", (function(gameDetails) {
+		this._server.subscribe("/game/" + this.id + "/rematch", (function(gameDetails) {
 			this._rematch(gameDetails);
 		}).bind(this));
 		
-		this._server.subscribe("/game/" + this._id + "/premove", (function(data) {
+		this._server.subscribe("/game/" + this.id + "/premove", (function(data) {
 			var premove = null;
 			
 			if(data !== null) {
@@ -153,11 +153,7 @@ define(function(require) {
 	}
 	
 	Game.prototype._requestLatestMoves = function() {
-		this._server.send("/game/" + this._id + "/request/moves", this.history.length);
-	}
-	
-	Game.prototype.getId = function() {
-		return this._id;
+		this._server.send("/game/" + this.id + "/request/moves", this.history.length);
 	}
 
 	Game.prototype.move = function(from, to, promoteTo) {
@@ -168,7 +164,7 @@ define(function(require) {
 				this._game.move(from, to, promoteTo);
 				this.history.push(Move.fromMove(move));
 				
-				this._server.send("/game/" + this._id + "/move", {
+				this._server.send("/game/" + this.id + "/move", {
 					from: from.squareNo,
 					to: to.squareNo,
 					promoteTo: (promoteTo ? promoteTo.sanString : undefined)
@@ -183,20 +179,20 @@ define(function(require) {
 		var premove = new Premove(this.getPosition(), from, to, promoteTo);
 			
 		if(premove.isValid()) {
-			this._server.send("/game/" + this._id + "/premove", premove);
+			this._server.send("/game/" + this.id + "/premove", premove);
 		}
 		
 		return premove;
 	}
 	
 	Game.prototype.cancelPremove = function() {
-		this._server.send("/game/" + this._id + "/premove/cancel");
+		this._server.send("/game/" + this.id + "/premove/cancel");
 	}
 	
 	Game.prototype.getPendingPremove = function() {
 		return this._promisor.get("/request/premove", function(promise) {
 			if(this.isInProgress) {
-				this._server.send("/game/" + this._id + "/request/premove");
+				this._server.send("/game/" + this.id + "/request/premove");
 			}
 			
 			else {
@@ -207,38 +203,38 @@ define(function(require) {
 	
 	Game.prototype.resign = function() {
 		if(this.isInProgress) {
-			this._server.send("/game/" + this._id + "/resign");
+			this._server.send("/game/" + this.id + "/resign");
 		}
 	}
 	
 	Game.prototype.offerDraw = function() {
 		if(this.isInProgress) {
-			this._server.send("/game/" + this._id + "/offer_draw");
+			this._server.send("/game/" + this.id + "/offer_draw");
 		}
 	}
 	
 	Game.prototype.acceptDraw = function() {
 		if(this.isInProgress) {
-			this._server.send("/game/" + this._id + "/accept_draw");
+			this._server.send("/game/" + this.id + "/accept_draw");
 		}
 	}
 	
 	Game.prototype.claimDraw = function() {
 		if(this.isInProgress && this.isDrawClaimable()) {
-			this._server.send("/game/" + this._id + "/claim_draw");
+			this._server.send("/game/" + this.id + "/claim_draw");
 		}
 	}
 	
 	Game.prototype.offerOrAcceptRematch = function() {
-		this._server.send("/game/" + this._id + "/rematch");
+		this._server.send("/game/" + this.id + "/rematch");
 	}
 	
 	Game.prototype.declineRematch = function() {
-		this._server.send("/game/" + this._id + "/rematch/decline");
+		this._server.send("/game/" + this.id + "/rematch/decline");
 	}
 	
 	Game.prototype.cancelRematch = function() {
-		this._server.send("/game/" + this._id + "/rematch/cancel");
+		this._server.send("/game/" + this.id + "/rematch/cancel");
 	}
 	
 	Game.prototype._rematch = function(gameDetails) {
@@ -250,7 +246,7 @@ define(function(require) {
 	}
 	
 	Game.prototype.getActiveColour = function() {
-		return this._game.activeColour;
+		return this._game.position.activeColour;
 	}
 	
 	Game.prototype.timingHasStarted = function() {
@@ -294,7 +290,7 @@ define(function(require) {
 	}
 	
 	Game.prototype.getActivePlayer = function() {
-		return this._players[this._game.activeColour];
+		return this._players[this._game.position.activeColour];
 	}
 	
 	Game.prototype.getTimeLeft = function(colour) {
@@ -310,7 +306,7 @@ define(function(require) {
 	}
 	
 	Game.prototype.sendChatMessage = function(message) {
-		this._server.send("/game/" + this._id + "/chat", message);
+		this._server.send("/game/" + this.id + "/chat", message);
 	}
 	
 	Game.prototype._handleServerMove = function(move) {
@@ -336,25 +332,17 @@ define(function(require) {
 		this._clock.calculateTimes();
 	}
 	
-	Game.prototype._applyServerMove = function(move) {
-		var chessMove = this._game.move(
-			Square.fromSquareNo(move.from),
-			Square.fromSquareNo(move.to),
-			move.promoteTo ? PieceType.fromSanString(move.promoteTo) : PieceType.queen
-		);
+	Game.prototype._applyServerMove = function(jsonchessMove) {
+		var move = Move.decode(jsonchessMove, this.position);
 		
-		if(chessMove !== null && chessMove.isLegal()) {
-			move = Move.fromMove(chessMove);
-			move.setTime(move.time);
-			
-			this.history.push(move);
-			this.Move.fire(move);
-			
-			var nextMove = this._moveQueue[move.index + 1];
-			
-			if(nextMove) {
-				this._applyServerMove(nextMove);
-			}
+		this._game.addMove(move);
+		this.history.push(move);
+		this.Move.fire(move);
+		
+		var next = this._moveQueue[move.index + 1];
+		
+		if(next) {
+			this._applyServerMove(next);
 		}
 	}
 		
@@ -365,8 +353,7 @@ define(function(require) {
 	
 	Game.prototype._gameOver = function(result) {
 		this.isInProgress = false;
-		this._result = result;
-		
+		this.result = result;
 		this.GameOver.fire(result);
 	}
 	
@@ -378,7 +365,7 @@ define(function(require) {
 			startTime: this.startTime,
 			options: this._options,
 			addedTime: this._addedTime,
-			id: this._id
+			id: this.id
 		};
 	}
 	
