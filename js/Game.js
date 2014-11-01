@@ -360,10 +360,10 @@ define(function(require) {
 		this.GameOver.fire(result);
 	}
 	
-	Game.prototype.getBackupDetails = function() { //FIXME make this work with the new formats
+	Game.prototype.getBackupDetails = function() {
 		return {
 			history: this.history.map(function(move) {
-				return Move.fromMove(move);
+				return Move.encodeAndPack(move);
 			}),
 			startTime: this.startTime,
 			options: this._options,
