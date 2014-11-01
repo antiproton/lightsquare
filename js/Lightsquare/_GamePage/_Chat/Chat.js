@@ -19,7 +19,9 @@ define(function(require) {
 		this._historyNode = this._template.nodes.chat_history;
 		
 		this._historyNode.addEventListener("scroll", (function() {
-			this._scrollOnNewMessages = (this._historyNode.scrollHeight - this._historyNode.scrollTop === this._historyNode.clientHeight);
+			var node = this._historyNode;
+			
+			this._scrollOnNewMessages = (node.scrollHeight - node.scrollTop === node.clientHeight);
 		}).bind(this));
 		
 		this._template.on("send", (function(event) {
@@ -35,19 +37,29 @@ define(function(require) {
 	Chat.prototype._setupGame = function(game) {
 		this._game = game;
 		
-		this._addMessage(game.getPlayerName(Colour.white) + " vs. " + game.getPlayerName(Colour.black) + " " + game.getTimingStyle().getDescription());
+		this._addMessage(
+			game.getPlayerName(Colour.white)
+			+ " vs. " + game.getPlayerName(Colour.black) + " "
+			+ game.timingStyle.getDescription()
+		);
 		
 		this._game.ChatMessageReceived.addHandler(function(message) {
 			this._addMessage(message.body, message.from);
 		}, this);
 		
 		this._game.DrawOffered.addHandler(function() {
-			this._addMessage(this._game.getPlayerName(this._game.getActiveColour().opposite) + " has offered a draw.");
+			this._addMessage(
+				this._game.getPlayerName(this._game.position.activeColour.opposite)
+				+ " has offered a draw."
+			);
 		}, this);
 		
 		this._game.RematchOffered.addHandler(function(colour) {
 			if(colour === this._game.getUserColour().opposite) {
-				this._addMessage(this._game.getPlayerName(this._game.getUserColour().opposite) + " has offered you a rematch.");
+				this._addMessage(
+					this._game.getPlayerName(this._game.getUserColour().opposite)
+					+ " has offered you a rematch."
+				);
 			}
 		}, this);
 		

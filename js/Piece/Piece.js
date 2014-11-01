@@ -2,7 +2,6 @@ define(function(require) {
 	var Template = require("dom/Template");
 	var html = require("file!./piece.html");
 	var style = require("dom/style");
-	var Fen = require("chess/Fen");
 
 	function Piece(parent, size) {
 		this._template = new Template(html, parent);

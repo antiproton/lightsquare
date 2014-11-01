@@ -24,7 +24,7 @@ define(function(require) {
 			var pieceButton = create("div", this._template.pieces);
 			var piece = new Piece(pieceButton, pieceSize);
 			
-			piece.setPiece(ChessPiece.get(type, Colour.white));
+			piece.setPiece(ChessPiece.pieces[type][Colour.white]);
 			
 			this._pieces.push(piece);
 			
@@ -42,7 +42,7 @@ define(function(require) {
 	
 	PromotionDialog.prototype.setColour = function(colour) {
 		this._pieces.forEach(function(piece) {
-			piece.setPiece(ChessPiece.get(piece.getPiece().type, colour));
+			piece.setPiece(ChessPiece.pieces[piece.getPiece().type][colour]);
 		});
 	}
 	

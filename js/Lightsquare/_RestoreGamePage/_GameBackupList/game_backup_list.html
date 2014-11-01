@@ -17,10 +17,10 @@
 			<div class="game_backup">
 				<div class="game_backup_title">
 					<div>
-						{{opponent.name}} ({{opponent.rating}}) {{timingDescription}}
+						{{details.opponent.name}} ({{details.opponent.rating}}) {{details.timingDescription}}
 					</div>
 					<div>
-						Started {{formatDate(gameDetails.startTime)}}
+						Started {{formatDate(details.gameDetails.startTime)}}
 					</div>
 				</div>
 				<div class="game_backup_body">
@@ -29,14 +29,14 @@
 					</div>
 					<div class="game_backup_details">
 						<div class="game_backup_history">
-							{{#gameDetails.history}}
+							{{#game.history}}
 								<span
 									class="game_backup_move {{selectedMove[id] === this ? 'selected_move' : ''}}"
 									on-click="select_move:{{id}}"
 								>
-									{{colour === 'w' ? fullLabel : label}}
+									{{colour.fenString === 'w' ? fullLabel : label}}
 								</span><span>&nbsp;</span>
-							{{/gameDetails.history}}
+							{{/game.history}}
 						</div>
 						<div class="game_backup_controls">
 							<div>

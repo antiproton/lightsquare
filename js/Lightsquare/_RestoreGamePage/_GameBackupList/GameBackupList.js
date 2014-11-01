@@ -6,6 +6,8 @@ define(function(require) {
 	var Position = require("chess/Position");
 	var Colour = require("chess/Colour");
 	var Board = require("lightsquare/Board/Board");
+	var Game = require("chess/Game");
+	var Move = require("jsonchess/Move");
 	
 	function GameBackupList(user, server, parent) {
 		this._user = user;
@@ -41,15 +43,16 @@ define(function(require) {
 		});
 		
 		this._template.on("select_move", (function(event, id) {
-			var moveDetails = event.context;
+			var move = event.context;
 			
-			this._boards[id].setBoardArray(new Position(moveDetails.resultingFen).getBoardArray());
-			this._template.set("selectedMove." + id, moveDetails);
+			this._boards[id].setBoardArray(move.positionAfter.board);
+			this._template.set("selectedMove." + id, move);
 		}).bind(this));
 		
 		this._template.on("restore_or_cancel", (function(event, id) {
-			var backup = event.context;
+			var backup = event.context.details;
 			var request = this._getRestorationRequest(backup);
+			
 			
 			this._template.set("error." + id, null);
 			
@@ -81,18 +84,28 @@ define(function(require) {
 		for(var id in backups) {
 			backup = backups[id];
 			
-			var history = backup.gameDetails.history;
-			var lastMove = history[history.length - 1];
+			var game = new Game();
 			
-			this._template.set("gameBackups." + id, backup);
+			backup.gameDetails.history.forEach(function(move) {
+				game.addMove(Move.decode(Move.unpack(move), game.position));
+			});
+			
+			var lastMove = game.getLastMove();
+			
+			this._template.set("gameBackups." + id, {
+				id: id,
+				details: backup,
+				game: game
+			});
+			
 			this._template.set("selectedMove." + id, lastMove);
 			
 			var board  = new Board(this._template.nodes["board_" + id]);
 			
 			board.setSquareSize(Board.sizes["Tiny"]);
 			board.setShowCoords(false);
-			board.setBoardArray(new Position(lastMove.resultingFen).getBoardArray());
-			board.setViewingAs(Colour.fromFenString(backup.playingAs));
+			board.setBoardArray(lastMove.positionAfter.board);
+			board.setViewingAs(Colour.byFenString[backup.playingAs]);
 			
 			this._boards[id] = board;
 		}

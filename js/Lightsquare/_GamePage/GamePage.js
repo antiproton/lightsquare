@@ -61,11 +61,11 @@ define(function(require) {
 	}
 	
 	GamePage.prototype.getStartTime = function() {
-		return this._game.getStartTime();
+		return this._game.startTime;
 	}
 	
 	GamePage.prototype.getTimingStyle = function() {
-		return this._game.getTimingStyle();
+		return this._game.timingStyle;
 	}
 	
 	GamePage.prototype.getPlayerName = function(colour) {
@@ -77,11 +77,11 @@ define(function(require) {
 	}
 	
 	GamePage.prototype.getId = function() {
-		return this._game.getId();
+		return this._game.id;
 	}
 	
 	GamePage.prototype.gameIsInProgress = function() {
-		return this._game.isInProgress();
+		return this._game.isInProgress;
 	}
 	
 	GamePage.prototype._setupGame = function(game) {
@@ -94,14 +94,14 @@ define(function(require) {
 		
 		this._game.Move.addHandler(function(move) {
 			this._history.move(move);
-			this._template.set("viewingActivePlayer", (this._game.getActiveColour() === this._viewingAs));
+			this._template.set("viewingActivePlayer", (this._game.position.activeColour === this._viewingAs));
 			this._template.set("userIsActivePlayer", this.userIsActivePlayer());
 			this._template.set("drawOffered", false);
 			this._template.set("canClaimDraw", this._game.isDrawClaimable());
 			this._board.unhighlightSquares();
 			this._highlightMove(move);
 			
-			if(move.getColour() === this.getUserColour()) {
+			if(move.colour === this.getUserColour()) {
 				this._board.move(move);
 				applyMove(move);
 			}
@@ -112,10 +112,8 @@ define(function(require) {
 				});
 			}
 			
-			var capturedPiece = move.getCapturedPiece();
-			
-			if(capturedPiece) {
-				this._addCapturedPiece(capturedPiece);
+			if(move.capturedPiece) {
+				this._addCapturedPiece(move.capturedPiece);
 			}
 			
 			this.Move.fire(move);
@@ -198,7 +196,7 @@ define(function(require) {
 	GamePage.prototype._updateConnectionStatus = function(player, isConnected) {
 		var colour = this._getPlayerColour(player);
 		var relevance = this._relevanceFromColour(colour);
-		console.log(colour.fenString, relevance);
+		
 		this._template.set("players." + relevance + ".isConnected", isConnected);
 	}
 	
@@ -211,14 +209,14 @@ define(function(require) {
 	}
 	
 	GamePage.prototype._setPremove = function(premove) {
-		this._board.setBoardArray(premove.getBoardArray());
-		this._board.highlightSquares(premove.getFrom(), Board.highlightTypes.PREMOVE_FROM);
-		this._board.highlightSquares(premove.getTo(), Board.highlightTypes.PREMOVE_TO);
+		this._board.setBoardArray(premove.board);
+		this._board.highlightSquares(premove.from, Board.highlightTypes.PREMOVE_FROM);
+		this._board.highlightSquares(premove.to, Board.highlightTypes.PREMOVE_TO);
 		this._pendingPremove = premove;
 	}
 	
 	GamePage.prototype._clearPremove = function() {
-		this._board.setBoardArray(this._game.getPosition().getBoardArray());
+		this._board.setBoardArray(this._game.position.board);
 		this._board.unhighlightSquares(Board.highlightTypes.PREMOVE_FROM, Board.highlightTypes.PREMOVE_TO);
 		this._pendingPremove = null;
 	}
@@ -232,7 +230,7 @@ define(function(require) {
 		this._board = new Board(this._template.nodes.board);
 		
 		this._board.SelectPiece.addHandler(function(data) {
-			if(!this.userIsPlaying() || data.piece.colour !== this.getUserColour() || !this._game.isInProgress()) {
+			if(!this.userIsPlaying() || data.piece.colour !== this.getUserColour() || !this._game.isInProgress) {
 				data.cancel = true;
 			}
 		}, this);
@@ -257,7 +255,7 @@ define(function(require) {
 					promoteTo === null
 					&& (
 						userIsActive ?
-						new Move(this._game.getPosition(), moveEvent.from, moveEvent.to).isPromotion() :
+						new Move(this._game.position, moveEvent.from, moveEvent.to).isPromotion :
 						(moveEvent.piece.type === PieceType.pawn && moveEvent.to.isPromotionRank)
 					)
 				) {
@@ -272,7 +270,7 @@ define(function(require) {
 					else if(this._pendingPremove === null) {
 						var premove = this._game.premove(moveEvent.from, moveEvent.to, moveEvent.promoteTo);
 						
-						if(premove.isValid()) {
+						if(premove.isValid) {
 							this._setPremove(premove);
 						}
 					}
@@ -308,8 +306,8 @@ define(function(require) {
 	
 	GamePage.prototype._highlightMove = function(move) {
 		this._board.unhighlightSquares(Board.highlightTypes.LAST_MOVE_FROM, Board.highlightTypes.LAST_MOVE_TO);
-		this._board.highlightSquares(move.getFrom(), Board.highlightTypes.LAST_MOVE_FROM);
-		this._board.highlightSquares(move.getTo(), Board.highlightTypes.LAST_MOVE_TO);
+		this._board.highlightSquares(move.from, Board.highlightTypes.LAST_MOVE_FROM);
+		this._board.highlightSquares(move.to, Board.highlightTypes.LAST_MOVE_TO);
 	}
 	
 	GamePage.prototype._setupGameControls = function() {
@@ -332,19 +330,19 @@ define(function(require) {
 		}).bind(this));
 		
 		this._template.on("rematch", (function() {
-			if(this._game.rematchOfferedBy() !== this.getUserColour()) {
+			if(this._game.rematchOfferedBy !== this.getUserColour()) {
 				this._game.offerOrAcceptRematch();
 			}
 		}).bind(this));
 		
 		this._template.on("decline_rematch", (function() {
-			if(this._game.rematchOfferedBy() === this.getUserColour().opposite) {
+			if(this._game.rematchOfferedBy === this.getUserColour().opposite) {
 				this._game.declineRematch();
 			}
 		}).bind(this));
 		
 		this._template.on("cancel_rematch", (function() {
-			if(this._game.rematchOfferedBy() === this.getUserColour()) {
+			if(this._game.rematchOfferedBy === this.getUserColour()) {
 				this._game.cancelRematch();
 			}
 		}).bind(this));
@@ -451,14 +449,14 @@ define(function(require) {
 		this._updateHistory();
 		
 		this._history.UserSelect.addHandler(function(move) {
-			this._board.setBoardArray(move.getPositionAfter().getBoardArray());
+			this._board.setBoardArray(move.positionAfter.board);
 		}, this);
 	}
 	
 	GamePage.prototype._updateHistory = function() {
 		this._history.clear();
 		
-		this._game.getHistory().forEach((function(move) {
+		this._game.history.forEach((function(move) {
 			this._history.move(move);
 		}).bind(this));
 		
@@ -473,11 +471,9 @@ define(function(require) {
 	}
 	
 	GamePage.prototype._populateCapturedPieces = function() {
-		this._game.getHistory().forEach(function(move) {
-			var capturedPiece = move.getCapturedPiece();
-			
-			if(capturedPiece !== null) {
-				this._addCapturedPiece(capturedPiece);
+		this._game.history.forEach(function(move) {
+			if(move.capturedPiece) {
+				this._addCapturedPiece(move.capturedPiece);
 			}
 		}, this);
 	}
@@ -497,7 +493,7 @@ define(function(require) {
 	
 	GamePage.prototype._updateBoard = function() {
 		this._board.unhighlightSquares();
-		this._board.setBoardArray(this._game.getPosition().getBoardArray());
+		this._board.setBoardArray(this._game.position.board);
 		
 		var lastMove = this._game.getLastMove();
 		
@@ -507,7 +503,7 @@ define(function(require) {
 	}
 	
 	GamePage.prototype._updateScores = function() {
-		var result = this._game.getResult();
+		var result = this._game.result;
 		
 		if(result) {
 			Colour.forEach((function(colour) {
@@ -563,14 +559,14 @@ define(function(require) {
 					isConnected: true
 				}
 			},
-			result: this._game.getResult(),
-			isInProgress: this._game.isInProgress(),
+			result: this._game.result,
+			isInProgress: this._game.isInProgress,
 			userIsPlaying: this.userIsPlaying(),
-			viewingActivePlayer: (this._game.getActiveColour() === this._viewingAs),
+			viewingActivePlayer: (this._game.position.activeColour === this._viewingAs),
 			userIsActivePlayer: this.userIsActivePlayer(),
-			drawOffered: this._game.isDrawOffered(),
+			drawOffered: this._game.isDrawOffered,
 			canClaimDraw: this._game.isDrawClaimable(),
-			timingDescription: this._game.getTimingStyle().getDescription()
+			timingDescription: this._game.timingStyle.getDescription()
 		});
 		
 		if(this.userIsPlaying()) {
@@ -583,7 +579,7 @@ define(function(require) {
 	}
 	
 	GamePage.prototype._updateRematchOffer = function() {
-		var rematchOfferedBy = this._game.rematchOfferedBy();
+		var rematchOfferedBy = this._game.rematchOfferedBy;
 		var colour = this.getUserColour();
 		
 		this._template.set({
@@ -593,7 +589,7 @@ define(function(require) {
 	}
 	
 	GamePage.prototype.userIsActivePlayer = function() {
-		return (this.getUserColour() === this._game.getActiveColour());
+		return (this.getUserColour() === this._game.position.activeColour);
 	}
 	
 	GamePage.prototype._setupChat = function() {
@@ -611,7 +607,7 @@ define(function(require) {
 		this._updateScores();
 		this._updateCapturedPieces();
 		this._template.set("userIsPlaying", this.userIsPlaying());
-		this._template.set("viewingActivePlayer", (this._game.getActiveColour() === this._viewingAs));
+		this._template.set("viewingActivePlayer", (this._game.position.activeColour === this._viewingAs));
 	}
 	
 	GamePage.prototype._updatePlayerInfo = function() {
