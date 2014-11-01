@@ -65,7 +65,7 @@ define(function(require) {
 			var index = this._gamePages.length;
 			
 			for(var i = 0; i < this._gamePages.length; i++) {
-				if(game.getStartTime() >= this._gamePages[i].getStartTime()) {
+				if(game.startTime >= this._gamePages[i].startTime) {
 					index = i;
 					
 					break;
