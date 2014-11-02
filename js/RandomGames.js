@@ -1,5 +1,6 @@
 define(function(require) {
 	var Event = require("js/Event");
+	var Piece = require("chess/Piece");
 	
 	function RandomGames(server) {
 		this._server = server;
@@ -22,6 +23,10 @@ define(function(require) {
 	
 	RandomGames.prototype._subscribeToServerMessages = function() {
 		this._server.subscribe("/random_game", (function(gameDetails) {
+			gameDetails.board = gameDetails.board.split("").map(function(piece) {
+				return (piece === " " ? null : Piece.byFenString[piece]);
+			});
+			
 			this.Update.fire(gameDetails);
 		}).bind(this));
 		

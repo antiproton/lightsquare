@@ -4,7 +4,6 @@ define(function(require) {
 	var Ractive = require("ractive/ractive");
 	var Event = require("js/Event");
 	var Move = require("jsonchess/Move");
-	var Position = require("chess/Position");
 	var Square = require("chess/Square");
 	var Colour = require("chess/Colour");
 	
@@ -33,13 +32,13 @@ define(function(require) {
 				squareSize: SQUARE_SIZE,
 				pieceUrl: require.toUrl("../piece_sprites/Classic/" + SQUARE_SIZE + ".png"),
 				getSquareY: function(squareNo, id) {
-					return 7 - Square.fromSquareNo(squareNo).adjusted[viewingAs[id]].coords.y;
+					return 7 - Square.bySquareNo[squareNo].adjusted[viewingAs[id]].coords.y;
 				},
 				getSquareX: function(squareNo, id) {
-					return Square.fromSquareNo(squareNo).adjusted[viewingAs[id]].coords.x;
+					return Square.bySquareNo[squareNo].adjusted[viewingAs[id]].coords.x;
 				},
 				getSquareColour: function(squareNo) {
-					var coords = Square.fromSquareNo(squareNo).coords;
+					var coords = Square.bySquareNo[squareNo].coords;
 					
 					return (coords.x % 2 === coords.y % 2 ? 'b' : 'w');
 				},
@@ -78,7 +77,7 @@ define(function(require) {
 	SpectatePage.prototype._updateGame = function(gameDetails) {
 		var id = gameDetails.id;
 		
-		this._template.set("games." + id + ".board", new Position(gameDetails.fen).getBoardArray());
+		this._template.set("games." + id + ".board", gameDetails.board);
 		this._template.set("games." + id + ".lastMove", gameDetails.lastMove);
 	}
 	
