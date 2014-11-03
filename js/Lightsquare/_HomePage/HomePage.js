@@ -8,13 +8,11 @@ define(function(require) {
 	var jsonchessMessageTypes = require("jsonchess/chatMessageTypes");
 	var SeekList = require("lightsquare/SeekList");
 	
-	function HomePage(user, server, router, parent) {
+	function HomePage(user, server, parent) {
 		this._user = user;
 		this._server = server;
-		this._router = router;
 		this._seekList = new SeekList(this._server);
 		this._setupTemplate(parent);
-		this._setupRouter();
 	}
 	
 	HomePage.prototype._setupTemplate = function(parent) {
@@ -45,14 +43,12 @@ define(function(require) {
 		}).bind(this));
 	}
 	
-	HomePage.prototype._setupRouter = function() {
-		this._router.addRoute("/", (function() {
-			this._seekList.startUpdating();
-		}).bind(this), (function() {
-			this._seekList.stopUpdating();
-		}).bind(this));
-		
-		this._router.execute();
+	HomePage.prototype.show = function() {
+		this._seekList.startUpdating();
+	}
+	
+	HomePage.prototype.hide = function() {
+		this._seekList.stopUpdating();
 	}
 	
 	return HomePage;
