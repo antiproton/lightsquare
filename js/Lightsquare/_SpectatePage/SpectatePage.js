@@ -9,19 +9,9 @@ define(function(require) {
 	
 	var SQUARE_SIZE = 45;
 	
-	function SpectatePage(gamesList, router, prefixedRouter, parent) {
+	function SpectatePage(gamesList, router, parent) {
 		this._router = router;
-		this._prefixedRouter = prefixedRouter;
 		this._gamesList = gamesList;
-		
-		this._prefixedRouter.addRoute("/", (function() {
-			this._gamesList.startUpdating();
-		}).bind(this), (function() {
-			this._gamesList.stopUpdating();
-			this._template.set("games", {});
-		}).bind(this));
-		
-		this._prefixedRouter.execute();
 		
 		var viewingAs = {};
 		
@@ -79,6 +69,15 @@ define(function(require) {
 		
 		this._template.set("games." + id + ".board", gameDetails.board);
 		this._template.set("games." + id + ".lastMove", gameDetails.lastMove);
+	}
+	
+	SpectatePage.prototype.show = function() {
+		this._gamesList.startUpdating();
+	}
+	
+	SpectatePage.prototype.hide = function() {
+		this._gamesList.stopUpdating();
+		this._template.set("games", {});
 	}
 	
 	return SpectatePage;

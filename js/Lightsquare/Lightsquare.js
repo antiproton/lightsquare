@@ -46,6 +46,7 @@ define(function(require) {
 		this._setupRegisterForm();
 		this._setupOverlayHandlers();
 		
+		this._pages = {};
 		this._gamePages = [];
 		this._gamePageIndex = {};
 		this._currentPage = null;
@@ -172,7 +173,19 @@ define(function(require) {
 	}
 	
 	Lightsquare.prototype._showPage = function(url) {
+		var page = this._pages[url];
+		
+		if(this._currentPage !== null && this._currentPage !== page && this._currentPage.hide) {
+			this._currentPage.hide();
+		}
+		
 		this._tabContainer.showTab(url);
+		
+		if(this._currentPage !== page && page.show) {
+			page.show();
+		}
+		
+		this._currentPage = page;
 	}
 	
 	Lightsquare.prototype._createPage = function(url) {
@@ -239,7 +252,7 @@ define(function(require) {
 		
 		this._router.addRoute("/", (function(params, url) {
 			if(!this._hasPage(url)) {
-				new HomePage(this._user, this._server, this._router.createChild(), this._createPage(url));
+				this._pages[url] = new HomePage(this._user, this._server, this._createPage(url));
 			}
 			
 			this._showPage(url);
@@ -277,10 +290,9 @@ define(function(require) {
 		
 		this._router.addRoute("/games", (function(params, url) {
 			if(!this._hasPage(url)) {
-				new SpectatePage(
+				this._pages[url] = new SpectatePage(
 					new RandomGames(this._server),
 					this._router,
-					this._router.createChild(url),
 					this._createPage(url)
 				);
 			}
@@ -290,7 +302,7 @@ define(function(require) {
 		
 		this._router.addRoute("/restore-game", (function(params, url) {
 			if(!this._hasPage(url)) {
-				new RestoreGamePage(this._user, this._server, this._router.createChild(url), this._createPage(url));
+				this._pages[url] = new RestoreGamePage(this._user, this._server, this._createPage(url));
 			}
 			
 			this._showPage(url);

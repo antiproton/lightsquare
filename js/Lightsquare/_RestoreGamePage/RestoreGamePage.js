@@ -4,19 +4,17 @@ define(function(require) {
 	var Ractive = require("ractive/ractive");
 	var GameBackupList = require("./_GameBackupList/GameBackupList");
 	
-	function RestoreGamePage(user, server, router, parent) {
+	function RestoreGamePage(user, server, parent) {
 		this._template = new Ractive({
 			el: parent,
 			template: html
 		});
 		
-		var backupList = new GameBackupList(user, server, this._template.nodes.backup_list);
-		
-		router.addRoute("/", (function() {
-			backupList.refresh();
-		}).bind(this));
-		
-		router.execute();
+		this._backupList = new GameBackupList(user, server, this._template.nodes.backup_list);
+	}
+	
+	RestoreGamePage.prototype.show = function() {
+		this._backupList.refresh();
 	}
 	
 	return RestoreGamePage;
