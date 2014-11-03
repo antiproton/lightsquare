@@ -61,7 +61,7 @@ define(function(require) {
 		var url = "/game/" + id;
 		
 		if(!this._hasPage(url)) {
-			var page = new GamePage(game, this._user, this._server, this._router.createChild(url), this._createPage(url));
+			var page = new GamePage(game, this._user, this._server, this._createPage(url));
 			
 			var index = this._gamePages.length;
 			
@@ -76,12 +76,15 @@ define(function(require) {
 			this._gamePages.splice(index, 0, page);
 			this._updateGamePageIndex();
 			this._updateGamePages();
+			this._pages[url] = page;
 			
 			page.Rematch.addHandler(function(game) {
 				var newId = game.id;
 				var newUrl = "/game/" + newId;
 				
 				this._tabContainer.changeId(url, newUrl);
+				delete this._pages[url];
+				this._pages[newUrl] = page;
 				this._gamePageIndex[newId] = this._gamePageIndex[id];
 				
 				if(this._router.getPath() === url) {
@@ -144,6 +147,16 @@ define(function(require) {
 	}
 	
 	Lightsquare.prototype._clearGamePages = function() {
+		for(var id in this._gamePageIndex) {
+			var url = "/game/" + id;
+			
+			if(this._pages[url] === this._currentPage) {
+				this._currentPage = null;
+			}
+			
+			delete this._pages[url];
+		}
+		
 		this._gamePages = [];
 		this._gamePageIndex = {};
 		this._template.set("gamePages", []);

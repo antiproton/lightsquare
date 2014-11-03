@@ -76,10 +76,6 @@ define(function(require) {
 			this._clock.addTime(this._addedTime[colour], colour);
 		}
 		
-		if(this.isInProgress) {
-			this._requestLatestMoves();
-		}
-		
 		this._subscribeToServerMessages();
 	}
 	
@@ -154,7 +150,7 @@ define(function(require) {
 		}).bind(this));
 	}
 	
-	Game.prototype._requestLatestMoves = function() {
+	Game.prototype.requestLatestMoves = function() {
 		this._server.send("/game/" + this.id + "/request/moves", this.history.length);
 	}
 
