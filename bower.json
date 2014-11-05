@@ -19,7 +19,7 @@
 		"json-local-storage": "git://github.com/gushogg-blake/json-local-storage.git",
 		"tokeniser": "git://github.com/gushogg-blake/tokeniser.git",
 		"dom": "git://github.com/gushogg-blake/dom.git",
-		"jsonchess": "git://github.com/gushogg-blake/jsonchess.git",
+		"jsonchess": "git://github.com/jsonchess/jsonchess.git",
 		"chess": "git://github.com/gushogg-blake/chess.git",
 		"require": "git://github.com/jrburke/requirejs.git",
 		"require-text": "git://github.com/requirejs/text.git",
