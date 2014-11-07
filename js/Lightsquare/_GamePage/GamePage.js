@@ -21,7 +21,7 @@ define(function(require) {
 		opponent: "opponent"
 	};
 	
-	function GamePage(game, user, server, router, parent) {
+	function GamePage(game, user, server, parent) {
 		this.Rematch = new Event();
 		this.GameOver = new Event();
 		this.Move = new Event();
@@ -29,12 +29,12 @@ define(function(require) {
 		
 		this._user = user;
 		this._server = server;
-		this._router = router;
 		this._viewingAsPreference = null;
 		this._viewingAs = Colour.white;
 		this._pendingPremove = null;
 		this._clockUpdateInterval = null;
 		this._newSeekTimeoutAnimation = null;
+		this._isVisible = false;
 		
 		this._setupTemplate(parent);
 		this._setupGame(game);
@@ -45,7 +45,6 @@ define(function(require) {
 		this._setupHistory();
 		this._setupGameControls();
 		this._setupPrefsPanel();
-		this._setupRouter();
 		this._checkForPendingPremove();
 		this._handleUserEvents();
 		this._updateUserDependentElements();
@@ -170,7 +169,9 @@ define(function(require) {
 			this.Aborted.fire();
 		}, this);
 		
-		this._startUpdatingClocks();
+		if(this._isVisible) {
+			this._startUpdatingClocks();
+		}
 	}
 	
 	GamePage.prototype._getPlayerColour = function(player) {
@@ -406,16 +407,6 @@ define(function(require) {
 		}).bind(this));
 	}
 	
-	GamePage.prototype._setupRouter = function() {
-		this._router.addRoute("/", (function() {
-			this._startUpdatingClocks();
-		}).bind(this), (function() {
-			this._stopUpdatingClocks();
-		}).bind(this));
-		
-		this._router.execute();
-	}
-	
 	GamePage.prototype._updateNewSeek = function() {
 		var seek = this._user.getCurrentSeek();
 		var timingStyle = this.getTimingStyle();
@@ -632,6 +623,16 @@ define(function(require) {
 			
 			this._clockUpdateInterval = null;
 		}
+	}
+	
+	GamePage.prototype.show = function() {
+		this._isVisible = true;
+		this._startUpdatingClocks();
+	}
+	
+	GamePage.prototype.hide = function() {
+		this._stopUpdatingClocks();
+		this._isVisible = false;
 	}
 	
 	GamePage.prototype._handleUserEvents = function() {
