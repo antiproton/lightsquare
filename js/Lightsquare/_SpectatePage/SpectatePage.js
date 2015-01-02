@@ -65,10 +65,7 @@ define(function(require) {
 	}
 	
 	SpectatePage.prototype._updateGame = function(gameDetails) {
-		var id = gameDetails.id;
-		
-		this._template.set("games." + id + ".board", gameDetails.board);
-		this._template.set("games." + id + ".lastMove", gameDetails.lastMove);
+		this._template.set("games." + gameDetails.id, gameDetails);
 	}
 	
 	SpectatePage.prototype.show = function() {
