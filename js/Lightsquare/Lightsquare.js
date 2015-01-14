@@ -27,6 +27,7 @@ define(function(require) {
 	var SpectatePage = require("./_SpectatePage/SpectatePage");
 	var RestoreGamePage = require("./_RestoreGamePage/RestoreGamePage");
 	var RandomGames = require("lightsquare/RandomGames");
+	var SeekList = require("lightsquare/SeekList");
 	
 	var LEFT_BUTTON = 0;
 	var ESCAPE_KEY = 27;
@@ -35,6 +36,7 @@ define(function(require) {
 		this._user = user;
 		this._server = server;
 		this._router = new Router(new AddressBarPath());
+		this._seekList = new SeekList(this._server);
 		
 		this._setupTemplate(parent);
 		this._setupRouter();
@@ -301,6 +303,20 @@ define(function(require) {
 			}
 		}).bind(this));
 		
+		this._router.addRoute("/stockfish", (function() {
+			this._seekList.startUpdating();
+			
+			var accepted = this._autoAcceptStockfish();
+			
+			if(!accepted) {
+				this._seekList.Updated.addHandler(function() {
+					if(!accepted) {
+						accepted = this._autoAcceptStockfish();
+					}
+				}, this);
+			}
+		}).bind(this));
+		
 		this._router.addRoute("/games", (function(params, url) {
 			if(!this._hasPage(url)) {
 				this._pages[url] = new SpectatePage(
@@ -320,6 +336,16 @@ define(function(require) {
 			
 			this._showPage(url);
 		}).bind(this));
+	}
+	
+	Lightsquare.prototype._autoAcceptStockfish = function() {
+		return this._seekList.getSeeks().some(function(seek) {
+			if(!seek.owner.isUser) {
+				this._user.acceptSeek(seek.id);
+				
+				return true;
+			}
+		}, this);
 	}
 	
 	Lightsquare.prototype._setupTemplate = function(parent) {
