@@ -303,18 +303,26 @@ define(function(require) {
 			}
 		}).bind(this));
 		
-		this._router.addRoute("/stockfish", (function() {
-			this._seekList.startUpdating();
-			
-			var accepted = this._autoAcceptStockfish();
-			
-			if(!accepted) {
-				this._seekList.Updated.addHandler(function() {
-					if(!accepted) {
-						accepted = this._autoAcceptStockfish();
-					}
-				}, this);
+		this._router.addRoute("/stockfish", (function(params, url) {
+			if(!this._hasPage(url)) {
+				this._pages[url] = new HomePage(this._user, this._server, this._createPage(url));
 			}
+			
+			this._showPage(url);
+			
+			this._server.getConnection().then((function() {
+				this._seekList.startUpdating();
+				
+				var accepted = this._autoAcceptStockfish();
+				
+				if(!accepted) {
+					this._seekList.Updated.addHandler(function() {
+						if(!accepted) {
+							accepted = this._autoAcceptStockfish();
+						}
+					}, this);
+				}
+			}).bind(this));
 		}).bind(this));
 		
 		this._router.addRoute("/games", (function(params, url) {
