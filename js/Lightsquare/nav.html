@@ -1,21 +1,21 @@
 <div class="nav_header">
-	Home
+	{{__("Home")}}
 </div>
 <div class="nav_links">
 	{{#navLinks.home}}
-		<a on-click="navigate" href="{{getHref(href)}}" class="{{currentPath === href ? 'on' : 'off'}}">{{label}}</a>
+		<a on-click="navigate" href="{{getHref(href)}}" class="{{currentPath === href ? 'on' : 'off'}}">{{__(label)}}</a>
 	{{/navLinks.home}}
 </div>
 <div class="nav_header">
-	Tools
+	{{__("Tools")}}
 </div>
 <div class="nav_links">
 	{{#navLinks.tools}}
-		<a on-click="navigate" href="{{getHref(href)}}" class="{{currentPath === href ? 'on' : 'off'}}">{{label}}</a>
+		<a on-click="navigate" href="{{getHref(href)}}" class="{{currentPath === href ? 'on' : 'off'}}">{{__(label)}}</a>
 	{{/navLinks.tools}}
 </div>
 <div class="nav_header">
-	Games
+	{{__("Games")}}
 </div>
 <div class="nav_links game_links">
 	{{#gamePages}}
@@ -54,6 +54,6 @@
 		   on-click="navigate"
 		   href="{{getHref('/game/' + loadingGameId)}}"
 		   class="{{currentPath === '/game/' + loadingGameId ? 'on' : 'off'}}"
-		>Loading game...</a>
+		>{{__("Loading game")}}...</a>
 	{{/loadingGame}}
 </div>
