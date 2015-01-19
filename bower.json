@@ -26,6 +26,7 @@
 		"require-css": "git://github.com/guybedford/require-css.git#master",
 		"require-domReady": "git://github.com/requirejs/domReady.git#master",
 		"ractive": "*",
+		"ractive-i18n": "git://github.com/gushogg-blake/ractive-i18n.git#master",
 		"lightsquare": "./js"
 	}
 }
