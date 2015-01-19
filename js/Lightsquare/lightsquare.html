@@ -30,11 +30,11 @@
 <div class="container" on-click="background_click">
 	<div class="top_bar">
 		<div class="title">
-			<a href="{{getHref('/')}}" on-click="navigate">Lightsquare</a>
+			<a href="{{getHref('/')}}" on-click="navigate">{{__("Lightsquare")}}</a>
 		</div>
 		<div class="user">
 			{{#userIsLoggedIn}}
-				{{username}} (<a href="javascript:void(0)" on-click="logout"><span on-click="foreground_click">Log out</span></a>)
+				{{username}} (<a href="javascript:void(0)" on-click="logout"><span on-click="foreground_click">{{__("Log out")}}</span></a>)
 			{{/userIsLoggedIn}}
 			{{^userIsLoggedIn}}
 				<a href="javascript:void(0)" on-click="login"><span on-click="foreground_click">Log in</span></a>
