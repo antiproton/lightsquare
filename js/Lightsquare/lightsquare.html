@@ -7,12 +7,11 @@
 			<h1>Registration successful.</h1>
 			<div class="register_success">
 				<p>
-					Your account has been created.
+					{{__("Your account has been created")}}.
 				</p>
 				{{^registerAutoLoggedIn}}
 					<p>
-						(You can log in to your account after completing any games and logging
-						out of any other accounts.)
+						({{__("You can log in to your account after completing any games and logging out of any other accounts")}}.)
 					</p>
 				{{/registerAutoLoggedIn}}
 			</div>
@@ -37,9 +36,9 @@
 				{{username}} (<a href="javascript:void(0)" on-click="logout"><span on-click="foreground_click">{{__("Log out")}}</span></a>)
 			{{/userIsLoggedIn}}
 			{{^userIsLoggedIn}}
-				<a href="javascript:void(0)" on-click="login"><span on-click="foreground_click">Log in</span></a>
+				<a href="javascript:void(0)" on-click="login"><span on-click="foreground_click">{{__("Log in")}}</span></a>
 				&nbsp;&nbsp;
-				<a href="javascript:void(0)" on-click="register"><span on-click="foreground_click">Create account</span></a>
+				<a href="javascript:void(0)" on-click="register"><span on-click="foreground_click">{{__("Create account")}}</span></a>
 			{{/userIsLoggedIn}}
 		</div>
 	</div>
@@ -47,7 +46,7 @@
 		<div class="logout_confirmation_container">
 			<div class="logout_confirmation">
 				<div class="logout_confirmation_message">
-					You must finish all games before logging out.
+					{{__("You must finish all games before logging out")}}.
 				</div>
 				<div class="logout_confirmation_buttons">
 					<input type="button" class="logout_confirm" on-click="logout_confirm" value="Resign all games and log out">
@@ -58,9 +57,8 @@
 	{{/showLogoutConfirmation}}
 	{{#if !serverConnected && !waitingForServer}}
 		<div class="connection_problem">
-			<strong>Connection problem</strong> &ndash; if you see this after reloading, the server may have
-			gone down.  Otherwise, check your internet connection.
-			<a target="_blank" href="http://twitter.com/lightsquaredev">Check the status on Twitter.</a>
+			<strong>{{__("Connection problem")}}</strong> &ndash; {{__("if you see this after reloading, the server may have gone down.  Otherwise, check your internet connection")}}.
+			<a target="_blank" href="http://twitter.com/lightsquaredev">{{__("Check the status on Twitter")}}.</a>
 		</div>
 	{{/if}}
 	{{#waitingForServer}}
