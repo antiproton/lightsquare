@@ -3,7 +3,7 @@ define(function(require) {
 	var html = require("file!./game_page.html");
 	var controlsHtml = require("file!./controls.html");
 	var objToArray = require("js/objToArray");
-	var Ractive = require("ractive/ractive");
+	var RactiveI18n = require("ractive-i18n/RactiveI18n");
 	var Event = require("js/Event");
 	var jsonChessConstants = require("jsonchess/constants");
 	var Colour = require("chess/Colour");
@@ -506,10 +506,11 @@ define(function(require) {
 	GamePage.prototype._setupTemplate = function(parent) {
 		var timeCriticalThreshold = Time.fromUnitString("10s");
 		
-		this._template = new Ractive({
+		this._template = new RactiveI18n({
 			el: parent,
 			template: html,
 			data: {
+				locale: this._user.getLocaleDictionary(),
 				userPlayerId: this._user.getPlayerId(),
 				prefs: this._user.getPrefs(),
 				capturedPieceSize: CAPTURED_PIECE_SIZE,

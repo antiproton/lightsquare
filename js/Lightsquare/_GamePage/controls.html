@@ -3,12 +3,12 @@
 		<input
 			type="button"
 			on-click="resign"
-			value="Resign"
+			value="{{__("Resign")}}"
 		>
 		<input
 			type="button"
 			on-click="offer_or_accept_draw"
-			value="{{(drawOffered && userIsActivePlayer) ? 'Accept' : 'Offer'}} draw"
+			value="{{(drawOffered && userIsActivePlayer) ? __("Accept draw") : __("Offer draw")}}"
 			class="{{
 				(
 					(!drawOffered && !userIsActivePlayer)
@@ -17,19 +17,19 @@
 			}}"
 		>
 		{{#canClaimDraw}}
-			<input type="button" on-click="claim_draw" value="Claim draw">
+			<input type="button" on-click="claim_draw" value="{{__("Claim draw")}}">
 		{{/canClaimDraw}}
 	{{/isInProgress}}
 	{{^isInProgress}}
 		{{#playerHasOfferedRematch}}
-			<input type="button" on-click="cancel_rematch" value="Cancel" class="cancel_rematch">
+			<input type="button" on-click="cancel_rematch" value="{{__("Cancel")}}" class="cancel_rematch">
 		{{/playerHasOfferedRematch}}
 		{{#opponentHasOfferedRematch}}
-			<input type="button" on-click="rematch" value="Rematch" class="rematch rematch_offered">
-			<input type="button" on-click="decline_rematch" value="Decline" class="decline_rematch">
+			<input type="button" on-click="rematch" value="{{__("Rematch")}}" class="rematch rematch_offered">
+			<input type="button" on-click="decline_rematch" value="{{__("Decline")}}" class="decline_rematch">
 		{{/opponentHasOfferedRematch}}
 		{{#(!opponentHasOfferedRematch && !playerHasOfferedRematch)}}
-			<input type="button" on-click="rematch" value="Rematch" class="rematch">
+			<input type="button" on-click="rematch" value="{{__("Rematch")}}" class="rematch">
 		{{/neither}}
 		{{#newSeekWaiting}}
 			<input
@@ -42,11 +42,11 @@
 				)"
 				type="button"
 				on-click="cancel_new_game"
-				value="Cancel"
+				value="{{__("Cancel")}}"
 			>
 		{{/newSeekWaiting}}
 		{{^newSeekWaiting}}
-			<input type="button" on-click="new_game" value="New {{timingDescription}}">
+			<input type="button" on-click="new_game" value="{{__("New")}} {{timingDescription}}">
 		{{/newSeekWaiting}}
 	{{/isInProgress}}
 </div>
