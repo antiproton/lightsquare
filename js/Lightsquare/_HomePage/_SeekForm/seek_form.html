@@ -1,12 +1,12 @@
 <form class="single_column create_seek" on-submit="create_or_cancel">
-	<label for="initialTime">Initial time</label>
-	<input id="initialTime" type="text" value="{{initialTime}}" title="Accepts units, e.g. '2 days 3h 30 min' (defaults to minutes if no units given)">
-	<label for="increment">Increment</label>
-	<input id="increment" type="text" value="{{timeIncrement}}" title="Accepts units, e.g. '1m30' (defaults to seconds if no units given)">
-	<label for="acceptRatingMin" title="Minimum rating of players who can see and accept the seek">Min. opponent rating</label>
-	<input id="acceptRatingMin" type="text" value="{{ratingMin}}" title="Accepts relative ratings, e.g. '-150' to accept a minimum rating of 150 below your own">
-	<label for="acceptRatingMax" title="Maximum rating of players who can see and accept the seek">Max. opponent rating</label>
-	<input id="acceptRatingMax" type="text" value="{{ratingMax}}" title="Accepts relative ratings, e.g. '+150' to accept a maximum rating of 150 above your own">
+	<label for="initialTime">{{__("Initial time")}}</label>
+	<input id="initialTime" type="text" value="{{initialTime}}" title="{{__("Accepts units, e.g. '2 days 3h 30 min' (defaults to minutes if no units given)")}}">
+	<label for="increment">{{__("Increment")}}</label>
+	<input id="increment" type="text" value="{{timeIncrement}}" title="{{__("Accepts units, e.g. '1m30' (defaults to seconds if no units given)")}}">
+	<label for="acceptRatingMin" title="{{__("Minimum rating of players who can see and accept the seek")}}">{{__("Min. opponent rating")}}</label>
+	<input id="acceptRatingMin" type="text" value="{{ratingMin}}" title="{{__("Accepts relative ratings, e.g. '-150' to accept a minimum rating of 150 below your own")}}">
+	<label for="acceptRatingMax" title="{{__("Maximum rating of players who can see and accept the seek")}}">{{__("Max. opponent rating")}}</label>
+	<input id="acceptRatingMax" type="text" value="{{ratingMax}}" title="{{__("Accepts relative ratings, e.g. '+150' to accept a maximum rating of 150 above your own")}}">
 	{{#error}}
 		<div class="form_error">
 			{{error}}

@@ -1,7 +1,7 @@
 define(function(require) {
 	require("css!./seek_form.css");
 	var html = require("file!./seek_form.html");
-	var Ractive = require("ractive/ractive");
+	var RactiveI18n = require("ractive-i18n/RactiveI18n");
 	var jsonChessConstants = require("jsonchess/constants");
 	var Time = require("chess/Time");
 	
@@ -9,10 +9,11 @@ define(function(require) {
 		this._user = user;
 		this._server = server;
 		
-		this._template = new Ractive({
+		this._template = new RactiveI18n({
 			el: parent,
 			template: html,
 			data: {
+				locale: this._user.getLocaleDictionary(),
 				waiting: false,
 				percentExpired: null,
 				initialTime: "10m",
