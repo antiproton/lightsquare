@@ -6,10 +6,11 @@ define(function(require) {
 	var gameRestoration = require("jsonchess/gameRestoration");
 	var Game = require("./Game");
 	var RestorationRequest = require("./RestorationRequest");
+	var locales = require("lightsquare/locales");
 	
 	var GAME_BACKUP_MAX_AGE = 1000 * 60 * 60 * 24;
 	
-	function User(server, db) {
+	function User(server, db, locale) {
 		this._playerId = null;
 		this._games = [];
 		this._promisor = new Promisor(this);
@@ -19,6 +20,20 @@ define(function(require) {
 		
 		if(!this._db.get("gameBackups")) {
 			this._db.set("gameBackups", {});
+		}
+		
+		this._locale = "en";
+		
+		if(locale) {
+			this.setLocale(locale);
+		}
+		
+		else {
+			storedLocale = this._db.get("locale");
+			
+			if(storedLocale) {
+				this._locale = storedLocale;
+			}
 		}
 		
 		this._cleanupOldGameBackups();
@@ -48,6 +63,19 @@ define(function(require) {
 		
 		this._handleServerEvents();
 		this._subscribeToServerMessages();
+	}
+	
+	User.prototype.getLocale = function() {
+		return this._locale;
+	}
+	
+	User.prototype.setLocale = function(locale) {
+		this._locale = locale;
+		this._db.set("locale", locale);
+	}
+	
+	User.prototype.getLocaleDictionary = function() {
+		return locales[this._locale];
 	}
 	
 	User.prototype.getDetails = function() {

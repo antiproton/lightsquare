@@ -4,10 +4,17 @@ define(function(require) {
 	var JsonLocalStorage = require("json-local-storage/JsonLocalStorage");
 	var User = require("./User");
 	var Lightsquare = require("./Lightsquare/Lightsquare");
+	
+	var locale = null;
+	var queryStringLocale = document.location.href.match(/locale=(\w{2})/);
+	
+	if(queryStringLocale) {
+		locale = queryStringLocale[1];
+	}
 
 	var db = new JsonLocalStorage("/lightsquare");
 	var server = new Server("ws://" + window.location.hostname + ":8080");
-	var user = new User(server, db);
+	var user = new User(server, db, locale);
 	var lightsquare = new Lightsquare(user, server, document.getElementById("main"));
 	
 	console.log("Hi :)");

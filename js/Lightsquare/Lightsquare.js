@@ -28,6 +28,7 @@ define(function(require) {
 	var RestoreGamePage = require("./_RestoreGamePage/RestoreGamePage");
 	var RandomGames = require("lightsquare/RandomGames");
 	var SeekList = require("lightsquare/SeekList");
+	var RactiveI18n = require("ractive-i18n/RactiveI18n");
 	
 	var LEFT_BUTTON = 0;
 	var ESCAPE_KEY = 27;
@@ -360,10 +361,11 @@ define(function(require) {
 		var path = this._router.getPath();
 		var timeCriticalThreshold = Time.fromUnitString("10s");
 		
-		this._template = new Ractive({
+		this._template = new RactiveI18n({
 			el: parent,
 			template: html,
 			data: {
+				locale: this._user.getLocaleDictionary(),
 				gamePages: [],
 				timeCriticalThreshold: timeCriticalThreshold,
 				serverConnected: false,
