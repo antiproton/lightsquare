@@ -4,6 +4,7 @@ define(function(require) {
 	var html = require("file!./seek_graph.html");
 	var Event = require("js/Event");
 	var Time = require("chess/Time");
+	var RactiveI18n = require("ractive-i18n/RactiveI18n");
 	
 	var AVERAGE_MOVES_PER_GAME = 30;
 	
@@ -79,10 +80,11 @@ define(function(require) {
 		var graphRangeInEm = this._graphHeightInEm - this._seekHeightInEm;
 		var ratingRange = this._maxRating - this._minRating;
 		
-		this._template = new Ractive({
+		this._template = new RactiveI18n({
 			el: parent,
 			template: html,
 			data: {
+				locale: this._user.getLocaleDictionary(),
 				graphHeightInEm: this._graphHeightInEm,
 				seekHeightInEm: this._seekHeightInEm,
 				timeBracketWidthInPercent: this._timeBracketWidthInPercent,
