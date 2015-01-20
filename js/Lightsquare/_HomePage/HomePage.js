@@ -27,19 +27,19 @@ define(function(require) {
 		var chat = new Chat(this._server, this._template.nodes.chat);
 		
 		this._server.getConnection().then((function() {
-			setTimeout(function() {
+			setTimeout((function() {
 				chat.addMessage({
-					body: "Welcome to Lightsquare!",
+					body: this._user.__("Welcome to Lightsquare!"),
 					type: jsonchessMessageTypes.ADMIN
 				});
-			}, Math.round(100 + Math.random() * 100));
+			}).bind(this), Math.round(100 + Math.random() * 100));
 			
-			setTimeout(function() {
+			setTimeout((function() {
 				chat.addMessage({
-					body: "To find an opponent click Start game, or accept a seek from the graph.",
+					body: this._user.__("To find an opponent click Start game, or accept a seek from the graph."),
 					type: jsonchessMessageTypes.USER
 				});
-			}, Math.round(400 + Math.random() * 100));
+			}).bind(this), Math.round(400 + Math.random() * 100));
 		}).bind(this));
 	}
 	
