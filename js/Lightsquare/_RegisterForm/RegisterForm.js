@@ -1,7 +1,7 @@
 define(function(require) {
 	require("css!./register_form.css");
 	var html = require("file!./register_form.html");
-	var Ractive = require("ractive/ractive");
+	var RactiveI18n = require("ractive-i18n/RactiveI18n");
 	var Event = require("js/Event");
 	
 	function RegisterForm(user, parent) {
@@ -9,10 +9,11 @@ define(function(require) {
 		
 		this.Registered = new Event();
 		
-		this._template = new Ractive({
+		this._template = new RactiveI18n({
 			el: parent,
 			template: html,
 			data: {
+				locale: this._user.getLocaleDictionary(),
 				error: "",
 				username: "",
 				password: "",
