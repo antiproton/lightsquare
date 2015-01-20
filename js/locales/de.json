@@ -24,7 +24,7 @@
 	"Create account": "Account erstellen",
 	"There are no active seeks": "Es gibt keine aktiven Schach Forderungen",
 	"has offered you a rematch": "bietet ein Rückspiel an",
-	"Game aborted by the server - moves before timing starts must be made within 30 seconds.": "Die Partie wurde vom Server abgebrochen. Der erste Zug muß innerhalb von 30 Sekunden erfolgen.",
+	"Game aborted by the server - moves before timing starts must be made within %d seconds.": "Die Partie wurde vom Server abgebrochen. Der erste Zug muß innerhalb von %d Sekunden erfolgen.",
 	"Connecting to the server...": "Vebindung zum Server wird aufgebaut.....",
 	"Connection problem: if you see this after reloading, the server may have gone down. Otherwise, check your internet connection.": "Verbindung kann nicht aufgebaut werden. Benachrichtigen Sie den Administrator!",
 	"Restore game": "Partie wiederherstellen",
