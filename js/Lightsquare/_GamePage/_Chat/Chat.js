@@ -6,11 +6,13 @@ define(function(require) {
 	var jsonchess = require("jsonchess/constants");
 	
 	function Chat(user, game, parent) {
+		this._user = user;
+		
 		this._template = new RactiveI18n({
 			el: parent,
 			template: html,
 			data: {
-				locale: user.getLocaleDictionary(),
+				locale: this._user.getLocaleDictionary(),
 				message: "",
 				messages: []
 			}
@@ -79,10 +81,10 @@ define(function(require) {
 		}, this);
 		
 		this._game.Aborted.addHandler(function() {
-			this._addMessage(
+			this._addMessage(this._user.__(
 				"Game aborted by the server - moves before timing starts must be made"
-				+ " within " + (jsonchess.TIME_FOR_MOVES_BEFORE_CLOCK_START / 1000) + " seconds."
-			);
+				+ " within %d seconds.", [jsonchess.TIME_FOR_MOVES_BEFORE_CLOCK_START / 1000]
+			));
 		}, this);
 	}
 	
