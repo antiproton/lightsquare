@@ -3,11 +3,7 @@
 		<div class="no_game_backups">
 			<div class="no_game_backups_message">
 				<p>
-					Any games you play will be shown here for one day after the last activity.
-					If the server crashes during a game, the players can use this interface to
-					submit their local game details when it comes back online.  If both players
-					do this, the game will be immediately resumed and the active player will be
-					reimbursed any time that has passed since the last move.
+					{{__("Any games you play will be shown here for one day after the last activity. If the server crashes during a game, the players can use this interface to submit their local game details when it comes back online. If both players do this, the game will be immediately resumed and the active player will be reimbursed any time that has passed since the last move.")}}
 				</p>
 			</div>
 		</div>
@@ -42,7 +38,7 @@
 							<div>
 								{{#restorationRequestSubmitted[id]}}
 									<span class="game_backup_restoration_submitted">
-										Game details submitted for restoration.  Waiting for opponent...
+										{{__("Game details submitted for restoration.  Waiting for opponent...")}}
 									</span>
 								{{/restorationRequestSubmitted[id]}}
 								{{#error[id]}}
@@ -56,7 +52,7 @@
 									class="restore_game"
 									type="button"
 									on-click="restore_or_cancel:{{id}}"
-									value="{{restorationRequestSubmitted[id] ? 'Cancel' : 'Restore'}}"
+									value="{{__(restorationRequestSubmitted[id] ? "Cancel" : "Restore")}}"
 								>
 							</div>
 						</div>

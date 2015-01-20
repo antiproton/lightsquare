@@ -2,7 +2,7 @@ define(function(require) {
 	require("css!./game_backup_list.css");
 	var html = require("file!./game_backup_list.html");
 	var Event = require("js/Event");
-	var Ractive = require("ractive/ractive");
+	var RactiveI18n = require("ractive-i18n/RactiveI18n");
 	var Position = require("chess/Position");
 	var Colour = require("chess/Colour");
 	var Board = require("lightsquare/Board/Board");
@@ -28,10 +28,11 @@ define(function(require) {
 	}
 	
 	GameBackupList.prototype._setupTemplate = function(parent) {
-		this._template = new Ractive({
+		this._template = new RactiveI18n({
 			el: parent,
 			template: html,
 			data: {
+				locale: this._user.getLocaleDictionary(),
 				selectedMove: {},
 				restorationRequestSubmitted: {},
 				gameBackups: {},
