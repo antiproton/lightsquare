@@ -1,15 +1,16 @@
 define(function(require) {
 	require("css!./chat.css");
 	var html = require("file!./chat.html");
-	var Ractive = require("ractive/ractive");
+	var RactiveI18n = require("ractive-i18n/RactiveI18n");
 	var Colour = require("chess/Colour");
 	var jsonchess = require("jsonchess/constants");
 	
-	function Chat(game, parent) {
-		this._template = new Ractive({
+	function Chat(user, game, parent) {
+		this._template = new RactiveI18n({
 			el: parent,
 			template: html,
 			data: {
+				locale: user.getLocaleDictionary(),
 				message: "",
 				messages: []
 			}

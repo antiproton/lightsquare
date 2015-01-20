@@ -585,7 +585,7 @@ define(function(require) {
 	}
 	
 	GamePage.prototype._setupChat = function() {
-		this._chat = new Chat(this._game, this._template.nodes.chat);
+		this._chat = new Chat(this._user, this._game, this._template.nodes.chat);
 	}
 	
 	GamePage.prototype._relevanceFromColour = function(colour) {
