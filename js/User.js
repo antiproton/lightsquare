@@ -7,6 +7,7 @@ define(function(require) {
 	var Game = require("./Game");
 	var RestorationRequest = require("./RestorationRequest");
 	var locales = require("lightsquare/locales");
+	var i18n = require("i18n/i18n");
 	
 	var GAME_BACKUP_MAX_AGE = 1000 * 60 * 60 * 24;
 	
@@ -76,6 +77,14 @@ define(function(require) {
 	
 	User.prototype.getLocaleDictionary = function() {
 		return locales[this._locale];
+	}
+	
+	User.prototype.__ = function(string, replacements) {
+		return i18n.__(locales[this._locale], string, replacements);
+	}
+	
+	User.prototype.__n = function(singularVersion, count, replacements) {
+		return i18n.__n(locales[this._locale], singularVersion, count, replacements);
 	}
 	
 	User.prototype.getDetails = function() {
