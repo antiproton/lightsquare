@@ -1,7 +1,7 @@
 define(function(require) {
 	require("css!./chat.css");
 	var html = require("file!./chat.html");
-	var Ractive = require("ractive/ractive");
+	var RactiveI18n = require("ractive-i18n/RactiveI18n");
 	var jsonchessMessageTypes = require("jsonchess/chatMessageTypes");
 	
 	var messageClasses = {};
@@ -9,13 +9,14 @@ define(function(require) {
 	messageClasses[jsonchessMessageTypes.ADMIN] = "admin";
 	messageClasses[jsonchessMessageTypes.USER] = "user";
 	
-	function Chat(server, parent) {
+	function Chat(user, server, parent) {
 		this._server = server;
 		
-		this._template = new Ractive({
+		this._template = new RactiveI18n({
 			el: parent,
 			template: html,
 			data: {
+				locale: user.getLocaleDictionary(),
 				message: "",
 				messages: [],
 				getMessageClass: function(jsonchessMessageType) {

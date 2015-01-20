@@ -24,7 +24,7 @@ define(function(require) {
 		new SeekForm(this._user, this._server, this._template.nodes.create_seek);
 		new SeekGraph(this._seekList, this._user, this._template.nodes.seek_graph);
 		
-		var chat = new Chat(this._server, this._template.nodes.chat);
+		var chat = new Chat(this._user, this._server, this._template.nodes.chat);
 		
 		this._server.getConnection().then((function() {
 			setTimeout((function() {
