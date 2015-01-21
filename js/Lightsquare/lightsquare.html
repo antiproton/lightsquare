@@ -31,7 +31,7 @@
 		<div class="title">
 			<a href="{{getHref('/')}}" on-click="navigate">{{__("Lightsquare")}}</a>
 		</div>
-		<div class="user">
+		<div class="control_panel">
 			{{#userIsLoggedIn}}
 				{{username}} (<a href="javascript:void(0)" on-click="logout"><span on-click="foreground_click">{{__("Log out")}}</span></a>)
 			{{/userIsLoggedIn}}
@@ -40,6 +40,12 @@
 				&nbsp;&nbsp;
 				<a href="javascript:void(0)" on-click="register"><span on-click="foreground_click">{{__("Create account")}}</span></a>
 			{{/userIsLoggedIn}}
+			<span>&nbsp;</span>
+			<select value="{{selectedLocale}}">
+				{{#locales:locale}}
+					<option value="{{locale}}">{{locale}}</option>
+				{{/locales}}
+			</select>
 		</div>
 	</div>
 	{{#showLogoutConfirmation}}

@@ -29,6 +29,7 @@ define(function(require) {
 	var RandomGames = require("lightsquare/RandomGames");
 	var SeekList = require("lightsquare/SeekList");
 	var RactiveI18n = require("ractive-i18n/RactiveI18n");
+	var locales = require("lightsquare/locales");
 	
 	var LEFT_BUTTON = 0;
 	var ESCAPE_KEY = 27;
@@ -365,6 +366,8 @@ define(function(require) {
 			el: parent,
 			template: html,
 			data: {
+				selectedLocale: this._user.getLocale(),
+				locales: locales,
 				locale: this._user.getLocaleDictionary(),
 				gamePages: [],
 				timeCriticalThreshold: timeCriticalThreshold,
@@ -406,6 +409,12 @@ define(function(require) {
 				nav: navHtml,
 				connectingMessage: connectingMessageHtml
 			}
+		});
+		
+		this._template.observe("selectedLocale", (function(locale) {
+			document.location.href = "?locale=" + locale;
+		}).bind(this), {
+			init: false
 		});
 		
 		this._template.on("navigate", (function(event) {

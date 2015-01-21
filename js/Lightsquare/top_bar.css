@@ -15,14 +15,14 @@ div.title a {
 	text-decoration: none;
 }
 
-div.user {
+div.control_panel {
 	font-size: .85em;
 }
 
-div.user a {
+div.control_panel a {
 	color: #F2F2F2;
 }
 
-div.user a:hover {
+div.control_panel a:hover {
 	color: white;
 }
