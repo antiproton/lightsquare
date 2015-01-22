@@ -1,15 +1,16 @@
 define(function(require) {
 	require("css!./login_form.css");
 	var html = require("file!./login_form.html");
-	var Ractive = require("ractive/ractive");
+	var RactiveI18n = require("ractive-i18n/RactiveI18n");
 	
 	function LoginForm(user, parent) {
 		this._user = user;
 		
-		this._template = new Ractive({
+		this._template = new RactiveI18n({
 			el: parent,
 			template: html,
 			data: {
+				locale: this._user.getLocaleDictionary(),
 				error: "",
 				username: "",
 				password: ""

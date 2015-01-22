@@ -1,9 +1,9 @@
 <form class="login" on-submit="submit">
-	<h1>Log in</h1>
+	<h1>{{__("Log in")}}</h1>
 	<div class="login_form_fields">
-		<label>Username</label>
+		<label>{{__("Username")}}</label>
 		<input type="text" value="{{username}}" autofocus>
-		<label>Password</label>
+		<label>{{__("Password")}}</label>
 		<input type="password" value="{{password}}">
 	</div>
 	{{#error}}
@@ -11,5 +11,5 @@
 			{{error}}
 		</div>
 	{{/error}}
-	<input class="login" type="submit" value="Log in">
+	<input class="login" type="submit" value="{{__("Log in")}}">
 </form>
