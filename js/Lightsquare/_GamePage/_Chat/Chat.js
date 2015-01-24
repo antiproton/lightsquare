@@ -79,7 +79,7 @@ define(function(require) {
 		}, this);
 		
 		this._game.GameOver.addHandler(function(result) {
-			this._addMessage(this._user.__("Game over: " + this._user.__(result.description) + "."));
+			this._addMessage(this._user.__("Game over: " + result.description + "."));
 		}, this);
 		
 		this._game.Aborted.addHandler(function() {
