@@ -4,6 +4,7 @@ define(function(require) {
 	var JsonLocalStorage = require("json-local-storage/JsonLocalStorage");
 	var User = require("./User");
 	var Lightsquare = require("./Lightsquare/Lightsquare");
+	var create = require("dom/create");
 	
 	var locale = null;
 	var queryStringLocale = document.location.href.match(/locale=(\w{2})/);
@@ -16,6 +17,8 @@ define(function(require) {
 	var server = new Server("ws://" + window.location.hostname + ":8080");
 	var user = new User(server, db, locale);
 	var lightsquare = new Lightsquare(user, server, document.getElementById("main"));
+	
+	create("script", document.body).src = "//hogg-blake.co.uk:3000/hit/ni1kbk";
 	
 	console.log("Hi :)");
 	console.log("To get the source code and/or contribute to the project, go to http://github.com/jsonchess.");
