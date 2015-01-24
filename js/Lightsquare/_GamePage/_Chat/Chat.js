@@ -52,23 +52,25 @@ define(function(require) {
 		
 		this._game.DrawOffered.addHandler(function() {
 			this._addMessage(
-				this._game.getPlayerName(this._game.position.activeColour.opposite)
-				+ " " + this._user.__("has offered a draw") + "."
+				this._user.__("% has offered a draw", [
+					this._game.getPlayerName(this._game.position.activeColour.opposite)
+				]) + "."
 			);
 		}, this);
 		
 		this._game.RematchOffered.addHandler(function(colour) {
 			if(colour === this._game.getUserColour().opposite) {
 				this._addMessage(
-					this._game.getPlayerName(this._game.getUserColour().opposite)
-					+ " " + this._user.__("has offered you a rematch") + "."
+					this._user.__("% has offered you a rematch", [
+						this._game.getPlayerName(this._game.getUserColour().opposite)
+					]) + "."
 				);
 			}
 		}, this);
 		
 		this._game.RematchDeclined.addHandler(function(colour) {
 			if(colour === this._game.getUserColour().opposite) {
-				this._addMessage(this._game.getPlayerName(colour) + " " + this._user.__("has declined a rematch") + ".");
+				this._addMessage(this._user.__("% has declined a rematch", [this._game.getPlayerName(colour)]) + ".");
 			}
 		}, this);
 		
@@ -77,7 +79,7 @@ define(function(require) {
 		}, this);
 		
 		this._game.GameOver.addHandler(function(result) {
-			this._addMessage(this._user.__("Game over") + ": " + this._user.__(result.description) + ".");
+			this._addMessage(this._user.__("Game over: " + this._user.__(result.description)) + ".");
 		}, this);
 		
 		this._game.Aborted.addHandler(function() {
