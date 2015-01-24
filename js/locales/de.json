@@ -18,7 +18,7 @@
 	"Game over: white resigned": "Weiss gibt auf",
 	"Game over: draw by repetition": "Remis wegen Zug Wiederholung",
 	"Home": "Home",
-	"has offered you a rematch": "bietet ein Rückspiel an",
+	"% has offered you a rematch": "bietet ein Rückspiel an",
 	"Initial time": "Zeit",
 	"Initial time must be at least 1s": "Die Partiezeit ist zu kurz!",
 	"Increment": "Aufschlag",
