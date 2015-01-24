@@ -20,7 +20,7 @@
 	"Home": "Home",
 	"has offered you a rematch": "bietet ein Rückspiel an",
 	"Initial time": "Zeit",
-	"Initial time must be at least %": "Die Partiezeit ist zu kurz!",
+	"Initial time must be at least 1s": "Die Partiezeit ist zu kurz!",
 	"Increment": "Aufschlag",
 	"Lightsquare": "Lightsquare Schach",
 	"Min. opponent rating": "Gegner min. Elo",
