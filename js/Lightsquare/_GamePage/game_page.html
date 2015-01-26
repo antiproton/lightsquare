@@ -9,6 +9,8 @@
 				<label class="game_page_pref" for="premove">{{__("Premove")}}</label>
 				<input type="checkbox" on-change="toggle:'alwaysQueen'" checked="{{prefs.alwaysQueen}}" id="alwaysQueen">
 				<label class="game_page_pref" for="alwaysQueen">{{__("Always queen")}}</label>
+				<input type="checkbox" on-change="toggle:'sound'" checked="{{prefs.sound}}" id="sound">
+				<label class="game_page_pref" for="sound">{{__("Sound")}}</label>
 				<div class="board_buttons">
 					<input type="button" on-click="board_flip" value="{{__("Flip board")}}">
 					<input type="button" on-click="board_size_down" value="-">

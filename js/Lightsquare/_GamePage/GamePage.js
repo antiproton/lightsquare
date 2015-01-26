@@ -303,6 +303,10 @@ define(function(require) {
 		if(prefs.boardSize) {
 			this._board.setSquareSize(prefs.boardSize);
 		}
+		
+		if(prefs.sound !== null) {
+			this._board.toggleMoveSound(!!prefs.sound);
+		}
 	}
 	
 	GamePage.prototype._highlightMove = function(move) {

@@ -18,7 +18,10 @@ define(function(require) {
 			template: html,
 			el: parent,
 			data: {
-				animationInProgress: false
+				animationInProgress: false,
+				getAbsolutePath: function(path) {
+					return require.toUrl(path);
+				}
 			}
 		});
 
@@ -46,6 +49,7 @@ define(function(require) {
 		};
 
 		this._lastMoveEvent = null;
+		this._moveSound = false;
 		this._pendingPromotion = null;
 		this._viewingAs = Colour.white;
 		this._showSurround = false;
@@ -88,6 +92,10 @@ define(function(require) {
 
 	Board.prototype.setPiece = function(square, piece) {
 		this._squares[square.squareNo].setPiece(piece);
+	}
+	
+	Board.prototype.toggleMoveSound = function(moveSound) {
+		this._moveSound = moveSound;
 	}
 
 	Board.prototype.highlightSquares = function(squares, highlightType) {
@@ -132,6 +140,7 @@ define(function(require) {
 
 	Board.prototype.move = function(move) {
 		this.setBoardArray(move.positionAfter.board);
+		this._playMoveSound();
 	}
 	
 	Board.prototype.animateMove = function(move, callback) {
@@ -167,12 +176,19 @@ define(function(require) {
 				this._template.set("animationInProgress", false);
 				this._animation.isInProgress = false;
 				this.setBoardArray(boardArray);
+				this._playMoveSound();
 				
 				if(callback) {
 					callback();
 				}
 			}).bind(this)
 		});
+	}
+	
+	Board.prototype._playMoveSound = function() {
+		if(this._moveSound) {
+			this._template.nodes.move_sound.play();
+		}
 	}
 	
 	Board.prototype.setPieceStyle = function(pieceStyle) {
