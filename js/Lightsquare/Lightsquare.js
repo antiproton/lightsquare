@@ -26,6 +26,7 @@ define(function(require) {
 	var GamePage = require("./_GamePage/GamePage");
 	var SpectatePage = require("./_SpectatePage/SpectatePage");
 	var RestoreGamePage = require("./_RestoreGamePage/RestoreGamePage");
+	var TournamentsPage = require("./_TournamentsPage/TournamentsPage");
 	var RandomGames = require("lightsquare/RandomGames");
 	var SeekList = require("lightsquare/SeekList");
 	var RactiveI18n = require("ractive-i18n/RactiveI18n");
@@ -339,6 +340,14 @@ define(function(require) {
 			this._showPage(url);
 		}).bind(this));
 		
+		this._router.addRoute("/tournaments", (function(params, url) {
+			if(!this._hasPage(url)) {
+				this._pages[url] = new TournamentsPage(this._user, this._createPage(url));
+			}
+			
+			this._showPage(url);
+		}).bind(this));
+		
 		this._router.addRoute("/restore-game", (function(params, url) {
 			if(!this._hasPage(url)) {
 				this._pages[url] = new RestoreGamePage(this._user, this._server, this._createPage(url));
@@ -385,6 +394,10 @@ define(function(require) {
 						{
 							href: "/games",
 							label: "Current games"
+						},
+						{
+							href: "/tournaments",
+							label: "Tournaments"
 						}
 					],
 					tools: [
