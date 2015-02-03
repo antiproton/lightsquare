@@ -3,6 +3,8 @@ define(function(require) {
 	var html = require("file!./tournaments_page.html");
 	var RactiveI18n = require("ractive-i18n/RactiveI18n");
 	
+	var ESCAPE_KEY = 27;
+	
 	function TournamentsPage(user, parent) {
 		this._user = user;
 		this._setupTemplate(parent);
@@ -18,8 +20,32 @@ define(function(require) {
 			}
 		});
 		
-		this._template.on("open_create_form", (function() {
+		this._template.on("open_create_dialog", (function() {
 			this._showDialog("create");
+		}).bind(this));
+		
+		this._setupDialogHandlers();
+	}
+	
+	TournamentsPage.prototype._setupDialogHandlers = function() {
+		var foregroundClicked = false;
+		
+		this._template.on("background_click", (function() {
+			if(!foregroundClicked) {
+				this._hideDialog();
+			}
+			
+			foregroundClicked = false;
+		}).bind(this));
+		
+		this._template.on("foreground_click", (function() {
+			foregroundClicked = true;
+		}).bind(this));
+		
+		window.addEventListener("keyup", (function(event) {
+			if(event.keyCode === ESCAPE_KEY) {
+				this._hideDialog();
+			}
 		}).bind(this));
 	}
 	

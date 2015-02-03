@@ -1,3 +1,26 @@
 div.tournaments_page {
-	
+	flex-grow: 1;
+}
+
+div.create_tournament_panel {
+	padding: .4em;
+	border-bottom: 1px solid #bbbbbb;
+}
+
+input.create_tournament {
+	color: rgba(255, 255, 255, 0.93);
+	text-shadow: 1px 1px 0 rgba(0, 0, 0, .5);
+	margin: 0;
+	border: 0;
+	padding: .4em 1em;
+	background-image: linear-gradient(to top, #5B86B0 0%, #52B4E7 100%);
+}
+
+div.create_dialog {
+	width: 35%;
+	margin: 5% auto auto auto;
+	border-radius: 3px;
+	padding: .8em;
+	box-shadow: 2px 2px 8px rgba(0, 0, 0, .3);
+	background: white;
 }

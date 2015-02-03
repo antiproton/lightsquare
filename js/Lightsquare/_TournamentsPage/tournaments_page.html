@@ -1,2 +1,10 @@
+<div class="modal_overlay" on-click="background_click" style="{{dialog ? '' : 'display: none'}}">
+	<div class="create_dialog" style="{{dialog === 'create' ? '' : 'display: none'}}" on-click="foreground_click">
+		hello
+	</div>
+</div>
 <div class="tournaments_page">
+	<div class="create_tournament_panel">
+		<input class="create_tournament" type="button" on-click="open_create_dialog" value="{{__("Create tournament")}}">
+	</div>
 </div>
