@@ -16,7 +16,11 @@ define(function(require) {
 			template: html,
 			data: {
 				locale: this._user.getLocaleDictionary(),
-				dialog: null
+				dialog: null,
+				name: "",
+				initialTime: "3m",
+				timeIncrement: "2",
+				players: 8
 			}
 		});
 		

@@ -84,3 +84,18 @@ div.form_error {
 	border-radius: 3px;
 	padding: .5em;
 }
+
+div.range_display_pair {
+	display: flex;
+}
+
+div.range_display_pair div.input {
+	
+}
+
+div.range_display_pair div.display {
+	border: 1px solid #bbbbbb;
+	border-radius: 2px;
+	padding: .2em .5em;
+	background: #ececec;
+}
