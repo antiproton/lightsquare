@@ -20,7 +20,10 @@ define(function(require) {
 				name: "",
 				initialTime: "3m",
 				timeIncrement: "2",
-				players: 8
+				players_input: 3,
+				players: function(input) {
+					return Math.pow(2, input);
+				}
 			}
 		});
 		

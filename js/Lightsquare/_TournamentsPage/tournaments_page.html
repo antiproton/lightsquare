@@ -12,10 +12,10 @@
 				<label for="players">{{__("Players")}}</label>
 				<div class="range_display_pair tournament_players">
 					<div class="input tournament_players">
-						<input class="tournament_players" type="range" min="4" max="32" step="2" value="{{players}}">
+						<input class="tournament_players" type="range" min="2" max="6" value="{{players_input}}">
 					</div>
 					<div class="display">
-						{{players}}
+						{{players(players_input)}}
 					</div>
 				</div>
 			</div>
