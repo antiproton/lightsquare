@@ -1,30 +1,36 @@
 <div class="modal_overlay" on-click="background_click" style="{{dialog ? '' : 'display: none'}}">
 	<div class="create_dialog" style="{{dialog === 'create' ? '' : 'display: none'}}" on-click="foreground_click">
 		<form class="create_tournament" on-submit="create">
-			<h1>{{__("New tournament")}}</h1>
-			<div class="tournament_form_fields">
-				<label for="tournament_name">{{__("Name (optional)")}}</label>
-				<input type="text" id="tournament_name" value="{{name}}" autofocus>
-				<label for="tournament_initial_time">{{__("Initial time")}}</label>
-				<input type="text" id="tournament_initial_time" value="{{initialTime}}" title="{{__("Accepts units, e.g. '2 days 3h 30 min' (defaults to minutes if no units given)")}}">
-				<label for="tournament_time_increment">{{__("Increment")}}</label>
-				<input type="text" id="tournament_time_increment" value="{{timeIncrement}}" title="{{__("Accepts units, e.g. '1m30' (defaults to seconds if no units given)")}}">
-				<label for="players">{{__("Players")}}</label>
-				<div class="range_display_pair tournament_players">
-					<div class="input tournament_players">
-						<input class="tournament_players" type="range" min="2" max="6" value="{{players_input}}">
-					</div>
-					<div class="display">
-						{{players(players_input)}}
+			{{#if tournamentCreated}}
+				<div class="tournament_created">
+					success
+				</div>
+			{{else}}
+				<h1>{{__("New tournament")}}</h1>
+				<div class="tournament_form_fields">
+					<label for="tournament_name">{{__("Name (optional)")}}</label>
+					<input type="text" id="tournament_name" value="{{name}}" autofocus>
+					<label for="tournament_initial_time">{{__("Initial time")}}</label>
+					<input type="text" id="tournament_initial_time" value="{{initialTime}}" title="{{__("Accepts units, e.g. '2 days 3h 30 min' (defaults to minutes if no units given)")}}">
+					<label for="tournament_time_increment">{{__("Increment")}}</label>
+					<input type="text" id="tournament_time_increment" value="{{timeIncrement}}" title="{{__("Accepts units, e.g. '1m30' (defaults to seconds if no units given)")}}">
+					<label for="players">{{__("Players")}}</label>
+					<div class="range_display_pair tournament_players">
+						<div class="input tournament_players">
+							<input class="tournament_players" type="range" min="2" max="6" value="{{playersInput}}">
+						</div>
+						<div class="display">
+							{{players(playersInput)}}
+						</div>
 					</div>
 				</div>
-			</div>
-			{{#error}}
-				<div class="form_error">
-					{{error}}
-				</div>
-			{{/error}}
-			<input class="create_tournament" type="submit" value="{{__("Start")}}">
+				{{#error}}
+					<div class="form_error">
+						{{error}}
+					</div>
+				{{/error}}
+				<input class="create_tournament" type="submit" value="{{__("Start")}}">
+			{{/if}}
 		</form>
 	</div>
 </div>
