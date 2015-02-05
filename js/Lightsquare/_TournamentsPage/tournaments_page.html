@@ -38,4 +38,37 @@
 	<div class="create_tournament_panel">
 		<input class="create_tournament_dialog" type="button" on-click="open_create_dialog" value="{{__("Create tournament")}}">
 	</div>
+	<div class="tournaments">
+		{{#tournaments}}
+			<div class="tournament">
+				<div class="details">
+					{{#if name}}
+						<div class="name">
+							{{name}}
+						</div>
+					{{/if}}
+					<div class="time">
+						{{timeDescription}}
+					</div>
+					{{#if !inProgress}}
+						<div class="action">
+							<input
+								type="button"
+								class="tournament_action"
+								on-click="join_or_leave"
+								value="{{__(playerJoined ? "Withdraw" : "Join")}}"
+							>
+						</div>
+					{{/if}}
+				</div>
+				<div class="status">
+					{{#if inProgress}}
+						In progress
+					{{else}}
+						{{playersRequired - players.length}} players required
+					{{/if}}
+				</div>
+			</div>
+		{{/tournaments}}
+	</div>
 </div>
