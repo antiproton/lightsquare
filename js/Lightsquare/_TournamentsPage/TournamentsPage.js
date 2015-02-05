@@ -6,6 +6,13 @@ define(function(require) {
 	var ESCAPE_KEY = 27;
 	
 	function TournamentsPage(user, parent) {
+		this._formDefaults = {
+			name: "",
+			initialTime: "3m",
+			timeIncrement: "2",
+			playersInput: 3
+		};
+		
 		this._user = user;
 		this._setupTemplate(parent);
 	}
@@ -17,21 +24,56 @@ define(function(require) {
 			data: {
 				locale: this._user.getLocaleDictionary(),
 				dialog: null,
-				name: "",
-				initialTime: "3m",
-				timeIncrement: "2",
-				players_input: 3,
+				error: null,
 				players: function(input) {
 					return Math.pow(2, input);
 				}
 			}
 		});
 		
+		this._template.set(this._formDefaults);
+		
 		this._template.on("open_create_dialog", (function() {
 			this._showDialog("create");
 		}).bind(this));
 		
+		this._template.on("create", (function(event) {
+			event.original.preventDefault();
+			
+			this._user.createTournament({
+				playersRequired:this._template.get("players"),
+				initialTime: this._template.get("initialTime"),
+				timeIncrement: this._template.get("timeIncrement")
+			}).then((function(id) {
+				this._template.set("tournamentCreated", true);
+				
+				setTimeout((function() {
+					this._hideDialog();
+					this._clearForm();
+				}).bind(this), 1000);
+			}).bind(this), (function(error) {
+				this._setError(error);
+			}).bind(this));
+		}).bind(this));
+		
 		this._setupDialogHandlers();
+	}
+	
+	TournamentsPage.prototype._clearForm = function() {
+		this._template.set(this._formDefaults);
+		
+		this._template.set({
+			tournamentCreated: false
+		});
+	}
+	
+	TournamentsPage.prototype._clearError = function() {
+		this._template.set("error", "");
+	}
+	
+	TournamentsPage.prototype._setError = function(message) {
+		this._template.set("error", message);
+		this._setClearErrorTimer();
 	}
 	
 	TournamentsPage.prototype._setupDialogHandlers = function() {
