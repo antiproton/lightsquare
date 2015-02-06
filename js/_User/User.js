@@ -8,8 +8,7 @@ define(function(require) {
 	var RestorationRequest = require("./RestorationRequest");
 	var locales = require("lightsquare/locales");
 	var i18n = require("i18n/i18n");
-	
-	var GAME_BACKUP_MAX_AGE = 1000 * 60 * 60 * 24;
+	var GameBackups = require("./GameBackups");
 	
 	function User(server, db, locale) {
 		this._playerId = null;
@@ -18,10 +17,6 @@ define(function(require) {
 		
 		this._server = server;
 		this._db = db;
-		
-		if(!this._db.get("gameBackups")) {
-			this._db.set("gameBackups", {});
-		}
 		
 		this._locale = "en";
 		
@@ -37,8 +32,9 @@ define(function(require) {
 			}
 		}
 		
-		this._cleanupOldGameBackups();
-		this._markGameBackupsForCleanup();
+		this._gameBackups = new GameBackups(this._db);
+		this._gameBackups.cleanupOldBackups();
+		this._gameBackups.markForCleanup();
 		
 		this._username = "Anonymous";
 		this._isLoggedIn = false;
@@ -65,6 +61,10 @@ define(function(require) {
 		
 		this._handleServerEvents();
 		this._subscribeToServerMessages();
+	}
+	
+	User.prototype.getGameBackups = function() {
+		return this._gameBackups.getBackups();
 	}
 	
 	User.prototype.getLocale = function() {
@@ -133,75 +133,6 @@ define(function(require) {
 		this.LoggedOut.fire();
 	}
 	
-	User.prototype.getGameBackups = function() {
-		return this._db.get("gameBackups");
-	}
-	
-	User.prototype._cleanupOldGameBackups = function() {
-		this._filterGameBackups(function(backup) {
-			return (backup.expiryTime === null || time() < backup.expiryTime);
-		});
-	}
-	
-	User.prototype._markGameBackupsForCleanup = function() {
-		this._filterGameBackups(function(backup) {
-			if(backup.expiryTime === null) {
-				backup.expiryTime = time() + GAME_BACKUP_MAX_AGE;
-			}
-		});
-	}
-	
-	User.prototype._filterGameBackups = function(callback) {
-		var backups = this._db.get("gameBackups");
-		
-		for(var id in backups) {
-			if(callback(backups[id]) === false) {
-				delete backups[id];
-			}
-		}
-		
-		this._db.set("gameBackups", backups);
-	}
-	
-	User.prototype._saveGameBackup = function(game) {
-		var gameDetails = game.getBackupDetails();
-		var id = gameDetails.id;
-		var backups = this._db.get("gameBackups");
-		var backup;
-		var playingAs = game.getUserColour();
-		
-		if(id in backups) {
-			backup = backups[id];
-			backup.gameDetails = gameDetails;
-			backup.expiryTime = null;
-		}
-		
-		else {
-			backup = {
-				expiryTime: null,
-				gameDetails: gameDetails,
-				opponent: {
-					name: game.getPlayerName(playingAs.opposite),
-					rating: game.getRating(playingAs.opposite)
-				},
-				timingDescription: game.timingStyle.getDescription(),
-				playingAs: playingAs.fenString
-			};
-		}
-		
-		backups[id] = backup;
-		
-		this._db.set("gameBackups", backups);
-	}
-	
-	User.prototype._removeGameBackup = function(id) {
-		var backups = this._db.get("gameBackups");
-		
-		delete backups[id];
-		
-		this._db.set("gameBackups", backups);
-	}
-	
 	User.prototype.getPendingRestorations = function() {
 		return this._promisor.get("/restoration_requests", function() {
 			this._server.send("/request/restoration_requests");
@@ -212,7 +143,7 @@ define(function(require) {
 		var request = new RestorationRequest(this, this._server, backup);
 		
 		request.GameRestored.addHandler(function(game) {
-			this._removeGameBackup(request.getId());
+			this._gameBackups.remove(request.getId());
 			this.GameRestored.fire(this._addGame(game));
 		}, this);
 		
@@ -296,12 +227,12 @@ define(function(require) {
 		if(game.userIsPlaying()) {
 			game.Move.addHandler(function() {
 				if(game.history.length >= gameRestoration.MIN_MOVES) {
-					this._saveGameBackup(game);
+					this._gameBackups.save(game);
 				}
 			}, this);
 			
 			game.GameOver.addHandler(function() {
-				this._removeGameBackup(game.id);
+				this._gameBackups.remove(game.id);
 			}, this);
 		}
 		
@@ -335,6 +266,12 @@ define(function(require) {
 	User.prototype.getGames = function() {
 		return this._promisor.getPersistent("/games", function() {
 			this._server.send("/request/games");
+		});
+	}
+	
+	User.prototype.createTournament = function(options) {
+		return this._promisor.get("/tournament/new", function(promise) {
+			this._server.send("/tournament/new", options);
 		});
 	}
 	
@@ -399,6 +336,10 @@ define(function(require) {
 				this._currentSeek = null;
 				this.SeekMatched.fire(game);
 				this._promisor.resolve("/seek", game);
+			},
+			
+			"/tournament/new/success": function(details) {
+				this._promisor.resolve("/tourament/new", this._addTournament(this._createTournament(details)));
 			},
 			
 			"/game/not_found": function(id) {

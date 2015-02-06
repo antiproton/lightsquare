@@ -2,7 +2,7 @@ define(function(require) {
 	require("ready!");
 	var Server = require("websocket-client/Server");
 	var JsonLocalStorage = require("json-local-storage/JsonLocalStorage");
-	var User = require("./User");
+	var User = require("./_User/User");
 	var Lightsquare = require("./Lightsquare/Lightsquare");
 	var create = require("dom/create");
 	
