@@ -4,8 +4,8 @@ define(function(require) {
 	var Promisor = require("js/Promisor");
 	var glicko2 = require("jsonchess/glicko2");
 	var gameRestoration = require("jsonchess/gameRestoration");
-	var Game = require("./Game");
-	var RestorationRequest = require("./RestorationRequest");
+	var Game = require("lightsquare/Game");
+	var RestorationRequest = require("lightsquare/RestorationRequest");
 	var locales = require("lightsquare/locales");
 	var i18n = require("i18n/i18n");
 	var GameBackups = require("./GameBackups");
