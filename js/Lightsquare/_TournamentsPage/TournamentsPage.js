@@ -5,7 +5,7 @@ define(function(require) {
 	
 	var ESCAPE_KEY = 27;
 	
-	function TournamentsPage(user, parent) {
+	function TournamentsPage(user, server, parent) {
 		this._formDefaults = {
 			name: "",
 			initialTime: "3m",
@@ -14,6 +14,7 @@ define(function(require) {
 		};
 		
 		this._user = user;
+		this._tournamentList = new ListFeed(this._server, "tournaments");
 		this._setupTemplate(parent);
 	}
 	
@@ -27,7 +28,8 @@ define(function(require) {
 				error: null,
 				players: function(input) {
 					return Math.pow(2, input);
-				}
+				},
+				tournaments: []
 			}
 		});
 		
@@ -55,6 +57,10 @@ define(function(require) {
 				this._setError(error);
 			}).bind(this));
 		}).bind(this));
+		
+		this._tournamentList.Updated.addHandler(function() {
+			this._template.set("tournaments", this._tournamentList.getItems());
+		}, this);
 		
 		this._setupDialogHandlers();
 	}
@@ -106,6 +112,14 @@ define(function(require) {
 		if(!dialog || this._template.get("dialog") === dialog) {
 			this._template.set("dialog", null);
 		}
+	}
+	
+	TournamentsPage.prototype.show = function() {
+		this._tournamentList.startUpdating();
+	}
+	
+	TournamentsPage.prototype.hide = function() {
+		this._tournamentList.stopUpdating();
 	}
 	
 	return TournamentsPage;

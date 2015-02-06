@@ -342,7 +342,7 @@ define(function(require) {
 		
 		this._router.addRoute("/tournaments", (function(params, url) {
 			if(!this._hasPage(url)) {
-				this._pages[url] = new TournamentsPage(this._user, this._createPage(url));
+				this._pages[url] = new TournamentsPage(this._user, this._server, this._createPage(url));
 			}
 			
 			this._showPage(url);
