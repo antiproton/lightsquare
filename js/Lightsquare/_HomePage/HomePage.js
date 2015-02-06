@@ -6,12 +6,12 @@ define(function(require) {
 	var SeekGraph = require("./_SeekGraph/SeekGraph");
 	var Chat = require("./_Chat/Chat");
 	var jsonchessMessageTypes = require("jsonchess/chatMessageTypes");
-	var SeekList = require("lightsquare/SeekList");
+	var ListFeed = require("lightsquare/ListFeed");
 	
 	function HomePage(user, server, parent) {
 		this._user = user;
 		this._server = server;
-		this._seekList = new SeekList(this._server);
+		this._seekList = new ListFeed(this._server, "seeks");
 		this._setupTemplate(parent);
 	}
 	

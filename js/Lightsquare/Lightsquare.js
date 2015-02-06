@@ -28,7 +28,7 @@ define(function(require) {
 	var RestoreGamePage = require("./_RestoreGamePage/RestoreGamePage");
 	var TournamentsPage = require("./_TournamentsPage/TournamentsPage");
 	var RandomGames = require("lightsquare/RandomGames");
-	var SeekList = require("lightsquare/SeekList");
+	var ListFeed = require("lightsquare/ListFeed");
 	var RactiveI18n = require("ractive-i18n/RactiveI18n");
 	var locales = require("lightsquare/locales");
 	
@@ -39,7 +39,7 @@ define(function(require) {
 		this._user = user;
 		this._server = server;
 		this._router = new Router(new AddressBarPath());
-		this._seekList = new SeekList(this._server);
+		this._seekList = new ListFeed(this._server, "seeks");
 		
 		this._setupTemplate(parent);
 		this._setupRouter();
@@ -358,7 +358,7 @@ define(function(require) {
 	}
 	
 	Lightsquare.prototype._autoAcceptStockfish = function() {
-		return this._seekList.getSeeks().some(function(seek) {
+		return this._seekList.getItems().some(function(seek) {
 			if(!seek.owner.isUser) {
 				this._user.acceptSeek(seek.id);
 				

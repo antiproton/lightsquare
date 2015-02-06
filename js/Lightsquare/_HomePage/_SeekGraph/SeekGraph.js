@@ -116,7 +116,7 @@ define(function(require) {
 	
 	SeekGraph.prototype._updateTemplate = function() {
 		var occupiedGridSquares = {};
-		var seeks = this._seekList.getSeeks();
+		var seeks = this._seekList.getItems();
 		var graphRangeInEm = this._graphHeightInEm - this._seekHeightInEm;
 		var ratingRange = this._maxRating - this._minRating;
 		var graphSeeks = [];
