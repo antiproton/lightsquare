@@ -84,74 +84,80 @@ define(function(require) {
 	}
 	
 	Game.prototype._subscribeToServerMessages = function() {
-		this._server.subscribe("/game/" + this.id + "/move", (function(move) {
-			this._handleServerMove(move);
-		}).bind(this));
-		
-		this._server.subscribe("/game/" + this.id + "/chat", (function(message) {
-			this.ChatMessageReceived.fire({
-				from: message.from,
-				body: message.body
-			});
-		}).bind(this));
-		
-		this._server.subscribe("/game/" + this.id + "/game_over", (function(result) {
-			this._gameOver(result);
-		}).bind(this));
-		
-		this._server.subscribe("/game/" + this.id + "/aborted", (function() {
-			this._abort();
-		}).bind(this));
-		
-		this._server.subscribe("/game/" + this.id + "/draw_offer", (function(colour) {
-			if(Colour.byFenString[colour] === this.position.activeColour.opposite) {
-				this.DrawOffered.fire();
-			}
-		}).bind(this));
-		
-		this._server.subscribe("/game/" + this.id + "/rematch/offered", (function(colour) {
-			var offeredBy = Colour.byFenString[colour];
+		var subscriptions = {
+			"/move": function(move) {
+				this._handleServerMove(move);
+			},
 			
-			this.rematchOfferedBy = offeredBy;
-			this.RematchOffered.fire(offeredBy);
-		}).bind(this));
-		
-		this._server.subscribe("/game/" + this.id + "/rematch/declined", (function() {
-			var colour = this.rematchOfferedBy;
+			"/chat": function(message) {
+				this.ChatMessageReceived.fire({
+					from: message.from,
+					body: message.body
+				});
+			},
 			
-			this.rematchOfferedBy = null;
-			this.RematchDeclined.fire(colour.opposite);
-		}).bind(this));
-		
-		this._server.subscribe("/game/" + this.id + "/rematch/canceled", (function() {
-			var colour = this.rematchOfferedBy;
+			"/game_over": function(result) {
+				this._gameOver(result);
+			},
 			
-			this.rematchOfferedBy = null;
-			this.RematchOfferCanceled.fire(colour);
-		}).bind(this));
-		
-		this._server.subscribe("/game/" + this.id + "/rematch/expired", (function() {
-			this.rematchOfferedBy = null;
-			this.RematchOfferExpired.fire();
-		}).bind(this));
-		
-		this._server.subscribe("/game/" + this.id + "/rematch", (function(gameDetails) {
-			this._rematch(gameDetails);
-		}).bind(this));
-		
-		this._server.subscribe("/game/" + this.id + "/premove", (function(data) {
-			var premove = null;
+			"/aborted": function() {
+				this._abort();
+			},
 			
-			if(data !== null) {
-				var promoteTo = (data.promoteTo ? PieceType.bySanString[data.promoteTo] : PieceType.queen);
-				var from = Square.bySquareNo[data.from];
-				var to = Square.bySquareNo[data.to];
+			"/draw_offer": function(colour) {
+				if(Colour.byFenString[colour] === this.position.activeColour.opposite) {
+					this.DrawOffered.fire();
+				}
+			},
+			
+			"/rematch/offered": function(colour) {
+				var offeredBy = Colour.byFenString[colour];
 				
-				premove = new Premove(this.position, from, to, promoteTo);
-			}
+				this.rematchOfferedBy = offeredBy;
+				this.RematchOffered.fire(offeredBy);
+			},
 			
-			this._promisor.resolve("/request/premove", premove);
-		}).bind(this));
+			"/rematch/declined": function() {
+				var colour = this.rematchOfferedBy;
+				
+				this.rematchOfferedBy = null;
+				this.RematchDeclined.fire(colour.opposite);
+			},
+			
+			"/rematch/canceled": function() {
+				var colour = this.rematchOfferedBy;
+				
+				this.rematchOfferedBy = null;
+				this.RematchOfferCanceled.fire(colour);
+			},
+			
+			"/rematch/expired": function() {
+				this.rematchOfferedBy = null;
+				this.RematchOfferExpired.fire();
+			},
+			
+			"/rematch": function(gameDetails) {
+				this._rematch(gameDetails);
+			},
+			
+			"/premove": function(data) {
+				var premove = null;
+				
+				if(data !== null) {
+					var promoteTo = (data.promoteTo ? PieceType.bySanString[data.promoteTo] : PieceType.queen);
+					var from = Square.bySquareNo[data.from];
+					var to = Square.bySquareNo[data.to];
+					
+					premove = new Premove(this.position, from, to, promoteTo);
+				}
+				
+				this._promisor.resolve("/request/premove", premove);
+			}
+		};
+		
+		for(var topic in subscriptions) {
+			this._server.subscribe("/game/" + this.id + topic, subscriptions[topic].bind(this));
+		}
 	}
 	
 	Game.prototype._requestLatestMoves = function() {
