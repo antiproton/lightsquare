@@ -77,4 +77,6 @@ define(function(require) {
 		
 		this._db.set("gameBackups", backups);
 	}
+	
+	return GameBackups;
 });
