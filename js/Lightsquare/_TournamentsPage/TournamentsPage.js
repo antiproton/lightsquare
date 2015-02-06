@@ -48,7 +48,7 @@ define(function(require) {
 				playersRequired:this._template.get("players"),
 				initialTime: this._template.get("initialTime"),
 				timeIncrement: this._template.get("timeIncrement")
-			}).then((function(id) {
+			}).then((function(tournament) {
 				this._template.set("tournamentCreated", true);
 				
 				setTimeout((function() {
