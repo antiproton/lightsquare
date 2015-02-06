@@ -2,6 +2,7 @@ define(function(require) {
 	require("css!./tournaments_page.css");
 	var html = require("file!./tournaments_page.html");
 	var RactiveI18n = require("ractive-i18n/RactiveI18n");
+	var ListFeed = require("lightsquare/ListFeed");
 	
 	var ESCAPE_KEY = 27;
 	
@@ -14,6 +15,7 @@ define(function(require) {
 		};
 		
 		this._user = user;
+		this._server = server;
 		this._tournamentList = new ListFeed(this._server, "tournaments");
 		this._setupTemplate(parent);
 	}
