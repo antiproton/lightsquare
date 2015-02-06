@@ -273,7 +273,7 @@ define(function(require) {
 	}
 	
 	User.prototype.createTournament = function(options) {
-		return this._promisor.get("/tournament/new", function(promise) {
+		return this._promisor.get("/tournament/new", function() {
 			this._server.send("/tournament/new", options);
 		});
 	}
