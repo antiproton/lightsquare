@@ -24,11 +24,11 @@
 						</div>
 					</div>
 				</div>
-				{{#error}}
+				{{#if error}}
 					<div class="form_error">
 						{{error}}
 					</div>
-				{{/error}}
+				{{/if}}
 				<input class="create_tournament" type="submit" value="{{__("Start")}}">
 			{{/if}}
 		</form>
