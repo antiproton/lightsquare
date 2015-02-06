@@ -19,18 +19,7 @@ define(function(require) {
 		this._db = db;
 		
 		this._locale = "en";
-		
-		if(locale) {
-			this.setLocale(locale);
-		}
-		
-		else {
-			storedLocale = this._db.get("locale");
-			
-			if(storedLocale) {
-				this._locale = storedLocale;
-			}
-		}
+		this._setPreferredLocale(locale);
 		
 		this._gameBackups = new GameBackups(this._db);
 		this._gameBackups.cleanupOldBackups();
@@ -78,6 +67,20 @@ define(function(require) {
 	
 	User.prototype.getLocaleDictionary = function() {
 		return locales[this._locale];
+	}
+	
+	User.prototype._setPreferredLocale = function(locale) {
+		if(locale) {
+			this.setLocale(locale);
+		}
+		
+		else {
+			storedLocale = this._db.get("locale");
+			
+			if(storedLocale) {
+				this._locale = storedLocale;
+			}
+		}
 	}
 	
 	User.prototype.__ = function(string, replacements) {
