@@ -8,7 +8,7 @@ define(function(require) {
 	var RestorationRequest = require("lightsquare/RestorationRequest");
 	var locales = require("lightsquare/locales");
 	var i18n = require("i18n/i18n");
-	var GameBackups = require("./GameBackups");
+	var GameBackups = require("./_GameBackups");
 	
 	function User(server, db, locale) {
 		this._playerId = null;
