@@ -1,6 +1,6 @@
 <div class="modal_overlay" on-click="background_click" style="{{dialog ? '' : 'display: none'}}">
 	<div class="create_dialog" style="{{dialog === 'create' ? '' : 'display: none'}}" on-click="foreground_click">
-		<form class="create_tournament" on-submit="create">
+		<form class="create_tournament" on-submit="create:{{players(playersInput)}}">
 			{{#if tournamentCreated}}
 				<div class="tournament_created">
 					success

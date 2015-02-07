@@ -1,5 +1,6 @@
 define(function(require) {
 	var merge = require("js/merge");
+	var Event = require("js/Event");
 	var Game = require("./Game");
 	
 	function Tournament(user, server, details) {

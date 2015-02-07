@@ -5,6 +5,7 @@ define(function(require) {
 	var glicko2 = require("jsonchess/glicko2");
 	var gameRestoration = require("jsonchess/gameRestoration");
 	var Game = require("lightsquare/Game");
+	var Tournament = require("lightsquare/Tournament");
 	var RestorationRequest = require("lightsquare/RestorationRequest");
 	var locales = require("lightsquare/locales");
 	var i18n = require("i18n/i18n");
@@ -13,6 +14,7 @@ define(function(require) {
 	function User(server, db, locale) {
 		this._playerId = null;
 		this._games = [];
+		this._tournaments = [];
 		this._promisor = new Promisor(this);
 		
 		this._server = server;
@@ -272,10 +274,26 @@ define(function(require) {
 		});
 	}
 	
+	User.prototype.getTournaments = function() {
+		return this._promisor.getPersistent("/tournaments", function() {
+			this._server.send("/request/tournaments");
+		});
+	}
+	
 	User.prototype.createTournament = function(options) {
-		return this._promisor.get("/tournament/new", function(promise) {
+		return this._promisor.get("/tournament/new", function() {
 			this._server.send("/tournament/new", options);
 		});
+	}
+	
+	User.prototype._addTournament = function(tournament) {
+		this._tournaments.push(tournament);
+		
+		return tournament;
+	}
+	
+	User.prototype._createTournament = function(details) {
+		return new Tournament(this, this._server, details);
 	}
 	
 	User.prototype._handleServerEvents = function() {
@@ -343,6 +361,10 @@ define(function(require) {
 			
 			"/tournament/new/success": function(details) {
 				this._promisor.resolve("/tourament/new", this._addTournament(this._createTournament(details)));
+			},
+			
+			"/tournament/new/failure": function(error) {
+				this._promisor.fail("/tournament/new", error);
 			},
 			
 			"/game/not_found": function(id) {

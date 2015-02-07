@@ -41,11 +41,12 @@ define(function(require) {
 			this._showDialog("create");
 		}).bind(this));
 		
-		this._template.on("create", (function(event) {
+		this._template.on("create", (function(event, players) {
 			event.original.preventDefault();
 			
 			this._user.createTournament({
-				playersRequired:this._template.get("players"),
+				name: this._template.get("name"),
+				playersRequired: players,
 				initialTime: this._template.get("initialTime"),
 				timeIncrement: this._template.get("timeIncrement")
 			}).then((function(tournament) {
@@ -81,7 +82,6 @@ define(function(require) {
 	
 	TournamentsPage.prototype._setError = function(message) {
 		this._template.set("error", message);
-		this._setClearErrorTimer();
 	}
 	
 	TournamentsPage.prototype._setupDialogHandlers = function() {

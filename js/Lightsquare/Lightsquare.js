@@ -292,13 +292,6 @@ define(function(require) {
 					
 					this._showPage(url);
 				}).bind(this), (function() {
-					//FIXME do something here
-					//this._showMessage(
-					//	"The requested game could not be found &ndash; if you had a game in"
-					//	+ " progress, you may be able to restore it by clicking \"Restore game\"",
-					//	5
-					//);
-					
 					this._router.setPath("/");
 				}).bind(this), (function() {
 					this._template.set("loadingGame", false);
