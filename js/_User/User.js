@@ -9,21 +9,14 @@ define(function(require) {
 	var locales = require("lightsquare/locales");
 	var i18n = require("i18n/i18n");
 	var GameBackups = require("./_GameBackups");
-	var Games = require("./_Games");
 	
 	function User(server, db, locale) {
 		this._playerId = null;
+		this._games = [];
 		this._promisor = new Promisor(this);
+		
 		this._server = server;
 		this._db = db;
-		
-		this.LoggedIn = new Event();
-		this.LoggedOut = new Event();
-		this.GameRestored = new Event();
-		this.PrefsChanged = new Event();
-		this.SeekCreated = new Event();
-		this.SeekExpired = new Event();
-		this.SeekMatched = new Event();
 		
 		this._locale = "en";
 		this._setPreferredLocale(locale);
@@ -31,9 +24,6 @@ define(function(require) {
 		this._gameBackups = new GameBackups(this._db);
 		this._gameBackups.cleanupOldBackups();
 		this._gameBackups.markForCleanup();
-		
-		this._games = new Games(this, this._server, this._gameBackups);
-		this._handleGamesEvents();
 		
 		this._username = "Anonymous";
 		this._isLoggedIn = false;
@@ -49,6 +39,14 @@ define(function(require) {
 			boardSize: null,
 			boardStyle: null
 		};
+		
+		this.LoggedIn = new Event();
+		this.LoggedOut = new Event();
+		this.GameRestored = new Event();
+		this.PrefsChanged = new Event();
+		this.SeekCreated = new Event();
+		this.SeekExpired = new Event();
+		this.SeekMatched = new Event();
 		
 		this._handleServerEvents();
 		this._subscribeToServerMessages();
@@ -134,6 +132,7 @@ define(function(require) {
 		this._username = "Anonymous";
 		this._isLoggedIn = false;
 		this._rating = glicko2.defaults.RATING;
+		this._games = [];
 		this.LoggedOut.fire();
 	}
 	
@@ -193,42 +192,22 @@ define(function(require) {
 		return this._isLoggedIn;
 	}
 	
-	User.prototype.getGame = function(id) {
-		return this._games.getGame(id);
-	}
-	
-	User.prototype.getGames = function() {
-		return this._games.getGames();
-	}
-	
 	User.prototype.seekGame = function(options) {
-		return this._games.seek(options);
+		return this._promisor.get("/seek", function() {
+			this._server.send("/seek", options);
+		});
 	}
 	
 	User.prototype.cancelSeek = function() {
-		this._games.cancelSeek();
+		this._server.send("/seek/cancel");
 	}
 	
 	User.prototype.acceptSeek = function(id) {
-		this._games.acceptSeek(id);
+		this._server.send("/seek/accept", id);
 	}
 	
 	User.prototype.getCurrentSeek = function() {
-		return this._games.currentSeek;
-	}
-	
-	User.prototype._handleGamesEvents = function() {
-		this._games.SeekCreated.addHandler(function(seekDetails) {
-			this.SeekCreated.fire(seekDetails);
-		}, this);
-		
-		this._games.SeekMatched.addHandler(function(game) {
-			this.SeekMatched.fire(game);
-		}, this);
-		
-		this._games.SeekExpired.addHandler(function() {
-			this.SeekExpired.fire();
-		}, this);
+		return this._currentSeek;
 	}
 	
 	User.prototype.getLastSeekOptions = function() {
@@ -236,9 +215,61 @@ define(function(require) {
 	}
 	
 	User.prototype.hasGamesInProgress = function() {
-		return this._games.getGames().some((function(game) {
+		return this._games.some((function(game) {
 			return (game.getUserColour() !== null && game.isInProgress);
 		}).bind(this));
+	}
+	
+	User.prototype._createGame = function(gameDetails) {
+		return new Game(this, this._server, gameDetails);
+	}
+	
+	User.prototype._addGame = function(game) {
+		this._games.push(game);
+		
+		if(game.userIsPlaying()) {
+			game.Move.addHandler(function() {
+				if(game.history.length >= gameRestoration.MIN_MOVES) {
+					this._gameBackups.save(game);
+				}
+			}, this);
+			
+			game.GameOver.addHandler(function() {
+				this._gameBackups.remove(game.id);
+			}, this);
+		}
+		
+		game.Rematch.addHandler(function(game) {
+			this._addGame(game);
+		}, this);
+		
+		return game;
+	}
+	
+	User.prototype.getGame = function(id) {
+		return this._promisor.get("/game/" + id, function(promise) {
+			this._games.some(function(game) {
+				if(game.id === id) {
+					promise.resolve(game);
+					
+					return true;
+				}
+			});
+			
+			if(!promise.isResolved()) {
+				this._server.send("/request/game", id);
+				
+				setTimeout(function() {
+					promise.fail();
+				}, 1000);
+			}
+		});
+	}
+	
+	User.prototype.getGames = function() {
+		return this._promisor.getPersistent("/games", function() {
+			this._server.send("/request/games");
+		});
 	}
 	
 	User.prototype.createTournament = function(options) {
@@ -255,6 +286,7 @@ define(function(require) {
 	
 	User.prototype._resetSession = function() {
 		this._promisor = new Promisor(this);
+		this._games = [];
 	}
 	
 	User.prototype._subscribeToServerMessages = function() {
@@ -284,14 +316,58 @@ define(function(require) {
 			"/user/register/failure": function(reason) {
 				this._promisor.fail("/register", reason);
 			},
-
+			
+			"/games": function(games) {
+				games.forEach((function(gameDetails) {
+					this._addGame(this._createGame(gameDetails));
+				}).bind(this));
+				
+				this._promisor.resolve("/games", this._games);
+			},
+			
+			"/game": function(gameDetails) {
+				var game = this._games.filter(function(existingGame) {
+					return (existingGame.id === gameDetails.id);
+				})[0] || this._addGame(this._createGame(gameDetails));
+							
+				this._promisor.resolve("/game/" + game.id, game);
+			},
+			
+			"/seek/matched": function(gameDetails) {
+				var game = this._addGame(this._createGame(gameDetails));
+				
+				this._currentSeek = null;
+				this.SeekMatched.fire(game);
+				this._promisor.resolve("/seek", game);
+			},
+			
 			"/tournament/new/success": function(details) {
 				this._promisor.resolve("/tourament/new", this._addTournament(this._createTournament(details)));
+			},
+			
+			"/game/not_found": function(id) {
+				this._promisor.fail("/game/" + id);
 			},
 			
 			"/user": function(userDetails) {
 				this._loadDetails(userDetails);
 				this._promisor.resolve("/details");
+			},
+			
+			"/seek/waiting": function(seekDetails) {
+				this._currentSeek = seekDetails;
+				this._promisor.progress("/seek", seekDetails);
+				this.SeekCreated.fire(seekDetails);
+			},
+			
+			"/seek/error": function(error) {
+				this._promisor.fail("/seek", error);
+			},
+			
+			"/seek/expired": function() {
+				this._currentSeek = null;
+				this.SeekExpired.fire();
+				this._promisor.resolve("/seek", null);
 			},
 			
 			"/restoration_requests": function(ids) {
