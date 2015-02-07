@@ -82,7 +82,6 @@ define(function(require) {
 	
 	TournamentsPage.prototype._setError = function(message) {
 		this._template.set("error", message);
-		this._setClearErrorTimer();
 	}
 	
 	TournamentsPage.prototype._setupDialogHandlers = function() {
