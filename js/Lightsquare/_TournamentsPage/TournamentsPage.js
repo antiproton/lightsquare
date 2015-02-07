@@ -45,6 +45,7 @@ define(function(require) {
 			event.original.preventDefault();
 			
 			this._user.createTournament({
+				name: this._template.get("name"),
 				playersRequired: players,
 				initialTime: this._template.get("initialTime"),
 				timeIncrement: this._template.get("timeIncrement")
