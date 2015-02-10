@@ -3,7 +3,6 @@ div.general_chat {
 	display: flex;
 	flex-grow: 1;
 	flex-direction: column;
-	padding: 1px;
 }
 
 div.general_chat_history {

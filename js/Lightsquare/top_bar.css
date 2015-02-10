@@ -1,17 +1,13 @@
 div.top_bar {
-	color: white;
 	display: flex;
 	justify-content: space-between;
 	align-items: center;
 	flex-shrink: 0;
 	padding: .5em;
-	background: #464646;
 }
 
 div.title a {
-	font-family: arial;
 	font-size: .95em;
-	color: white;
 	text-decoration: none;
 }
 
@@ -20,9 +16,7 @@ div.control_panel {
 }
 
 div.control_panel a {
-	color: #F2F2F2;
 }
 
 div.control_panel a:hover {
-	color: white;
 }

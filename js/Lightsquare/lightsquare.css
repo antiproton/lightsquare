@@ -1,9 +1,6 @@
 div.container {
-	position: fixed;
 	display: flex;
 	flex-direction: column;
-	width: 100%;
-	height: 100%;
 }
 
 div.modal_overlay {
@@ -29,7 +26,7 @@ div.connection_problem {
 
 div.main {
 	display: flex;
-	flex-grow: 1;
+	align-items: flex-start;
 }
 
 div.tabs {
@@ -40,4 +37,5 @@ div.tabs {
 div.page {
 	display: flex;
 	flex-grow: 1;
+	margin-right: .5em;
 }

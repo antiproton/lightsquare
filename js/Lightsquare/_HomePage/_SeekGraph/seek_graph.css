@@ -1,5 +1,6 @@
 div.seek_graph {
 	display: flex;
+	background: #f7f7f7;
 }
 
 div.seek_graph_body {
@@ -41,7 +42,7 @@ div.no_seeks_message > div {
 	text-align: center;
 	color: #ababab;
 	padding: 1em;
-	background: white;
+	background: #f7f7f7;
 }
 
 div.seek {

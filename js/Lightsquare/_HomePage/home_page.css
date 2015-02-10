@@ -3,24 +3,31 @@ div.play_home {
 	flex-direction: column;
 	flex-grow: 1;
 	flex-shrink: 0;
+	padding-left: .5em;
 }
 
 div.seeks {
 	flex-grow: 1;
+	margin: 0 0 0 .4em;
+	border: 1px solid #e7e7e7;
+	border-radius: 3px;
 }
 
 div.create_and_find {
 	display: flex;
+	align-items: flex-start;
 	flex-shrink: 0;
-	border-bottom: 1px solid #A0A0A0;
 }
 
 div.create_seek {
-	padding: .6em;
-	background: #eeeeee;
+	
 }
 
 div.home_chat {
 	display: flex;
 	flex-grow: 1;
+	height: 20em;
+	margin-top: .2em;
+	padding: 1px;
+	background: white;
 }

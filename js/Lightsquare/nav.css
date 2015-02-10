@@ -5,7 +5,10 @@ div.nav {
 	width: 15%;
 	min-width: 8.5em;
 	max-width: 15em;
-	background: #d1d1d1;
+	margin-left: .5em;
+	border-radius: 3px;
+	padding: .3em;
+	background: whitesmoke;
 }
 
 div.nav > div {
@@ -14,13 +17,14 @@ div.nav > div {
 
 div.nav_header {
 	font-size: .8em;
+	font-weight: bold;
 	padding: .2em .3em;
 	text-shadow: 1px 1px 0 rgba(255, 255, 255, .4);
-	background: linear-gradient(to top, rgb(179, 179, 179) 0%, rgb(196, 196, 196) 100%);
 }
 
 div.nav_links {
 	overflow-y: auto;
+	padding: .1em;
 }
 
 div.nav_links.game_links {
@@ -28,16 +32,15 @@ div.nav_links.game_links {
 }
 
 div.nav_links > a {
-	font-size: .85em;
 	color: #5c5c5c;
 	text-decoration: none;
 	display: flex;
 	flex-direction: column;
-	padding: .4em .5em;
+	padding: .25em .4em;
 }
 
 div.nav a.on {
-	background: #bebebe;
+	background: #EDEDED;
 }
 
 div.nav a.off:hover {

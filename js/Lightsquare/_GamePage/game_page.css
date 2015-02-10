@@ -1,7 +1,6 @@
 div.game {
 	position: relative;
 	flex-grow: 1;
-	padding: .3em .7em;
 	overflow-y: auto;
 }
 
@@ -24,7 +23,6 @@ div.game_board_and_controls {
 
 div.game_main {
 	display: flex;
-	padding: 1em 0;
 }
 
 div.game_board {
