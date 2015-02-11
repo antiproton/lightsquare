@@ -81,6 +81,7 @@ define(function(require) {
 			this._gamePages.splice(index, 0, page);
 			this._updateGamePageIndex();
 			this._updateGamePages();
+			this._template.set("hasGames", true);
 			this._pages[url] = page;
 			
 			page.Rematch.addHandler(function(game) {
@@ -165,6 +166,7 @@ define(function(require) {
 		this._gamePages = [];
 		this._gamePageIndex = {};
 		this._template.set("gamePages", []);
+		this._template.set("hasGames", false);
 	}
 	
 	Lightsquare.prototype._updateClocks = function() {
@@ -372,6 +374,7 @@ define(function(require) {
 				locales: locales,
 				locale: this._user.getLocaleDictionary(),
 				gamePages: [],
+				hasGames: false,
 				timeCriticalThreshold: timeCriticalThreshold,
 				serverConnected: false,
 				waitingForServer: true,
