@@ -14,46 +14,48 @@
 		<a on-click="navigate" href="{{getHref(href)}}" class="{{currentPath === href ? 'on' : 'off'}}">{{__(label)}}</a>
 	{{/navLinks.tools}}
 </div>
-<div class="nav_header">
-	{{__("Games")}}
-</div>
-<div class="nav_links game_links">
-	{{#gamePages}}
-		<a
-		   on-click="navigate"
-		   href="{{getHref(href)}}"
-		   class="nav_game {{currentPath === href ? 'on' : 'off'}}"
-		>
-			<div class="nav_game_title">
-				<div>
-					{{userIsPlaying ? opponent : white + ' vs ' + black}}
+{{#if gamePages.length > 0 || loadingGame}}
+	<div class="nav_header">
+		{{__("Games")}}
+	</div>
+	<div class="nav_links game_links">
+		{{#gamePages}}
+			<a
+			   on-click="navigate"
+			   href="{{getHref(href)}}"
+			   class="nav_game {{currentPath === href ? 'on' : 'off'}}"
+			>
+				<div class="nav_game_title">
+					<div>
+						{{userIsPlaying ? opponent : white + ' vs ' + black}}
+					</div>
+					<div class="nav_game_timing_style">
+						{{timingStyle}}
+					</div>
 				</div>
-				<div class="nav_game_timing_style">
-					{{timingStyle}}
-				</div>
-			</div>
-			{{#userIsPlaying && isInProgress && currentPath !== href}}
-				<div
-					class="
-						nav_game_clock player_clock game_tab_clock
-						{{#isInProgress && userIsActivePlayer}}
-							active_clock
-							{{#playerTime < timeCriticalThreshold}}
-								critical_clock
-							{{/playerTime lt timeCriticalThreshold}}
-						{{/isInProgress and userIsActivePlayer}}
-					"
-				>
-					{{getColonDisplay(playerTime)}}
-				</div>
-			{{/userIsPlaying}}
-		</a>
-	{{/gamePages}}
-	{{#loadingGame}}
+				{{#userIsPlaying && isInProgress && currentPath !== href}}
+					<div
+						class="
+							nav_game_clock player_clock game_tab_clock
+							{{#isInProgress && userIsActivePlayer}}
+								active_clock
+								{{#playerTime < timeCriticalThreshold}}
+									critical_clock
+								{{/playerTime lt timeCriticalThreshold}}
+							{{/isInProgress and userIsActivePlayer}}
+						"
+					>
+						{{getColonDisplay(playerTime)}}
+					</div>
+				{{/userIsPlaying}}
+			</a>
+		{{/gamePages}}
+	</div>
+	{{#if loadingGame}}
 		<a
 		   on-click="navigate"
 		   href="{{getHref('/game/' + loadingGameId)}}"
 		   class="{{currentPath === '/game/' + loadingGameId ? 'on' : 'off'}}"
 		>{{__("Loading game")}}...</a>
-	{{/loadingGame}}
-</div>
+	{{/if}}
+{{/if}}
