@@ -14,7 +14,7 @@
 		<a on-click="navigate" href="{{getHref(href)}}" class="{{currentPath === href ? 'on' : 'off'}}">{{__(label)}}</a>
 	{{/navLinks.tools}}
 </div>
-{{#if gamePages.length > 0 || loadingGame}}
+{{#if hasGames || loadingGame}}
 	<div class="nav_header">
 		{{__("Games")}}
 	</div>
