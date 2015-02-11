@@ -1,4 +1,6 @@
 define(function(require) {
+	var time = require("js/time");
+	
 	function GameBackups(db) {
 		this._db = db;
 		
