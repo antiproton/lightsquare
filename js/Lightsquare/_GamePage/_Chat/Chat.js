@@ -52,7 +52,7 @@ define(function(require) {
 		
 		this._game.DrawOffered.addHandler(function() {
 			this._addMessage(
-				this._user.__("% has offered a draw", [
+				this._user.__("%s has offered a draw", [
 					this._game.getPlayerName(this._game.position.activeColour.opposite)
 				]) + "."
 			);
@@ -61,7 +61,7 @@ define(function(require) {
 		this._game.RematchOffered.addHandler(function(colour) {
 			if(colour === this._game.getUserColour().opposite) {
 				this._addMessage(
-					this._user.__("% has offered you a rematch", [
+					this._user.__("%s has offered you a rematch", [
 						this._game.getPlayerName(this._game.getUserColour().opposite)
 					]) + "."
 				);
@@ -70,7 +70,7 @@ define(function(require) {
 		
 		this._game.RematchDeclined.addHandler(function(colour) {
 			if(colour === this._game.getUserColour().opposite) {
-				this._addMessage(this._user.__("% has declined a rematch", [this._game.getPlayerName(colour)]) + ".");
+				this._addMessage(this._user.__("%s has declined a rematch", [this._game.getPlayerName(colour)]) + ".");
 			}
 		}, this);
 		
