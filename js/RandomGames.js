@@ -13,12 +13,12 @@ define(function(require) {
 	
 	RandomGames.prototype.startUpdating = function() {
 		this._server.getConnection().then((function() {
-			this._server.send("/feed/activate", "random_games");
+			this._server.send("/feed/activate", "/random_games");
 		}).bind(this));
 	}
 	
 	RandomGames.prototype.stopUpdating = function() {
-		this._server.send("/feed/deactivate", "random_games");
+		this._server.send("/feed/deactivate", "/random_games");
 	}
 	
 	RandomGames.prototype._subscribeToServerMessages = function() {
