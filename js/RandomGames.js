@@ -23,7 +23,7 @@ define(function(require) {
 	
 	RandomGames.prototype._subscribeToServerMessages = function() {
 		this._server.subscribe("/random_game", (function(gameDetails) {
-			gameDetails.board = gameDetails.board.split("").map(function(piece) {
+			gameDetails.boardArray = gameDetails.board.split("").map(function(piece) {
 				return (piece === " " ? null : Piece.byFenString[piece]);
 			});
 			

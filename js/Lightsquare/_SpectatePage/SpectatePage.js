@@ -42,14 +42,14 @@ define(function(require) {
 			}
 		});
 		
-		this._gamesList.Update.addHandler(function(gameDetails) {
-			var id = gameDetails.id;
+		this._gamesList.Update.addHandler(function(details) {
+			var id = details.id;
 			
 			if(!(id in viewingAs)) {
 				viewingAs[id] = (Math.random() > .5 ? Colour.white : Colour.black);
 			}
 			
-			this._updateGame(gameDetails);
+			this._updateGame(details);
 		}, this);
 		
 		this._gamesList.GameOver.addHandler(function(id) {
@@ -64,8 +64,8 @@ define(function(require) {
 		}).bind(this));
 	}
 	
-	SpectatePage.prototype._updateGame = function(gameDetails) {
-		this._template.set("games." + gameDetails.id, gameDetails);
+	SpectatePage.prototype._updateGame = function(details) {
+		this._template.set("games." + details.id, details);
 	}
 	
 	SpectatePage.prototype.show = function() {
