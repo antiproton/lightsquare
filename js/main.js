@@ -20,7 +20,6 @@ define(function(require) {
 	
 	create("script", document.body).src = "//hogg-blake.co.uk:3000/hit/ni1kbk";
 	
-	console.log("Hi :)");
 	console.log("To get the source code and/or contribute to the project, go to http://github.com/jsonchess.");
 	console.log("A screencast showing the installation and setup can be found at https://www.youtube.com/watch?v=PR2FBr_5wiI.");
 });
