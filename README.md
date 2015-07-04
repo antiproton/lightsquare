@@ -50,13 +50,13 @@ Optimisation
 Run `r.js -o rjs-optimise.js` to build a completely separate source tree called
 lightsquare-optimised as a sibling to lightsquare (the directory containing rjs-optimise.js).
 
-The actual virtual host config used for jsonchess.com is:
+The actual virtual host config used for meteorchess.com is:
 
 ```
 <VirtualHost *:80>
         DocumentRoot /home/gus/projects/lightsquare-optimised
-        ServerName jsonchess.com
-        ServerAlias www.jsonchess.com
+        ServerName meteorchess.com
+        ServerAlias www.meteorchess.com
         DirectoryIndex /index.html
         RewriteEngine On
         RewriteRule ^[^.]+$ /index.html
