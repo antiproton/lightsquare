@@ -25,6 +25,7 @@
 		"require-text": "git://github.com/requirejs/text.git#master",
 		"require-css": "git://github.com/guybedford/require-css.git#master",
 		"require-domReady": "git://github.com/requirejs/domReady.git#master",
+		"sup": "*",
 		"ractive": "git://github.com/ractivejs/ractive.git#edge",
 		"ractive-i18n": "git://github.com/gushogg-blake/ractive-i18n.git#master",
 		"lightsquare": "./js"
