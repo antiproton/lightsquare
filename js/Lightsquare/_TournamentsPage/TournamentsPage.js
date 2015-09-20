@@ -3,6 +3,8 @@ define(function(require) {
 	var html = require("file!./tournaments_page.html");
 	var RactiveI18n = require("ractive-i18n/RactiveI18n");
 	var ListFeed = require("lightsquare/ListFeed");
+	var getObject = require("sup/adaptors/websocket-client");
+	var List = require("sup/List");
 	
 	var ESCAPE_KEY = 27;
 	
@@ -16,8 +18,23 @@ define(function(require) {
 		
 		this._user = user;
 		this._server = server;
-		this._tournamentList = new ListFeed(this._server, "tournaments");
+		this._tournaments = null;
 		this._setupTemplate(parent);
+		this._init();
+	}
+	
+	TournamentsPage.prototype._init = function() {
+		getObject(this._server, "/tournaments", List).then(function(tournaments) {
+			this._tournaments = tournaments;
+			ractiveAdaptor(tournaments, this._template, "tournaments");
+		});
+	}
+	
+	Tournaments.prototype._teardown = function() {
+		if(this._tournaments) {
+			this._tournaments.unsubscribe();
+			this._template.set("tournaments", []);
+		}
 	}
 	
 	TournamentsPage.prototype._setupTemplate = function(parent) {
@@ -117,11 +134,11 @@ define(function(require) {
 	}
 	
 	TournamentsPage.prototype.show = function() {
-		this._tournamentList.startUpdating();
+		this._init();
 	}
 	
 	TournamentsPage.prototype.hide = function() {
-		this._tournamentList.stopUpdating();
+		this._tear();
 	}
 	
 	return TournamentsPage;
