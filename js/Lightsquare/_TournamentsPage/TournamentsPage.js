@@ -3,8 +3,9 @@ define(function(require) {
 	var html = require("file!./tournaments_page.html");
 	var RactiveI18n = require("ractive-i18n/RactiveI18n");
 	var ListFeed = require("lightsquare/ListFeed");
-	var getObject = require("sup/adaptors/websocket-client");
+	var Proxy = require("sup/adaptors/websocket-client");
 	var List = require("sup/List");
+	var ractiveAdaptor = require("sup/adaptors/ractive");
 	
 	var ESCAPE_KEY = 27;
 	
@@ -18,23 +19,19 @@ define(function(require) {
 		
 		this._user = user;
 		this._server = server;
-		this._tournaments = null;
+		this._proxy = new Proxy(this._server, "/tournaments");
 		this._setupTemplate(parent);
-		this._init();
 	}
 	
 	TournamentsPage.prototype._init = function() {
-		getObject(this._server, "/tournaments", List).then(function(tournaments) {
-			this._tournaments = tournaments;
+		this._proxy.init(List, true).then((function(tournaments) {
 			ractiveAdaptor(tournaments, this._template, "tournaments");
-		});
+		}).bind(this));
 	}
 	
-	Tournaments.prototype._teardown = function() {
-		if(this._tournaments) {
-			this._tournaments.unsubscribe();
-			this._template.set("tournaments", []);
-		}
+	TournamentsPage.prototype._teardown = function() {
+		this._proxy.cancel();
+		this._template.set("tournaments", []);
 	}
 	
 	TournamentsPage.prototype._setupTemplate = function(parent) {
@@ -77,10 +74,6 @@ define(function(require) {
 				this._setError(error);
 			}).bind(this));
 		}).bind(this));
-		
-		this._tournamentList.Updated.addHandler(function() {
-			this._template.set("tournaments", this._tournamentList.getItems());
-		}, this);
 		
 		this._setupDialogHandlers();
 	}
@@ -138,7 +131,7 @@ define(function(require) {
 	}
 	
 	TournamentsPage.prototype.hide = function() {
-		this._tear();
+		this._teardown();
 	}
 	
 	return TournamentsPage;
