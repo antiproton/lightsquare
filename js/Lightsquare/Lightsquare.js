@@ -390,11 +390,11 @@ define(function(require) {
 						{
 							href: "/games",
 							label: "Current games"
-						},
+						}/*,
 						{
 							href: "/tournaments",
 							label: "Tournaments"
-						}
+						}*/
 					],
 					tools: [
 						{
