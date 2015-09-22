@@ -360,7 +360,7 @@ define(function(require) {
 			},
 			
 			"/tournament/new/success": function(details) {
-				this._promisor.resolve("/tourament/new", this._addTournament(this._createTournament(details)));
+				this._promisor.resolve("/tournament/new", this._addTournament(this._createTournament(details)));
 			},
 			
 			"/tournament/new/failure": function(error) {
