@@ -1,6 +1,6 @@
 {
 	"name": "lightsquare",
-	"version": "2.0.0",
+	"version": "2.1.0",
 	"authors": [
 		"Gus <gus@hogg-blake.co.uk>"
 	],
@@ -9,7 +9,7 @@
 	"moduleType": [
 		"amd"
 	],
-	"homepage": "http://jsonchess.com",
+	"homepage": "http://meteorchess.com",
 	"private": true,
 	"dependencies": {
 		"Array.prototype": "git://github.com/gushogg-blake/Array.prototype.git#master",
