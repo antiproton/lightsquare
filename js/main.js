@@ -14,7 +14,7 @@ define(function(require) {
 	}
 
 	var db = new JsonLocalStorage("/lightsquare");
-	var server = new Server("ws://" + window.location.hostname + ":8080");
+	var server = new Server("ws://" + window.location.hostname + ":8081");
 	var user = new User(server, db, locale);
 	var lightsquare = new Lightsquare(user, server, document.getElementById("main"));
 	
